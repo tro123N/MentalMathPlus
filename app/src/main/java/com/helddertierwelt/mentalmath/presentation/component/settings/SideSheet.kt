@@ -203,7 +203,7 @@ fun SideSheet(
                         intentProvider = {
                             Intent(
                                 Intent.ACTION_VIEW,
-                                "https://github.com/HeldDerTierwelt/MentalMath".toUri()
+                                "https://codeberg.org/HeldDerTierwelt/MentalMath".toUri()
                             )
                         },
                         context = context
