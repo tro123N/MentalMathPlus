@@ -25,6 +25,7 @@ import com.helddertierwelt.mentalmath.data.dao.AdditionTaskDao
 import com.helddertierwelt.mentalmath.data.dao.DivisionTaskDao
 import com.helddertierwelt.mentalmath.data.dao.MultiplicationTaskDao
 import com.helddertierwelt.mentalmath.data.dao.SubtractionTaskDao
+import com.helddertierwelt.mentalmath.data.repository.MathTaskRepository
 
 class GameViewModelFactory(
     private val additionTaskDao: AdditionTaskDao,
@@ -37,10 +38,12 @@ class GameViewModelFactory(
             @Suppress("UNCHECKED_CAST")
             return GameViewModel(
                 SavedStateHandle(),
-                additionTaskDao,
-                subtractionTaskDao,
-                multiplicationTaskDao,
-                divisionTaskDao
+                MathTaskRepository(
+                    additionTaskDao,
+                    subtractionTaskDao,
+                    multiplicationTaskDao,
+                    divisionTaskDao
+                )
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

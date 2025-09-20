@@ -21,24 +21,24 @@ package com.helddertierwelt.mentalmath.data.entity
 fun AdditionTask.toMathTask() = MathTask(
     operand1 = operand1,
     operand2 = operand2,
-    difficulty = difficultyAddition
+    difficulty = difficulty
 )
 
 fun SubtractionTask.toMathTask() = MathTask(
     operand1 = operand1,
     operand2 = operand2,
-    difficulty = difficultySubtraction
+    difficulty = difficulty
 )
 
 fun MultiplicationTask.toMathTask() = MathTask(
     operand1 = operand1,
     operand2 = operand2,
-    difficulty = difficultyMultiplication
+    difficulty = difficulty
 )
 
 fun DivisionTask.toMathTask() = MathTask(
     operand1 = operand1,
     operand2 = operand2,
-    difficulty = difficultyDivision
+    difficulty = difficulty
 )
 

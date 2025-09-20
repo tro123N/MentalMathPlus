@@ -19,13 +19,15 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.data.entity
 
 import androidx.room.Entity
+import androidx.room.Index
 
 @Entity(
     tableName = "tasks_multiplication",
-    primaryKeys = ["operand1", "operand2"]
+    primaryKeys = ["operand1", "operand2"],
+    indices = [Index(value = ["difficulty"], name = "idx_difficulty_multiplication")]
 )
 data class MultiplicationTask(
+    val difficulty: Int,
     val operand1: Int,
-    val operand2: Int,
-    val difficultyMultiplication: Int
+    val operand2: Int
 )

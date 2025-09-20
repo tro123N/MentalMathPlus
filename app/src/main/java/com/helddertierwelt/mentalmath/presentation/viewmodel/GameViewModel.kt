@@ -25,12 +25,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.helddertierwelt.mentalmath.data.dao.AdditionTaskDao
-import com.helddertierwelt.mentalmath.data.dao.DivisionTaskDao
-import com.helddertierwelt.mentalmath.data.dao.MultiplicationTaskDao
-import com.helddertierwelt.mentalmath.data.dao.SubtractionTaskDao
 import com.helddertierwelt.mentalmath.data.entity.MathTask
-import com.helddertierwelt.mentalmath.data.entity.toMathTask
+import com.helddertierwelt.mentalmath.data.repository.MathTaskRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -39,20 +35,18 @@ import kotlin.random.Random
 
 class GameViewModel(
     private val savedStateHandle: SavedStateHandle,
-    private val additionTaskDao: AdditionTaskDao,
-    private val subtractionTaskDao: SubtractionTaskDao,
-    private val multiplicationTaskDao: MultiplicationTaskDao,
-    private val divisionTaskDao: DivisionTaskDao
+    private val mathTaskRepository: MathTaskRepository,
 ) : ViewModel(), DefaultLifecycleObserver {
+
     private val _gameState = mutableStateOf(
         savedStateHandle.get<GameState>("game_state") ?: GameState()
     )
-    private var timerJob: Job? = null
-
     val gamesState: State<GameState> = _gameState
+    private var timerJob: Job? = null
+    private var random: Random = Random(System.currentTimeMillis())
 
     fun appendToInput(number: Int) {
-        if (_gameState.value.input.length < 8) {
+        if (_gameState.value.input.length < 7) {
             if (_gameState.value.input == "0") {
                 clearInput()
             }
@@ -75,59 +69,41 @@ class GameViewModel(
 
     fun generateNewTask() {
         clearInput()
+        val enabledOperators = _gameState.value.enabledOperators
+        val operationSetting =
+            enabledOperators.entries.elementAt(random.nextInt(enabledOperators.size))
+        val operation = operationSetting.key
+        val difficulty = random.nextInt(
+            operationSetting.value.first.toInt(),
+            operationSetting.value.second.toInt() + 1
+        )
         viewModelScope.launch(Dispatchers.IO) {
-            val operationSetting = _gameState.value.enabledOperators.entries.random()
-            val operation = operationSetting.key
-            val difficulty = Random.nextInt(
-                operationSetting.value.first.toInt(),
-                operationSetting.value.second.toInt() + 1
+            val mathTask: MathTask = when (operation) {
+                Operation.ADDITION -> mathTaskRepository.getRandomAdditionTaskByDifficulty(difficulty,random)
+                Operation.SUBTRACTION -> mathTaskRepository.getRandomSubtractionTaskByDifficulty(difficulty,random)
+                Operation.MULTIPLICATION -> mathTaskRepository.getRandomMultiplicationTaskByDifficulty(difficulty,random)
+                Operation.DIVISION -> mathTaskRepository.getRandomDivisionTaskByDifficulty(difficulty,random)
+            }
+
+            val operands = when (operation) {
+                Operation.SUBTRACTION -> mathTask.operand1 to mathTask.operand2
+                Operation.DIVISION -> (mathTask.operand1 * mathTask.operand2) to mathTask.operand1
+                Operation.ADDITION,
+                Operation.MULTIPLICATION -> {
+                    if (random.nextBoolean())
+                        mathTask.operand1 to mathTask.operand2
+                    else
+                        mathTask.operand2 to mathTask.operand1
+                }
+            }
+
+            _gameState.value = _gameState.value.copy(
+                operand1 = operands.first,
+                operand2 = operands.second,
+                operator = operation,
+                input = "",
+                isCorrect = null
             )
-
-            val mathTask: MathTask? = when (operation) {
-                Operation.ADDITION -> additionTaskDao.getAdditionTasksByDifficulty(difficulty)
-                    .getOrNull(0)?.toMathTask()
-
-                Operation.SUBTRACTION -> subtractionTaskDao.getSubtractionTasksByDifficulty(
-                    difficulty
-                )
-                    .getOrNull(0)?.toMathTask()
-
-                Operation.MULTIPLICATION -> multiplicationTaskDao.getMultiplicationTasksByDifficulty(
-                    difficulty
-                )
-                    .getOrNull(0)?.toMathTask()
-
-                Operation.DIVISION -> divisionTaskDao.getDivisionTasksByDifficulty(difficulty)
-                    .getOrNull(0)?.toMathTask()
-            }
-
-            if (mathTask != null) {
-                val operand1 = if (operation == Operation.DIVISION) {
-                    mathTask.operand1 * mathTask.operand2
-                } else {
-                    mathTask.operand1
-                }
-                val operand2 = if (operation == Operation.DIVISION) {
-                    mathTask.operand1
-                } else {
-                    mathTask.operand2
-                }
-                _gameState.value = _gameState.value.copy(
-                    operand1 = operand1,
-                    operand2 = operand2,
-                    operator = operation,
-                    input = "",
-                    isCorrect = null
-                )
-            } else {
-                _gameState.value = _gameState.value.copy(
-                    operand1 = difficulty,
-                    operand2 = difficulty,
-                    operator = operation,
-                    input = "",
-                    isCorrect = null
-                )
-            }
             saveState()
         }
     }
@@ -216,6 +192,7 @@ class GameViewModel(
     }
 
     fun startGame() {
+        random = Random(System.currentTimeMillis())
         _gameState.value = _gameState.value.copy(isGameStarted = true)
         generateNewTask()
         setStartTimestamp()
@@ -256,7 +233,6 @@ class GameViewModel(
                 delay(100)
             }
         }
-
     }
 
     fun pauseTimer() {
@@ -266,10 +242,6 @@ class GameViewModel(
         )
         saveState()
         timerJob?.cancel()
-    }
-
-    override fun onStop(owner: LifecycleOwner) {
-        super.onStop(owner)
     }
 
     override fun onPause(owner: LifecycleOwner) {

@@ -19,23 +19,16 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.data.dao
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.helddertierwelt.mentalmath.data.entity.DivisionTask
 
 @Dao
 interface DivisionTaskDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(task: DivisionTask)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAll(tasks: List<DivisionTask>)
+    @Query("SELECT COUNT(*) FROM tasks_division WHERE difficulty = :difficulty")
+    suspend fun countDivisionTasksByDifficulty(difficulty: Int): Int
 
-    @Query("SELECT * FROM tasks_division WHERE difficultyDivision = :difficulty ORDER BY RANDOM() LIMIT 1")
-    suspend fun getDivisionTasksByDifficulty(difficulty: Int): List<DivisionTask>
-
-    @Query("SELECT COUNT(*) FROM tasks_division")
-    suspend fun getCount(): Int
+    @Query("SELECT * FROM tasks_division WHERE difficulty = :difficulty LIMIT 1 OFFSET :offset")
+    suspend fun getDivisionTaskByDifficultyWithOffset(difficulty: Int, offset: Int): DivisionTask
 }
 
