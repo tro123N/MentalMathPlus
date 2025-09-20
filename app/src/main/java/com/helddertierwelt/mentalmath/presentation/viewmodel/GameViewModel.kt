@@ -31,6 +31,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.random.Random
 
 class GameViewModel(
@@ -77,12 +79,13 @@ class GameViewModel(
             operationSetting.value.first.toInt(),
             operationSetting.value.second.toInt() + 1
         )
+        val lastOperands = max(_gameState.value.operand1,_gameState.value.operand2) to min(_gameState.value.operand1,_gameState.value.operand2)
         viewModelScope.launch(Dispatchers.IO) {
             val mathTask: MathTask = when (operation) {
-                Operation.ADDITION -> mathTaskRepository.getRandomAdditionTaskByDifficulty(difficulty,random)
-                Operation.SUBTRACTION -> mathTaskRepository.getRandomSubtractionTaskByDifficulty(difficulty,random)
-                Operation.MULTIPLICATION -> mathTaskRepository.getRandomMultiplicationTaskByDifficulty(difficulty,random)
-                Operation.DIVISION -> mathTaskRepository.getRandomDivisionTaskByDifficulty(difficulty,random)
+                Operation.ADDITION -> mathTaskRepository.getRandomAdditionTaskByDifficulty(difficulty,random,lastOperands)
+                Operation.SUBTRACTION -> mathTaskRepository.getRandomSubtractionTaskByDifficulty(difficulty,random,lastOperands)
+                Operation.MULTIPLICATION -> mathTaskRepository.getRandomMultiplicationTaskByDifficulty(difficulty,random,lastOperands)
+                Operation.DIVISION -> mathTaskRepository.getRandomDivisionTaskByDifficulty(difficulty,random,lastOperands)
             }
 
             val operands = when (operation) {

@@ -23,8 +23,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class GameState(
-    val operand1: Int = 0,
-    val operand2: Int = 0,
+    val operand1: Int = 1,
+    val operand2: Int = 1,
     val operator: Operation = Operation.ADDITION,
     val input: String = "",
     val tasks: List<TaskResult> = emptyList(),

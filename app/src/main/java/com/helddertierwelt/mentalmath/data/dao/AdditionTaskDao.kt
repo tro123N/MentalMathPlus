@@ -25,10 +25,10 @@ import com.helddertierwelt.mentalmath.data.entity.AdditionTask
 @Dao
 interface AdditionTaskDao {
 
-    @Query("SELECT COUNT(*) FROM tasks_addition WHERE difficulty = :difficulty")
-    suspend fun countAdditionTasksByDifficulty(difficulty: Int): Int
+    @Query("SELECT COUNT(*) FROM tasks_addition WHERE difficulty = :difficulty AND (operand1 <> :lastOperand1 OR operand2 <> :lastOperand2)")
+    suspend fun countAdditionTasksByDifficulty(difficulty: Int, lastOperand1: Int, lastOperand2: Int): Int
 
-    @Query("SELECT * FROM tasks_addition WHERE difficulty = :difficulty LIMIT 1 OFFSET :offset")
-    suspend fun getAdditionTaskByDifficultyWithOffset(difficulty: Int, offset: Int): AdditionTask
+    @Query("SELECT * FROM tasks_addition WHERE difficulty = :difficulty  AND (operand1 <> :lastOperand1 OR operand2 <> :lastOperand2) LIMIT 1 OFFSET :offset")
+    suspend fun getAdditionTaskByDifficultyWithOffset(difficulty: Int, offset: Int, lastOperand1: Int, lastOperand2: Int): AdditionTask
 }
 
