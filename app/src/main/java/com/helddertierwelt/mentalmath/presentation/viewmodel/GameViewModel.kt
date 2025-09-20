@@ -217,9 +217,8 @@ class GameViewModel(
     }
 
     fun startTimer() {
-        if (_gameState.value.isTimerRunning || !_gameState.value.isGameStarted) return
+        if (!_gameState.value.isGameStarted) return
 
-        timerJob?.cancel()
         _gameState.value = _gameState.value.copy(isTimerRunning = true)
         saveState()
         timerJob = viewModelScope.launch(Dispatchers.Default) {
@@ -242,6 +241,12 @@ class GameViewModel(
         )
         saveState()
         timerJob?.cancel()
+    }
+
+    fun resumeTimerIfNeeded() {
+        if (_gameState.value.isTimerRunning && (timerJob == null || timerJob?.isCompleted == true)) {
+            startTimer()
+        }
     }
 
     override fun onPause(owner: LifecycleOwner) {

@@ -132,7 +132,7 @@ fun TasksCard(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Icon(
-                                painter = painterResource(R.drawable.cancel_24),
+                                painter = painterResource(R.drawable.cancel_24dp),
                                 contentDescription = "Skipped",
                                 modifier = Modifier
                                     .size(iconSize)
@@ -143,7 +143,7 @@ fun TasksCard(
 
 
                         null -> Icon(
-                            painter = painterResource(R.drawable.cancel_24),
+                            painter = painterResource(R.drawable.cancel_24dp),
                             contentDescription = "Skipped",
                             modifier = Modifier
                                 .size(iconSize)

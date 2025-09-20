@@ -51,7 +51,7 @@ fun BackspaceButton(
         )
     ) {
         Icon(
-            painter = painterResource(R.drawable.backspace_24),
+            painter = painterResource(R.drawable.backspace_24dp),
             contentDescription = "Backspace",
             modifier = Modifier.size(iconSize),
         )

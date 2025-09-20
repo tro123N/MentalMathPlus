@@ -56,7 +56,8 @@ fun MathTaskDisplay(
         Text(
             text = "$operand1 $operatorString $operand2",
             fontSize = fontSize,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            lineHeight = fontSize
         )
 
         Spacer(modifier = Modifier.height((0.5 * fontSize.value).dp))

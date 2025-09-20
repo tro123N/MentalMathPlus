@@ -196,7 +196,7 @@ fun SettingsAndStatsCard(
                 StatsColumn(
                     fontSize = fontSize,
                     statsText = formatTime(totalTime),
-                    iconId = R.drawable.access_time_24,
+                    iconId = R.drawable.access_time_24dp,
                     iconSize = iconSize,
                     iconColor = MaterialTheme.colorScheme.onPrimary
                 )

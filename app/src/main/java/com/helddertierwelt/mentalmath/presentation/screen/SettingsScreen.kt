@@ -45,7 +45,7 @@ import com.helddertierwelt.mentalmath.presentation.component.settings.CustomSlid
 import com.helddertierwelt.mentalmath.presentation.component.settings.ModeButton
 import com.helddertierwelt.mentalmath.presentation.component.settings.OperatorButton
 import com.helddertierwelt.mentalmath.presentation.component.settings.SettingsTopBar
-import com.helddertierwelt.mentalmath.presentation.component.settings.SideSheet
+import com.helddertierwelt.mentalmath.presentation.component.settings.SideSheetLeft
 import com.helddertierwelt.mentalmath.presentation.component.settings.StartButton
 import com.helddertierwelt.mentalmath.presentation.component.settings.TextLabel
 import com.helddertierwelt.mentalmath.presentation.theme.blue
@@ -109,6 +109,7 @@ fun SettingsScreen(
                     verticalArrangement = Arrangement.SpaceBetween,
                     horizontalAlignment = Alignment.Start
                 ) {
+                    // TextLabel(text= screenHeight.toString(), fontSize = 25.sp) // Debug: show screen height
                     TextLabel(
                         text = stringResource(R.string.mode_instruction),
                         fontSize = textLabelFontSize,
@@ -243,15 +244,22 @@ fun SettingsScreen(
                         iconSize = startIconSize
                     )
                 }
-                SideSheet(
+                /*SideSheet(
                     isSheetOpen = settingsViewModel.isSheetOpen.value,
                     screenWidth = screenWidth,
                     onDismissRequested = { settingsViewModel.toggleSheetOpen() },
                     screenHeight = screenHeight,
                     settingsViewModel = settingsViewModel
-                )
+                )*/
             }
         }
+    )
+    SideSheetLeft(
+        isSheetOpen = settingsViewModel.isSheetOpen.value,
+        screenWidth = screenWidth,
+        onDismissRequested = { settingsViewModel.toggleSheetOpen() },
+        screenHeight = screenHeight,
+        settingsViewModel = settingsViewModel
     )
 
     BackHandler {

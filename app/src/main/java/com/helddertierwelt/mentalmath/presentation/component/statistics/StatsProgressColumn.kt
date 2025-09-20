@@ -49,7 +49,7 @@ fun StatsProgressColumn(
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var iconId = R.drawable.timer_24
+        var iconId = R.drawable.timer_24dp
         var progressText = formatTime(activeTime)
         if (!modeEnabled) {
             iconId = R.drawable.tag_24dp
