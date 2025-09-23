@@ -24,9 +24,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.helddertierwelt.mentalmath.data.datastore.SettingsRepository
 import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.launch
 
-class SettingsViewModel(
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
     private val repository: SettingsRepository,
 ) : ViewModel() {
 

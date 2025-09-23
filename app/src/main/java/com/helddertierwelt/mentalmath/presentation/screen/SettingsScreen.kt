@@ -18,7 +18,6 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.screen
 
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
@@ -62,12 +61,12 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    settingsViewModel: SettingsViewModel,
     modifier: Modifier = Modifier
 ) {
 
     val activity = LocalActivity.current as ViewModelStoreOwner
     val gameViewModel: GameViewModel = hiltViewModel(activity)
+    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
 
     val context = LocalContext.current
     val settingsState = settingsViewModel.settingsState.value
@@ -235,7 +234,6 @@ fun SettingsScreen(
                         )
                     }
                     StartButton(
-                        settingsViewModel = settingsViewModel,
                         onClick = {
                             gameViewModel.resetGame()
                             gameViewModel.setEnabledOperators(settingsViewModel)

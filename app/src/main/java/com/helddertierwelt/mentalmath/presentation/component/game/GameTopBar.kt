@@ -47,12 +47,13 @@ import kotlin.math.roundToInt
 @Composable
 fun GameTopBar(
     navController: NavController,
-    settingsViewModel: SettingsViewModel,
     iconSize: Dp,
     fontSize: TextUnit
 ) {
     val activity = LocalActivity.current as ViewModelStoreOwner
     val gameViewModel: GameViewModel = hiltViewModel(activity)
+    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
+
     TopAppBar(
         title = {
         },

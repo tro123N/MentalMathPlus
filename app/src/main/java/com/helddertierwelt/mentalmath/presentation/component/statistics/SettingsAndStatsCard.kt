@@ -43,8 +43,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
@@ -57,13 +57,14 @@ import kotlin.math.pow
 
 @Composable
 fun SettingsAndStatsCard(
-    settingsViewModel: SettingsViewModel,
     operatorSize: TextUnit,
     fontSize: TextUnit,
     iconSize: Dp,
     modifier: Modifier
 ) {
+
     val activity = LocalActivity.current as ViewModelStoreOwner
+    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
     val gameViewModel: GameViewModel = hiltViewModel(activity)
     val gameState = gameViewModel.gamesState.value
     val totalTime = gameState.totalTime

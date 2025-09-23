@@ -45,12 +45,10 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.helddertierwelt.mentalmath.data.datastore.SettingsRepository
 import com.helddertierwelt.mentalmath.presentation.screen.Navigation
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
@@ -62,14 +60,12 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val gameViewModel: GameViewModel by viewModels()
+    private val settingsViewModel: SettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val settingsViewModel: SettingsViewModel = remember {
-                SettingsViewModel(SettingsRepository(applicationContext))
-            }
             installSplashScreen().apply {
                 setKeepOnScreenCondition {
                     !settingsViewModel.isLoaded.value
@@ -98,7 +94,6 @@ class MainActivity : ComponentActivity() {
                 }
 
                 Navigation(
-                    settingsViewModel = settingsViewModel,
                     navController = navController
                 )
             }

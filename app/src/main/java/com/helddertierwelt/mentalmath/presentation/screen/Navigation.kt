@@ -29,11 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 
 @Composable
 fun Navigation(
-    settingsViewModel: SettingsViewModel,
     navController: NavHostController
 ) {
 
@@ -51,7 +49,6 @@ fun Navigation(
                 enterTransition = { fadeIn() },
             ) {
                 SettingsScreen(
-                    settingsViewModel = settingsViewModel,
                     navController = navController
                 )
             }
@@ -61,7 +58,6 @@ fun Navigation(
                 enterTransition = { slideInHorizontally(initialOffsetX = { it }) }
             ) {
                 GameScreen(
-                    settingsViewModel = settingsViewModel,
                     navController = navController
                 )
             }
@@ -71,7 +67,6 @@ fun Navigation(
                 enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
             ) {
                 StatisticsScreen(
-                    settingsViewModel = settingsViewModel,
                     navController = navController
                 )
             }

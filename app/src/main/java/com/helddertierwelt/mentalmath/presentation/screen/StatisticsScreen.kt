@@ -62,15 +62,14 @@ import com.helddertierwelt.mentalmath.presentation.component.statistics.DoneButt
 import com.helddertierwelt.mentalmath.presentation.component.statistics.SettingsAndStatsCard
 import com.helddertierwelt.mentalmath.presentation.component.statistics.StatisticsTopBar
 import com.helddertierwelt.mentalmath.presentation.component.statistics.TasksCard
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import java.io.File
 import java.io.FileOutputStream
 
 @Composable
 fun StatisticsScreen(
     navController: NavController,
-    settingsViewModel: SettingsViewModel,
 ) {
+
     // Calculate sizes based on screen size
     val containerSizePx = LocalWindowInfo.current.containerSize // IntSize in px
     val density = LocalDensity.current
@@ -180,7 +179,6 @@ fun StatisticsScreen(
                         horizontalAlignment = Alignment.Start
                     ) {
                         SettingsAndStatsCard(
-                            settingsViewModel = settingsViewModel,
                             fontSize = resultFontSize,
                             operatorSize = operatorFontSize,
                             iconSize = modeIconSize,

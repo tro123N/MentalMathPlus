@@ -68,12 +68,13 @@ import kotlin.math.roundToInt
 @Composable
 fun GameScreen(
     navController: NavController,
-    settingsViewModel: SettingsViewModel,
     modifier: Modifier = Modifier
 ) {
 
     val activity = LocalActivity.current as ViewModelStoreOwner
     val gameViewModel: GameViewModel = hiltViewModel(activity)
+    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
+
     LaunchedEffect(Unit) {
         gameViewModel.resumeTimerIfNeeded()
     }
@@ -103,7 +104,6 @@ fun GameScreen(
             Column {
                 GameTopBar(
                     navController = navController,
-                    settingsViewModel = settingsViewModel,
                     iconSize = iconSizeClose,
                     fontSize = numberFontSize
                 )
