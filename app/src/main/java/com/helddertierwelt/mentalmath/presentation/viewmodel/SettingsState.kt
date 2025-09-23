@@ -27,15 +27,15 @@ data class SettingsState(
     val isModeEnabled: Boolean = true,
     val limit: Float = 3f,
 
-    val plusRange: Pair<Float, Float> = 2f to 5f,
-    val minusRange: Pair<Float, Float> = 2f to 5f,
-    val multiplyRange: Pair<Float, Float> = 2f to 5f,
-    val divideRange: Pair<Float, Float> = 2f to 5f,
+    val additionRange: Pair<Float, Float> = 2f to 5f,
+    val subtractionRange: Pair<Float, Float> = 2f to 5f,
+    val multiplicationRange: Pair<Float, Float> = 2f to 5f,
+    val divisionRange: Pair<Float, Float> = 2f to 5f,
 
-    val isPlusEnabled: Boolean = true,
-    val isMinusEnabled: Boolean = true,
-    val isMultiplyEnabled: Boolean = true,
-    val isDivideEnabled: Boolean = true,
+    val isAdditionEnabled: Boolean = true,
+    val isSubtractionEnabled: Boolean = true,
+    val isMultiplicationEnabled: Boolean = true,
+    val isDivisionEnabled: Boolean = true,
 
     val themeMode: ThemeMode = ThemeMode.SYSTEM
 ) : Parcelable

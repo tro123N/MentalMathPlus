@@ -29,15 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 
 @Composable
 fun Navigation(
     settingsViewModel: SettingsViewModel,
-    gameViewModel: GameViewModel,
     navController: NavHostController
 ) {
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -53,7 +52,6 @@ fun Navigation(
             ) {
                 SettingsScreen(
                     settingsViewModel = settingsViewModel,
-                    gameViewModel = gameViewModel,
                     navController = navController
                 )
             }
@@ -63,7 +61,6 @@ fun Navigation(
                 enterTransition = { slideInHorizontally(initialOffsetX = { it }) }
             ) {
                 GameScreen(
-                    gameViewModel = gameViewModel,
                     settingsViewModel = settingsViewModel,
                     navController = navController
                 )
@@ -75,7 +72,6 @@ fun Navigation(
             ) {
                 StatisticsScreen(
                     settingsViewModel = settingsViewModel,
-                    gameViewModel = gameViewModel,
                     navController = navController
                 )
             }

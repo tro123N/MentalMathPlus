@@ -62,7 +62,6 @@ import com.helddertierwelt.mentalmath.presentation.component.statistics.DoneButt
 import com.helddertierwelt.mentalmath.presentation.component.statistics.SettingsAndStatsCard
 import com.helddertierwelt.mentalmath.presentation.component.statistics.StatisticsTopBar
 import com.helddertierwelt.mentalmath.presentation.component.statistics.TasksCard
-import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import java.io.File
 import java.io.FileOutputStream
@@ -70,7 +69,6 @@ import java.io.FileOutputStream
 @Composable
 fun StatisticsScreen(
     navController: NavController,
-    gameViewModel: GameViewModel,
     settingsViewModel: SettingsViewModel,
 ) {
     // Calculate sizes based on screen size
@@ -182,7 +180,6 @@ fun StatisticsScreen(
                         horizontalAlignment = Alignment.Start
                     ) {
                         SettingsAndStatsCard(
-                            gameViewModel = gameViewModel,
                             settingsViewModel = settingsViewModel,
                             fontSize = resultFontSize,
                             operatorSize = operatorFontSize,
@@ -205,7 +202,6 @@ fun StatisticsScreen(
                         )
                         Spacer(modifier = Modifier.height(24.dp))
                         TasksCard(
-                            gameViewModel = gameViewModel,
                             resultFontSize = resultFontSize,
                             iconSize = taskIconSize
                         )

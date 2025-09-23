@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.component.settings.CustomRangeSlider
@@ -58,10 +59,11 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    gameViewModel: GameViewModel,
     settingsViewModel: SettingsViewModel,
     modifier: Modifier = Modifier
 ) {
+
+    val gameViewModel: GameViewModel = viewModel()
 
     val context = LocalContext.current
     val settingsState = settingsViewModel.settingsState.value
@@ -147,7 +149,7 @@ fun SettingsScreen(
                         OperatorButton(
                             buttonTextId = R.string.add,
                             textColor = green,
-                            isSelected = settingsState.isPlusEnabled,
+                            isSelected = settingsState.isAdditionEnabled,
                             onClick = { settingsViewModel.togglePlus() },
                             size = roundButtonSize,
                             fontSize = operatorButtonFontSize,
@@ -155,9 +157,9 @@ fun SettingsScreen(
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
                             valueRange = valueRangeOperators,
-                            value = settingsState.plusRange,
+                            value = settingsState.additionRange,
                             activeTrackColor = green,
-                            isEnabled = settingsState.isPlusEnabled,
+                            isEnabled = settingsState.isAdditionEnabled,
                             onValueChange = { settingsViewModel.updatePlusRange(it) },
                             size = sliderSize
                         )
@@ -169,7 +171,7 @@ fun SettingsScreen(
                         OperatorButton(
                             buttonTextId = R.string.subtract,
                             textColor = red,
-                            isSelected = settingsState.isMinusEnabled,
+                            isSelected = settingsState.isSubtractionEnabled,
                             onClick = { settingsViewModel.toggleMinus() },
                             size = roundButtonSize,
                             fontSize = operatorButtonFontSize
@@ -177,9 +179,9 @@ fun SettingsScreen(
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
                             valueRange = valueRangeOperators,
-                            value = settingsState.minusRange,
+                            value = settingsState.subtractionRange,
                             activeTrackColor = red,
-                            isEnabled = settingsState.isMinusEnabled,
+                            isEnabled = settingsState.isSubtractionEnabled,
                             onValueChange = { settingsViewModel.updateMinusRange(it) },
                             size = sliderSize
                         )
@@ -191,7 +193,7 @@ fun SettingsScreen(
                         OperatorButton(
                             buttonTextId = R.string.multiply,
                             textColor = yellow,
-                            isSelected = settingsState.isMultiplyEnabled,
+                            isSelected = settingsState.isMultiplicationEnabled,
                             onClick = { settingsViewModel.toggleMultiply() },
                             size = roundButtonSize,
                             fontSize = operatorButtonFontSize
@@ -199,9 +201,9 @@ fun SettingsScreen(
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
                             valueRange = valueRangeOperators,
-                            value = settingsState.multiplyRange,
+                            value = settingsState.multiplicationRange,
                             activeTrackColor = yellow,
-                            isEnabled = settingsState.isMultiplyEnabled,
+                            isEnabled = settingsState.isMultiplicationEnabled,
                             onValueChange = { settingsViewModel.updateMultiplyRange(it) },
                             size = sliderSize
                         )
@@ -213,7 +215,7 @@ fun SettingsScreen(
                         OperatorButton(
                             buttonTextId = R.string.divide,
                             textColor = blue,
-                            isSelected = settingsState.isDivideEnabled,
+                            isSelected = settingsState.isDivisionEnabled,
                             onClick = { settingsViewModel.toggleDivide() },
                             size = roundButtonSize,
                             fontSize = operatorButtonFontSize
@@ -221,9 +223,9 @@ fun SettingsScreen(
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
                             valueRange = valueRangeOperators,
-                            value = settingsState.divideRange,
+                            value = settingsState.divisionRange,
                             activeTrackColor = blue,
-                            isEnabled = settingsState.isDivideEnabled,
+                            isEnabled = settingsState.isDivisionEnabled,
                             onValueChange = { settingsViewModel.updateDivideRange(it) },
                             size = sliderSize
                         )

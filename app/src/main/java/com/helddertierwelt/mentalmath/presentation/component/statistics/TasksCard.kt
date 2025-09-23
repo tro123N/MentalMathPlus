@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
@@ -53,10 +54,10 @@ import java.util.Locale
 
 @Composable
 fun TasksCard(
-    gameViewModel: GameViewModel,
     resultFontSize: androidx.compose.ui.unit.TextUnit,
     iconSize: androidx.compose.ui.unit.Dp
 ) {
+    val gameViewModel: GameViewModel = viewModel()
     var isExpanded by remember { mutableStateOf(true) }
     Card(
         shape = RoundedCornerShape(32.dp),

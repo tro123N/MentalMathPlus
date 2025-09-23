@@ -27,17 +27,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.helddertierwelt.mentalmath.data.entity.MathTask
 import com.helddertierwelt.mentalmath.data.repository.MathTaskRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
 
-class GameViewModel(
-    private val savedStateHandle: SavedStateHandle,
+@HiltViewModel
+class GameViewModel @Inject constructor(
     private val mathTaskRepository: MathTaskRepository,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel(), DefaultLifecycleObserver {
 
     private val _gameState = mutableStateOf(
@@ -148,7 +151,6 @@ class GameViewModel(
 
     fun addTaskResultToList() {
         val taskResult = TaskResult(
-            taskNumber = _gameState.value.tasks.size + 1,
             operand1 = _gameState.value.operand1,
             operand2 = _gameState.value.operand2,
             operator = _gameState.value.operator,
@@ -165,28 +167,28 @@ class GameViewModel(
         val enabledOperators: MutableMap<Operation, Pair<Float, Float>> = mutableMapOf()
 
         val settingsState = settingsViewModel.settingsState.value
-        if (settingsState.isPlusEnabled) {
+        if (settingsState.isAdditionEnabled) {
             enabledOperators.put(
                 Operation.ADDITION,
-                settingsViewModel.settingsState.value.plusRange
+                settingsViewModel.settingsState.value.additionRange
             )
         }
-        if (settingsState.isMinusEnabled) {
+        if (settingsState.isSubtractionEnabled) {
             enabledOperators.put(
                 Operation.SUBTRACTION,
-                settingsViewModel.settingsState.value.minusRange
+                settingsViewModel.settingsState.value.subtractionRange
             )
         }
-        if (settingsState.isMultiplyEnabled) {
+        if (settingsState.isMultiplicationEnabled) {
             enabledOperators.put(
                 Operation.MULTIPLICATION,
-                settingsViewModel.settingsState.value.multiplyRange
+                settingsViewModel.settingsState.value.multiplicationRange
             )
         }
-        if (settingsState.isDivideEnabled) {
+        if (settingsState.isDivisionEnabled) {
             enabledOperators.put(
                 Operation.DIVISION,
-                settingsViewModel.settingsState.value.divideRange
+                settingsViewModel.settingsState.value.divisionRange
             )
         }
 

@@ -38,7 +38,7 @@ import com.helddertierwelt.mentalmath.data.entity.SubtractionTask
     ],
     version = 2
 )
-abstract class AppDatabase : RoomDatabase() {
+abstract class MathTaskDatabase : RoomDatabase() {
     abstract fun additionTaskDao(): AdditionTaskDao
     abstract fun subtractionTaskDao(): SubtractionTaskDao
     abstract fun multiplicationTaskDao(): MultiplicationTaskDao

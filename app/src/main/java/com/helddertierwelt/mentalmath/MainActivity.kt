@@ -41,34 +41,28 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.helddertierwelt.mentalmath.data.dao.AdditionTaskDao
-import com.helddertierwelt.mentalmath.data.dao.DivisionTaskDao
-import com.helddertierwelt.mentalmath.data.dao.MultiplicationTaskDao
-import com.helddertierwelt.mentalmath.data.dao.SubtractionTaskDao
 import com.helddertierwelt.mentalmath.data.datastore.SettingsRepository
-import com.helddertierwelt.mentalmath.data.db.DbImporter
 import com.helddertierwelt.mentalmath.presentation.screen.Navigation
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModelFactory
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val gameViewModel: GameViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -82,60 +76,33 @@ class MainActivity : ComponentActivity() {
                 }
             }
             val navController = rememberNavController()
-            val context = applicationContext
-            val dbImporter = DbImporter(context)
-            var additionDao by remember { mutableStateOf<AdditionTaskDao?>(null) }
-            var subtractionDao by remember { mutableStateOf<SubtractionTaskDao?>(null) }
-            var multiplicationDao by remember { mutableStateOf<MultiplicationTaskDao?>(null) }
-            var divisionDao by remember { mutableStateOf<DivisionTaskDao?>(null) }
+            lifecycle.addObserver(gameViewModel)
+            MentalMathTheme(themeMode = settingsViewModel.settingsState.value.themeMode) {
+                val darkTheme = when (settingsViewModel.settingsState.value.themeMode) {
+                    ThemeMode.DARK -> true
+                    ThemeMode.LIGHT -> false
+                    ThemeMode.SYSTEM -> isSystemInDarkTheme()
+                }
+                val systemUiController = rememberSystemUiController()
+                val navBarColor = MaterialTheme.colorScheme.background
 
-            LaunchedEffect(Unit) {
-                val db = dbImporter.importDb()
-                additionDao = db.additionTaskDao()
-                subtractionDao = db.subtractionTaskDao()
-                multiplicationDao = db.multiplicationTaskDao()
-                divisionDao = db.divisionTaskDao()
-            }
-
-            if (additionDao != null && subtractionDao != null && multiplicationDao != null && divisionDao != null) {
-                val gameViewModel: GameViewModel = viewModel(
-                    factory = GameViewModelFactory(
-                        additionDao!!,
-                        subtractionDao!!,
-                        multiplicationDao!!,
-                        divisionDao!!
+                SideEffect {
+                    systemUiController.setNavigationBarColor(
+                        color = navBarColor,
+                        darkIcons = !darkTheme
                     )
-                )
-                lifecycle.addObserver(gameViewModel)
-                MentalMathTheme(themeMode = settingsViewModel.settingsState.value.themeMode) {
-                    val darkTheme = when (settingsViewModel.settingsState.value.themeMode) {
-                        ThemeMode.DARK -> true
-                        ThemeMode.LIGHT -> false
-                        ThemeMode.SYSTEM -> isSystemInDarkTheme()
-                    }
-                    val systemUiController = rememberSystemUiController()
-                    val navBarColor = MaterialTheme.colorScheme.background
-
-                    SideEffect {
-                        systemUiController.setNavigationBarColor(
-                            color = navBarColor,
-                            darkIcons = !darkTheme
-                        )
-                        systemUiController.setStatusBarColor(
-                            color = Color.Transparent,
-                            darkIcons = !darkTheme
-                        )
-                    }
-
-                    Navigation(
-                        settingsViewModel = settingsViewModel,
-                        gameViewModel = gameViewModel,
-                        navController = navController
+                    systemUiController.setStatusBarColor(
+                        color = Color.Transparent,
+                        darkIcons = !darkTheme
                     )
                 }
-            } else {
-                Text("Load math exercise database")
+
+                Navigation(
+                    settingsViewModel = settingsViewModel,
+                    navController = navController
+                )
             }
+
         }
     }
 }

@@ -52,25 +52,25 @@ class SettingsViewModel(
 
     fun updatePlusRange(plusRange: ClosedFloatingPointRange<Float>) {
         _settingsState.value =
-            _settingsState.value.copy(plusRange = plusRange.start to plusRange.endInclusive)
+            _settingsState.value.copy(additionRange = plusRange.start to plusRange.endInclusive)
         saveState()
     }
 
     fun updateMinusRange(minusRange: ClosedFloatingPointRange<Float>) {
         _settingsState.value =
-            _settingsState.value.copy(minusRange = minusRange.start to minusRange.endInclusive)
+            _settingsState.value.copy(subtractionRange = minusRange.start to minusRange.endInclusive)
         saveState()
     }
 
     fun updateMultiplyRange(multiplyRange: ClosedFloatingPointRange<Float>) {
         _settingsState.value =
-            _settingsState.value.copy(multiplyRange = multiplyRange.start to multiplyRange.endInclusive)
+            _settingsState.value.copy(multiplicationRange = multiplyRange.start to multiplyRange.endInclusive)
         saveState()
     }
 
     fun updateDivideRange(divideRange: ClosedFloatingPointRange<Float>) {
         _settingsState.value =
-            _settingsState.value.copy(divideRange = divideRange.start to divideRange.endInclusive)
+            _settingsState.value.copy(divisionRange = divideRange.start to divideRange.endInclusive)
         saveState()
     }
 
@@ -82,25 +82,25 @@ class SettingsViewModel(
 
     fun togglePlus() {
         _settingsState.value =
-            _settingsState.value.copy(isPlusEnabled = !_settingsState.value.isPlusEnabled)
+            _settingsState.value.copy(isAdditionEnabled = !_settingsState.value.isAdditionEnabled)
         saveState()
     }
 
     fun toggleMinus() {
         _settingsState.value =
-            _settingsState.value.copy(isMinusEnabled = !_settingsState.value.isMinusEnabled)
+            _settingsState.value.copy(isSubtractionEnabled = !_settingsState.value.isSubtractionEnabled)
         saveState()
     }
 
     fun toggleMultiply() {
         _settingsState.value =
-            _settingsState.value.copy(isMultiplyEnabled = !_settingsState.value.isMultiplyEnabled)
+            _settingsState.value.copy(isMultiplicationEnabled = !_settingsState.value.isMultiplicationEnabled)
         saveState()
     }
 
     fun toggleDivide() {
         _settingsState.value =
-            _settingsState.value.copy(isDivideEnabled = !_settingsState.value.isDivideEnabled)
+            _settingsState.value.copy(isDivisionEnabled = !_settingsState.value.isDivisionEnabled)
         saveState()
     }
 

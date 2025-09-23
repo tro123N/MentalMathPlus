@@ -30,18 +30,18 @@ fun SettingsState.toProto(): SettingsStateProto {
     return SettingsStateProto.newBuilder()
         .setIsModeEnabled(isModeEnabled)
         .setLimit(limit)
-        .setPlusMin(plusRange.first)
-        .setPlusMax(plusRange.second)
-        .setMinusMin(minusRange.first)
-        .setMinusMax(minusRange.second)
-        .setMultiplyMin(multiplyRange.first)
-        .setMultiplyMax(multiplyRange.second)
-        .setDivideMin(divideRange.first)
-        .setDivideMax(divideRange.second)
-        .setIsPlusEnabled(isPlusEnabled)
-        .setIsMinusEnabled(isMinusEnabled)
-        .setIsMultiplyEnabled(isMultiplyEnabled)
-        .setIsDivideEnabled(isDivideEnabled)
+        .setPlusMin(additionRange.first)
+        .setPlusMax(additionRange.second)
+        .setMinusMin(subtractionRange.first)
+        .setMinusMax(subtractionRange.second)
+        .setMultiplyMin(multiplicationRange.first)
+        .setMultiplyMax(multiplicationRange.second)
+        .setDivideMin(divisionRange.first)
+        .setDivideMax(divisionRange.second)
+        .setIsPlusEnabled(isAdditionEnabled)
+        .setIsMinusEnabled(isSubtractionEnabled)
+        .setIsMultiplyEnabled(isMultiplicationEnabled)
+        .setIsDivideEnabled(isDivisionEnabled)
         .setThemeMode(
             when (themeMode) {
                 ThemeMode.SYSTEM -> SYSTEM
@@ -56,14 +56,14 @@ fun SettingsStateProto.toSettingsState(): SettingsState {
     return SettingsState(
         isModeEnabled = isModeEnabled,
         limit = limit,
-        plusRange = plusMin to plusMax,
-        minusRange = minusMin to minusMax,
-        multiplyRange = multiplyMin to multiplyMax,
-        divideRange = divideMin to divideMax,
-        isPlusEnabled = isPlusEnabled,
-        isMinusEnabled = isMinusEnabled,
-        isMultiplyEnabled = isMultiplyEnabled,
-        isDivideEnabled = isDivideEnabled,
+        additionRange = plusMin to plusMax,
+        subtractionRange = minusMin to minusMax,
+        multiplicationRange = multiplyMin to multiplyMax,
+        divisionRange = divideMin to divideMax,
+        isAdditionEnabled = isPlusEnabled,
+        isSubtractionEnabled = isMinusEnabled,
+        isMultiplicationEnabled = isMultiplyEnabled,
+        isDivisionEnabled = isDivideEnabled,
         themeMode = when (themeMode) {
             LIGHT -> ThemeMode.LIGHT
             DARK -> ThemeMode.DARK

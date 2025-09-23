@@ -33,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.red
@@ -45,10 +46,11 @@ import kotlin.math.roundToInt
 fun GameTopBar(
     navController: NavController,
     settingsViewModel: SettingsViewModel,
-    gameViewModel: GameViewModel,
     iconSize: Dp,
     fontSize: TextUnit
 ) {
+
+    val gameViewModel: GameViewModel = viewModel()
     TopAppBar(
         title = {
         },
@@ -89,7 +91,6 @@ fun GameTopBar(
                     fontSize = fontSize,
                     navController = navController,
                     time = settingsViewModel.settingsState.value.limit.toLong() * 60000L,
-                    gameViewModel = gameViewModel
                 )
             }
         },

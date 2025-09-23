@@ -47,6 +47,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.component.game.BackspaceButton
@@ -65,11 +66,11 @@ import kotlin.math.roundToInt
 @Composable
 fun GameScreen(
     navController: NavController,
-    gameViewModel: GameViewModel,
     settingsViewModel: SettingsViewModel,
     modifier: Modifier = Modifier
 ) {
 
+    val gameViewModel: GameViewModel = viewModel()
     LaunchedEffect(Unit) {
         gameViewModel.resumeTimerIfNeeded()
     }
@@ -100,7 +101,6 @@ fun GameScreen(
                 GameTopBar(
                     navController = navController,
                     settingsViewModel = settingsViewModel,
-                    gameViewModel = gameViewModel,
                     iconSize = iconSizeClose,
                     fontSize = numberFontSize
                 )

@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import kotlin.math.ceil
@@ -39,9 +40,9 @@ fun CountdownTimer(
     fontSize: TextUnit,
     navController: NavController,
     time: Long,
-    gameViewModel: GameViewModel
 ) {
 
+    val gameViewModel: GameViewModel = viewModel()
     var timeLeft = time - gameViewModel.gamesState.value.activeTime
     var formattedTime by remember { mutableStateOf(formatTime(timeLeft)) }
 

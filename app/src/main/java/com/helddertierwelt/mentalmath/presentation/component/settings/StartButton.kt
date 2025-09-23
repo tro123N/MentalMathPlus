@@ -48,10 +48,10 @@ fun StartButton(
 ) {
 
     val settingsState = settingsViewModel.settingsState.value
-    val isEnabled: Boolean = settingsState.isPlusEnabled ||
-            settingsState.isMinusEnabled ||
-            settingsState.isMultiplyEnabled ||
-            settingsState.isDivideEnabled
+    val isEnabled: Boolean = settingsState.isAdditionEnabled ||
+            settingsState.isSubtractionEnabled ||
+            settingsState.isMultiplicationEnabled ||
+            settingsState.isDivisionEnabled
 
     Button(
         enabled = isEnabled,

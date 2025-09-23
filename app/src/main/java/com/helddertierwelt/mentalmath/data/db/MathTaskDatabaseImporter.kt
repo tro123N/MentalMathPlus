@@ -23,9 +23,9 @@ import androidx.room.Room
 import java.io.File
 import java.io.FileOutputStream
 
-class DbImporter(private val context: Context) {
+class MathTaskDatabaseImporter(private val context: Context) {
 
-    fun importDb(): AppDatabase {
+    fun importDb(): MathTaskDatabase {
 
         val dbFileName = "math_tasks.db"
         val dbPath = context.filesDir.absolutePath + "/$dbFileName"
@@ -41,7 +41,7 @@ class DbImporter(private val context: Context) {
 
         return Room.databaseBuilder(
             context.applicationContext,
-            AppDatabase::class.java,
+            MathTaskDatabase::class.java,
             dbFile.absolutePath
         ).createFromFile(dbFile)
             .build()

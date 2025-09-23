@@ -42,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
@@ -54,13 +55,13 @@ import kotlin.math.pow
 
 @Composable
 fun SettingsAndStatsCard(
-    gameViewModel: GameViewModel,
     settingsViewModel: SettingsViewModel,
     operatorSize: TextUnit,
     fontSize: TextUnit,
     iconSize: Dp,
     modifier: Modifier
 ) {
+    val gameViewModel: GameViewModel = viewModel()
     val gameState = gameViewModel.gamesState.value
     val totalTime = gameState.totalTime
     val percentage = gameState.correctAnswers.toFloat() /
@@ -120,32 +121,32 @@ fun SettingsAndStatsCard(
                 SettingsOperatorColumn(
                     operatorSize = operatorSize,
                     fontSize = fontSize,
-                    operatorEnabled = settingsViewModel.settingsState.value.isPlusEnabled,
-                    difficultyRange = settingsViewModel.settingsState.value.plusRange,
+                    operatorEnabled = settingsViewModel.settingsState.value.isAdditionEnabled,
+                    difficultyRange = settingsViewModel.settingsState.value.additionRange,
                     operatorId = R.string.add,
                     operatorColor = green
                 )
                 SettingsOperatorColumn(
                     operatorSize = operatorSize,
                     fontSize = fontSize,
-                    operatorEnabled = settingsViewModel.settingsState.value.isMinusEnabled,
-                    difficultyRange = settingsViewModel.settingsState.value.minusRange,
+                    operatorEnabled = settingsViewModel.settingsState.value.isSubtractionEnabled,
+                    difficultyRange = settingsViewModel.settingsState.value.subtractionRange,
                     operatorId = R.string.subtract,
                     operatorColor = red
                 )
                 SettingsOperatorColumn(
                     operatorSize = operatorSize,
                     fontSize = fontSize,
-                    operatorEnabled = settingsViewModel.settingsState.value.isMultiplyEnabled,
-                    difficultyRange = settingsViewModel.settingsState.value.multiplyRange,
+                    operatorEnabled = settingsViewModel.settingsState.value.isMultiplicationEnabled,
+                    difficultyRange = settingsViewModel.settingsState.value.multiplicationRange,
                     operatorId = R.string.multiply,
                     operatorColor = yellow
                 )
                 SettingsOperatorColumn(
                     operatorSize = operatorSize,
                     fontSize = fontSize,
-                    operatorEnabled = settingsViewModel.settingsState.value.isDivideEnabled,
-                    difficultyRange = settingsViewModel.settingsState.value.divideRange,
+                    operatorEnabled = settingsViewModel.settingsState.value.isDivisionEnabled,
+                    difficultyRange = settingsViewModel.settingsState.value.divisionRange,
                     operatorId = R.string.divide,
                     operatorColor = blue
                 )

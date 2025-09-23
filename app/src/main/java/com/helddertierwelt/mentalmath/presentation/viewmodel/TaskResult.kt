@@ -20,10 +20,11 @@ package com.helddertierwelt.mentalmath.presentation.viewmodel
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 data class TaskResult(
-    val taskNumber: Int,
     val operand1: Int,
     val operand2: Int,
     val operator: Operation,
