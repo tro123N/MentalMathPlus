@@ -24,7 +24,6 @@ import com.helddertierwelt.mentalmath.data.dao.AdditionTaskDao
 import com.helddertierwelt.mentalmath.data.dao.DivisionTaskDao
 import com.helddertierwelt.mentalmath.data.dao.MultiplicationTaskDao
 import com.helddertierwelt.mentalmath.data.dao.SubtractionTaskDao
-import com.helddertierwelt.mentalmath.data.repository.MathTaskRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -65,13 +64,5 @@ object MathTaskDatabaseModule {
     @Provides
     fun provideDivisionTaskDao(database: MathTaskDatabase): DivisionTaskDao {
         return database.divisionTaskDao()
-    }
-
-    @Provides
-    fun provideMathTaskRepository(additionDao: AdditionTaskDao,
-                                  subtractionDao: SubtractionTaskDao,
-                                  multiplicationDao: MultiplicationTaskDao,
-                                  divisionDao: DivisionTaskDao,): MathTaskRepository {
-        return MathTaskRepository(additionDao,subtractionDao,multiplicationDao,divisionDao)
     }
 }
