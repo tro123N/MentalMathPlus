@@ -18,13 +18,9 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.settings
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,20 +49,25 @@ fun SettingsTopBar(
 ) {
     TopAppBar(
         title = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .clickable(onClick = onInfoClick)
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-            ) {
-                Image(
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(
+                    onClick = onInfoClick,
+                    modifier = Modifier.padding(end = 8.dp)
+                ) {
+                    Icon(
+                        painterResource(R.drawable.menu_24dp),
+                        contentDescription = "menu",
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(iconSize),
+                    )
+                }
+                /*Image(
                     painter = painterResource(id = R.drawable.mental_math),
                     contentDescription = "App Logo",
                     modifier = Modifier
                         .size(appSymbolSize)
                         .padding(bottom = 1.dp)
-                )
-                Spacer(Modifier.width(8.dp))
+                )*/
                 Text(text = stringResource(id = titleId), fontSize = titleFontSize)
             }
         },

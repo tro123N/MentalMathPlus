@@ -65,18 +65,6 @@ fun SettingsAndStatsCard(
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
     val lastGameRecord = statisticsViewModel.lastGameRecord.collectAsState().value
 
-    val activeScore = String.format(
-        Locale.getDefault(),
-        "%s:  %.2f",
-        stringResource(R.string.active_score),
-        lastGameRecord.activeScore
-    )
-    val totalScore = String.format(
-        Locale.getDefault(),
-        "%s:  %.2f",
-        stringResource(R.string.total_score),
-        lastGameRecord.totalScore
-    )
     Card(
         shape = RoundedCornerShape(32.dp),
         modifier = modifier
@@ -199,6 +187,13 @@ fun SettingsAndStatsCard(
                 color = MaterialTheme.colorScheme.background
             )
             Spacer(modifier = modifier.height(8.dp))
+
+            val activeScore = String.format(
+                Locale.getDefault(),
+                "%s:  %.2f",
+                stringResource(R.string.active_score),
+                lastGameRecord.activeScore
+            )
             Row(
                 modifier = modifier
                     .fillMaxWidth()
@@ -218,6 +213,13 @@ fun SettingsAndStatsCard(
                     tint = yellow
                 )
             }
+
+            val totalScore = String.format(
+                Locale.getDefault(),
+                "%s:  %.2f",
+                stringResource(R.string.total_score),
+                lastGameRecord.totalScore
+            )
             Row(
                 modifier = modifier
                     .fillMaxWidth()

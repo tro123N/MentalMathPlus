@@ -57,7 +57,7 @@ import com.helddertierwelt.mentalmath.presentation.component.game.EnterButton
 import com.helddertierwelt.mentalmath.presentation.component.game.GameTopBar
 import com.helddertierwelt.mentalmath.presentation.component.game.MathTaskDisplay
 import com.helddertierwelt.mentalmath.presentation.component.game.NumberButton
-import com.helddertierwelt.mentalmath.presentation.component.game.QuitGamePopUp
+import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
@@ -89,8 +89,8 @@ fun GameScreen(
     val screenHeight = with(density) { containerSizePx.height.toDp() }
 
     val roundButtonSize = (0.10f * screenHeight.value).dp
-    val titleFontSize = (0.032f * screenHeight.value).sp
-    val textLabelFontSize = (0.0180f * screenHeight.value).sp
+    val titleFontSize = (0.031f * screenHeight.value).sp
+    val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
     val numberFontSize = (0.040f * screenHeight.value).sp
     val taskFontSize = (0.057f * screenHeight.value).sp
     val iconSizeClose = (0.057f * screenHeight.value).dp
@@ -260,8 +260,8 @@ fun GameScreen(
     }
 
     if (showDialog) {
-        QuitGamePopUp(
-            onDismissRequest = {},
+        PopUp(
+            onDismissRequest = {showDialog = false},
             onConfirm = {
                 showDialog = false
                 gameViewModel.endGame()
@@ -272,7 +272,11 @@ fun GameScreen(
             },
             onCancel = { showDialog = false },
             titleSize = titleFontSize,
-            descriptionSize = textLabelFontSize
+            descriptionSize = popUpDescriptionFontSize,
+            title = "Quit Game?",
+            description = "Your current progress will be lost.",
+            confirmationText = "Quit",
+            cancelText = "Continue"
         )
     }
 }

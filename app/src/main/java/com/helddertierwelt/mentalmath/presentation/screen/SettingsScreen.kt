@@ -31,6 +31,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -43,12 +47,13 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.component.settings.CustomRangeSlider
 import com.helddertierwelt.mentalmath.presentation.component.settings.CustomSlider
+import com.helddertierwelt.mentalmath.presentation.component.settings.MenuSideSheet
 import com.helddertierwelt.mentalmath.presentation.component.settings.ModeButton
 import com.helddertierwelt.mentalmath.presentation.component.settings.OperatorButton
 import com.helddertierwelt.mentalmath.presentation.component.settings.SettingsTopBar
-import com.helddertierwelt.mentalmath.presentation.component.settings.SideSheetLeft
 import com.helddertierwelt.mentalmath.presentation.component.settings.StartButton
 import com.helddertierwelt.mentalmath.presentation.component.settings.TextLabel
 import com.helddertierwelt.mentalmath.presentation.theme.blue
@@ -84,12 +89,14 @@ fun SettingsScreen(
     val startButtonFontSize = (0.038f * screenHeight.value).sp
     val titleFontSize = (0.031f * screenHeight.value).sp
     val textLabelFontSize = (0.024f * screenHeight.value).sp
+    val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
     val startIconSize = (0.057f * screenHeight.value).dp
     val modeIconSize = (0.048f * screenHeight.value).dp
     val columnPadding = (0.028f * screenHeight.value).dp
     val infoIconSize = (0.038f * screenHeight.value).dp
     val appSymbolSizeTopBar = (0.024f * screenHeight.value).dp
 
+    var showDialog by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             SettingsTopBar(
@@ -255,16 +262,37 @@ fun SettingsScreen(
                     screenHeight = screenHeight,
                     settingsViewModel = settingsViewModel
                 )*/
+                MenuSideSheet(
+                    isSheetOpen = settingsViewModel.isSheetOpen.value,
+                    screenWidth = screenWidth,
+                    onDismissRequested = { settingsViewModel.toggleSheetOpen() },
+                    screenHeight = screenHeight,
+                    settingsViewModel = settingsViewModel,
+                    onResetClick = { showDialog = true }
+                )
             }
         }
     )
-    SideSheetLeft(
-        isSheetOpen = settingsViewModel.isSheetOpen.value,
-        screenWidth = screenWidth,
-        onDismissRequested = { settingsViewModel.toggleSheetOpen() },
-        screenHeight = screenHeight,
-        settingsViewModel = settingsViewModel
-    )
+
+    if (showDialog) {
+        PopUp(
+            onDismissRequest = { showDialog = false },
+            onConfirm = {
+                showDialog = false
+                gameViewModel.resetAppData()
+                settingsViewModel.resetSettings()
+                settingsViewModel.toggleSheetOpen()
+            },
+            onCancel = { showDialog = false },
+            titleSize = titleFontSize,
+            descriptionSize = popUpDescriptionFontSize,
+            title = "Reset App?",
+            description = "Deletes all scores and settings.",
+            confirmationText = "Reset",
+            cancelText = "Cancel"
+        )
+    }
+
 
     BackHandler {
         (context as? android.app.Activity)?.moveTaskToBack(true)

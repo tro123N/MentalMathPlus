@@ -194,7 +194,7 @@ fun SideSheet(
                     )
 
                     // Source Code Link
-                    SideSheetLinkRow(
+                    LinkRow(
                         iconResId = R.drawable.code_24dp,
                         contentDescription = "Source Code",
                         text = "Source Code",
@@ -210,7 +210,7 @@ fun SideSheet(
                     )
 
                     // License Link
-                    SideSheetLinkRow(
+                    LinkRow(
                         iconResId = R.drawable.balance_24dp,
                         contentDescription = "License",
                         text = "License",
@@ -226,7 +226,7 @@ fun SideSheet(
                     )
 
                     // Privacy Policy Link
-                    SideSheetLinkRow(
+                    LinkRow(
                         iconResId = R.drawable.domino_mask_24dp,
                         contentDescription = "Privacy Policy",
                         text = "Privacy Policy",
@@ -242,7 +242,7 @@ fun SideSheet(
                     )
 
                     // Feedback Link
-                    SideSheetLinkRow(
+                    LinkRow(
                         iconResId = R.drawable.feedback_24dp,
                         contentDescription = "Feedback",
                         text = "Feed\u200Bback",
@@ -263,7 +263,7 @@ fun SideSheet(
                     )
 
                     // Donation Link
-                    SideSheetLinkRow(
+                    LinkRow(
                         iconResId = R.drawable.volunteer_activism_24dp,
                         contentDescription = "Donate",
                         text = "Donate",

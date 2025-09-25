@@ -25,8 +25,8 @@ import androidx.lifecycle.viewModelScope
 import com.helddertierwelt.mentalmath.data.repository.SettingsRepository
 import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
@@ -113,6 +113,11 @@ class SettingsViewModel @Inject constructor(
 
     fun setThemeMode(mode: ThemeMode) {
         _settingsState.value = _settingsState.value.copy(themeMode = mode)
+        saveState()
+    }
+
+    fun resetSettings() {
+        _settingsState.value = SettingsState()
         saveState()
     }
 

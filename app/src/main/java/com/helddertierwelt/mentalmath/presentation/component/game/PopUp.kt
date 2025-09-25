@@ -30,12 +30,16 @@ import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 
 @Composable
-fun QuitGamePopUp(
+fun PopUp(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     onCancel: () -> Unit,
     titleSize: TextUnit,
     descriptionSize: TextUnit,
+    title: String,
+    description: String,
+    confirmationText: String,
+    cancelText: String,
 ) {
     val quitColor = red
     val continueColor = green
@@ -43,32 +47,35 @@ fun QuitGamePopUp(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
-            Text(text = "Quit Game?", fontSize = titleSize)
+            Text(text = title, fontSize = titleSize)
         },
         text = {
-            Text(text = "Your current progress will be lost.", fontSize = descriptionSize)
+            Text(text = description, fontSize = descriptionSize)
         },
         confirmButton = {
             Button(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = quitColor,
-                    contentColor = MaterialTheme.colorScheme.primary
+                    contentColor = MaterialTheme.colorScheme.surface
                 ),
                 onClick = { onConfirm() }
             ) {
-                Text("Quit", fontSize = descriptionSize)
+                Text(confirmationText, fontSize = descriptionSize)
             }
         },
         dismissButton = {
             Button(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = continueColor,
-                    contentColor = MaterialTheme.colorScheme.primary
+                    contentColor = MaterialTheme.colorScheme.surface
                 ),
                 onClick = { onCancel() }
             ) {
-                Text("Continue", fontSize = descriptionSize)
+                Text(cancelText, fontSize = descriptionSize)
             }
-        }
+        },
+        containerColor = MaterialTheme.colorScheme.primary,
+        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+        textContentColor = MaterialTheme.colorScheme.onPrimary
     )
 }

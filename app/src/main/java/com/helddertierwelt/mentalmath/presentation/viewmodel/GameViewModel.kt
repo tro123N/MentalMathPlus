@@ -217,8 +217,7 @@ class GameViewModel @Inject constructor(
     fun endGame() {
         pauseTimer()
         saveGameRecord()
-        _gameState.value = _gameState.value.copy(isGameStarted = false)
-        saveState()
+        resetGame()
     }
 
     private fun saveGameRecord() {
@@ -261,6 +260,12 @@ class GameViewModel @Inject constructor(
     fun resetGame() {
         _gameState.value = GameState()
         saveState()
+    }
+
+    fun resetAppData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            gameRecordRepository.deleteAllGameRecords()
+        }
     }
 
     fun setStartTimestamp() {
