@@ -236,7 +236,7 @@ fun SettingsScreen(
                     StartButton(
                         onClick = {
                             gameViewModel.resetGame()
-                            gameViewModel.setEnabledOperators(settingsViewModel)
+                            gameViewModel.setSettings(settingsViewModel)
                             navController.navigate("game") {
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true

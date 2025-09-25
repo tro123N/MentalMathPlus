@@ -23,6 +23,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class GameState(
+
+    val isModeEnabled: Boolean = false,
+    val modeLimit: Int = 1,
     val operand1: Int = 1,
     val operand2: Int = 1,
     val operator: Operation = Operation.ADDITION,

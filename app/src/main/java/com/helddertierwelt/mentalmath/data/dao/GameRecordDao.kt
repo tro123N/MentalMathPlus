@@ -47,17 +47,17 @@ interface GameRecordDao {
         divisionRangeEnd = :divisionRangeEnd
         """
     )
-    suspend fun findMatchingGameScores(
+    suspend fun findGameRecordsBySettings(
         isModeEnabled: Boolean,
-        modeLimit: Float,
-        additionRangeStart: Float,
-        additionRangeEnd: Float,
-        subtractionRangeStart: Float,
-        subtractionRangeEnd: Float,
-        multiplicationRangeStart: Float,
-        multiplicationRangeEnd: Float,
-        divisionRangeStart: Float,
-        divisionRangeEnd: Float
+        modeLimit: Int,
+        additionRangeStart: Int,
+        additionRangeEnd: Int,
+        subtractionRangeStart: Int,
+        subtractionRangeEnd: Int,
+        multiplicationRangeStart: Int,
+        multiplicationRangeEnd: Int,
+        divisionRangeStart: Int,
+        divisionRangeEnd: Int
     ): List<GameRecord>
 
     @Query("DELETE FROM game_records")

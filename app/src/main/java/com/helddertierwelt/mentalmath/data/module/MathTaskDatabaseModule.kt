@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.data.db
+package com.helddertierwelt.mentalmath.data.module
 
 import android.content.Context
 import androidx.room.Room
@@ -24,11 +24,14 @@ import com.helddertierwelt.mentalmath.data.dao.AdditionTaskDao
 import com.helddertierwelt.mentalmath.data.dao.DivisionTaskDao
 import com.helddertierwelt.mentalmath.data.dao.MultiplicationTaskDao
 import com.helddertierwelt.mentalmath.data.dao.SubtractionTaskDao
+import com.helddertierwelt.mentalmath.data.db.MathTaskDatabase
+import com.helddertierwelt.mentalmath.data.repository.MathTaskRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -64,5 +67,21 @@ object MathTaskDatabaseModule {
     @Provides
     fun provideDivisionTaskDao(database: MathTaskDatabase): DivisionTaskDao {
         return database.divisionTaskDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMathTaskRepository(
+        additionTaskDao: AdditionTaskDao,
+        subtractionTaskDao: SubtractionTaskDao,
+        multiplicationTaskDao: MultiplicationTaskDao,
+        divisionTaskDao: DivisionTaskDao
+    ): MathTaskRepository {
+        return MathTaskRepository(
+            additionTaskDao,
+            subtractionTaskDao,
+            multiplicationTaskDao,
+            divisionTaskDao
+        )
     }
 }

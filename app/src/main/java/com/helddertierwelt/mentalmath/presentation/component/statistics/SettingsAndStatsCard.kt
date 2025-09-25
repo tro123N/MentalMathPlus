@@ -36,6 +36,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -50,10 +51,8 @@ import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
-import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import java.util.Locale
-import kotlin.math.pow
 
 @Composable
 fun SettingsAndStatsCard(
@@ -62,39 +61,21 @@ fun SettingsAndStatsCard(
     iconSize: Dp,
     modifier: Modifier
 ) {
-
     val activity = LocalActivity.current as ViewModelStoreOwner
-    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
-    val gameViewModel: GameViewModel = hiltViewModel(activity)
-    val gameState = gameViewModel.gamesState.value
-    val totalTime = gameState.totalTime
-    val percentage = gameState.correctAnswers.toFloat() /
-            gameState.totalAnswers.toFloat() * 100f
-    val percentageString = if (percentage.isNaN()) "-" else String.format(
-        Locale.getDefault(),
-        "%.1f",
-        percentage
-    )
-    val correctPerMinute = String.format(
-        Locale.getDefault(),
-        "%.1f",
-        gameState.correctAnswers.toFloat() /
-                (gameState.activeTime.toFloat() / 60000f)
-    )
-    val activeScoreValue = 10f * gameState.correctAnswers.toFloat().pow(2f) /
-            ((gameState.activeTime.toFloat() / 60000f) * maxOf(
-                1f,
-                gameState.totalAnswers.toFloat()
-            ))
+    val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
+    val lastGameRecord = statisticsViewModel.lastGameRecord.collectAsState().value
+
     val activeScore = String.format(
-        Locale.getDefault(), "%s:  %.2f", stringResource(R.string.active_score),
-        activeScoreValue
+        Locale.getDefault(),
+        "%s:  %.2f",
+        stringResource(R.string.active_score),
+        lastGameRecord.activeScore
     )
-    val totalScoreValue = 10f * gameState.correctAnswers.toFloat().pow(2f) /
-            ((totalTime.toFloat() / 60000f) * maxOf(1f, gameState.totalAnswers.toFloat()))
     val totalScore = String.format(
-        Locale.getDefault(), "%s:  %.2f", stringResource(R.string.total_score),
-        totalScoreValue
+        Locale.getDefault(),
+        "%s:  %.2f",
+        stringResource(R.string.total_score),
+        lastGameRecord.totalScore
     )
     Card(
         shape = RoundedCornerShape(32.dp),
@@ -117,40 +98,36 @@ fun SettingsAndStatsCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 SettingsModeColumn(
-                    modeEnabled = settingsViewModel.settingsState.value.isModeEnabled,
+                    modeEnabled = lastGameRecord.isModeEnabled,
                     fontSize = fontSize,
                     iconSize = iconSize,
-                    limit = settingsViewModel.settingsState.value.limit.toInt()
+                    limit = lastGameRecord.modeLimit.toInt()
                 )
                 SettingsOperatorColumn(
                     operatorSize = operatorSize,
                     fontSize = fontSize,
-                    operatorEnabled = settingsViewModel.settingsState.value.isAdditionEnabled,
-                    difficultyRange = settingsViewModel.settingsState.value.additionRange,
+                    difficultyRange = lastGameRecord.additionRangeStart to lastGameRecord.additionRangeEnd,
                     operatorId = R.string.add,
                     operatorColor = green
                 )
                 SettingsOperatorColumn(
                     operatorSize = operatorSize,
                     fontSize = fontSize,
-                    operatorEnabled = settingsViewModel.settingsState.value.isSubtractionEnabled,
-                    difficultyRange = settingsViewModel.settingsState.value.subtractionRange,
+                    difficultyRange = lastGameRecord.subtractionRangeStart to lastGameRecord.subtractionRangeEnd,
                     operatorId = R.string.subtract,
                     operatorColor = red
                 )
                 SettingsOperatorColumn(
                     operatorSize = operatorSize,
                     fontSize = fontSize,
-                    operatorEnabled = settingsViewModel.settingsState.value.isMultiplicationEnabled,
-                    difficultyRange = settingsViewModel.settingsState.value.multiplicationRange,
+                    difficultyRange = lastGameRecord.multiplicationRangeStart to lastGameRecord.multiplicationRangeEnd,
                     operatorId = R.string.multiply,
                     operatorColor = yellow
                 )
                 SettingsOperatorColumn(
                     operatorSize = operatorSize,
                     fontSize = fontSize,
-                    operatorEnabled = settingsViewModel.settingsState.value.isDivisionEnabled,
-                    difficultyRange = settingsViewModel.settingsState.value.divisionRange,
+                    difficultyRange = lastGameRecord.divisionRangeStart to lastGameRecord.divisionRangeEnd,
                     operatorId = R.string.divide,
                     operatorColor = blue
                 )
@@ -166,20 +143,26 @@ fun SettingsAndStatsCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 StatsProgressColumn(
-                    modeEnabled = settingsViewModel.settingsState.value.isModeEnabled,
+                    modeEnabled = lastGameRecord.isModeEnabled,
                     fontSize = fontSize,
                     iconSize = iconSize,
-                    totalAnswers = gameState.totalAnswers,
-                    activeTime = gameState.activeTime
+                    totalAnswers = lastGameRecord.totalAnswers,
+                    activeTime = lastGameRecord.activeTime
                 )
                 StatsColumn(
                     fontSize = fontSize,
-                    statsText = gameState.correctAnswers.toString(),
+                    statsText = lastGameRecord.correctAnswers.toString(),
                     iconId = R.drawable.check_24dp,
                     iconSize = iconSize,
                     iconColor = green
                 )
 
+                val percentage = lastGameRecord.correctAnswers.toFloat() / lastGameRecord.totalAnswers.toFloat() * 100f
+                val percentageString = if (percentage.isNaN()) "-" else String.format(
+                    Locale.getDefault(),
+                    "%.1f",
+                    percentage
+                )
                 StatsColumn(
                     fontSize = fontSize,
                     statsText = percentageString,
@@ -188,6 +171,11 @@ fun SettingsAndStatsCard(
                     iconColor = green
                 )
 
+                val correctPerMinute = String.format(
+                    Locale.getDefault(),
+                    "%.1f",
+                    lastGameRecord.correctAnswers.toFloat() / (lastGameRecord.activeTime.toFloat() / 60000f)
+                )
                 StatsCorrectPerMinuteColumn(
                     iconId = R.drawable.check_24dp,
                     iconSize = iconSize,
@@ -200,7 +188,7 @@ fun SettingsAndStatsCard(
 
                 StatsColumn(
                     fontSize = fontSize,
-                    statsText = formatTime(totalTime),
+                    statsText = formatTime(lastGameRecord.totalTime),
                     iconId = R.drawable.access_time_24dp,
                     iconSize = iconSize,
                     iconColor = MaterialTheme.colorScheme.onPrimary

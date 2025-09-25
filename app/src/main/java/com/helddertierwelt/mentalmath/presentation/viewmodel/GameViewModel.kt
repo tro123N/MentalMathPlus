@@ -25,7 +25,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.data.entity.MathTask
+import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
 import com.helddertierwelt.mentalmath.data.repository.MathTaskRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -35,11 +37,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.pow
 import kotlin.random.Random
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
     private val mathTaskRepository: MathTaskRepository,
+    private val gameRecordRepository: GameRecordRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel(), DefaultLifecycleObserver {
 
@@ -163,10 +167,9 @@ class GameViewModel @Inject constructor(
         saveState()
     }
 
-    fun setEnabledOperators(settingsViewModel: SettingsViewModel) {
-        val enabledOperators: MutableMap<Operation, Pair<Float, Float>> = mutableMapOf()
-
+    fun setSettings(settingsViewModel: SettingsViewModel) {
         val settingsState = settingsViewModel.settingsState.value
+        val enabledOperators: MutableMap<Operation, Pair<Float, Float>> = mutableMapOf()
         if (settingsState.isAdditionEnabled) {
             enabledOperators.put(
                 Operation.ADDITION,
@@ -192,7 +195,13 @@ class GameViewModel @Inject constructor(
             )
         }
 
-        _gameState.value = _gameState.value.copy(enabledOperators = enabledOperators)
+        _gameState.value = _gameState.value.copy(
+            enabledOperators = enabledOperators,
+            isModeEnabled = settingsState.isModeEnabled,
+            modeLimit = settingsState.limit.toInt()
+        )
+
+
         saveState()
     }
 
@@ -207,8 +216,46 @@ class GameViewModel @Inject constructor(
 
     fun endGame() {
         pauseTimer()
+        saveGameRecord()
         _gameState.value = _gameState.value.copy(isGameStarted = false)
         saveState()
+    }
+
+    private fun saveGameRecord() {
+
+        val activeScoreValue = 10f * _gameState.value.correctAnswers.toFloat().pow(2f) /
+                ((_gameState.value.activeTime.toFloat() / 60000f) * maxOf(
+                    1f,
+                    _gameState.value.totalAnswers.toFloat()
+                ))
+
+        val totalScoreValue = 10f * _gameState.value.correctAnswers.toFloat().pow(2f) /
+                ((_gameState.value.totalTime.toFloat() / 60000f) * maxOf(1f, _gameState.value.totalAnswers.toFloat()))
+
+        val lastGame = GameRecord(
+            isModeEnabled = _gameState.value.isModeEnabled,
+            modeLimit = _gameState.value.modeLimit,
+            additionRangeStart = _gameState.value.enabledOperators[Operation.ADDITION]?.first?.toInt()?: 0,
+            additionRangeEnd = _gameState.value.enabledOperators[Operation.ADDITION]?.second?.toInt()?: 0,
+            subtractionRangeStart = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.first?.toInt()?: 0,
+            subtractionRangeEnd = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.second?.toInt()?: 0,
+            multiplicationRangeStart = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.first?.toInt()?: 0,
+            multiplicationRangeEnd = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.second?.toInt()?: 0,
+            divisionRangeStart = _gameState.value.enabledOperators[Operation.DIVISION]?.first?.toInt()?: 0,
+            divisionRangeEnd = _gameState.value.enabledOperators[Operation.DIVISION]?.second?.toInt()?: 0,
+            totalAnswers = _gameState.value.totalAnswers,
+            correctAnswers = _gameState.value.correctAnswers,
+            totalTime = _gameState.value.totalTime,
+            activeTime = _gameState.value.activeTime,
+            activeScore = activeScoreValue,
+            totalScore = totalScoreValue,
+            taskResults = _gameState.value.tasks
+        )
+
+        gameRecordRepository.setLastGameRecord(lastGame)
+        viewModelScope.launch(Dispatchers.IO) {
+            gameRecordRepository.insertGameRecord(lastGame)
+        }
     }
 
     fun resetGame() {

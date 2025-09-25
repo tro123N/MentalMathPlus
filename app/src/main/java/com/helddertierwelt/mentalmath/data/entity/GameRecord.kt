@@ -34,29 +34,28 @@ data class GameRecord(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
 
     val isModeEnabled: Boolean,
-    val modeLimit: Float,
+    val modeLimit: Int,
 
-    val additionRangeStart: Float,
-    val additionRangeEnd: Float,
+    val additionRangeStart: Int,
+    val additionRangeEnd: Int,
 
-    val subtractionRangeStart: Float,
-    val subtractionRangeEnd: Float,
+    val subtractionRangeStart: Int,
+    val subtractionRangeEnd: Int,
 
-    val multiplicationRangeStart: Float,
-    val multiplicationRangeEnd: Float,
+    val multiplicationRangeStart: Int,
+    val multiplicationRangeEnd: Int,
 
-    val divisionRangeStart: Float,
-    val divisionRangeEnd: Float,
+    val divisionRangeStart: Int,
+    val divisionRangeEnd: Int,
 
-    val totalTasks: Int,
+    val totalAnswers: Int,
     val correctAnswers: Int,
 
     val activeTime: Long,
     val totalTime: Long,
 
-    val activeScore: Int,
-    val totalScore: Int,
-
+    val activeScore: Float,
+    val totalScore: Float,
 
     val taskResults: List<TaskResult>
 )

@@ -34,8 +34,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SettingsOperatorColumn(
     operatorId: Int,
-    operatorEnabled: Boolean,
-    difficultyRange: Pair<Float, Float>,
+    difficultyRange: Pair<Int, Int>,
     operatorSize: TextUnit,
     fontSize: TextUnit,
     operatorColor: Color,
@@ -46,14 +45,14 @@ fun SettingsOperatorColumn(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var range = "-"
-        if (operatorEnabled) {
+        if (difficultyRange.first >= 0 && difficultyRange.second >= 0) {
             range = if (difficultyRange.first == difficultyRange.second) {
-                difficultyRange.first.toInt().toString()
+                difficultyRange.first.toString()
             } else {
                 String.format(
                     "%s-%s",
-                    difficultyRange.first.toInt(),
-                    difficultyRange.second.toInt()
+                    difficultyRange.first,
+                    difficultyRange.second
                 )
             }
         }
