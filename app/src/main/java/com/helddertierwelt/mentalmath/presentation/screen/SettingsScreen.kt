@@ -53,6 +53,7 @@ import com.helddertierwelt.mentalmath.presentation.component.settings.CustomSlid
 import com.helddertierwelt.mentalmath.presentation.component.settings.MenuSideSheet
 import com.helddertierwelt.mentalmath.presentation.component.settings.ModeButton
 import com.helddertierwelt.mentalmath.presentation.component.settings.OperatorButton
+import com.helddertierwelt.mentalmath.presentation.component.settings.ScoreSideSheet
 import com.helddertierwelt.mentalmath.presentation.component.settings.SettingsTopBar
 import com.helddertierwelt.mentalmath.presentation.component.settings.StartButton
 import com.helddertierwelt.mentalmath.presentation.component.settings.TextLabel
@@ -93,18 +94,18 @@ fun SettingsScreen(
     val startIconSize = (0.057f * screenHeight.value).dp
     val modeIconSize = (0.048f * screenHeight.value).dp
     val columnPadding = (0.028f * screenHeight.value).dp
-    val infoIconSize = (0.038f * screenHeight.value).dp
+    val topBarIconSize = (0.038f * screenHeight.value).dp
     val appSymbolSizeTopBar = (0.024f * screenHeight.value).dp
 
     var showDialog by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             SettingsTopBar(
-                R.string.app_name,
-                titleFontSize,
-                onInfoClick = { settingsViewModel.toggleSheetOpen() },
-                infoIconSize,
-                appSymbolSizeTopBar
+                titleId = R.string.app_name,
+                titleFontSize = titleFontSize,
+                onMenuClick = { settingsViewModel.toggleMenuOpen() },
+                onScoreClick = { settingsViewModel.toggleScoreOpen() },
+                iconSize = topBarIconSize,
             )
         },
         content = { padding ->
@@ -255,19 +256,17 @@ fun SettingsScreen(
                         iconSize = startIconSize
                     )
                 }
-                /*SideSheet(
-                    isSheetOpen = settingsViewModel.isSheetOpen.value,
+                ScoreSideSheet(
+                    isSheetOpen = settingsViewModel.isScoreOpen.value,
                     screenWidth = screenWidth,
-                    onDismissRequested = { settingsViewModel.toggleSheetOpen() },
+                    onDismissRequested = { settingsViewModel.toggleScoreOpen() },
                     screenHeight = screenHeight,
-                    settingsViewModel = settingsViewModel
-                )*/
+                )
                 MenuSideSheet(
-                    isSheetOpen = settingsViewModel.isSheetOpen.value,
+                    isSheetOpen = settingsViewModel.isMenuOpen.value,
                     screenWidth = screenWidth,
-                    onDismissRequested = { settingsViewModel.toggleSheetOpen() },
+                    onDismissRequested = { settingsViewModel.toggleMenuOpen() },
                     screenHeight = screenHeight,
-                    settingsViewModel = settingsViewModel,
                     onResetClick = { showDialog = true }
                 )
             }
@@ -281,7 +280,7 @@ fun SettingsScreen(
                 showDialog = false
                 gameViewModel.resetAppData()
                 settingsViewModel.resetSettings()
-                settingsViewModel.toggleSheetOpen()
+                settingsViewModel.toggleMenuOpen()
             },
             onCancel = { showDialog = false },
             titleSize = titleFontSize,

@@ -19,6 +19,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.presentation.component.settings
 
 import android.content.Intent
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -28,10 +29,8 @@ import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -57,6 +56,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import kotlinx.coroutines.launch
@@ -68,20 +69,19 @@ fun MenuSideSheet(
     onDismissRequested: () -> Unit,
     onResetClick: () -> Unit,
     screenHeight: Dp,
-    settingsViewModel: SettingsViewModel
 ) {
+    val activity = LocalActivity.current as ViewModelStoreOwner
+    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     val screenWidthPx = with(LocalDensity.current) { screenWidth.toPx() }
-    with(LocalDensity.current) { screenHeight.toPx() }
     val sheetWidthFactor = 0.6f
     val minOffset = -screenWidthPx * sheetWidthFactor
     val maxOffset = 0f
     val offsetX = remember { Animatable(minOffset) }
     val overlayAlpha = 0.4f * (offsetX.value - minOffset) / (maxOffset - minOffset)
 
-    (0.032f * screenHeight.value).sp
     val fontSize = (0.020f * screenHeight.value).sp
     val iconSize = (0.032f * screenHeight.value).dp
     var isInteractionEnabled by remember { mutableStateOf(true) }
@@ -160,14 +160,13 @@ fun MenuSideSheet(
 
             Column(
                 modifier = Modifier
-                    .padding(16.dp),
+                    .padding(12.dp),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
 
                 // App Logo
-                LogoRow(0.6f, R.drawable.mental_math)
-                Spacer(modifier = Modifier.height(16.dp))
+                LogoRow(0.54f, R.drawable.mental_math)
 
                 // Dark Mode Toggle
                 DarkModeToggleRow(

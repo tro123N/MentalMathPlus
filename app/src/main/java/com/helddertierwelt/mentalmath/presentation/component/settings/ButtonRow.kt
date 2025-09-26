@@ -32,7 +32,7 @@ fun ButtonRow(
             .fillMaxWidth()
             .padding(16.dp, 8.dp)
             .clickable { onClick() },
-        verticalAlignment = Alignment.Bottom,
+        verticalAlignment = Alignment.CenterVertically,
 
     ) {
         Icon(

@@ -17,7 +17,7 @@ fun LogoRow(
 ) {
     Row(
         modifier = Modifier
-            .padding(16.dp, 8.dp),
+            .padding(16.dp, 24.dp),
         verticalAlignment = Alignment.CenterVertically,
         ) {
         Image(

@@ -18,25 +18,19 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.settings
 
-import android.content.Intent
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -53,27 +47,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
-import com.helddertierwelt.mentalmath.R
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.ViewModelStoreOwner
+import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun SideSheet(
+fun ScoreSideSheet(
     isSheetOpen: Boolean,
     screenWidth: Dp,
     onDismissRequested: () -> Unit,
     screenHeight: Dp,
-    settingsViewModel: SettingsViewModel
 ) {
-    val context = LocalContext.current
+    val activity = LocalActivity.current as ViewModelStoreOwner
+    val gameViewModel: GameViewModel = hiltViewModel(activity)
     val coroutineScope = rememberCoroutineScope()
 
     val screenWidthPx = with(LocalDensity.current) { screenWidth.toPx() }
@@ -158,142 +150,13 @@ fun SideSheet(
                 contentColor = MaterialTheme.colorScheme.onPrimary
             )
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.Center
+
+            Column(
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start
             ) {
-                Column(
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.Start
-                ) {
 
-                    // App Logo
-                    Spacer(modifier = Modifier.size(16.dp))
-                    Row(
-                        modifier = Modifier
-                            .padding(16.dp, 8.dp),
-                        verticalAlignment = Alignment.Top,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.mental_math),
-                            contentDescription = "App Logo",
-                            modifier = Modifier.fillMaxWidth(0.5f)
-                        )
-                    }
-                    Spacer(modifier = Modifier.size(16.dp))
 
-                    // Dark Mode Toggle
-                    DarkModeToggleRow(
-                        fontSize = fontSize,
-                        iconSize = iconSize,
-                        currentMode = settingsViewModel.settingsState.value.themeMode,
-                        onModeChange = { settingsViewModel.setThemeMode(it) }
-                    )
-
-                    // Source Code Link
-                    LinkRow(
-                        iconResId = R.drawable.code_24dp,
-                        contentDescription = "Source Code",
-                        text = "Source Code",
-                        fontSize = fontSize,
-                        iconSize = iconSize,
-                        intentProvider = {
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                "https://codeberg.org/HeldDerTierwelt/MentalMath".toUri()
-                            )
-                        },
-                        context = context
-                    )
-
-                    // License Link
-                    LinkRow(
-                        iconResId = R.drawable.balance_24dp,
-                        contentDescription = "License",
-                        text = "License",
-                        fontSize = fontSize,
-                        iconSize = iconSize,
-                        intentProvider = {
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                "https://codeberg.org/HeldDerTierwelt/MentalMath/src/branch/main/LICENSE.md".toUri()
-                            )
-                        },
-                        context = context
-                    )
-
-                    // Privacy Policy Link
-                    LinkRow(
-                        iconResId = R.drawable.domino_mask_24dp,
-                        contentDescription = "Privacy Policy",
-                        text = "Privacy Policy",
-                        fontSize = fontSize,
-                        iconSize = iconSize,
-                        intentProvider = {
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                "https://codeberg.org/HeldDerTierwelt/MentalMath/src/branch/main/PRIVACY_POLICY.md".toUri()
-                            )
-                        },
-                        context = context
-                    )
-
-                    // Feedback Link
-                    LinkRow(
-                        iconResId = R.drawable.feedback_24dp,
-                        contentDescription = "Feedback",
-                        text = "Feed\u200Bback",
-                        fontSize = fontSize,
-                        iconSize = iconSize,
-                        intentProvider = {
-                            Intent(Intent.ACTION_SEND)
-                                .apply {
-                                    selector = Intent(Intent.ACTION_SENDTO, "mailto:".toUri())
-                                    putExtra(
-                                        Intent.EXTRA_EMAIL,
-                                        arrayOf("mental_math_feedback@pm.me")
-                                    )
-                                    putExtra(Intent.EXTRA_SUBJECT, "Mental Math: Feedback")
-                                }
-                        },
-                        context = context
-                    )
-
-                    // Donation Link
-                    LinkRow(
-                        iconResId = R.drawable.volunteer_activism_24dp,
-                        contentDescription = "Donate",
-                        text = "Donate",
-                        fontSize = fontSize,
-                        iconSize = iconSize,
-                        intentProvider = {
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                "https://ko-fi.com/mental_math".toUri()
-                            )
-                        },
-                        context = context
-                    )
-
-                    // Recommendation Link
-                    /*SideSheetLinkRow(
-                        iconResId = R.drawable.thumb_up_24dp,
-                        contentDescription = "Recommend",
-                        text = "Recom\u200Bmend",
-                        fontSize = fontSize,
-                        iconSize = iconSize,
-                        intentProvider = {
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                "https://www.example.com".toUri()
-                            )
-                        },
-                        context = context
-                    )*/
-                }
             }
         }
     }

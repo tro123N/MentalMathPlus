@@ -37,7 +37,8 @@ class SettingsViewModel @Inject constructor(
     val settingsState: State<SettingsState> = _settingsState
 
     val isLoaded = mutableStateOf(false)
-    val isSheetOpen = mutableStateOf(false)
+    val isMenuOpen = mutableStateOf(false)
+    val isScoreOpen = mutableStateOf(false)
 
     init {
         viewModelScope.launch {
@@ -107,8 +108,18 @@ class SettingsViewModel @Inject constructor(
         saveState()
     }
 
-    fun toggleSheetOpen() {
-        isSheetOpen.value=!isSheetOpen.value
+    fun toggleMenuOpen() {
+        if (isScoreOpen.value) {
+            isScoreOpen.value=false
+        }
+        isMenuOpen.value=!isMenuOpen.value
+    }
+
+    fun toggleScoreOpen() {
+        if (isMenuOpen.value) {
+            isMenuOpen.value=false
+        }
+        isScoreOpen.value=!isScoreOpen.value
     }
 
     fun setThemeMode(mode: ThemeMode) {

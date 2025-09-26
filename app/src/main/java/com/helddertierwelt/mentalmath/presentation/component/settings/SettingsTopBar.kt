@@ -43,15 +43,15 @@ import com.helddertierwelt.mentalmath.R
 fun SettingsTopBar(
     titleId: Int,
     titleFontSize: TextUnit,
-    onInfoClick: () -> Unit,
+    onMenuClick: () -> Unit,
+    onScoreClick: () -> Unit,
     iconSize: Dp,
-    appSymbolSize: Dp,
 ) {
     TopAppBar(
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(
-                    onClick = onInfoClick,
+                    onClick = onMenuClick,
                     modifier = Modifier.padding(end = 8.dp)
                 ) {
                     Icon(
@@ -61,13 +61,6 @@ fun SettingsTopBar(
                         modifier = Modifier.size(iconSize),
                     )
                 }
-                /*Image(
-                    painter = painterResource(id = R.drawable.mental_math),
-                    contentDescription = "App Logo",
-                    modifier = Modifier
-                        .size(appSymbolSize)
-                        .padding(bottom = 1.dp)
-                )*/
                 Text(text = stringResource(id = titleId), fontSize = titleFontSize)
             }
         },
@@ -77,7 +70,7 @@ fun SettingsTopBar(
         ),
         actions = {
             IconButton(
-                onClick = {},
+                onClick = onScoreClick,
                 modifier = Modifier.padding(end = 16.dp)
             ) {
                 Icon(
