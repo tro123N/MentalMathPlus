@@ -208,7 +208,7 @@ fun SettingsAndStatsCard(
                 )
                 Icon(
                     painter = painterResource(R.drawable.star_24dp),
-                    contentDescription = "activeSoreIcon",
+                    contentDescription = "activeScoreIcon",
                     modifier = modifier.size(iconSize),
                     tint = yellow
                 )

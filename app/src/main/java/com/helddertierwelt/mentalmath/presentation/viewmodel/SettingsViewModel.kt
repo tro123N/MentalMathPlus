@@ -39,6 +39,7 @@ class SettingsViewModel @Inject constructor(
     val isLoaded = mutableStateOf(false)
     val isMenuOpen = mutableStateOf(false)
     val isScoreOpen = mutableStateOf(false)
+    val isScoreSheetEnabled = mutableStateOf(false)
 
     init {
         viewModelScope.launch {
@@ -120,6 +121,20 @@ class SettingsViewModel @Inject constructor(
             isMenuOpen.value=false
         }
         isScoreOpen.value=!isScoreOpen.value
+    }
+
+    fun toggleDefaultScoreOption() {
+        _settingsState.value =
+            _settingsState.value.copy(isActiveScoreDefault = !_settingsState.value.isActiveScoreDefault)
+        saveState()
+    }
+
+    fun disableScoreSheet() {
+        isScoreSheetEnabled.value=false
+    }
+
+    fun enableScoreSheet() {
+        isScoreSheetEnabled.value=true
     }
 
     fun setThemeMode(mode: ThemeMode) {

@@ -36,31 +36,35 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
-import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import java.util.Locale
 
 @Composable
 fun TasksCard(
-    resultFontSize: androidx.compose.ui.unit.TextUnit,
-    iconSize: androidx.compose.ui.unit.Dp
+    resultFontSize: TextUnit,
+    iconSize: Dp
 ) {
     val activity = LocalActivity.current as ViewModelStoreOwner
-    val gameViewModel: GameViewModel = hiltViewModel(activity)
+    val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
     var isExpanded by remember { mutableStateOf(true) }
     Card(
         shape = RoundedCornerShape(32.dp),
@@ -89,74 +93,76 @@ fun TasksCard(
                 contentDescription = "Expand",
                 modifier = Modifier
                     .size(iconSize)
+                    .clip(RoundedCornerShape(16.dp))
                     .clickable { isExpanded = !isExpanded }
             )
         }
         if (isExpanded) {
-            gameViewModel.gamesState.value.tasks.forEach { task ->
-                FlowRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp, 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    val exercise = String.format(
-                        Locale.getDefault(),
-                        "%d %s %d = %d",
-                        task.operand1,
-                        stringResource(task.operator.stringId),
-                        task.operand2,
-                        task.correctResult
-                    )
-                    Text(
-                        text = exercise,
-                        fontSize = resultFontSize,
-                    )
-
-                    val isCorrect =
-                        if (!task.userInput.isEmpty()) task.correctResult == task.userInput.toInt() else null
-                    when (isCorrect) {
-
-                        true -> Icon(
-                            painter = painterResource(R.drawable.check_circle_24dp),
-                            contentDescription = "Correct",
-                            modifier = Modifier
-                                .size(iconSize)
-                                .align(Alignment.CenterVertically),
-                            tint = green
+            statisticsViewModel.lastGameRecord.collectAsState().value.taskResults
+                .forEach { task ->
+                    FlowRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp, 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        val exercise = String.format(
+                            Locale.getDefault(),
+                            "%d %s %d = %d",
+                            task.operand1,
+                            stringResource(task.operator.stringId),
+                            task.operand2,
+                            task.correctResult
+                        )
+                        Text(
+                            text = exercise,
+                            fontSize = resultFontSize,
                         )
 
-                        false -> {
-                            Spacer(modifier = Modifier.weight(1f))
-                            Text(
-                                text = task.userInput,
-                                color = red,
-                                fontSize = resultFontSize,
-                                modifier = Modifier.align(Alignment.CenterVertically)
+                        val isCorrect =
+                            if (!task.userInput.isEmpty()) task.correctResult == task.userInput.toInt() else null
+                        when (isCorrect) {
+
+                            true -> Icon(
+                                painter = painterResource(R.drawable.check_circle_24dp),
+                                contentDescription = "Correct",
+                                modifier = Modifier
+                                    .size(iconSize)
+                                    .align(Alignment.CenterVertically),
+                                tint = green
                             )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Icon(
+
+                            false -> {
+                                Spacer(modifier = Modifier.weight(1f))
+                                Text(
+                                    text = task.userInput,
+                                    color = red,
+                                    fontSize = resultFontSize,
+                                    modifier = Modifier.align(Alignment.CenterVertically)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Icon(
+                                    painter = painterResource(R.drawable.cancel_24dp),
+                                    contentDescription = "Skipped",
+                                    modifier = Modifier
+                                        .size(iconSize)
+                                        .align(Alignment.CenterVertically),
+                                    tint = red
+                                )
+                            }
+
+
+                            null -> Icon(
                                 painter = painterResource(R.drawable.cancel_24dp),
                                 contentDescription = "Skipped",
                                 modifier = Modifier
                                     .size(iconSize)
                                     .align(Alignment.CenterVertically),
-                                tint = red
+                                tint = yellow
                             )
                         }
-
-
-                        null -> Icon(
-                            painter = painterResource(R.drawable.cancel_24dp),
-                            contentDescription = "Skipped",
-                            modifier = Modifier
-                                .size(iconSize)
-                                .align(Alignment.CenterVertically),
-                            tint = yellow
-                        )
                     }
                 }
-            }
         }
         Spacer(modifier = Modifier.height(12.dp))
     }

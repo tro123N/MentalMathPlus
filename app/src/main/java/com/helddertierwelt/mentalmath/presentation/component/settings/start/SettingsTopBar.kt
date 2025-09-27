@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.presentation.component.settings
+package com.helddertierwelt.mentalmath.presentation.component.settings.start
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -46,6 +46,7 @@ fun SettingsTopBar(
     onMenuClick: () -> Unit,
     onScoreClick: () -> Unit,
     iconSize: Dp,
+    scoreEnabled: Boolean,
 ) {
     TopAppBar(
         title = {
@@ -70,13 +71,14 @@ fun SettingsTopBar(
         ),
         actions = {
             IconButton(
+                enabled = scoreEnabled,
                 onClick = onScoreClick,
                 modifier = Modifier.padding(end = 16.dp)
             ) {
                 Icon(
                     painterResource(R.drawable.leaderboard_24dp),
                     contentDescription = "share",
-                    tint = MaterialTheme.colorScheme.onPrimary,
+                    tint = if (scoreEnabled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
                     modifier = Modifier.size(iconSize),
                 )
             }

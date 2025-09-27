@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.presentation.component.settings
+package com.helddertierwelt.mentalmath.presentation.component.settings.menu
 
 import android.content.Intent
 import androidx.activity.compose.LocalActivity
@@ -26,6 +26,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -114,7 +115,7 @@ fun MenuSideSheet(
                         if (isInteractionEnabled) {
                             Modifier.clickable(
                                 indication = null,
-                                interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+                                interactionSource = remember { MutableInteractionSource() }
                             ) { onDismissRequested() }
                         } else {
                             Modifier
@@ -160,9 +161,7 @@ fun MenuSideSheet(
 
             Column(
                 modifier = Modifier
-                    .padding(12.dp),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.Start
+                    .padding(4.dp,12.dp),
             ) {
 
                 // App Logo
@@ -280,7 +279,7 @@ fun MenuSideSheet(
 
             Column(
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(4.dp,12.dp)
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.Start

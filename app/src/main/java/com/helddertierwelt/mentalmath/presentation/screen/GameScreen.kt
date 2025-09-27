@@ -221,7 +221,8 @@ fun GameScreen(
                                     val totalAnswers = gameViewModel.gamesState.value.totalAnswers
                                     val totalTasks = (settingsState.limit * 10).roundToInt()
                                     if (settingsState.isModeEnabled && totalAnswers == totalTasks) {
-                                        gameViewModel.endGame()
+                                        gameViewModel.pauseTimer()
+                                        gameViewModel.saveGameRecord()
                                         navController.navigate("statistics") {
                                             popUpTo(0) { inclusive = true }
                                             launchSingleTop = true
@@ -264,7 +265,7 @@ fun GameScreen(
             onDismissRequest = {showDialog = false},
             onConfirm = {
                 showDialog = false
-                gameViewModel.endGame()
+                gameViewModel.pauseTimer()
                 navController.navigate("settings") {
                     popUpTo(0) { inclusive = true }
                     launchSingleTop = true

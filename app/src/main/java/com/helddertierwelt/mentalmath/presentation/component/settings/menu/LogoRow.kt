@@ -1,4 +1,4 @@
-package com.helddertierwelt.mentalmath.presentation.component.settings
+package com.helddertierwelt.mentalmath.presentation.component.settings.menu
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row

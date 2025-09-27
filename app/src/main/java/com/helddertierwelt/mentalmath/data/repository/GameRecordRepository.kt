@@ -38,11 +38,11 @@ class GameRecordRepository @Inject constructor(
     }
 
     suspend fun insertGameRecord(gameRecord: GameRecord) {
-        gameRecordDao.insert(gameRecord)
-        _lastGameRecord.value = gameRecord
+        val newId = gameRecordDao.insert(gameRecord)
+        setLastGameRecord(gameRecord.copy(id = newId.toInt()))
     }
 
-    suspend fun getGamesBySetting(
+    suspend fun findBestActiveGameRecords(
         isModeEnabled: Boolean,
         modeLimit: Int,
         additionRangeStart: Int,
@@ -54,7 +54,33 @@ class GameRecordRepository @Inject constructor(
         divisionRangeStart: Int,
         divisionRangeEnd: Int
     ): List<GameRecord> {
-        return gameRecordDao.findGameRecordsBySettings(
+        return gameRecordDao.findBestActiveGameRecords(
+            isModeEnabled,
+            modeLimit,
+            additionRangeStart,
+            additionRangeEnd,
+            subtractionRangeStart,
+            subtractionRangeEnd,
+            multiplicationRangeStart,
+            multiplicationRangeEnd,
+            divisionRangeStart,
+            divisionRangeEnd
+        )
+    }
+
+    suspend fun findBestTotalGameRecords(
+        isModeEnabled: Boolean,
+        modeLimit: Int,
+        additionRangeStart: Int,
+        additionRangeEnd: Int,
+        subtractionRangeStart: Int,
+        subtractionRangeEnd: Int,
+        multiplicationRangeStart: Int,
+        multiplicationRangeEnd: Int,
+        divisionRangeStart: Int,
+        divisionRangeEnd: Int
+    ): List<GameRecord> {
+        return gameRecordDao.findBestTotalGameRecords(
             isModeEnabled,
             modeLimit,
             additionRangeStart,

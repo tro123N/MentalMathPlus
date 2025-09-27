@@ -37,5 +37,6 @@ data class SettingsState(
     val isMultiplicationEnabled: Boolean = true,
     val isDivisionEnabled: Boolean = true,
 
-    val themeMode: ThemeMode = ThemeMode.SYSTEM
+    val themeMode: ThemeMode = ThemeMode.SYSTEM,
+    val isActiveScoreDefault: Boolean = false,
 ) : Parcelable

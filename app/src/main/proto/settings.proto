@@ -50,4 +50,5 @@ message SettingsStateProto {
   }
 
   ThemeMode theme_mode = 16;
+  bool is_active_score_default = 17;
 }

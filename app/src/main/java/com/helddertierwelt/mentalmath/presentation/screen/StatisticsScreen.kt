@@ -183,17 +183,12 @@ fun StatisticsScreen(
                             operatorSize = operatorFontSize,
                             iconSize = modeIconSize,
                             modifier = Modifier
-                                .onGloballyPositioned { coords ->
-
+                                .onGloballyPositioned { coordinates ->
                                     if (!hasCapturedCoordinates) {
-                                        val size = coords.size
+                                        val size = coordinates.size
                                         if (size.width > 50 && size.height > 50) {
-                                            statsCardCoordinates = coords
+                                            statsCardCoordinates = coordinates
                                             hasCapturedCoordinates = true
-                                            Log.d(
-                                                "StatsCard",
-                                                "Coordinates saved with size $size"
-                                            )
                                         }
                                     }
                                 }

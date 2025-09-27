@@ -28,7 +28,7 @@ import com.helddertierwelt.mentalmath.data.entity.GameRecord
 interface GameRecordDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(gameScore: GameRecord)
+    suspend fun insert(gameScore: GameRecord): Long
 
     @Query("SELECT * FROM game_records WHERE id = :id")
     suspend fun getById(id: Int): GameRecord?
@@ -45,9 +45,11 @@ interface GameRecordDao {
         multiplicationRangeEnd = :multiplicationRangeEnd AND
         divisionRangeStart = :divisionRangeStart AND
         divisionRangeEnd = :divisionRangeEnd
+        ORDER BY activeScore DESC
+        LIMIT 10
         """
     )
-    suspend fun findGameRecordsBySettings(
+    suspend fun findBestActiveGameRecords(
         isModeEnabled: Boolean,
         modeLimit: Int,
         additionRangeStart: Int,
@@ -59,6 +61,36 @@ interface GameRecordDao {
         divisionRangeStart: Int,
         divisionRangeEnd: Int
     ): List<GameRecord>
+
+    @Query(
+        """SELECT * FROM game_records WHERE
+        isModeEnabled = :isModeEnabled AND
+        modeLimit = :modeLimit AND
+        additionRangeStart = :additionRangeStart AND
+        additionRangeEnd = :additionRangeEnd AND
+        subtractionRangeStart = :subtractionRangeStart AND
+        subtractionRangeEnd = :subtractionRangeEnd AND
+        multiplicationRangeStart = :multiplicationRangeStart AND
+        multiplicationRangeEnd = :multiplicationRangeEnd AND
+        divisionRangeStart = :divisionRangeStart AND
+        divisionRangeEnd = :divisionRangeEnd
+        ORDER BY totalScore DESC
+        LIMIT 10
+        """
+    )
+    suspend fun findBestTotalGameRecords(
+        isModeEnabled: Boolean,
+        modeLimit: Int,
+        additionRangeStart: Int,
+        additionRangeEnd: Int,
+        subtractionRangeStart: Int,
+        subtractionRangeEnd: Int,
+        multiplicationRangeStart: Int,
+        multiplicationRangeEnd: Int,
+        divisionRangeStart: Int,
+        divisionRangeEnd: Int
+    ): List<GameRecord>
+
 
     @Query("DELETE FROM game_records")
     suspend fun deleteAll()

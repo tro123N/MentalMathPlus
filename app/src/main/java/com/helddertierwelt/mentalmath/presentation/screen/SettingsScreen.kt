@@ -48,15 +48,15 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
-import com.helddertierwelt.mentalmath.presentation.component.settings.CustomRangeSlider
-import com.helddertierwelt.mentalmath.presentation.component.settings.CustomSlider
-import com.helddertierwelt.mentalmath.presentation.component.settings.MenuSideSheet
-import com.helddertierwelt.mentalmath.presentation.component.settings.ModeButton
-import com.helddertierwelt.mentalmath.presentation.component.settings.OperatorButton
-import com.helddertierwelt.mentalmath.presentation.component.settings.ScoreSideSheet
-import com.helddertierwelt.mentalmath.presentation.component.settings.SettingsTopBar
-import com.helddertierwelt.mentalmath.presentation.component.settings.StartButton
-import com.helddertierwelt.mentalmath.presentation.component.settings.TextLabel
+import com.helddertierwelt.mentalmath.presentation.component.settings.start.CustomRangeSlider
+import com.helddertierwelt.mentalmath.presentation.component.settings.start.CustomSlider
+import com.helddertierwelt.mentalmath.presentation.component.settings.start.ModeButton
+import com.helddertierwelt.mentalmath.presentation.component.settings.start.OperatorButton
+import com.helddertierwelt.mentalmath.presentation.component.settings.score.ScoreSideSheet
+import com.helddertierwelt.mentalmath.presentation.component.settings.start.SettingsTopBar
+import com.helddertierwelt.mentalmath.presentation.component.settings.start.StartButton
+import com.helddertierwelt.mentalmath.presentation.component.settings.start.TextLabel
+import com.helddertierwelt.mentalmath.presentation.component.settings.menu.MenuSideSheet
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
@@ -78,7 +78,6 @@ fun SettingsScreen(
     val settingsState = settingsViewModel.settingsState.value
     val valueRangeOperators = 1f..9f
 
-    // Calculate sizes based on screen height
     val containerSizePx = LocalWindowInfo.current.containerSize // IntSize in px
     val density = LocalDensity.current
     val screenHeight = with(density) { containerSizePx.height.toDp() }
@@ -95,7 +94,6 @@ fun SettingsScreen(
     val modeIconSize = (0.048f * screenHeight.value).dp
     val columnPadding = (0.028f * screenHeight.value).dp
     val topBarIconSize = (0.038f * screenHeight.value).dp
-    val appSymbolSizeTopBar = (0.024f * screenHeight.value).dp
 
     var showDialog by remember { mutableStateOf(false) }
     Scaffold(
@@ -106,6 +104,7 @@ fun SettingsScreen(
                 onMenuClick = { settingsViewModel.toggleMenuOpen() },
                 onScoreClick = { settingsViewModel.toggleScoreOpen() },
                 iconSize = topBarIconSize,
+                scoreEnabled = settingsViewModel.isScoreSheetEnabled.value
             )
         },
         content = { padding ->
@@ -258,8 +257,8 @@ fun SettingsScreen(
                 }
                 ScoreSideSheet(
                     isSheetOpen = settingsViewModel.isScoreOpen.value,
-                    screenWidth = screenWidth,
                     onDismissRequested = { settingsViewModel.toggleScoreOpen() },
+                    screenWidth = screenWidth,
                     screenHeight = screenHeight,
                 )
                 MenuSideSheet(

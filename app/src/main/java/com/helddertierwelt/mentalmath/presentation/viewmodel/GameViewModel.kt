@@ -214,13 +214,7 @@ class GameViewModel @Inject constructor(
         saveState()
     }
 
-    fun endGame() {
-        pauseTimer()
-        saveGameRecord()
-        resetGame()
-    }
-
-    private fun saveGameRecord() {
+    fun saveGameRecord() {
 
         val activeScoreValue = 10f * _gameState.value.correctAnswers.toFloat().pow(2f) /
                 ((_gameState.value.activeTime.toFloat() / 60000f) * maxOf(
@@ -252,8 +246,10 @@ class GameViewModel @Inject constructor(
         )
 
         gameRecordRepository.setLastGameRecord(lastGame)
-        viewModelScope.launch(Dispatchers.IO) {
-            gameRecordRepository.insertGameRecord(lastGame)
+        if (0f != activeScoreValue || 0f != totalScoreValue) {
+            viewModelScope.launch(Dispatchers.IO) {
+                gameRecordRepository.insertGameRecord(lastGame)
+            }
         }
     }
 

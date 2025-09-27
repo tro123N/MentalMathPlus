@@ -16,42 +16,40 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.presentation.component.settings
+package com.helddertierwelt.mentalmath.presentation.component.settings.start
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun OperatorButton(
-    buttonTextId: Int,
-    textColor: Color,
-    isSelected: Boolean,
+fun ModeButton(
+    iconId1: Int,
+    iconId2: Int,
+    isToggled: Boolean,
     onClick: () -> Unit,
+    iconSize: Dp,
     size: Dp,
-    fontSize: TextUnit
 ) {
+    val icon = if (isToggled) iconId1 else iconId2
 
     Button(
         onClick = onClick,
         shape = CircleShape,
         modifier = Modifier.size(size),
-        contentPadding = PaddingValues(0.dp),
+        contentPadding = PaddingValues(0.dp)
     ) {
-        Text(
-            text = stringResource(buttonTextId),
-            fontSize = fontSize,
-            color = if (isSelected) textColor else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+        Icon(
+            painter = painterResource(icon),
+            contentDescription = "Mode",
+            modifier = Modifier.size(iconSize)
         )
     }
 }
