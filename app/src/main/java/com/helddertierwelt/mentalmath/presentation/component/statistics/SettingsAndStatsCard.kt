@@ -53,6 +53,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import java.util.Locale
+import kotlin.math.max
 
 @Composable
 fun SettingsAndStatsCard(
@@ -64,11 +65,12 @@ fun SettingsAndStatsCard(
     val activity = LocalActivity.current as ViewModelStoreOwner
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
 
-    val statisticsGameRecord = if (statisticsViewModel.showLoadedGameRecord.collectAsState().value) {
-        statisticsViewModel.loadedGameRecord.collectAsState().value
-    } else {
-        statisticsViewModel.lastGameRecord.collectAsState().value
-    }
+    val statisticsGameRecord =
+        if (statisticsViewModel.showLoadedGameRecord.collectAsState().value) {
+            statisticsViewModel.loadedGameRecord.collectAsState().value
+        } else {
+            statisticsViewModel.lastGameRecord.collectAsState().value
+        }
 
     Card(
         shape = RoundedCornerShape(32.dp),
@@ -150,11 +152,10 @@ fun SettingsAndStatsCard(
                     iconColor = green
                 )
 
-                val percentage = statisticsGameRecord.correctAnswers.toFloat() / statisticsGameRecord.totalAnswers.toFloat() * 100f
+                val percentage =
+                    statisticsGameRecord.correctAnswers.toFloat() / statisticsGameRecord.totalAnswers.toFloat() * 100f
                 val percentageString = if (percentage.isNaN()) "-" else String.format(
-                    Locale.getDefault(),
-                    "%.1f",
-                    percentage
+                    Locale.getDefault(), "%.1f", percentage
                 )
                 StatsColumn(
                     fontSize = fontSize,
@@ -164,10 +165,11 @@ fun SettingsAndStatsCard(
                     iconColor = green
                 )
 
+                val activeMinutes = max(1, (statisticsGameRecord.activeTime / 1000)) / 60.0f
                 val correctPerMinute = String.format(
                     Locale.getDefault(),
                     "%.1f",
-                    statisticsGameRecord.correctAnswers.toFloat() / (statisticsGameRecord.activeTime.toFloat() / 60000f)
+                    statisticsGameRecord.correctAnswers.toFloat() / activeMinutes
                 )
                 StatsCorrectPerMinuteColumn(
                     iconId = R.drawable.check_24dp,
@@ -195,8 +197,8 @@ fun SettingsAndStatsCard(
 
             val activeScore = String.format(
                 Locale.getDefault(),
-                "%s:  %.2f",
-                stringResource(R.string.active_score),
+                "%-6s  %.2f",
+                stringResource(R.string.active_score) + ":",
                 statisticsGameRecord.activeScore
             )
             Row(
@@ -215,14 +217,14 @@ fun SettingsAndStatsCard(
                     painter = painterResource(R.drawable.star_24dp),
                     contentDescription = "activeScoreIcon",
                     modifier = modifier.size(iconSize),
-                    tint = yellow
+                    tint = green
                 )
             }
 
             val totalScore = String.format(
                 Locale.getDefault(),
-                "%s:  %.2f",
-                stringResource(R.string.total_score),
+                "%-8s  %.2f",
+                stringResource(R.string.total_score) + ":",
                 statisticsGameRecord.totalScore
             )
             Row(
@@ -241,7 +243,7 @@ fun SettingsAndStatsCard(
                     painter = painterResource(R.drawable.star_24dp),
                     contentDescription = "totalScoreIcon",
                     modifier = modifier.size(iconSize),
-                    tint = green
+                    tint = yellow
                 )
             }
         }

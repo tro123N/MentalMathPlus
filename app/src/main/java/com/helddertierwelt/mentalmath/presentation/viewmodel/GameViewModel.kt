@@ -86,13 +86,35 @@ class GameViewModel @Inject constructor(
             operationSetting.value.first.toInt(),
             operationSetting.value.second.toInt() + 1
         )
-        val lastOperands = max(_gameState.value.operand1,_gameState.value.operand2) to min(_gameState.value.operand1,_gameState.value.operand2)
+        val lastOperands = max(
+            _gameState.value.operand1,
+            _gameState.value.operand2
+        ) to min(_gameState.value.operand1, _gameState.value.operand2)
         viewModelScope.launch(Dispatchers.IO) {
             val mathTask: MathTask = when (operation) {
-                Operation.ADDITION -> mathTaskRepository.getRandomAdditionTaskByDifficulty(difficulty,random,lastOperands)
-                Operation.SUBTRACTION -> mathTaskRepository.getRandomSubtractionTaskByDifficulty(difficulty,random,lastOperands)
-                Operation.MULTIPLICATION -> mathTaskRepository.getRandomMultiplicationTaskByDifficulty(difficulty,random,lastOperands)
-                Operation.DIVISION -> mathTaskRepository.getRandomDivisionTaskByDifficulty(difficulty,random,lastOperands)
+                Operation.ADDITION -> mathTaskRepository.getRandomAdditionTaskByDifficulty(
+                    difficulty,
+                    random,
+                    lastOperands
+                )
+
+                Operation.SUBTRACTION -> mathTaskRepository.getRandomSubtractionTaskByDifficulty(
+                    difficulty,
+                    random,
+                    lastOperands
+                )
+
+                Operation.MULTIPLICATION -> mathTaskRepository.getRandomMultiplicationTaskByDifficulty(
+                    difficulty,
+                    random,
+                    lastOperands
+                )
+
+                Operation.DIVISION -> mathTaskRepository.getRandomDivisionTaskByDifficulty(
+                    difficulty,
+                    random,
+                    lastOperands
+                )
             }
 
             val operands = when (operation) {
@@ -212,27 +234,36 @@ class GameViewModel @Inject constructor(
     }
 
     fun saveGameRecord() {
+        val activeMinutes = max(1, (_gameState.value.activeTime / 1000)) / 60.0f
+        val totalMinutes = max(1, (_gameState.value.totalTime / 1000)) / 60.0f
+        val correctAnswers = _gameState.value.correctAnswers.toFloat()
+        val totalAnswers = max(1, _gameState.value.totalAnswers).toFloat()
 
-        val activeScoreValue = 10f * _gameState.value.correctAnswers.toFloat().pow(2f) /
-                ((_gameState.value.activeTime.toFloat() / 60000f) * maxOf(
-                    1f,
-                    _gameState.value.totalAnswers.toFloat()
-                ))
+        val activeScoreValue = 10f * correctAnswers.pow(2f) /
+                (activeMinutes * totalAnswers)
 
-        val totalScoreValue = 10f * _gameState.value.correctAnswers.toFloat().pow(2f) /
-                ((_gameState.value.totalTime.toFloat() / 60000f) * maxOf(1f, _gameState.value.totalAnswers.toFloat()))
+        val totalScoreValue = 10f * correctAnswers.pow(2f) /
+                (totalMinutes * totalAnswers)
 
         val lastGame = GameRecord(
             isModeEnabled = _gameState.value.isModeEnabled,
             modeLimit = _gameState.value.modeLimit,
-            additionRangeStart = _gameState.value.enabledOperators[Operation.ADDITION]?.first?.toInt()?: 0,
-            additionRangeEnd = _gameState.value.enabledOperators[Operation.ADDITION]?.second?.toInt()?: 0,
-            subtractionRangeStart = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.first?.toInt()?: 0,
-            subtractionRangeEnd = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.second?.toInt()?: 0,
-            multiplicationRangeStart = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.first?.toInt()?: 0,
-            multiplicationRangeEnd = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.second?.toInt()?: 0,
-            divisionRangeStart = _gameState.value.enabledOperators[Operation.DIVISION]?.first?.toInt()?: 0,
-            divisionRangeEnd = _gameState.value.enabledOperators[Operation.DIVISION]?.second?.toInt()?: 0,
+            additionRangeStart = _gameState.value.enabledOperators[Operation.ADDITION]?.first?.toInt()
+                ?: 0,
+            additionRangeEnd = _gameState.value.enabledOperators[Operation.ADDITION]?.second?.toInt()
+                ?: 0,
+            subtractionRangeStart = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.first?.toInt()
+                ?: 0,
+            subtractionRangeEnd = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.second?.toInt()
+                ?: 0,
+            multiplicationRangeStart = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.first?.toInt()
+                ?: 0,
+            multiplicationRangeEnd = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.second?.toInt()
+                ?: 0,
+            divisionRangeStart = _gameState.value.enabledOperators[Operation.DIVISION]?.first?.toInt()
+                ?: 0,
+            divisionRangeEnd = _gameState.value.enabledOperators[Operation.DIVISION]?.second?.toInt()
+                ?: 0,
             totalAnswers = _gameState.value.totalAnswers,
             correctAnswers = _gameState.value.correctAnswers,
             totalTime = _gameState.value.totalTime,

@@ -74,7 +74,10 @@ fun Navigation(
             composable(
                 route = "statistics",
                 enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
-                exitTransition = { if (!showLoadedGameRecord) null else slideOutHorizontally(targetOffsetX = { it }) }
+                exitTransition = {
+                    if (!showLoadedGameRecord) null else slideOutHorizontally(
+                        targetOffsetX = { it })
+                }
             ) {
                 StatisticsScreen(
                     navController = navController

@@ -264,7 +264,7 @@ fun SettingsScreen(
                     screenWidth = screenWidth,
                     screenHeight = screenHeight,
                     navController = navController,
-                    )
+                )
                 MenuSideSheet(
                     isSheetOpen = settingsViewModel.isMenuOpen.value,
                     screenWidth = screenWidth,

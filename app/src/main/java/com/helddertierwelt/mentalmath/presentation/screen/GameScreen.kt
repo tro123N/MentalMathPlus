@@ -265,7 +265,7 @@ fun GameScreen(
 
     if (showDialog) {
         PopUp(
-            onDismissRequest = {showDialog = false},
+            onDismissRequest = { showDialog = false },
             onConfirm = {
                 showDialog = false
                 gameViewModel.pauseTimer()

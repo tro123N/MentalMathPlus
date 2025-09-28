@@ -26,9 +26,18 @@ import com.helddertierwelt.mentalmath.data.entity.MultiplicationTask
 interface MultiplicationTaskDao {
 
     @Query("SELECT COUNT(*) FROM tasks_multiplication WHERE difficulty = :difficulty AND (operand1 <> :lastOperand1 OR operand2 <> :lastOperand2)")
-    suspend fun countMultiplicationTasksByDifficulty(difficulty: Int, lastOperand1: Int, lastOperand2: Int): Int
+    suspend fun countMultiplicationTasksByDifficulty(
+        difficulty: Int,
+        lastOperand1: Int,
+        lastOperand2: Int
+    ): Int
 
     @Query("SELECT * FROM tasks_multiplication WHERE difficulty = :difficulty  AND (operand1 <> :lastOperand1 OR operand2 <> :lastOperand2) LIMIT 1 OFFSET :offset")
-    suspend fun getMultiplicationTaskByDifficultyWithOffset(difficulty: Int, offset: Int, lastOperand1: Int, lastOperand2: Int): MultiplicationTask
+    suspend fun getMultiplicationTaskByDifficultyWithOffset(
+        difficulty: Int,
+        offset: Int,
+        lastOperand1: Int,
+        lastOperand2: Int
+    ): MultiplicationTask
 }
 

@@ -23,13 +23,17 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.helddertierwelt.mentalmath.presentation.viewmodel.TaskResult
 
-@Entity(tableName = "game_records",
+@Entity(
+    tableName = "game_records",
     indices = [
-        Index(value = ["isModeEnabled", "modeLimit", "additionRangeStart", "additionRangeEnd",
-            "subtractionRangeStart", "subtractionRangeEnd",
-            "multiplicationRangeStart", "multiplicationRangeEnd",
-            "divisionRangeStart", "divisionRangeEnd"])
-    ])
+        Index(
+            value = ["isModeEnabled", "modeLimit", "additionRangeStart", "additionRangeEnd",
+                "subtractionRangeStart", "subtractionRangeEnd",
+                "multiplicationRangeStart", "multiplicationRangeEnd",
+                "divisionRangeStart", "divisionRangeEnd"]
+        )
+    ]
+)
 data class GameRecord(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
 

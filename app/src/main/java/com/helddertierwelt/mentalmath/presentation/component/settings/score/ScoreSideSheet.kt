@@ -27,7 +27,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,7 +37,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -170,107 +174,114 @@ fun ScoreSideSheet(
                 contentColor = MaterialTheme.colorScheme.onPrimary
             )
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
 
-            // load game records based on current settings
-            val settingsState = settingsViewModel.settingsState.value
-            LaunchedEffect(settingsState) {
+                // load game records based on current settings
                 val settingsState = settingsViewModel.settingsState.value
-                val additionRangeStart =
-                    if (settingsState.isAdditionEnabled) settingsState.additionRange.first.toInt() else 0
-                val additionRangeEnd =
-                    if (settingsState.isAdditionEnabled) settingsState.additionRange.second.toInt() else 0
-                val subtractionRangeStart =
-                    if (settingsState.isSubtractionEnabled) settingsState.subtractionRange.first.toInt() else 0
-                val subtractionRangeEnd =
-                    if (settingsState.isSubtractionEnabled) settingsState.subtractionRange.second.toInt() else 0
-                val multiplicationRangeStart =
-                    if (settingsState.isMultiplicationEnabled) settingsState.multiplicationRange.first.toInt() else 0
-                val multiplicationRangeEnd =
-                    if (settingsState.isMultiplicationEnabled) settingsState.multiplicationRange.second.toInt() else 0
-                val divisionRangeStart =
-                    if (settingsState.isDivisionEnabled) settingsState.divisionRange.first.toInt() else 0
-                val divisionRangeEnd =
-                    if (settingsState.isDivisionEnabled) settingsState.divisionRange.second.toInt() else 0
-                statisticsViewModel.loadBestActiveGames(
-                    settingsState.isModeEnabled,
-                    settingsState.limit.toInt(),
-                    additionRangeStart,
-                    additionRangeEnd,
-                    subtractionRangeStart,
-                    subtractionRangeEnd,
-                    multiplicationRangeStart,
-                    multiplicationRangeEnd,
-                    divisionRangeStart,
-                    divisionRangeEnd,
-                )
-                statisticsViewModel.loadBestTotalGames(
-                    settingsState.isModeEnabled,
-                    settingsState.limit.toInt(),
-                    additionRangeStart,
-                    additionRangeEnd,
-                    subtractionRangeStart,
-                    subtractionRangeEnd,
-                    multiplicationRangeStart,
-                    multiplicationRangeEnd,
-                    divisionRangeStart,
-                    divisionRangeEnd,
-                )
-            }
-            val bestActiveGames by statisticsViewModel.bestActiveGames.collectAsState()
-            val bestTotalGames by statisticsViewModel.bestTotalGames.collectAsState()
-            val lastGameId = statisticsViewModel.lastGameRecord.collectAsState().value.id
-
-
-            if (bestActiveGames.isEmpty() && bestTotalGames.isEmpty()) {
-                settingsViewModel.disableScoreSheet()
-            } else {
-                settingsViewModel.enableScoreSheet()
-                @Composable
-                fun onScoreClick(): (GameRecord) -> Unit = { gameRecord ->
-                    statisticsViewModel.setLoadedGameRecord(gameRecord)
-                    statisticsViewModel.setShowLoadedGameRecord(true)
-                    navController.navigate("statistics") {
-                        popUpTo(0) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(28.dp, 12.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .clickable { settingsViewModel.toggleDefaultScoreOption() },
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = if (settingsState.isActiveScoreDefault) "Active\nScore" else "Total  \nScore",
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = fontSizeTitle,
-                        textAlign = TextAlign.Start,
+                LaunchedEffect(settingsState) {
+                    val settingsState = settingsViewModel.settingsState.value
+                    val additionRangeStart =
+                        if (settingsState.isAdditionEnabled) settingsState.additionRange.first.toInt() else 0
+                    val additionRangeEnd =
+                        if (settingsState.isAdditionEnabled) settingsState.additionRange.second.toInt() else 0
+                    val subtractionRangeStart =
+                        if (settingsState.isSubtractionEnabled) settingsState.subtractionRange.first.toInt() else 0
+                    val subtractionRangeEnd =
+                        if (settingsState.isSubtractionEnabled) settingsState.subtractionRange.second.toInt() else 0
+                    val multiplicationRangeStart =
+                        if (settingsState.isMultiplicationEnabled) settingsState.multiplicationRange.first.toInt() else 0
+                    val multiplicationRangeEnd =
+                        if (settingsState.isMultiplicationEnabled) settingsState.multiplicationRange.second.toInt() else 0
+                    val divisionRangeStart =
+                        if (settingsState.isDivisionEnabled) settingsState.divisionRange.first.toInt() else 0
+                    val divisionRangeEnd =
+                        if (settingsState.isDivisionEnabled) settingsState.divisionRange.second.toInt() else 0
+                    statisticsViewModel.loadBestActiveGames(
+                        settingsState.isModeEnabled,
+                        settingsState.limit.toInt(),
+                        additionRangeStart,
+                        additionRangeEnd,
+                        subtractionRangeStart,
+                        subtractionRangeEnd,
+                        multiplicationRangeStart,
+                        multiplicationRangeEnd,
+                        divisionRangeStart,
+                        divisionRangeEnd,
                     )
-                    Icon(
-                        painter = painterResource(R.drawable.star_24dp),
-                        contentDescription = "activeScore",
-                        modifier = Modifier.size(128.dp),
-                        tint = if (settingsState.isActiveScoreDefault) yellow else green
+                    statisticsViewModel.loadBestTotalGames(
+                        settingsState.isModeEnabled,
+                        settingsState.limit.toInt(),
+                        additionRangeStart,
+                        additionRangeEnd,
+                        subtractionRangeStart,
+                        subtractionRangeEnd,
+                        multiplicationRangeStart,
+                        multiplicationRangeEnd,
+                        divisionRangeStart,
+                        divisionRangeEnd,
                     )
                 }
-                if (settingsState.isActiveScoreDefault) {
-                    ScoreList(
-                        gameRecords = bestActiveGames,
-                        fontSizeScore = fontSizeScore,
-                        lastGameId = lastGameId,
-                        scoreSelector = { gameRecord -> gameRecord.activeScore },
-                        onClick = onScoreClick()
-                    )
+                val bestActiveGames by statisticsViewModel.bestActiveGames.collectAsState()
+                val bestTotalGames by statisticsViewModel.bestTotalGames.collectAsState()
+                val lastGameId = statisticsViewModel.lastGameRecord.collectAsState().value.id
+
+
+                if (bestActiveGames.isEmpty() && bestTotalGames.isEmpty()) {
+                    settingsViewModel.disableScoreSheet()
                 } else {
-                    ScoreList(
-                        gameRecords = bestTotalGames,
-                        fontSizeScore = fontSizeScore,
-                        lastGameId = lastGameId,
-                        scoreSelector = { gameRecord -> gameRecord.totalScore },
-                        onClick = onScoreClick()
-                    )
+                    settingsViewModel.enableScoreSheet()
+                    @Composable
+                    fun onScoreClick(): (GameRecord) -> Unit = { gameRecord ->
+                        statisticsViewModel.setLoadedGameRecord(gameRecord)
+                        statisticsViewModel.setShowLoadedGameRecord(true)
+                        navController.navigate("statistics") {
+                            popUpTo(0) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(28.dp, 12.dp, 12.dp, 0.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .clickable { settingsViewModel.toggleDefaultScoreOption() },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = if (settingsState.isActiveScoreDefault) "Active\nScore" else "Total  \nScore",
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            fontSize = fontSizeTitle,
+                            textAlign = TextAlign.Start,
+                        )
+                        Icon(
+                            painter = painterResource(R.drawable.star_24dp),
+                            contentDescription = "activeScore",
+                            modifier = Modifier.size(128.dp),
+                            tint = if (settingsState.isActiveScoreDefault) green else yellow
+                        )
+                    }
+                    if (settingsState.isActiveScoreDefault) {
+                        ScoreList(
+                            gameRecords = bestActiveGames,
+                            fontSizeScore = fontSizeScore,
+                            lastGameId = lastGameId,
+                            scoreSelector = { gameRecord -> gameRecord.activeScore },
+                            onClick = onScoreClick()
+                        )
+                    } else {
+                        ScoreList(
+                            gameRecords = bestTotalGames,
+                            fontSizeScore = fontSizeScore,
+                            lastGameId = lastGameId,
+                            scoreSelector = { gameRecord -> gameRecord.totalScore },
+                            onClick = onScoreClick()
+                        )
+                    }
                 }
             }
         }

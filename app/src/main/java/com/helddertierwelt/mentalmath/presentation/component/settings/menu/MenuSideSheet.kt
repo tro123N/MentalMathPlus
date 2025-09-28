@@ -104,8 +104,6 @@ fun MenuSideSheet(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-
-        // Dark overlay
         if (overlayAlpha > 0f) {
             Box(
                 modifier = Modifier
@@ -124,7 +122,6 @@ fun MenuSideSheet(
             )
         }
 
-        // Side sheet
         Card(
             shape = RoundedCornerShape(0.dp),
             modifier = Modifier
@@ -161,7 +158,7 @@ fun MenuSideSheet(
 
             Column(
                 modifier = Modifier
-                    .padding(4.dp,12.dp),
+                    .padding(4.dp, 12.dp),
             ) {
 
                 // App Logo
@@ -279,7 +276,7 @@ fun MenuSideSheet(
 
             Column(
                 modifier = Modifier
-                    .padding(4.dp,12.dp)
+                    .padding(4.dp, 12.dp)
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.Start

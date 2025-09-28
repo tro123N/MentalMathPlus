@@ -1,3 +1,21 @@
+/*
+Mental Math - Android app for practicing mental arithmetic
+Copyright (C) 2025 HeldDerTierwelt
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
+*/
+
 package com.helddertierwelt.mentalmath.presentation.component.settings.score
 
 import androidx.compose.foundation.clickable
@@ -28,16 +46,18 @@ fun ScoreList(
     lastGameId: Int,
     scoreSelector: (GameRecord) -> Float,
     onClick: (GameRecord) -> Unit,
-    ) {
+) {
 
     Column(
-        modifier = Modifier.padding(12.dp),
+        modifier = Modifier.padding(12.dp, 0.dp, 12.dp, 12.dp),
         horizontalAlignment = Alignment.End
     ) {
         gameRecords.forEachIndexed { index, game ->
             var color = MaterialTheme.colorScheme.onPrimary
+            var indexValue = String.format(Locale.getDefault(), "%d", index + 1)
             if (game.id == lastGameId) {
                 color = green
+                indexValue = "new"
             }
             Row(
                 modifier = Modifier
@@ -49,11 +69,11 @@ fun ScoreList(
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    text = "${index + 1}",
+                    text = indexValue,
                     color = color,
                     fontSize = fontSizeScore,
                     textAlign = TextAlign.End,
-                    modifier = Modifier.weight(0.2f),
+                    modifier = Modifier.weight(0.33f),
                     fontWeight = Bold
                 )
                 Text(
@@ -61,7 +81,7 @@ fun ScoreList(
                     color = color,
                     fontSize = fontSizeScore,
                     textAlign = TextAlign.End,
-                    modifier = Modifier.weight(0.8f)
+                    modifier = Modifier.weight(0.67f)
                 )
             }
         }

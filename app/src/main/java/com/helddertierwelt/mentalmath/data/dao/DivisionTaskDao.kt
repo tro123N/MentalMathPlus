@@ -26,9 +26,18 @@ import com.helddertierwelt.mentalmath.data.entity.DivisionTask
 interface DivisionTaskDao {
 
     @Query("SELECT COUNT(*) FROM tasks_division WHERE difficulty = :difficulty AND (operand1 <> :lastOperand1 OR operand2 <> :lastOperand2)")
-    suspend fun countDivisionTasksByDifficulty(difficulty: Int, lastOperand1: Int, lastOperand2: Int): Int
+    suspend fun countDivisionTasksByDifficulty(
+        difficulty: Int,
+        lastOperand1: Int,
+        lastOperand2: Int
+    ): Int
 
     @Query("SELECT * FROM tasks_division WHERE difficulty = :difficulty  AND (operand1 <> :lastOperand1 OR operand2 <> :lastOperand2) LIMIT 1 OFFSET :offset")
-    suspend fun getDivisionTaskByDifficultyWithOffset(difficulty: Int, offset: Int, lastOperand1: Int, lastOperand2: Int): DivisionTask
+    suspend fun getDivisionTaskByDifficultyWithOffset(
+        difficulty: Int,
+        offset: Int,
+        lastOperand1: Int,
+        lastOperand2: Int
+    ): DivisionTask
 }
 

@@ -45,7 +45,7 @@ fun SettingsOperatorColumn(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var range = "-"
-        if (difficultyRange.first >= 0 && difficultyRange.second >= 0) {
+        if (difficultyRange.first > 0 && difficultyRange.second > 0) {
             range = if (difficultyRange.first == difficultyRange.second) {
                 difficultyRange.first.toString()
             } else {

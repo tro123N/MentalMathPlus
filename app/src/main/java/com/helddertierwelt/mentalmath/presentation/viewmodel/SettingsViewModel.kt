@@ -111,16 +111,16 @@ class SettingsViewModel @Inject constructor(
 
     fun toggleMenuOpen() {
         if (isScoreOpen.value) {
-            isScoreOpen.value=false
+            isScoreOpen.value = false
         }
-        isMenuOpen.value=!isMenuOpen.value
+        isMenuOpen.value = !isMenuOpen.value
     }
 
     fun toggleScoreOpen() {
         if (isMenuOpen.value) {
-            isMenuOpen.value=false
+            isMenuOpen.value = false
         }
-        isScoreOpen.value=!isScoreOpen.value
+        isScoreOpen.value = !isScoreOpen.value
     }
 
 
@@ -131,11 +131,11 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun disableScoreSheet() {
-        isScoreSheetEnabled.value=false
+        isScoreSheetEnabled.value = false
     }
 
     fun enableScoreSheet() {
-        isScoreSheetEnabled.value=true
+        isScoreSheetEnabled.value = true
     }
 
     fun setThemeMode(mode: ThemeMode) {
