@@ -63,7 +63,12 @@ fun SettingsAndStatsCard(
 ) {
     val activity = LocalActivity.current as ViewModelStoreOwner
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
-    val lastGameRecord = statisticsViewModel.lastGameRecord.collectAsState().value
+
+    val statisticsGameRecord = if (statisticsViewModel.showLoadedGameRecord.collectAsState().value) {
+        statisticsViewModel.loadedGameRecord.collectAsState().value
+    } else {
+        statisticsViewModel.lastGameRecord.collectAsState().value
+    }
 
     Card(
         shape = RoundedCornerShape(32.dp),
@@ -86,36 +91,36 @@ fun SettingsAndStatsCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 SettingsModeColumn(
-                    modeEnabled = lastGameRecord.isModeEnabled,
+                    modeEnabled = statisticsGameRecord.isModeEnabled,
                     fontSize = fontSize,
                     iconSize = iconSize,
-                    limit = lastGameRecord.modeLimit.toInt()
+                    limit = statisticsGameRecord.modeLimit.toInt()
                 )
                 SettingsOperatorColumn(
                     operatorSize = operatorSize,
                     fontSize = fontSize,
-                    difficultyRange = lastGameRecord.additionRangeStart to lastGameRecord.additionRangeEnd,
+                    difficultyRange = statisticsGameRecord.additionRangeStart to statisticsGameRecord.additionRangeEnd,
                     operatorId = R.string.add,
                     operatorColor = green
                 )
                 SettingsOperatorColumn(
                     operatorSize = operatorSize,
                     fontSize = fontSize,
-                    difficultyRange = lastGameRecord.subtractionRangeStart to lastGameRecord.subtractionRangeEnd,
+                    difficultyRange = statisticsGameRecord.subtractionRangeStart to statisticsGameRecord.subtractionRangeEnd,
                     operatorId = R.string.subtract,
                     operatorColor = red
                 )
                 SettingsOperatorColumn(
                     operatorSize = operatorSize,
                     fontSize = fontSize,
-                    difficultyRange = lastGameRecord.multiplicationRangeStart to lastGameRecord.multiplicationRangeEnd,
+                    difficultyRange = statisticsGameRecord.multiplicationRangeStart to statisticsGameRecord.multiplicationRangeEnd,
                     operatorId = R.string.multiply,
                     operatorColor = yellow
                 )
                 SettingsOperatorColumn(
                     operatorSize = operatorSize,
                     fontSize = fontSize,
-                    difficultyRange = lastGameRecord.divisionRangeStart to lastGameRecord.divisionRangeEnd,
+                    difficultyRange = statisticsGameRecord.divisionRangeStart to statisticsGameRecord.divisionRangeEnd,
                     operatorId = R.string.divide,
                     operatorColor = blue
                 )
@@ -131,21 +136,21 @@ fun SettingsAndStatsCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 StatsProgressColumn(
-                    modeEnabled = lastGameRecord.isModeEnabled,
+                    modeEnabled = statisticsGameRecord.isModeEnabled,
                     fontSize = fontSize,
                     iconSize = iconSize,
-                    totalAnswers = lastGameRecord.totalAnswers,
-                    activeTime = lastGameRecord.activeTime
+                    totalAnswers = statisticsGameRecord.totalAnswers,
+                    activeTime = statisticsGameRecord.activeTime
                 )
                 StatsColumn(
                     fontSize = fontSize,
-                    statsText = lastGameRecord.correctAnswers.toString(),
+                    statsText = statisticsGameRecord.correctAnswers.toString(),
                     iconId = R.drawable.check_24dp,
                     iconSize = iconSize,
                     iconColor = green
                 )
 
-                val percentage = lastGameRecord.correctAnswers.toFloat() / lastGameRecord.totalAnswers.toFloat() * 100f
+                val percentage = statisticsGameRecord.correctAnswers.toFloat() / statisticsGameRecord.totalAnswers.toFloat() * 100f
                 val percentageString = if (percentage.isNaN()) "-" else String.format(
                     Locale.getDefault(),
                     "%.1f",
@@ -162,7 +167,7 @@ fun SettingsAndStatsCard(
                 val correctPerMinute = String.format(
                     Locale.getDefault(),
                     "%.1f",
-                    lastGameRecord.correctAnswers.toFloat() / (lastGameRecord.activeTime.toFloat() / 60000f)
+                    statisticsGameRecord.correctAnswers.toFloat() / (statisticsGameRecord.activeTime.toFloat() / 60000f)
                 )
                 StatsCorrectPerMinuteColumn(
                     iconId = R.drawable.check_24dp,
@@ -176,7 +181,7 @@ fun SettingsAndStatsCard(
 
                 StatsColumn(
                     fontSize = fontSize,
-                    statsText = formatTime(lastGameRecord.totalTime),
+                    statsText = formatTime(statisticsGameRecord.totalTime),
                     iconId = R.drawable.access_time_24dp,
                     iconSize = iconSize,
                     iconColor = MaterialTheme.colorScheme.onPrimary
@@ -192,7 +197,7 @@ fun SettingsAndStatsCard(
                 Locale.getDefault(),
                 "%s:  %.2f",
                 stringResource(R.string.active_score),
-                lastGameRecord.activeScore
+                statisticsGameRecord.activeScore
             )
             Row(
                 modifier = modifier
@@ -218,7 +223,7 @@ fun SettingsAndStatsCard(
                 Locale.getDefault(),
                 "%s:  %.2f",
                 stringResource(R.string.total_score),
-                lastGameRecord.totalScore
+                statisticsGameRecord.totalScore
             )
             Row(
                 modifier = modifier

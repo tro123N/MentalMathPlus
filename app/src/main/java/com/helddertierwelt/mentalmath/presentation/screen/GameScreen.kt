@@ -61,6 +61,7 @@ import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -74,6 +75,7 @@ fun GameScreen(
     val activity = LocalActivity.current as ViewModelStoreOwner
     val gameViewModel: GameViewModel = hiltViewModel(activity)
     val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
+    val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
 
     LaunchedEffect(Unit) {
         gameViewModel.resumeTimerIfNeeded()
@@ -223,6 +225,7 @@ fun GameScreen(
                                     if (settingsState.isModeEnabled && totalAnswers == totalTasks) {
                                         gameViewModel.pauseTimer()
                                         gameViewModel.saveGameRecord()
+                                        statisticsViewModel.setShowLoadedGameRecord(false)
                                         navController.navigate("statistics") {
                                             popUpTo(0) { inclusive = true }
                                             launchSingleTop = true

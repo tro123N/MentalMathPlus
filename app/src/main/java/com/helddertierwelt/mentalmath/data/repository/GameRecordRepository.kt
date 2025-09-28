@@ -32,10 +32,37 @@ class GameRecordRepository @Inject constructor(
         )
     )
     val lastGameRecord: StateFlow<GameRecord> = _lastGameRecord
-
     fun setLastGameRecord(gameRecord: GameRecord) {
         _lastGameRecord.value = gameRecord
     }
+
+    private val _loadedGameRecord = MutableStateFlow(
+        GameRecord(
+            id = -1,
+            isModeEnabled = false,
+            modeLimit = 0,
+            additionRangeStart = 0,
+            additionRangeEnd = 0,
+            subtractionRangeStart = 0,
+            subtractionRangeEnd = 0,
+            multiplicationRangeStart = 0,
+            multiplicationRangeEnd = 0,
+            divisionRangeStart = 0,
+            divisionRangeEnd = 0,
+            totalAnswers = 0,
+            correctAnswers = 0,
+            activeTime = 0L,
+            totalTime = 0L,
+            activeScore = 0f,
+            totalScore = 0f,
+            taskResults = emptyList()
+        )
+    )
+    val loadedGameRecord: StateFlow<GameRecord> = _loadedGameRecord
+    fun setLoadedGameRecord(gameRecord: GameRecord) {
+        _loadedGameRecord.value = gameRecord
+    }
+
 
     suspend fun insertGameRecord(gameRecord: GameRecord) {
         val newId = gameRecordDao.insert(gameRecord)

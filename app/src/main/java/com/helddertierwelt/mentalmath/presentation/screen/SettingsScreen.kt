@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,15 +49,14 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
-import com.helddertierwelt.mentalmath.presentation.component.settings.start.CustomRangeSlider
-import com.helddertierwelt.mentalmath.presentation.component.settings.start.CustomSlider
-import com.helddertierwelt.mentalmath.presentation.component.settings.start.ModeButton
-import com.helddertierwelt.mentalmath.presentation.component.settings.start.OperatorButton
-import com.helddertierwelt.mentalmath.presentation.component.settings.score.ScoreSideSheet
-import com.helddertierwelt.mentalmath.presentation.component.settings.start.SettingsTopBar
-import com.helddertierwelt.mentalmath.presentation.component.settings.start.StartButton
-import com.helddertierwelt.mentalmath.presentation.component.settings.start.TextLabel
 import com.helddertierwelt.mentalmath.presentation.component.settings.menu.MenuSideSheet
+import com.helddertierwelt.mentalmath.presentation.component.settings.score.ScoreSideSheet
+import com.helddertierwelt.mentalmath.presentation.component.settings.settings.CustomRangeSlider
+import com.helddertierwelt.mentalmath.presentation.component.settings.settings.CustomSlider
+import com.helddertierwelt.mentalmath.presentation.component.settings.settings.ModeButton
+import com.helddertierwelt.mentalmath.presentation.component.settings.settings.OperatorButton
+import com.helddertierwelt.mentalmath.presentation.component.settings.settings.SettingsTopBar
+import com.helddertierwelt.mentalmath.presentation.component.settings.settings.StartButton
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
@@ -121,10 +121,11 @@ fun SettingsScreen(
                     verticalArrangement = Arrangement.SpaceBetween,
                     horizontalAlignment = Alignment.Start
                 ) {
-                    // TextLabel(text= screenHeight.toString(), fontSize = 25.sp) // Debug: show screen height
-                    TextLabel(
+                    Text(
                         text = stringResource(R.string.mode_instruction),
                         fontSize = textLabelFontSize,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        lineHeight = textLabelFontSize
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -148,9 +149,11 @@ fun SettingsScreen(
                             activeTrackColor = MaterialTheme.colorScheme.onSurface
                         )
                     }
-                    TextLabel(
+                    Text(
                         text = stringResource(R.string.operator_instruction),
-                        fontSize = textLabelFontSize
+                        fontSize = textLabelFontSize,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        lineHeight = textLabelFontSize
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -260,7 +263,8 @@ fun SettingsScreen(
                     onDismissRequested = { settingsViewModel.toggleScoreOpen() },
                     screenWidth = screenWidth,
                     screenHeight = screenHeight,
-                )
+                    navController = navController,
+                    )
                 MenuSideSheet(
                     isSheetOpen = settingsViewModel.isMenuOpen.value,
                     screenWidth = screenWidth,
@@ -290,7 +294,6 @@ fun SettingsScreen(
             cancelText = "Cancel"
         )
     }
-
 
     BackHandler {
         (context as? android.app.Activity)?.moveTaskToBack(true)

@@ -194,14 +194,11 @@ class GameViewModel @Inject constructor(
                 settingsViewModel.settingsState.value.divisionRange
             )
         }
-
         _gameState.value = _gameState.value.copy(
             enabledOperators = enabledOperators,
             isModeEnabled = settingsState.isModeEnabled,
             modeLimit = settingsState.limit.toInt()
         )
-
-
         saveState()
     }
 

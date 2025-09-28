@@ -123,6 +123,7 @@ class SettingsViewModel @Inject constructor(
         isScoreOpen.value=!isScoreOpen.value
     }
 
+
     fun toggleDefaultScoreOption() {
         _settingsState.value =
             _settingsState.value.copy(isActiveScoreDefault = !_settingsState.value.isActiveScoreDefault)

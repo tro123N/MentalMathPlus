@@ -18,12 +18,20 @@ class StatisticsViewModel @Inject constructor(
 ) : ViewModel() {
     val lastGameRecord: StateFlow<GameRecord> = gameRecordRepository.lastGameRecord
 
+    private val _showLoadedGameRecord = MutableStateFlow(false)
+    val showLoadedGameRecord: StateFlow<Boolean> = _showLoadedGameRecord.asStateFlow()
+    fun setShowLoadedGameRecord(value: Boolean) {
+        _showLoadedGameRecord.value = value
+    }
+
+    val loadedGameRecord: StateFlow<GameRecord> = gameRecordRepository.loadedGameRecord
+    fun setLoadedGameRecord(gameRecord: GameRecord) {
+        gameRecordRepository.setLoadedGameRecord(gameRecord)
+
+    }
+
     private val _bestActiveGames = MutableStateFlow<List<GameRecord>>(emptyList())
     val bestActiveGames = _bestActiveGames.asStateFlow()
-
-    private val _bestTotalGames = MutableStateFlow<List<GameRecord>>(emptyList())
-    val bestTotalGames = _bestTotalGames.asStateFlow()
-
     fun loadBestActiveGames(
         isModeEnabled: Boolean,
         modeLimit: Int,
@@ -53,6 +61,8 @@ class StatisticsViewModel @Inject constructor(
         }
     }
 
+    private val _bestTotalGames = MutableStateFlow<List<GameRecord>>(emptyList())
+    val bestTotalGames = _bestTotalGames.asStateFlow()
     fun loadBestTotalGames(
         isModeEnabled: Boolean,
         modeLimit: Int,

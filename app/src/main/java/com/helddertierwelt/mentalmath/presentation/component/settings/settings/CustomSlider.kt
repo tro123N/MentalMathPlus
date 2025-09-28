@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.presentation.component.settings.start
+package com.helddertierwelt.mentalmath.presentation.component.settings.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -63,7 +63,7 @@ fun CustomSlider(
     val isDragging by interactionSource.collectIsDraggedAsState()
     var sliderWidth by remember { mutableIntStateOf(0) }
     var sliderHeight by remember { mutableIntStateOf(0) }
-    val containerSizePx = LocalWindowInfo.current.containerSize // IntSize in px
+    val containerSizePx = LocalWindowInfo.current.containerSize
     val density = LocalDensity.current
     val screenWidth = with(density) { containerSizePx.width.toDp() }
     val lastTickSpace = (0.084f * screenWidth.value)

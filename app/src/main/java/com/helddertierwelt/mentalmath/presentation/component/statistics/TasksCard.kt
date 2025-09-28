@@ -98,7 +98,12 @@ fun TasksCard(
             )
         }
         if (isExpanded) {
-            statisticsViewModel.lastGameRecord.collectAsState().value.taskResults
+            val statisticsGameRecord = if (statisticsViewModel.showLoadedGameRecord.collectAsState().value) {
+                statisticsViewModel.loadedGameRecord.collectAsState().value.taskResults
+            } else {
+                statisticsViewModel.lastGameRecord.collectAsState().value.taskResults
+            }
+            statisticsGameRecord
                 .forEach { task ->
                     FlowRow(
                         modifier = Modifier

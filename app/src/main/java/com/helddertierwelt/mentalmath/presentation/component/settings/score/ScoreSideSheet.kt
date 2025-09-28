@@ -63,7 +63,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
@@ -76,6 +78,7 @@ fun ScoreSideSheet(
     onDismissRequested: () -> Unit,
     screenWidth: Dp,
     screenHeight: Dp,
+    navController: NavController,
 ) {
     val activity = LocalActivity.current as ViewModelStoreOwner
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
@@ -84,6 +87,7 @@ fun ScoreSideSheet(
     val coroutineScope = rememberCoroutineScope()
     val screenWidthPx = with(LocalDensity.current) { screenWidth.toPx() }
     val sheetWidthFactor = 0.5f
+    var isFirstRender by remember { mutableStateOf(true) }
     val offsetX = remember { Animatable(screenWidthPx) }
     val minOffset = screenWidthPx * (1f - sheetWidthFactor)
     val maxOffset = screenWidthPx
@@ -95,9 +99,12 @@ fun ScoreSideSheet(
 
     // Handle side sheet open/close animation
     LaunchedEffect(isSheetOpen) {
-        isInteractionEnabled = false
         val target = if (isSheetOpen) screenWidthPx * (1f - sheetWidthFactor) else screenWidthPx
-        if (offsetX.value != target) {
+        if (isFirstRender) {
+            offsetX.snapTo(target)
+            isFirstRender = false
+        } else {
+            isInteractionEnabled = false
             offsetX.animateTo(
                 targetValue = target,
                 animationSpec = tween(
@@ -130,7 +137,6 @@ fun ScoreSideSheet(
             )
         }
 
-        // Side sheet
         Card(
             shape = RoundedCornerShape(0.dp),
             modifier = Modifier
@@ -214,45 +220,58 @@ fun ScoreSideSheet(
             val bestTotalGames by statisticsViewModel.bestTotalGames.collectAsState()
             val lastGameId = statisticsViewModel.lastGameRecord.collectAsState().value.id
 
+
             if (bestActiveGames.isEmpty() && bestTotalGames.isEmpty()) {
                 settingsViewModel.disableScoreSheet()
             } else {
                 settingsViewModel.enableScoreSheet()
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(28.dp, 12.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .clickable { settingsViewModel.toggleDefaultScoreOption() },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = if (settingsState.isActiveScoreDefault) "Active\nScore" else "Total  \nScore",
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = fontSizeTitle,
-                    textAlign = TextAlign.Start,
-                )
-                Icon(
-                    painter = painterResource(R.drawable.star_24dp),
-                    contentDescription = "activeScore",
-                    modifier = Modifier.size(128.dp),
-                    tint = if (settingsState.isActiveScoreDefault) yellow else green
-                )
-            }
-            if (settingsState.isActiveScoreDefault) {
-                ScoreList(
-                    gameRecords = bestActiveGames,
-                    fontSizeScore = fontSizeScore,
-                    lastGameId = lastGameId,
-                )
-            } else {
-                ScoreList(
-                    gameRecords = bestTotalGames,
-                    fontSizeScore = fontSizeScore,
-                    lastGameId = lastGameId,
+                @Composable
+                fun onScoreClick(): (GameRecord) -> Unit = { gameRecord ->
+                    statisticsViewModel.setLoadedGameRecord(gameRecord)
+                    statisticsViewModel.setShowLoadedGameRecord(true)
+                    navController.navigate("statistics") {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(28.dp, 12.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable { settingsViewModel.toggleDefaultScoreOption() },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = if (settingsState.isActiveScoreDefault) "Active\nScore" else "Total  \nScore",
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontSize = fontSizeTitle,
+                        textAlign = TextAlign.Start,
                     )
+                    Icon(
+                        painter = painterResource(R.drawable.star_24dp),
+                        contentDescription = "activeScore",
+                        modifier = Modifier.size(128.dp),
+                        tint = if (settingsState.isActiveScoreDefault) yellow else green
+                    )
+                }
+                if (settingsState.isActiveScoreDefault) {
+                    ScoreList(
+                        gameRecords = bestActiveGames,
+                        fontSizeScore = fontSizeScore,
+                        lastGameId = lastGameId,
+                        scoreSelector = { gameRecord -> gameRecord.activeScore },
+                        onClick = onScoreClick()
+                    )
+                } else {
+                    ScoreList(
+                        gameRecords = bestTotalGames,
+                        fontSizeScore = fontSizeScore,
+                        lastGameId = lastGameId,
+                        scoreSelector = { gameRecord -> gameRecord.totalScore },
+                        onClick = onScoreClick()
+                    )
+                }
             }
         }
     }
