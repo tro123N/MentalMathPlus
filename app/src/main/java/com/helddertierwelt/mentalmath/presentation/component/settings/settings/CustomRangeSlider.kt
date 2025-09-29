@@ -153,7 +153,7 @@ fun CustomRangeSlider(
             startInteractionSource = startInteractionSource,
             endInteractionSource = endInteractionSource,
             onValueChange = onValueChange,
-            onValueChangeFinished = onValueChangeFinished // hinzugefügt
+            onValueChangeFinished = onValueChangeFinished
         )
     }
 }

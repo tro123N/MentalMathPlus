@@ -32,6 +32,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -74,6 +75,7 @@ fun SettingsScreen(
     val activity = LocalActivity.current as ViewModelStoreOwner
     val gameViewModel: GameViewModel = hiltViewModel(activity)
     val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
+    val isLoaded by settingsViewModel.isLoaded
 
     val context = LocalContext.current
     val settingsState = settingsViewModel.settingsState.value
@@ -98,6 +100,14 @@ fun SettingsScreen(
 
     var showDialog by remember { mutableStateOf(false) }
     var isSliderActive by remember { mutableStateOf(false) }
+    val bestTotalGames by settingsViewModel.bestTotalGames.collectAsState()
+
+    // Lade die besten Spiele erst, wenn die Settings geladen sind
+    LaunchedEffect(isLoaded) {
+        if (isLoaded) {
+            settingsViewModel.loadBestGames()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -107,7 +117,8 @@ fun SettingsScreen(
                 onMenuClick = { settingsViewModel.toggleMenuOpen() },
                 onScoreClick = { settingsViewModel.toggleScoreOpen() },
                 iconSize = topBarIconSize,
-                scoreEnabled = !(settingsViewModel.bestTotalGames.collectAsState().value.isEmpty() || isSliderActive)
+                scoreEnabled = !(bestTotalGames.isEmpty() || isSliderActive),
+                isGreydOut = bestTotalGames.isEmpty()
             )
         },
         content = { padding ->

@@ -71,7 +71,6 @@ class MainActivity : ComponentActivity() {
                     !settingsViewModel.isLoaded.value
                 }
             }
-            settingsViewModel.loadBestGames()
             val navController = rememberNavController()
             lifecycle.addObserver(gameViewModel)
             MentalMathTheme(themeMode = settingsViewModel.settingsState.value.themeMode) {
