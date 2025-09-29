@@ -182,53 +182,9 @@ fun ScoreSideSheet(
 
                 // load game records based on current settings
                 val settingsState = settingsViewModel.settingsState.value
-                LaunchedEffect(settingsState) {
-                    val settingsState = settingsViewModel.settingsState.value
-                    val additionRangeStart =
-                        if (settingsState.isAdditionEnabled) settingsState.additionRange.first.toInt() else 0
-                    val additionRangeEnd =
-                        if (settingsState.isAdditionEnabled) settingsState.additionRange.second.toInt() else 0
-                    val subtractionRangeStart =
-                        if (settingsState.isSubtractionEnabled) settingsState.subtractionRange.first.toInt() else 0
-                    val subtractionRangeEnd =
-                        if (settingsState.isSubtractionEnabled) settingsState.subtractionRange.second.toInt() else 0
-                    val multiplicationRangeStart =
-                        if (settingsState.isMultiplicationEnabled) settingsState.multiplicationRange.first.toInt() else 0
-                    val multiplicationRangeEnd =
-                        if (settingsState.isMultiplicationEnabled) settingsState.multiplicationRange.second.toInt() else 0
-                    val divisionRangeStart =
-                        if (settingsState.isDivisionEnabled) settingsState.divisionRange.first.toInt() else 0
-                    val divisionRangeEnd =
-                        if (settingsState.isDivisionEnabled) settingsState.divisionRange.second.toInt() else 0
-                    statisticsViewModel.loadBestActiveGames(
-                        settingsState.isModeEnabled,
-                        settingsState.limit.toInt(),
-                        additionRangeStart,
-                        additionRangeEnd,
-                        subtractionRangeStart,
-                        subtractionRangeEnd,
-                        multiplicationRangeStart,
-                        multiplicationRangeEnd,
-                        divisionRangeStart,
-                        divisionRangeEnd,
-                    )
-                    statisticsViewModel.loadBestTotalGames(
-                        settingsState.isModeEnabled,
-                        settingsState.limit.toInt(),
-                        additionRangeStart,
-                        additionRangeEnd,
-                        subtractionRangeStart,
-                        subtractionRangeEnd,
-                        multiplicationRangeStart,
-                        multiplicationRangeEnd,
-                        divisionRangeStart,
-                        divisionRangeEnd,
-                    )
-                }
-                val bestActiveGames by statisticsViewModel.bestActiveGames.collectAsState()
-                val bestTotalGames by statisticsViewModel.bestTotalGames.collectAsState()
+                val bestActiveGames by settingsViewModel.bestActiveGames.collectAsState()
+                val bestTotalGames by settingsViewModel.bestTotalGames.collectAsState()
                 val lastGameId = statisticsViewModel.lastGameRecord.collectAsState().value.id
-
 
                 if (bestActiveGames.isEmpty() && bestTotalGames.isEmpty()) {
                     settingsViewModel.disableScoreSheet()

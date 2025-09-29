@@ -52,12 +52,13 @@ import kotlin.math.roundToInt
 
 @Composable
 fun CustomSlider(
+    valueRange: ClosedFloatingPointRange<Float>,
     value: Float,
     onValueChange: (Float) -> Unit,
-    valueRange: ClosedFloatingPointRange<Float>,
+    onValueChangeFinished: () -> Unit,
     isToggled: Boolean,
-    size: Dp,
     activeTrackColor: Color,
+    size: Dp,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isDragging by interactionSource.collectIsDraggedAsState()
@@ -120,7 +121,8 @@ fun CustomSlider(
                 .fillMaxWidth()
                 .height(size),
             colors = sliderColors,
-            interactionSource = interactionSource
+            interactionSource = interactionSource,
+            onValueChangeFinished = onValueChangeFinished,
         )
     }
 }

@@ -54,10 +54,11 @@ import java.util.Locale
 fun CustomRangeSlider(
     valueRange: ClosedFloatingPointRange<Float>,
     value: Pair<Float, Float>,
-    activeTrackColor: Color,
-    isEnabled: Boolean,
     onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
-    size: Dp
+    onValueChangeFinished: () -> Unit,
+    isEnabled: Boolean,
+    activeTrackColor: Color,
+    size: Dp,
 ) {
     val startInteractionSource = remember { MutableInteractionSource() }
     val endInteractionSource = remember { MutableInteractionSource() }
@@ -151,7 +152,8 @@ fun CustomRangeSlider(
             enabled = isEnabled,
             startInteractionSource = startInteractionSource,
             endInteractionSource = endInteractionSource,
-            onValueChange = onValueChange
+            onValueChange = onValueChange,
+            onValueChangeFinished = onValueChangeFinished // hinzugefügt
         )
     }
 }

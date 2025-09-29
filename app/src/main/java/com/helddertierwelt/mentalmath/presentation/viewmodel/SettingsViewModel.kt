@@ -22,15 +22,21 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.helddertierwelt.mentalmath.data.entity.GameRecord
+import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
 import com.helddertierwelt.mentalmath.data.repository.SettingsRepository
 import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val repository: SettingsRepository,
+    private val gameRecordRepository: GameRecordRepository
 ) : ViewModel() {
 
     private val _settingsState = mutableStateOf(SettingsState())
@@ -39,6 +45,12 @@ class SettingsViewModel @Inject constructor(
     val isLoaded = mutableStateOf(false)
     val isMenuOpen = mutableStateOf(false)
     val isScoreOpen = mutableStateOf(false)
+
+    private val _bestActiveGames = MutableStateFlow<List<GameRecord>>(emptyList())
+    val bestActiveGames = _bestActiveGames.asStateFlow()
+    private val _bestTotalGames = MutableStateFlow<List<GameRecord>>(emptyList())
+    val bestTotalGames = _bestTotalGames.asStateFlow()
+
     val isScoreSheetEnabled = mutableStateOf(false)
 
     init {
@@ -85,19 +97,19 @@ class SettingsViewModel @Inject constructor(
         saveState()
     }
 
-    fun togglePlus() {
+    fun toggleAddition() {
         _settingsState.value =
             _settingsState.value.copy(isAdditionEnabled = !_settingsState.value.isAdditionEnabled)
         saveState()
     }
 
-    fun toggleMinus() {
+    fun toggleSubtraction() {
         _settingsState.value =
             _settingsState.value.copy(isSubtractionEnabled = !_settingsState.value.isSubtractionEnabled)
         saveState()
     }
 
-    fun toggleMultiply() {
+    fun toggleMultiplication() {
         _settingsState.value =
             _settingsState.value.copy(isMultiplicationEnabled = !_settingsState.value.isMultiplicationEnabled)
         saveState()
@@ -108,6 +120,7 @@ class SettingsViewModel @Inject constructor(
             _settingsState.value.copy(isDivisionEnabled = !_settingsState.value.isDivisionEnabled)
         saveState()
     }
+
 
     fun toggleMenuOpen() {
         if (isScoreOpen.value) {
@@ -122,7 +135,6 @@ class SettingsViewModel @Inject constructor(
         }
         isScoreOpen.value = !isScoreOpen.value
     }
-
 
     fun toggleDefaultScoreOption() {
         _settingsState.value =
@@ -142,7 +154,6 @@ class SettingsViewModel @Inject constructor(
         _settingsState.value = _settingsState.value.copy(themeMode = mode)
         saveState()
     }
-
     fun resetSettings() {
         _settingsState.value = SettingsState()
         saveState()
@@ -151,6 +162,45 @@ class SettingsViewModel @Inject constructor(
     private fun saveState() {
         viewModelScope.launch {
             repository.saveSettings(_settingsState.value)
+        }
+    }
+
+    fun loadBestGames() {
+        val additionRangeStart = if (settingsState.value.isAdditionEnabled) settingsState.value.additionRange.first.toInt() else 0
+        val additionRangeEnd = if (settingsState.value.isAdditionEnabled) settingsState.value.additionRange.second.toInt() else 0
+        val subtractionRangeStart = if (settingsState.value.isSubtractionEnabled) settingsState.value.subtractionRange.first.toInt() else 0
+        val subtractionRangeEnd = if (settingsState.value.isSubtractionEnabled) settingsState.value.subtractionRange.second.toInt() else 0
+        val multiplicationRangeStart = if (settingsState.value.isMultiplicationEnabled) settingsState.value.multiplicationRange.first.toInt() else 0
+        val multiplicationRangeEnd = if (settingsState.value.isMultiplicationEnabled) settingsState.value.multiplicationRange.second.toInt() else 0
+        val divisionRangeStart = if (settingsState.value.isDivisionEnabled) settingsState.value.divisionRange.first.toInt() else 0
+        val divisionRangeEnd = if (settingsState.value.isDivisionEnabled) settingsState.value.divisionRange.second.toInt() else 0
+        viewModelScope.launch(Dispatchers.IO) {
+            val resultBestTotalGames = gameRecordRepository.findBestTotalGameRecords(
+                settingsState.value.isModeEnabled,
+                settingsState.value.limit.toInt(),
+                additionRangeStart,
+                additionRangeEnd,
+                subtractionRangeStart,
+                subtractionRangeEnd,
+                multiplicationRangeStart,
+                multiplicationRangeEnd,
+                divisionRangeStart,
+                divisionRangeEnd
+            )
+            val resultBestActiveGames = gameRecordRepository.findBestActiveGameRecords(
+                settingsState.value.isModeEnabled,
+                settingsState.value.limit.toInt(),
+                additionRangeStart,
+                additionRangeEnd,
+                subtractionRangeStart,
+                subtractionRangeEnd,
+                multiplicationRangeStart,
+                multiplicationRangeEnd,
+                divisionRangeStart,
+                divisionRangeEnd
+            )
+            _bestTotalGames.value = resultBestTotalGames
+            _bestActiveGames.value = resultBestActiveGames
         }
     }
 }

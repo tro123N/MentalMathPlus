@@ -32,6 +32,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -96,6 +97,7 @@ fun SettingsScreen(
     val topBarIconSize = (0.038f * screenHeight.value).dp
 
     var showDialog by remember { mutableStateOf(false) }
+    var isSliderActive by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             SettingsTopBar(
@@ -104,7 +106,7 @@ fun SettingsScreen(
                 onMenuClick = { settingsViewModel.toggleMenuOpen() },
                 onScoreClick = { settingsViewModel.toggleScoreOpen() },
                 iconSize = topBarIconSize,
-                scoreEnabled = settingsViewModel.isScoreSheetEnabled.value
+                scoreEnabled = !(settingsViewModel.bestTotalGames.collectAsState().value.isEmpty() || isSliderActive)
             )
         },
         content = { padding ->
@@ -135,18 +137,28 @@ fun SettingsScreen(
                             iconId1 = R.drawable.tag_24dp,
                             iconId2 = R.drawable.hourglass_bottom_24dp,
                             isToggled = settingsState.isModeEnabled,
-                            onClick = { settingsViewModel.toggleMode() },
+                            onClick = {
+                                settingsViewModel.toggleMode()
+                                settingsViewModel.loadBestGames()
+                            },
                             iconSize = modeIconSize,
                             size = roundButtonSize
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomSlider(
                             value = settingsState.limit,
-                            onValueChange = { settingsViewModel.updateLimit(it) },
+                            onValueChange = {
+                                isSliderActive = true
+                                settingsViewModel.updateLimit(it)
+                            },
                             valueRange = 1f..5f,
                             isToggled = settingsState.isModeEnabled,
                             size = sliderSize,
-                            activeTrackColor = MaterialTheme.colorScheme.onSurface
+                            activeTrackColor = MaterialTheme.colorScheme.onSurface,
+                            onValueChangeFinished = {
+                                isSliderActive = false
+                                settingsViewModel.loadBestGames()
+                            }
                         )
                     }
                     Text(
@@ -163,7 +175,10 @@ fun SettingsScreen(
                             buttonTextId = R.string.add,
                             textColor = green,
                             isSelected = settingsState.isAdditionEnabled,
-                            onClick = { settingsViewModel.togglePlus() },
+                            onClick = {
+                                settingsViewModel.toggleAddition()
+                                settingsViewModel.loadBestGames()
+                            },
                             size = roundButtonSize,
                             fontSize = operatorButtonFontSize,
                         )
@@ -173,8 +188,15 @@ fun SettingsScreen(
                             value = settingsState.additionRange,
                             activeTrackColor = green,
                             isEnabled = settingsState.isAdditionEnabled,
-                            onValueChange = { settingsViewModel.updatePlusRange(it) },
-                            size = sliderSize
+                            onValueChange = {
+                                isSliderActive = true
+                                settingsViewModel.updatePlusRange(it)
+                            },
+                            size = sliderSize,
+                            onValueChangeFinished = {
+                                isSliderActive = false
+                                settingsViewModel.loadBestGames()
+                            }
                         )
                     }
                     Row(
@@ -185,7 +207,10 @@ fun SettingsScreen(
                             buttonTextId = R.string.subtract,
                             textColor = red,
                             isSelected = settingsState.isSubtractionEnabled,
-                            onClick = { settingsViewModel.toggleMinus() },
+                            onClick = {
+                                settingsViewModel.toggleSubtraction()
+                                settingsViewModel.loadBestGames()
+                            },
                             size = roundButtonSize,
                             fontSize = operatorButtonFontSize
                         )
@@ -195,8 +220,15 @@ fun SettingsScreen(
                             value = settingsState.subtractionRange,
                             activeTrackColor = red,
                             isEnabled = settingsState.isSubtractionEnabled,
-                            onValueChange = { settingsViewModel.updateMinusRange(it) },
-                            size = sliderSize
+                            onValueChange = {
+                                isSliderActive = true
+                                settingsViewModel.updateMinusRange(it)
+                            },
+                            size = sliderSize,
+                            onValueChangeFinished = {
+                                isSliderActive = false
+                                settingsViewModel.loadBestGames()
+                            }
                         )
                     }
                     Row(
@@ -207,7 +239,10 @@ fun SettingsScreen(
                             buttonTextId = R.string.multiply,
                             textColor = yellow,
                             isSelected = settingsState.isMultiplicationEnabled,
-                            onClick = { settingsViewModel.toggleMultiply() },
+                            onClick = {
+                                settingsViewModel.toggleMultiplication()
+                                settingsViewModel.loadBestGames()
+                            },
                             size = roundButtonSize,
                             fontSize = operatorButtonFontSize
                         )
@@ -217,8 +252,15 @@ fun SettingsScreen(
                             value = settingsState.multiplicationRange,
                             activeTrackColor = yellow,
                             isEnabled = settingsState.isMultiplicationEnabled,
-                            onValueChange = { settingsViewModel.updateMultiplyRange(it) },
-                            size = sliderSize
+                            onValueChange = {
+                                isSliderActive = true
+                                settingsViewModel.updateMultiplyRange(it)
+                            },
+                            size = sliderSize,
+                            onValueChangeFinished = {
+                                isSliderActive = false
+                                settingsViewModel.loadBestGames()
+                            }
                         )
                     }
                     Row(
@@ -229,7 +271,10 @@ fun SettingsScreen(
                             buttonTextId = R.string.divide,
                             textColor = blue,
                             isSelected = settingsState.isDivisionEnabled,
-                            onClick = { settingsViewModel.toggleDivide() },
+                            onClick = {
+                                settingsViewModel.toggleDivide()
+                                settingsViewModel.loadBestGames()
+                            },
                             size = roundButtonSize,
                             fontSize = operatorButtonFontSize
                         )
@@ -239,8 +284,15 @@ fun SettingsScreen(
                             value = settingsState.divisionRange,
                             activeTrackColor = blue,
                             isEnabled = settingsState.isDivisionEnabled,
-                            onValueChange = { settingsViewModel.updateDivideRange(it) },
-                            size = sliderSize
+                            onValueChange = {
+                                isSliderActive = true
+                                settingsViewModel.updateDivideRange(it)
+                            },
+                            size = sliderSize,
+                            onValueChangeFinished = {
+                                isSliderActive = false
+                                settingsViewModel.loadBestGames()
+                            }
                         )
                     }
                     StartButton(
