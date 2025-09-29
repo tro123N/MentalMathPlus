@@ -98,6 +98,7 @@ fun SettingsScreen(
 
     var showDialog by remember { mutableStateOf(false) }
     var isSliderActive by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             SettingsTopBar(

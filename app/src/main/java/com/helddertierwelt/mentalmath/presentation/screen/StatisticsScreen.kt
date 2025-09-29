@@ -24,6 +24,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -56,12 +57,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.core.view.drawToBitmap
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.component.statistics.DoneButton
 import com.helddertierwelt.mentalmath.presentation.component.statistics.SettingsAndStatsCard
 import com.helddertierwelt.mentalmath.presentation.component.statistics.StatisticsTopBar
 import com.helddertierwelt.mentalmath.presentation.component.statistics.TasksCard
+import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import java.io.File
 import java.io.FileOutputStream
 
@@ -69,6 +73,9 @@ import java.io.FileOutputStream
 fun StatisticsScreen(
     navController: NavController,
 ) {
+
+    val activity = LocalActivity.current as ViewModelStoreOwner
+    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
 
     // Calculate sizes based on screen size
     val containerSizePx = LocalWindowInfo.current.containerSize // IntSize in px
@@ -203,6 +210,7 @@ fun StatisticsScreen(
                     DoneButton(
                         buttonTextId = R.string.done,
                         onClick = {
+                            settingsViewModel.loadBestGames()
                             navController.navigate("settings") {
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true
@@ -221,6 +229,7 @@ fun StatisticsScreen(
     DisposableEffect(Unit) {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                settingsViewModel.loadBestGames()
                 navController.navigate("settings") {
                     popUpTo(0) { inclusive = true }
                     launchSingleTop = true

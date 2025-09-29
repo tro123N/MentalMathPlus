@@ -97,7 +97,7 @@ fun CustomSlider(
                 .padding(horizontal = 6.dp),
             text = String.format(
                 Locale.getDefault(),
-                if (isToggled) "${(value * 10).roundToInt()}ex" else "${value.toInt()}min",
+                if (isToggled) "${(value * 10).roundToInt()}" else "${value.toInt()}min",
                 value
             ),
             color = MaterialTheme.colorScheme.onSecondary,
