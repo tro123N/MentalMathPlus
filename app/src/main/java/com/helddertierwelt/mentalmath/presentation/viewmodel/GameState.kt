@@ -45,5 +45,6 @@ data class GameState(
     val totalTime: Long = 0,
     val startTimeStamp: Long = 0,
     val pausedAt: Long = Long.MAX_VALUE,
-    val totalPauseDuration: Long = 0L
+    val totalPauseDuration: Long = 0L,
+    val seed: Long = 0L
 ) : Parcelable

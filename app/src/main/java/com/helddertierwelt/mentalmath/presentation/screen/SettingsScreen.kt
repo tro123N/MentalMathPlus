@@ -101,8 +101,10 @@ fun SettingsScreen(
     var showDialog by remember { mutableStateOf(false) }
     var isSliderActive by remember { mutableStateOf(false) }
     val bestTotalGames by settingsViewModel.bestTotalGames.collectAsState()
+    val bestActiveGames by settingsViewModel.bestTotalGames.collectAsState()
+    val bestGamesEmpty = bestTotalGames.isEmpty() && bestActiveGames.isEmpty()
 
-    // Lade die besten Spiele erst, wenn die Settings geladen sind
+
     LaunchedEffect(isLoaded) {
         if (isLoaded) {
             settingsViewModel.loadBestGames()
@@ -117,8 +119,8 @@ fun SettingsScreen(
                 onMenuClick = { settingsViewModel.toggleMenuOpen() },
                 onScoreClick = { settingsViewModel.toggleScoreOpen() },
                 iconSize = topBarIconSize,
-                scoreEnabled = !(bestTotalGames.isEmpty() || isSliderActive),
-                isGreydOut = bestTotalGames.isEmpty()
+                scoreEnabled = !bestGamesEmpty && !isSliderActive,
+                isGreydOut = bestGamesEmpty
             )
         },
         content = { padding ->

@@ -27,10 +27,10 @@ data class SettingsState(
     val isModeEnabled: Boolean = true,
     val limit: Float = 3f,
 
-    val additionRange: Pair<Float, Float> = 2f to 5f,
-    val subtractionRange: Pair<Float, Float> = 2f to 5f,
-    val multiplicationRange: Pair<Float, Float> = 2f to 5f,
-    val divisionRange: Pair<Float, Float> = 2f to 5f,
+    val additionRange: Pair<Float, Float> = 1f to 3f,
+    val subtractionRange: Pair<Float, Float> = 1f to 3f,
+    val multiplicationRange: Pair<Float, Float> = 1f to 3f,
+    val divisionRange: Pair<Float, Float> = 1f to 3f,
 
     val isAdditionEnabled: Boolean = true,
     val isSubtractionEnabled: Boolean = true,

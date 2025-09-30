@@ -61,5 +61,7 @@ data class GameRecord(
     val activeScore: Float,
     val totalScore: Float,
 
+    val seed: Long,
+
     val taskResults: List<TaskResult>
 )

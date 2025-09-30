@@ -46,7 +46,8 @@ class GameRecordRepository @Inject constructor(
             totalTime = 0L,
             activeScore = 0f,
             totalScore = 0f,
-            taskResults = emptyList()
+            taskResults = emptyList(),
+            seed = 0
         )
     )
     val lastGameRecord: StateFlow<GameRecord> = _lastGameRecord
@@ -73,7 +74,8 @@ class GameRecordRepository @Inject constructor(
             totalTime = 0L,
             activeScore = 0f,
             totalScore = 0f,
-            taskResults = emptyList()
+            taskResults = emptyList(),
+            seed = 0
         )
     )
     val loadedGameRecord: StateFlow<GameRecord> = _loadedGameRecord
@@ -138,7 +140,6 @@ class GameRecordRepository @Inject constructor(
             divisionRangeEnd
         )
     }
-
 
     suspend fun deleteAllGameRecords() {
         gameRecordDao.deleteAll()

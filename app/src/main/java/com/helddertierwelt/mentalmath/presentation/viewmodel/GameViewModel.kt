@@ -225,8 +225,12 @@ class GameViewModel @Inject constructor(
     }
 
     fun startGame() {
-        random = Random(System.currentTimeMillis())
-        _gameState.value = _gameState.value.copy(isGameStarted = true)
+        val seed = System.currentTimeMillis()
+        random = Random(seed)
+        _gameState.value = _gameState.value.copy(
+            isGameStarted = true,
+            seed = seed
+        )
         generateNewTask()
         setStartTimestamp()
         startTimer()
@@ -270,7 +274,8 @@ class GameViewModel @Inject constructor(
             activeTime = _gameState.value.activeTime,
             activeScore = activeScoreValue,
             totalScore = totalScoreValue,
-            taskResults = _gameState.value.tasks
+            taskResults = _gameState.value.tasks,
+            seed = _gameState.value.seed
         )
 
         gameRecordRepository.setLastGameRecord(lastGame)
