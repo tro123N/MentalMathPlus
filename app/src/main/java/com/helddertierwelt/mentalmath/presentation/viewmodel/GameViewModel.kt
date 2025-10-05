@@ -353,6 +353,13 @@ class GameViewModel @Inject constructor(
         }
     }
 
+    fun endGame() {
+        pauseTimer()
+        saveGameRecord()
+        _gameState.value = _gameState.value.copy(isGameStarted = false)
+        saveState()
+    }
+
     private fun saveState() {
         savedStateHandle["game_state"] = _gameState.value
     }

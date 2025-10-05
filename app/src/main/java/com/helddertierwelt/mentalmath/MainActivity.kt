@@ -37,6 +37,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -45,10 +46,12 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.screen.Navigation
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
@@ -61,6 +64,10 @@ class MainActivity : ComponentActivity() {
 
     private val gameViewModel: GameViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
+
+    // States für DeepLink-PopUp
+    private val showDeepLinkPopUp = mutableStateOf(false)
+    private val deepLinkSettingsString = mutableStateOf<String?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,8 +103,38 @@ class MainActivity : ComponentActivity() {
                 Navigation(
                     navController = navController
                 )
+                if (showDeepLinkPopUp.value) {
+                    PopUp(
+                        onDismissRequest = { showDeepLinkPopUp.value = false },
+                        onConfirm = {
+                            showDeepLinkPopUp.value = false
+                            gameViewModel.endGame()
+                            settingsViewModel.applySettingsString(deepLinkSettingsString.value!!)
+                        },
+                        onCancel = { showDeepLinkPopUp.value = false },
+                        titleSize = MaterialTheme.typography.titleLarge.fontSize,
+                        descriptionSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        title = "Test",
+                        description = "",
+                        confirmationText = "",
+                        cancelText = ""
+                    )
+                }
             }
+        }
+    }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        val data = intent.data
+        val settingsString = data?.getQueryParameter("settings")
+        if (settingsString != null && settingsViewModel.isValidSettingsString(settingsString)) {
+            if (gameViewModel.gamesState.value.isGameStarted) {
+                showDeepLinkPopUp.value = true
+                deepLinkSettingsString.value = settingsString
+            } else {
+                settingsViewModel.applySettingsString(settingsString)
+            }
         }
     }
 }

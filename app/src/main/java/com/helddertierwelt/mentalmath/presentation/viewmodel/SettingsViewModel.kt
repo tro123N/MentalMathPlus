@@ -203,4 +203,56 @@ class SettingsViewModel @Inject constructor(
             _bestActiveGames.value = resultBestActiveGames
         }
     }
+
+    fun applySettingsString(settingsString: String) {
+        val parts = settingsString.split(";")
+        val isModeEnabled = parts[0] == "1"
+        val limit = parts[1].toFloat()
+        val additionRange = Pair(parts[2].toFloat(), parts[3].toFloat())
+        val subtractionRange = Pair(parts[4].toFloat(), parts[5].toFloat())
+        val multiplicationRange = Pair(parts[6].toFloat(), parts[7].toFloat())
+        val divisionRange = Pair(parts[8].toFloat(), parts[9].toFloat())
+        _settingsState.value = _settingsState.value.copy(
+            isModeEnabled = isModeEnabled,
+            limit = limit,
+            additionRange = additionRange,
+            subtractionRange = subtractionRange,
+            multiplicationRange = multiplicationRange,
+            divisionRange = divisionRange
+        )
+    }
+
+    fun isValidSettingsString(settingsString: String): Boolean {
+        val parts = settingsString.split(";")
+        if (parts.size != 11) return false
+        if (parts[0] != "0" && parts[0] != "1") return false
+
+        // limit
+        val limit = parts[1].toIntOrNull() ?: return false
+        if (limit !in 1..5) return false
+
+        // addition
+        val addStart = parts[2].toIntOrNull() ?: return false
+        val addEnd = parts[3].toIntOrNull() ?: return false
+        if (addStart !in 0..9 || addEnd !in 0..9 || addStart > addEnd) return false
+
+        // subtraction
+        val subStart = parts[4].toIntOrNull() ?: return false
+        val subEnd = parts[5].toIntOrNull() ?: return false
+        if (subStart !in 0..9 || subEnd !in 0..9 || subStart > subEnd) return false
+
+        // multiplication
+        val mulStart = parts[6].toIntOrNull() ?: return false
+        val mulEnd = parts[7].toIntOrNull() ?: return false
+        if (mulStart !in 0..9 || mulEnd !in 0..9 || mulStart > mulEnd) return false
+
+        // division
+        val divStart = parts[8].toIntOrNull() ?: return false
+        val divEnd = parts[9].toIntOrNull() ?: return false
+        if (divStart !in 0..9 || divEnd !in 0..9 || divStart > divEnd) return false
+
+        // seed
+        if (parts[10].toLongOrNull() == null) return false
+        return true
+    }
 }

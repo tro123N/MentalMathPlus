@@ -223,8 +223,7 @@ fun GameScreen(
                                     val totalAnswers = gameViewModel.gamesState.value.totalAnswers
                                     val totalTasks = (settingsState.limit * 10).roundToInt()
                                     if (settingsState.isModeEnabled && totalAnswers == totalTasks) {
-                                        gameViewModel.pauseTimer()
-                                        gameViewModel.saveGameRecord()
+                                        gameViewModel.endGame()
                                         statisticsViewModel.setShowLoadedGameRecord(false)
                                         navController.navigate("statistics") {
                                             popUpTo(0) { inclusive = true }

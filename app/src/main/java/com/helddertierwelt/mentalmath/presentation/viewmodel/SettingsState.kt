@@ -25,7 +25,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class SettingsState(
     val isModeEnabled: Boolean = true,
-    val limit: Float = 3f,
+    val limit: Float = 2f,
 
     val additionRange: Pair<Float, Float> = 1f to 3f,
     val subtractionRange: Pair<Float, Float> = 1f to 3f,
