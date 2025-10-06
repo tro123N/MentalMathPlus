@@ -28,7 +28,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="mentalmath" android:host="start" />
+                <data android:scheme="https" android:host="helddertierwelt.codeberg.page" />
             </intent-filter>
         </activity>
         <provider

@@ -57,6 +57,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import com.helddertierwelt.mentalmath.util.LinkValidator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -128,7 +129,7 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         val data = intent.data
         val settingsString = data?.getQueryParameter("settings")
-        if (settingsString != null && settingsViewModel.isValidSettingsString(settingsString)) {
+        if (settingsString != null && LinkValidator.isValidSettingsString(settingsString)) {
             if (gameViewModel.gamesState.value.isGameStarted) {
                 showDeepLinkPopUp.value = true
                 deepLinkSettingsString.value = settingsString
