@@ -39,6 +39,7 @@ package com.helddertierwelt.mentalmath
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -58,6 +59,8 @@ import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.screen.Navigation
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
+import com.helddertierwelt.mentalmath.presentation.theme.green
+import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.util.LinkValidator
@@ -68,13 +71,12 @@ class MainActivity : ComponentActivity() {
 
     private val gameViewModel: GameViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
-
-    // States für DeepLink-PopUp
     private val showDeepLinkPopUp = mutableStateOf(false)
     private val deepLinkSettingsString = mutableStateOf<String?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        handleDeepLinkIntent(intent)
         enableEdgeToEdge()
         setContent {
             installSplashScreen().apply {
@@ -114,12 +116,12 @@ class MainActivity : ComponentActivity() {
                     val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
                     PopUp(
                         onDismissRequest = {
-                            gameViewModel.resumeTimer()
                             showDeepLinkPopUp.value = false
                         },
                         onConfirm = {
+                            val settingsString = deepLinkSettingsString.value!!
                             gameViewModel.resetGame()
-                            settingsViewModel.applySettingsString(deepLinkSettingsString.value!!)
+                            settingsViewModel.applySettingsString(settingsString)
                             gameViewModel.setSettings(settingsViewModel)
                             deepLinkSettingsString.value = null
                             showDeepLinkPopUp.value = false
@@ -128,11 +130,10 @@ class MainActivity : ComponentActivity() {
                                 launchSingleTop = true
                             }
                             gameViewModel.startGame(
-                                deepLinkSettingsString.value!!.split(";").last().toLong()
+                                settingsString.split(";").last().toLong()
                             )
                         },
                         onCancel = {
-                            gameViewModel.resumeTimer()
                             showDeepLinkPopUp.value = false
                         },
                         titleSize = titleFontSize,
@@ -140,7 +141,9 @@ class MainActivity : ComponentActivity() {
                         title = "Start game from link?",
                         description = "Start a new game using the settings provided by the link. Any current game progress will be lost.",
                         confirmationText = "Start",
-                        cancelText = "Cancel"
+                        cancelText = "Cancel",
+                        dismissColor = red,
+                        confirmColor = green
                     )
                 }
             }
@@ -148,13 +151,21 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onNewIntent(intent: Intent) {
+        Log.d("DeepLink", "onNewIntent called. Intent: $intent")
         super.onNewIntent(intent)
-        val data = intent.data
+        handleDeepLinkIntent(intent)
+    }
+
+    private fun handleDeepLinkIntent(intent: Intent?) {
+        val data = intent?.data
         val settingsString = data?.getQueryParameter("settings")
+        Log.d("DeepLink", "Extracted settingsString: $settingsString")
         if (settingsString != null && LinkValidator.isValidSettingsString(settingsString)) {
+            Log.d("DeepLink", "SettingsString is valid. Showing popup.")
             showDeepLinkPopUp.value = true
             deepLinkSettingsString.value = settingsString
-            gameViewModel.pauseTimer()
+        } else {
+            Log.d("DeepLink", "SettingsString is invalid or missing.")
         }
     }
 }

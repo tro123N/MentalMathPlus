@@ -357,7 +357,9 @@ fun SettingsScreen(
             title = "Reset app?",
             description = "Deletes all scores and settings.",
             confirmationText = "Reset",
-            cancelText = "Cancel"
+            cancelText = "Cancel",
+            dismissColor = green,
+            confirmColor = red
         )
     }
 

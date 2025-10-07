@@ -25,9 +25,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.TextUnit
-import com.helddertierwelt.mentalmath.presentation.theme.green
-import com.helddertierwelt.mentalmath.presentation.theme.red
 
 @Composable
 fun PopUp(
@@ -40,10 +39,9 @@ fun PopUp(
     description: String,
     confirmationText: String,
     cancelText: String,
+    dismissColor: Color,
+    confirmColor: Color,
 ) {
-    val quitColor = red
-    val continueColor = green
-
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
@@ -55,7 +53,7 @@ fun PopUp(
         confirmButton = {
             Button(
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = quitColor,
+                    containerColor = confirmColor,
                     contentColor = MaterialTheme.colorScheme.onSecondary
                 ),
                 onClick = { onConfirm() }
@@ -66,7 +64,7 @@ fun PopUp(
         dismissButton = {
             Button(
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = continueColor,
+                    containerColor = dismissColor,
                     contentColor = MaterialTheme.colorScheme.onSecondary
                 ),
                 onClick = { onCancel() }

@@ -59,6 +59,8 @@ import com.helddertierwelt.mentalmath.presentation.component.game.MathTaskDispla
 import com.helddertierwelt.mentalmath.presentation.component.game.NumberButton
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.theme.blue
+import com.helddertierwelt.mentalmath.presentation.theme.green
+import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
@@ -279,7 +281,9 @@ fun GameScreen(
             title = "Quit game?",
             description = "Your current progress will be lost.",
             confirmationText = "Quit",
-            cancelText = "Continue"
+            cancelText = "Continue",
+            dismissColor = green,
+            confirmColor = red
         )
     }
 }
