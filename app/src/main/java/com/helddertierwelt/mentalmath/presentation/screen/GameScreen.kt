@@ -78,7 +78,7 @@ fun GameScreen(
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
 
     LaunchedEffect(Unit) {
-        gameViewModel.resumeTimerIfNeeded()
+        gameViewModel.startTimerIfNeeded()
     }
 
     val settingsState = settingsViewModel.settingsState.value

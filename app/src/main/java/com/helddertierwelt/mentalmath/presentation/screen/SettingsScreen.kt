@@ -317,7 +317,7 @@ fun SettingsScreen(
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true
                             }
-                            gameViewModel.startGame()
+                            gameViewModel.startGame(System.currentTimeMillis())
                         },
                         size = roundButtonSize,
                         fontSize = startButtonFontSize,

@@ -48,6 +48,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -105,20 +108,37 @@ class MainActivity : ComponentActivity() {
                     navController = navController
                 )
                 if (showDeepLinkPopUp.value) {
+                    val screenHeight =
+                        with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
+                    val titleFontSize = (0.031f * screenHeight.value).sp
+                    val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
                     PopUp(
-                        onDismissRequest = { showDeepLinkPopUp.value = false },
-                        onConfirm = {
+                        onDismissRequest = {
+                            gameViewModel.resumeTimer()
                             showDeepLinkPopUp.value = false
-                            gameViewModel.endGame()
-                            settingsViewModel.applySettingsString(deepLinkSettingsString.value!!)
                         },
-                        onCancel = { showDeepLinkPopUp.value = false },
-                        titleSize = MaterialTheme.typography.titleLarge.fontSize,
-                        descriptionSize = MaterialTheme.typography.bodyLarge.fontSize,
-                        title = "Test",
-                        description = "",
-                        confirmationText = "",
-                        cancelText = ""
+                        onConfirm = {
+                            gameViewModel.resetGame()
+                            settingsViewModel.applySettingsString(deepLinkSettingsString.value!!)
+                            gameViewModel.setSettings(settingsViewModel)
+                            deepLinkSettingsString.value = null
+                            showDeepLinkPopUp.value = false
+                            navController.navigate("game") {
+                                popUpTo(0) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                            gameViewModel.startGame(deepLinkSettingsString.value!!.split(";").last().toLong())
+                        },
+                        onCancel = {
+                            gameViewModel.resumeTimer()
+                            showDeepLinkPopUp.value = false
+                        },
+                        titleSize = titleFontSize,
+                        descriptionSize = popUpDescriptionFontSize,
+                        title = "Start New Game?",
+                        description = "Start a new game with the provided settings.\nAny current game progress will be lost.",
+                        confirmationText = "Start",
+                        cancelText = "Cancel"
                     )
                 }
             }
@@ -130,12 +150,9 @@ class MainActivity : ComponentActivity() {
         val data = intent.data
         val settingsString = data?.getQueryParameter("settings")
         if (settingsString != null && LinkValidator.isValidSettingsString(settingsString)) {
-            if (gameViewModel.gamesState.value.isGameStarted) {
-                showDeepLinkPopUp.value = true
-                deepLinkSettingsString.value = settingsString
-            } else {
-                settingsViewModel.applySettingsString(settingsString)
-            }
+            showDeepLinkPopUp.value = true
+            deepLinkSettingsString.value = settingsString
+            gameViewModel.pauseTimer()
         }
     }
 }

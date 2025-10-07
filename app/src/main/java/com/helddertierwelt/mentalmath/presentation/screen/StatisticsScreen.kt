@@ -156,11 +156,11 @@ fun StatisticsScreen(
         try {
             val imageUri = saveBitmapToCacheAndGetUri(context, bitmap)
             val settingsString = GameStringSerializer.serialize(statisticsViewModel.lastGameRecord.value)
-            val deepLink = "mentalmath://start?settings=$settingsString"
+            val appLink = "https://helddertierwelt.codeberg.page/mentalmath?settings=$settingsString"
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "image/png"
                 putExtra(Intent.EXTRA_STREAM, imageUri)
-                putExtra(Intent.EXTRA_TEXT, deepLink)
+                putExtra(Intent.EXTRA_TEXT, appLink)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
             context.startActivity(
