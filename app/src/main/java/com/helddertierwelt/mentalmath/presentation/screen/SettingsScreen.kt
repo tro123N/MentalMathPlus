@@ -354,7 +354,7 @@ fun SettingsScreen(
             onCancel = { showDialog = false },
             titleSize = titleFontSize,
             descriptionSize = popUpDescriptionFontSize,
-            title = "Reset App?",
+            title = "Reset app?",
             description = "Deletes all scores and settings.",
             confirmationText = "Reset",
             cancelText = "Cancel"

@@ -276,7 +276,7 @@ fun GameScreen(
             onCancel = { showDialog = false },
             titleSize = titleFontSize,
             descriptionSize = popUpDescriptionFontSize,
-            title = "Quit Game?",
+            title = "Quit game?",
             description = "Your current progress will be lost.",
             confirmationText = "Quit",
             cancelText = "Continue"

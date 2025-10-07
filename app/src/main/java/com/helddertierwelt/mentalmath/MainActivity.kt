@@ -127,7 +127,9 @@ class MainActivity : ComponentActivity() {
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true
                             }
-                            gameViewModel.startGame(deepLinkSettingsString.value!!.split(";").last().toLong())
+                            gameViewModel.startGame(
+                                deepLinkSettingsString.value!!.split(";").last().toLong()
+                            )
                         },
                         onCancel = {
                             gameViewModel.resumeTimer()
@@ -135,8 +137,8 @@ class MainActivity : ComponentActivity() {
                         },
                         titleSize = titleFontSize,
                         descriptionSize = popUpDescriptionFontSize,
-                        title = "Start New Game?",
-                        description = "Start a new game with the provided settings.\nAny current game progress will be lost.",
+                        title = "Start game from link?",
+                        description = "Start a new game using the settings provided by the link. Any current game progress will be lost.",
                         confirmationText = "Start",
                         cancelText = "Cancel"
                     )
