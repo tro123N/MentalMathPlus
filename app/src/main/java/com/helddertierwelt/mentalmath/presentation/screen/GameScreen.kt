@@ -59,6 +59,8 @@ import com.helddertierwelt.mentalmath.presentation.component.game.MathTaskDispla
 import com.helddertierwelt.mentalmath.presentation.component.game.NumberButton
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.theme.blue
+import com.helddertierwelt.mentalmath.presentation.theme.green
+import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
@@ -78,7 +80,7 @@ fun GameScreen(
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
 
     LaunchedEffect(Unit) {
-        gameViewModel.resumeTimerIfNeeded()
+        gameViewModel.startTimerIfNeeded()
     }
 
     val settingsState = settingsViewModel.settingsState.value
@@ -223,8 +225,7 @@ fun GameScreen(
                                     val totalAnswers = gameViewModel.gamesState.value.totalAnswers
                                     val totalTasks = (settingsState.limit * 10).roundToInt()
                                     if (settingsState.isModeEnabled && totalAnswers == totalTasks) {
-                                        gameViewModel.pauseTimer()
-                                        gameViewModel.saveGameRecord()
+                                        gameViewModel.endGame()
                                         statisticsViewModel.setShowLoadedGameRecord(false)
                                         navController.navigate("statistics") {
                                             popUpTo(0) { inclusive = true }
@@ -277,10 +278,12 @@ fun GameScreen(
             onCancel = { showDialog = false },
             titleSize = titleFontSize,
             descriptionSize = popUpDescriptionFontSize,
-            title = "Quit Game?",
+            title = "Quit game?",
             description = "Your current progress will be lost.",
             confirmationText = "Quit",
-            cancelText = "Continue"
+            cancelText = "Continue",
+            dismissColor = green,
+            confirmColor = red
         )
     }
 }

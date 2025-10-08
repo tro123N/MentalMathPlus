@@ -317,7 +317,7 @@ fun SettingsScreen(
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true
                             }
-                            gameViewModel.startGame()
+                            gameViewModel.startGame(System.currentTimeMillis())
                         },
                         size = roundButtonSize,
                         fontSize = startButtonFontSize,
@@ -354,10 +354,12 @@ fun SettingsScreen(
             onCancel = { showDialog = false },
             titleSize = titleFontSize,
             descriptionSize = popUpDescriptionFontSize,
-            title = "Reset App?",
+            title = "Reset app?",
             description = "Deletes all scores and settings.",
             confirmationText = "Reset",
-            cancelText = "Cancel"
+            cancelText = "Cancel",
+            dismissColor = green,
+            confirmColor = red
         )
     }
 

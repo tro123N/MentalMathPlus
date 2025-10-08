@@ -224,8 +224,7 @@ class GameViewModel @Inject constructor(
         saveState()
     }
 
-    fun startGame() {
-        val seed = System.currentTimeMillis()
+    fun startGame(seed: Long) {
         random = Random(seed)
         _gameState.value = _gameState.value.copy(
             isGameStarted = true,
@@ -321,29 +320,23 @@ class GameViewModel @Inject constructor(
     }
 
     fun pauseTimer() {
-        _gameState.value = _gameState.value.copy(
-            pausedAt = System.currentTimeMillis(),
-            isTimerRunning = false
-        )
-        saveState()
-        timerJob?.cancel()
+        if (_gameState.value.isGameStarted && _gameState.value.isTimerRunning) {
+            _gameState.value = _gameState.value.copy(
+                pausedAt = System.currentTimeMillis(),
+                isTimerRunning = false
+            )
+            saveState()
+            timerJob?.cancel()
+        }
     }
 
-    fun resumeTimerIfNeeded() {
+    fun startTimerIfNeeded() {
         if (_gameState.value.isTimerRunning && (timerJob == null || timerJob?.isCompleted == true)) {
             startTimer()
         }
     }
 
-    override fun onPause(owner: LifecycleOwner) {
-        super.onPause(owner)
-        if (_gameState.value.isGameStarted && _gameState.value.isTimerRunning) {
-            pauseTimer()
-        }
-    }
-
-    override fun onResume(owner: LifecycleOwner) {
-        super.onResume(owner)
+    fun resumeTimer() {
         if (_gameState.value.isGameStarted && !_gameState.value.isTimerRunning) {
             val totalPauseDuration =
                 _gameState.value.totalPauseDuration + (System.currentTimeMillis() - _gameState.value.pausedAt)
@@ -351,6 +344,23 @@ class GameViewModel @Inject constructor(
             saveState()
             startTimer()
         }
+    }
+
+    fun endGame() {
+        pauseTimer()
+        saveGameRecord()
+        _gameState.value = _gameState.value.copy(isGameStarted = false)
+        saveState()
+    }
+
+    override fun onPause(owner: LifecycleOwner) {
+        super.onPause(owner)
+        pauseTimer()
+    }
+
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
+        resumeTimer()
     }
 
     private fun saveState() {

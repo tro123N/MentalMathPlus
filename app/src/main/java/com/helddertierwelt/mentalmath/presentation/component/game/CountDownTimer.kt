@@ -54,8 +54,7 @@ fun CountdownTimer(
     LaunchedEffect(timeLeft) {
         formattedTime = formatTime(timeLeft)
         if (timeLeft <= 0) {
-            gameViewModel.pauseTimer()
-            gameViewModel.saveGameRecord()
+            gameViewModel.endGame()
             statisticsViewModel.setShowLoadedGameRecord(false)
             navController.navigate("statistics") {
                 popUpTo(0) { inclusive = true }

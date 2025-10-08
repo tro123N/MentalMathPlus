@@ -66,6 +66,8 @@ import com.helddertierwelt.mentalmath.presentation.component.statistics.Settings
 import com.helddertierwelt.mentalmath.presentation.component.statistics.StatisticsTopBar
 import com.helddertierwelt.mentalmath.presentation.component.statistics.TasksCard
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.util.GameStringSerializer
 import java.io.File
 import java.io.FileOutputStream
 
@@ -76,6 +78,8 @@ fun StatisticsScreen(
 
     val activity = LocalActivity.current as ViewModelStoreOwner
     val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
+    val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
+
 
     // Calculate sizes based on screen size
     val containerSizePx = LocalWindowInfo.current.containerSize // IntSize in px
@@ -148,6 +152,25 @@ fun StatisticsScreen(
         }
     }
 
+    fun shareBitmapWithLink(context: Context, bitmap: Bitmap) {
+        try {
+            val imageUri = saveBitmapToCacheAndGetUri(context, bitmap)
+            val settingsString = GameStringSerializer.serialize(statisticsViewModel.lastGameRecord.value)
+            val appLink = "https://helddertierwelt.codeberg.page/mentalmath?settings=$settingsString"
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "image/png"
+                putExtra(Intent.EXTRA_STREAM, imageUri)
+                putExtra(Intent.EXTRA_TEXT, appLink)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            context.startActivity(
+                Intent.createChooser(shareIntent, context.getString(R.string.share_score))
+            )
+        } catch (e: Exception) {
+            Log.e("StatisticsScreen", "Error when sharing score and link", e)
+        }
+    }
+
     Scaffold(
         topBar = {
             StatisticsTopBar(
@@ -157,7 +180,7 @@ fun StatisticsScreen(
                 onShareClick = {
                     val bitmap = captureSettingsCardBitmap()
                     if (bitmap != null) {
-                        shareBitmap(context, bitmap)
+                        shareBitmapWithLink(context, bitmap)
                     } else {
                         Log.e("StatisticsScreen", "Bitmap could not be captured")
                     }

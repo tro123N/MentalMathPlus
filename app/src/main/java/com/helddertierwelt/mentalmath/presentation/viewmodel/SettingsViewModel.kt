@@ -203,4 +203,22 @@ class SettingsViewModel @Inject constructor(
             _bestActiveGames.value = resultBestActiveGames
         }
     }
+
+    fun applySettingsString(settingsString: String) {
+        val parts = settingsString.split(";")
+        val isModeEnabled = parts[0] == "1"
+        val limit = parts[1].toFloat()
+        val additionRange = Pair(parts[2].toFloat(), parts[3].toFloat())
+        val subtractionRange = Pair(parts[4].toFloat(), parts[5].toFloat())
+        val multiplicationRange = Pair(parts[6].toFloat(), parts[7].toFloat())
+        val divisionRange = Pair(parts[8].toFloat(), parts[9].toFloat())
+        _settingsState.value = _settingsState.value.copy(
+            isModeEnabled = isModeEnabled,
+            limit = limit,
+            additionRange = additionRange,
+            subtractionRange = subtractionRange,
+            multiplicationRange = multiplicationRange,
+            divisionRange = divisionRange
+        )
+    }
 }
