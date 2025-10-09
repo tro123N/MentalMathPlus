@@ -43,6 +43,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -70,6 +71,7 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import com.helddertierwelt.mentalmath.util.GameStringSerializer
 import java.io.File
 import java.io.FileOutputStream
+import kotlinx.coroutines.launch
 
 @Composable
 fun StatisticsScreen(
@@ -100,6 +102,8 @@ fun StatisticsScreen(
     val columnPadding = (0.028f * screenHeight.value).dp
     val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
 
+    val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
     var statsCardCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
     var hasCapturedCoordinates by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -164,11 +168,14 @@ fun StatisticsScreen(
                 titleFontSize,
                 shareIconSize,
                 onShareClick = {
-                    val bitmap = captureSettingsCardBitmap()
-                    if (bitmap != null) {
-                        shareBitmapWithLink(context, bitmap)
-                    } else {
-                        Log.e("StatisticsScreen", "Bitmap could not be captured")
+                    coroutineScope.launch {
+                        scrollState.animateScrollTo(0)
+                        val bitmap = captureSettingsCardBitmap()
+                        if (bitmap != null) {
+                            shareBitmapWithLink(context, bitmap)
+                        } else {
+                            Log.e("StatisticsScreen", "Bitmap could not be captured")
+                        }
                     }
                 }
             )
@@ -188,7 +195,7 @@ fun StatisticsScreen(
                 ) {
                     Column(
                         modifier = Modifier
-                            .verticalScroll(rememberScrollState())
+                            .verticalScroll(scrollState)
                             .fillMaxWidth()
                             .weight(1f),
                         verticalArrangement = Arrangement.Top,
