@@ -39,6 +39,7 @@ package com.helddertierwelt.mentalmath
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -65,6 +66,7 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.util.LinkValidator
 import dagger.hilt.android.AndroidEntryPoint
+import java.math.BigInteger
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -130,7 +132,7 @@ class MainActivity : ComponentActivity() {
                                 launchSingleTop = true
                             }
                             gameViewModel.startGame(
-                                settingsString.split(";").last().toLong()
+                                settingsString.substring(17, 35).toLong()
                             )
                         },
                         onCancel = {
@@ -158,14 +160,17 @@ class MainActivity : ComponentActivity() {
 
     private fun handleDeepLinkIntent(intent: Intent?) {
         val data = intent?.data
-        val settingsString = data?.getQueryParameter("settings")
-        Log.d("DeepLink", "Extracted settingsString: $settingsString")
-        if (settingsString != null && LinkValidator.isValidSettingsString(settingsString)) {
-            Log.d("DeepLink", "SettingsString is valid. Showing popup.")
+        val encodedSettingsString = data?.getQueryParameter("settings")
+        if (encodedSettingsString != null && LinkValidator.isValidSettingsString(encodedSettingsString)) {
             showDeepLinkPopUp.value = true
-            deepLinkSettingsString.value = settingsString
+            deepLinkSettingsString.value = decode(encodedSettingsString)
         } else {
             Log.d("DeepLink", "SettingsString is invalid or missing.")
         }
+    }
+
+    private fun decode(encodedSettingsString: String): String {
+        val byteArray = Base64.decode(encodedSettingsString, Base64.URL_SAFE or Base64.NO_WRAP)
+        return BigInteger(byteArray).toString().padStart(35, '0')
     }
 }

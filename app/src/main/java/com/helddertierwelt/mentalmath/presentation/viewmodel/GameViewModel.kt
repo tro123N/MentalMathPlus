@@ -244,9 +244,12 @@ class GameViewModel @Inject constructor(
 
         val activeScoreValue = 10f * correctAnswers.pow(2f) /
                 (activeMinutes * totalAnswers)
+        val activeScore = kotlin.math.round(activeScoreValue * 100) / 100f
 
         val totalScoreValue = 10f * correctAnswers.pow(2f) /
                 (totalMinutes * totalAnswers)
+        val totalScore = kotlin.math.round(totalScoreValue * 100) / 100f
+
 
         val lastGame = GameRecord(
             isModeEnabled = _gameState.value.isModeEnabled,
@@ -271,14 +274,14 @@ class GameViewModel @Inject constructor(
             correctAnswers = _gameState.value.correctAnswers,
             totalTime = _gameState.value.totalTime,
             activeTime = _gameState.value.activeTime,
-            activeScore = activeScoreValue,
-            totalScore = totalScoreValue,
+            activeScore = activeScore,
+            totalScore = totalScore,
             taskResults = _gameState.value.tasks,
             seed = _gameState.value.seed
         )
 
         gameRecordRepository.setLastGameRecord(lastGame)
-        if (0f != activeScoreValue || 0f != totalScoreValue) {
+        if (0f != activeScore || 0f != totalScore) {
             viewModelScope.launch(Dispatchers.IO) {
                 gameRecordRepository.insertGameRecord(lastGame)
             }
@@ -290,9 +293,10 @@ class GameViewModel @Inject constructor(
         saveState()
     }
 
-    fun resetAppData() {
+    fun resetGameData() {
+        resetGame()
         viewModelScope.launch(Dispatchers.IO) {
-            gameRecordRepository.deleteAllGameRecords()
+            gameRecordRepository.reset()
         }
     }
 

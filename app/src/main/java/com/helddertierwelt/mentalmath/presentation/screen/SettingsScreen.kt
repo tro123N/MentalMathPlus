@@ -65,6 +65,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import java.security.SecureRandom
 
 @Composable
 fun SettingsScreen(
@@ -317,7 +318,12 @@ fun SettingsScreen(
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true
                             }
-                            gameViewModel.startGame(System.currentTimeMillis())
+                            val random = SecureRandom()
+                            var seed: Long
+                            do {
+                                seed = random.nextLong()
+                            } while (seed < 0)
+                            gameViewModel.startGame(seed)
                         },
                         size = roundButtonSize,
                         fontSize = startButtonFontSize,
@@ -347,8 +353,9 @@ fun SettingsScreen(
             onDismissRequest = { showDialog = false },
             onConfirm = {
                 showDialog = false
-                gameViewModel.resetAppData()
+                gameViewModel.resetGameData()
                 settingsViewModel.resetSettings()
+                settingsViewModel.loadBestGames()
                 settingsViewModel.toggleMenuOpen()
             },
             onCancel = { showDialog = false },

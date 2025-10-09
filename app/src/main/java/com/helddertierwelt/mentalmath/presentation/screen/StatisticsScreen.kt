@@ -80,7 +80,6 @@ fun StatisticsScreen(
     val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
 
-
     // Calculate sizes based on screen size
     val containerSizePx = LocalWindowInfo.current.containerSize // IntSize in px
     val density = LocalDensity.current
@@ -134,28 +133,15 @@ fun StatisticsScreen(
         )
     }
 
-    fun shareBitmap(context: Context, bitmap: Bitmap) {
-        try {
-            val imageUri = saveBitmapToCacheAndGetUri(context, bitmap)
-
-            val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                type = "image/png"
-                putExtra(Intent.EXTRA_STREAM, imageUri)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
-
-            context.startActivity(
-                Intent.createChooser(shareIntent, context.getString(R.string.share_score))
-            )
-        } catch (e: Exception) {
-            Log.e("StatisticsScreen", "Error when sharing score", e)
-        }
-    }
-
     fun shareBitmapWithLink(context: Context, bitmap: Bitmap) {
         try {
             val imageUri = saveBitmapToCacheAndGetUri(context, bitmap)
-            val settingsString = GameStringSerializer.serialize(statisticsViewModel.lastGameRecord.value)
+            val record = if (statisticsViewModel.showLoadedGameRecord.value) {
+                statisticsViewModel.loadedGameRecord.value
+            } else {
+                statisticsViewModel.lastGameRecord.value
+            }
+            val settingsString = GameStringSerializer.serialize(record)
             val appLink = "https://helddertierwelt.codeberg.page/mentalmath?settings=$settingsString"
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "image/png"
@@ -264,5 +250,4 @@ fun StatisticsScreen(
             callback.remove()
         }
     }
-
 }

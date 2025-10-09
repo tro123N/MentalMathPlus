@@ -42,6 +42,5 @@ class StatisticsViewModel @Inject constructor(
     val loadedGameRecord: StateFlow<GameRecord> = gameRecordRepository.loadedGameRecord
     fun setLoadedGameRecord(gameRecord: GameRecord) {
         gameRecordRepository.setLoadedGameRecord(gameRecord)
-
     }
 }

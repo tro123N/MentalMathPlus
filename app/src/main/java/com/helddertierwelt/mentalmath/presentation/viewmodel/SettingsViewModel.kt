@@ -121,7 +121,6 @@ class SettingsViewModel @Inject constructor(
         saveState()
     }
 
-
     fun toggleMenuOpen() {
         if (isScoreOpen.value) {
             isScoreOpen.value = false
@@ -204,21 +203,31 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun applySettingsString(settingsString: String) {
-        val parts = settingsString.split(";")
-        val isModeEnabled = parts[0] == "1"
-        val limit = parts[1].toFloat()
-        val additionRange = Pair(parts[2].toFloat(), parts[3].toFloat())
-        val subtractionRange = Pair(parts[4].toFloat(), parts[5].toFloat())
-        val multiplicationRange = Pair(parts[6].toFloat(), parts[7].toFloat())
-        val divisionRange = Pair(parts[8].toFloat(), parts[9].toFloat())
+    fun applySettingsString(decodedSettingsString: String) {
+        val isModeEnabled = decodedSettingsString[0] == '1'
+        val limit = decodedSettingsString[1].digitToInt().toFloat()
+        val additionRange = Pair(decodedSettingsString[2].digitToInt().toFloat(), decodedSettingsString[3].digitToInt().toFloat())
+        val subtractionRange = Pair(decodedSettingsString[4].digitToInt().toFloat(), decodedSettingsString[5].digitToInt().toFloat())
+        val multiplicationRange = Pair(decodedSettingsString[6].digitToInt().toFloat(), decodedSettingsString[7].digitToInt().toFloat())
+        val divisionRange = Pair(decodedSettingsString[8].digitToInt().toFloat(), decodedSettingsString[9].digitToInt().toFloat())
+
+        val isAdditionEnabled = additionRange.first != 0f && additionRange.second != 0f
+        val isSubtractionEnabled = subtractionRange.first != 0f && subtractionRange.second != 0f
+        val isMultiplicationEnabled = multiplicationRange.first != 0f && multiplicationRange.second != 0f
+        val isDivisionEnabled = divisionRange.first != 0f && divisionRange.second != 0f
+
         _settingsState.value = _settingsState.value.copy(
             isModeEnabled = isModeEnabled,
             limit = limit,
-            additionRange = additionRange,
-            subtractionRange = subtractionRange,
-            multiplicationRange = multiplicationRange,
-            divisionRange = divisionRange
+            additionRange = if (isAdditionEnabled) additionRange else _settingsState.value.additionRange,
+            subtractionRange = if (isSubtractionEnabled) subtractionRange else _settingsState.value.subtractionRange,
+            multiplicationRange = if (isMultiplicationEnabled) multiplicationRange else _settingsState.value.multiplicationRange,
+            divisionRange = if (isDivisionEnabled) divisionRange else _settingsState.value.divisionRange,
+            isAdditionEnabled = isAdditionEnabled,
+            isSubtractionEnabled = isSubtractionEnabled,
+            isMultiplicationEnabled = isMultiplicationEnabled,
+            isDivisionEnabled = isDivisionEnabled
         )
+        saveState()
     }
 }

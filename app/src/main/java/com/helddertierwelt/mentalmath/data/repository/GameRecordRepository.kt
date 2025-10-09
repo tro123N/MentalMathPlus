@@ -50,10 +50,33 @@ class GameRecordRepository @Inject constructor(
             seed = 0
         )
     )
-    val lastGameRecord: StateFlow<GameRecord> = _lastGameRecord
+    fun resetLastGameRecord() {
+        _lastGameRecord.value = GameRecord(
+            id = -1,
+            isModeEnabled = false,
+            modeLimit = 0,
+            additionRangeStart = 0,
+            additionRangeEnd = 0,
+            subtractionRangeStart = 0,
+            subtractionRangeEnd = 0,
+            multiplicationRangeStart = 0,
+            multiplicationRangeEnd = 0,
+            divisionRangeStart = 0,
+            divisionRangeEnd = 0,
+            totalAnswers = 0,
+            correctAnswers = 0,
+            activeTime = 0L,
+            totalTime = 0L,
+            activeScore = 0f,
+            totalScore = 0f,
+            taskResults = emptyList(),
+            seed = 0
+        )
+    }
     fun setLastGameRecord(gameRecord: GameRecord) {
         _lastGameRecord.value = gameRecord
     }
+    val lastGameRecord: StateFlow<GameRecord> = _lastGameRecord
 
     private val _loadedGameRecord = MutableStateFlow(
         GameRecord(
@@ -78,10 +101,36 @@ class GameRecordRepository @Inject constructor(
             seed = 0
         )
     )
-    val loadedGameRecord: StateFlow<GameRecord> = _loadedGameRecord
+
+    fun resetLoadedGameRecord() {
+        _loadedGameRecord.value = GameRecord(
+            id = -1,
+            isModeEnabled = false,
+            modeLimit = 0,
+            additionRangeStart = 0,
+            additionRangeEnd = 0,
+            subtractionRangeStart = 0,
+            subtractionRangeEnd = 0,
+            multiplicationRangeStart = 0,
+            multiplicationRangeEnd = 0,
+            divisionRangeStart = 0,
+            divisionRangeEnd = 0,
+            totalAnswers = 0,
+            correctAnswers = 0,
+            activeTime = 0L,
+            totalTime = 0L,
+            activeScore = 0f,
+            totalScore = 0f,
+            taskResults = emptyList(),
+            seed = 0
+        )
+    }
+
     fun setLoadedGameRecord(gameRecord: GameRecord) {
         _loadedGameRecord.value = gameRecord
     }
+
+    val loadedGameRecord: StateFlow<GameRecord> = _loadedGameRecord
 
 
     suspend fun insertGameRecord(gameRecord: GameRecord) {
@@ -143,5 +192,11 @@ class GameRecordRepository @Inject constructor(
 
     suspend fun deleteAllGameRecords() {
         gameRecordDao.deleteAll()
+    }
+
+    suspend fun reset() {
+        deleteAllGameRecords()
+        resetLastGameRecord()
+        resetLoadedGameRecord()
     }
 }
