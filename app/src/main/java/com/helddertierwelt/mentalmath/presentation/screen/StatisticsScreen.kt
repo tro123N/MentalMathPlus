@@ -69,9 +69,9 @@ import com.helddertierwelt.mentalmath.presentation.component.statistics.TasksCar
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import com.helddertierwelt.mentalmath.util.GameStringSerializer
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
-import kotlinx.coroutines.launch
 
 @Composable
 fun StatisticsScreen(
@@ -146,11 +146,13 @@ fun StatisticsScreen(
                 statisticsViewModel.lastGameRecord.value
             }
             val settingsString = GameStringSerializer.serialize(record)
+            val totalScore = record.totalScore
             val appLink = "https://helddertierwelt.codeberg.page/mentalmath?settings=$settingsString"
+            val shareText = "Try to beat my score of $totalScore in Mental Math - it's the exact same game:\n\n$appLink"
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "image/png"
                 putExtra(Intent.EXTRA_STREAM, imageUri)
-                putExtra(Intent.EXTRA_TEXT, appLink)
+                putExtra(Intent.EXTRA_TEXT, shareText)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
             context.startActivity(
