@@ -41,6 +41,7 @@ fun PopUp(
     cancelText: String,
     dismissColor: Color,
     confirmColor: Color,
+    icon: @Composable (() -> Unit)? = null,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -74,6 +75,7 @@ fun PopUp(
         },
         containerColor = MaterialTheme.colorScheme.primary,
         titleContentColor = MaterialTheme.colorScheme.onPrimary,
-        textContentColor = MaterialTheme.colorScheme.onPrimary
+        textContentColor = MaterialTheme.colorScheme.onPrimary,
+        icon = icon
     )
 }

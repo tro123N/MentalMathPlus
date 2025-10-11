@@ -31,16 +31,43 @@ import javax.inject.Inject
 class StatisticsViewModel @Inject constructor(
     private val gameRecordRepository: GameRecordRepository
 ) : ViewModel() {
-    val lastGameRecord: StateFlow<GameRecord> = gameRecordRepository.lastGameRecord
 
     private val _showLoadedGameRecord = MutableStateFlow(false)
     val showLoadedGameRecord: StateFlow<Boolean> = _showLoadedGameRecord.asStateFlow()
+
+    private val _showScorePopUp = MutableStateFlow(false)
+    val showScorePopUp: StateFlow<Boolean> = _showScorePopUp.asStateFlow()
+
+    private val _scoreFromLink = MutableStateFlow<Float?>(null)
+    val scoreFromLink: StateFlow<Float?> = _scoreFromLink.asStateFlow()
+
+    val loadedGameRecord: StateFlow<GameRecord> = gameRecordRepository.loadedGameRecord
+    val lastGameRecord: StateFlow<GameRecord> = gameRecordRepository.lastGameRecord
+
     fun setShowLoadedGameRecord(value: Boolean) {
         _showLoadedGameRecord.value = value
     }
-
-    val loadedGameRecord: StateFlow<GameRecord> = gameRecordRepository.loadedGameRecord
+    fun setShowScorePopUp(value: Boolean) {
+        _showScorePopUp.value = value
+    }
+    fun setScoreFromLink(value: Float?) {
+        _scoreFromLink.value = value
+    }
     fun setLoadedGameRecord(gameRecord: GameRecord) {
         gameRecordRepository.setLoadedGameRecord(gameRecord)
     }
+
+    fun resetLinkData() {
+        setScoreFromLink(null)
+        setShowScorePopUp(false)
+    }
+
+    fun reset() {
+        gameRecordRepository.resetLoadedGameRecord()
+        gameRecordRepository.resetLastGameRecord()
+        resetLinkData()
+        setShowLoadedGameRecord(false)
+    }
+
+
 }

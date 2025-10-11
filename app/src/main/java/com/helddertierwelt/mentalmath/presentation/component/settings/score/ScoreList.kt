@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.presentation.theme.green
-import java.util.Locale
 
 @Composable
 fun ScoreList(
@@ -54,7 +53,7 @@ fun ScoreList(
     ) {
         gameRecords.forEachIndexed { index, game ->
             var color = MaterialTheme.colorScheme.onPrimary
-            var indexValue = String.format(Locale.getDefault(), "%d", index + 1)
+            var indexValue = "%d".format(index + 1)
             if (game.id == lastGameId) {
                 color = green
                 indexValue = "new"
@@ -77,7 +76,7 @@ fun ScoreList(
                     fontWeight = Bold
                 )
                 Text(
-                    text = String.format(Locale.getDefault(), "%.2f", scoreSelector(game)),
+                    text = "%.2f".format(scoreSelector(game)),
                     color = color,
                     fontSize = fontSizeScore,
                     textAlign = TextAlign.End,

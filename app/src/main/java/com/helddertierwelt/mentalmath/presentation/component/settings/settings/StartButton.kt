@@ -18,7 +18,6 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.settings.settings
 
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,28 +34,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.green
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 
 @Composable
 fun StartButton(
     onClick: () -> Unit,
     iconSize: Dp,
     size: Dp,
-    fontSize: TextUnit
+    fontSize: TextUnit,
+    isEnabled: Boolean = true
 ) {
-    val activity = LocalActivity.current as ViewModelStoreOwner
-    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
-
-    val settingsState = settingsViewModel.settingsState.value
-    val isEnabled: Boolean = settingsState.isAdditionEnabled ||
-            settingsState.isSubtractionEnabled ||
-            settingsState.isMultiplicationEnabled ||
-            settingsState.isDivisionEnabled
-
     Button(
         enabled = isEnabled,
         onClick = onClick,

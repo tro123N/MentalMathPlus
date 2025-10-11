@@ -20,7 +20,6 @@ package com.helddertierwelt.mentalmath.util
 
 import android.util.Base64
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
-import java.util.Locale
 
 object GameStringSerializer {
     fun serialize(record: GameRecord): String {
@@ -35,8 +34,8 @@ object GameStringSerializer {
             record.multiplicationRangeEnd.toString(),
             record.divisionRangeStart.toString(),
             record.divisionRangeEnd.toString(),
-            String.format(Locale.getDefault(),"%06d", (record.totalScore * 100).toInt()),
-            String.format(Locale.getDefault(),"%019d", record.seed)
+            "%06d".format((record.totalScore * 100).toInt()),
+            "%019d".format(record.seed)
         ).joinToString("").toBigInteger().toByteArray()
 
         val encoded = Base64.encodeToString(settingsStringByteArray, Base64.URL_SAFE or Base64.NO_WRAP)

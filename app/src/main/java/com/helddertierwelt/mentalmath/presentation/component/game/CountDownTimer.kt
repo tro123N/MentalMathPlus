@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,7 +49,7 @@ fun CountdownTimer(
     val activity = LocalActivity.current as ViewModelStoreOwner
     val gameViewModel: GameViewModel = hiltViewModel(activity)
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
-    var timeLeft = time - gameViewModel.gamesState.value.activeTime
+    var timeLeft = time - gameViewModel.gamesState.collectAsState().value.activeTime
     var formattedTime by remember { mutableStateOf(formatTime(timeLeft)) }
 
     LaunchedEffect(timeLeft) {

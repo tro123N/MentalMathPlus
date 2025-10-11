@@ -74,12 +74,13 @@ fun SettingsScreen(
 ) {
 
     val activity = LocalActivity.current as ViewModelStoreOwner
+    val context = LocalContext.current
+
     val gameViewModel: GameViewModel = hiltViewModel(activity)
     val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
-    val isLoaded by settingsViewModel.isLoaded
+    val settingsState = settingsViewModel.settingsState.collectAsState().value
+    val isLoaded = settingsViewModel.isLoaded.collectAsState().value
 
-    val context = LocalContext.current
-    val settingsState = settingsViewModel.settingsState.value
     val valueRangeOperators = 1f..9f
 
     val containerSizePx = LocalWindowInfo.current.containerSize // IntSize in px
@@ -102,7 +103,7 @@ fun SettingsScreen(
     var showDialog by remember { mutableStateOf(false) }
     var isSliderActive by remember { mutableStateOf(false) }
     val bestTotalGames by settingsViewModel.bestTotalGames.collectAsState()
-    val bestActiveGames by settingsViewModel.bestTotalGames.collectAsState()
+    val bestActiveGames by settingsViewModel.bestActiveGames.collectAsState()
     val bestGamesEmpty = bestTotalGames.isEmpty() && bestActiveGames.isEmpty()
 
 
@@ -318,27 +319,30 @@ fun SettingsScreen(
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true
                             }
-                            val random = SecureRandom()
                             var seed: Long
                             do {
-                                seed = random.nextLong()
+                                seed = SecureRandom().nextLong()
                             } while (seed < 0)
                             gameViewModel.startGame(seed)
                         },
                         size = roundButtonSize,
                         fontSize = startButtonFontSize,
-                        iconSize = startIconSize
+                        iconSize = startIconSize,
+                        isEnabled = settingsState.isAdditionEnabled ||
+                                settingsState.isSubtractionEnabled ||
+                                settingsState.isMultiplicationEnabled ||
+                                settingsState.isDivisionEnabled
                     )
                 }
                 ScoreSideSheet(
-                    isSheetOpen = settingsViewModel.isScoreOpen.value,
+                    isSheetOpen = settingsViewModel.isScoreOpen.collectAsState().value,
                     onDismissRequested = { settingsViewModel.toggleScoreOpen() },
                     screenWidth = screenWidth,
                     screenHeight = screenHeight,
                     navController = navController,
                 )
                 MenuSideSheet(
-                    isSheetOpen = settingsViewModel.isMenuOpen.value,
+                    isSheetOpen = settingsViewModel.isMenuOpen.collectAsState().value,
                     screenWidth = screenWidth,
                     onDismissRequested = { settingsViewModel.toggleMenuOpen() },
                     screenHeight = screenHeight,
@@ -355,8 +359,6 @@ fun SettingsScreen(
                 showDialog = false
                 gameViewModel.resetGameData()
                 settingsViewModel.resetSettings()
-                settingsViewModel.loadBestGames()
-                settingsViewModel.toggleMenuOpen()
             },
             onCancel = { showDialog = false },
             titleSize = titleFontSize,

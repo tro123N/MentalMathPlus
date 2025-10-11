@@ -47,7 +47,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,7 +97,7 @@ fun CustomRangeSlider(
                     shape = RoundedCornerShape(16.dp)
                 )
                 .padding(horizontal = 6.dp),
-            text = String.format(Locale.getDefault(), "%.0f", value.start),
+            text = "%.0f".format(value.start),
             color = MaterialTheme.colorScheme.onSecondary,
             fontSize = 12.sp
         )
@@ -117,7 +116,7 @@ fun CustomRangeSlider(
                     shape = RoundedCornerShape(16.dp)
                 )
                 .padding(horizontal = 6.dp),
-            text = String.format(Locale.getDefault(), "%.0f", value.endInclusive),
+            text = "%.0f".format(value.endInclusive),
             color = MaterialTheme.colorScheme.onSecondary,
             fontSize = 16.sp
         )

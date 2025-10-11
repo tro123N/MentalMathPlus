@@ -52,7 +52,6 @@ import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
-import java.util.Locale
 import kotlin.math.max
 
 @Composable
@@ -152,11 +151,8 @@ fun SettingsAndStatsCard(
                     iconColor = green
                 )
 
-                val percentage =
-                    statisticsGameRecord.correctAnswers.toFloat() / statisticsGameRecord.totalAnswers.toFloat() * 100f
-                val percentageString = if (percentage.isNaN()) "-" else String.format(
-                    Locale.getDefault(), "%.1f", percentage
-                )
+                val percentage = statisticsGameRecord.correctAnswers.toFloat() / statisticsGameRecord.totalAnswers.toFloat() * 100f
+                val percentageString = if (percentage.isNaN()) "-" else "%.1f".format(percentage)
                 StatsColumn(
                     fontSize = fontSize,
                     statsText = percentageString,
@@ -166,11 +162,7 @@ fun SettingsAndStatsCard(
                 )
 
                 val activeMinutes = max(1, (statisticsGameRecord.activeTime / 1000)) / 60.0f
-                val correctPerMinute = String.format(
-                    Locale.getDefault(),
-                    "%.1f",
-                    statisticsGameRecord.correctAnswers.toFloat() / activeMinutes
-                )
+                val correctPerMinute = "%.1f".format(statisticsGameRecord.correctAnswers.toFloat() / activeMinutes)
                 StatsCorrectPerMinuteColumn(
                     iconId = R.drawable.check_24dp,
                     iconSize = iconSize,
@@ -195,9 +187,7 @@ fun SettingsAndStatsCard(
             )
             Spacer(modifier = modifier.height(8.dp))
 
-            val activeScore = String.format(
-                Locale.getDefault(),
-                "%-6s  %.2f",
+            val activeScore = "%-6s  %.2f".format(
                 stringResource(R.string.active_score) + ":",
                 statisticsGameRecord.activeScore
             )
@@ -221,9 +211,7 @@ fun SettingsAndStatsCard(
                 )
             }
 
-            val totalScore = String.format(
-                Locale.getDefault(),
-                "%-8s  %.2f",
+            val totalScore = "%-8s  %.2f".format(
                 stringResource(R.string.total_score) + ":",
                 statisticsGameRecord.totalScore
             )

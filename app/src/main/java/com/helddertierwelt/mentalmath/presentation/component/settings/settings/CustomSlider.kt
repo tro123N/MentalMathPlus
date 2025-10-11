@@ -47,7 +47,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.util.Locale
 import kotlin.math.roundToInt
 
 @Composable
@@ -95,11 +94,7 @@ fun CustomSlider(
                     activeTrackColor, shape = RoundedCornerShape(16.dp)
                 )
                 .padding(horizontal = 6.dp),
-            text = String.format(
-                Locale.getDefault(),
-                if (isToggled) "${(value * 10).roundToInt()}" else "${value.toInt()}min",
-                value
-            ),
+            text = if (isToggled) "${(value * 10).roundToInt()}".format(value) else "${value.toInt()}min".format(value),
             color = MaterialTheme.colorScheme.onSecondary,
             fontSize = 16.sp
         )

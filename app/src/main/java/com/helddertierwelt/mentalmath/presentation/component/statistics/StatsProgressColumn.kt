@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
-import java.util.Locale
 
 @Composable
 fun StatsProgressColumn(
@@ -54,7 +53,7 @@ fun StatsProgressColumn(
         var progressText = formatTime(activeTime)
         if (!modeEnabled) {
             iconId = R.drawable.tag_24dp
-            progressText = String.format(Locale.getDefault(), "%d", totalAnswers)
+            progressText = "%d".format(totalAnswers)
         }
         Spacer(modifier = Modifier.height(8.dp))
         Icon(

@@ -49,11 +49,10 @@ fun SettingsModeColumn(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var iconId = R.drawable.tag_24dp
-        var limitText = String.format("%s", (limit * 10).toString())
+        var limitText = "%d".format(limit * 10)
         if (!modeEnabled) {
             iconId = R.drawable.hourglass_bottom_24dp
-            limitText =
-                String.format("%s:00", limit)
+            limitText = "%s:00".format(limit)
         }
         Spacer(modifier = Modifier.height(8.dp))
         Icon(

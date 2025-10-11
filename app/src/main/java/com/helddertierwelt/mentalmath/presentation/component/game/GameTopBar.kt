@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
@@ -80,9 +81,9 @@ fun GameTopBar(
             }
         },
         actions = {
-            if (settingsViewModel.settingsState.value.isModeEnabled) {
-                val totalTasks = (settingsViewModel.settingsState.value.limit * 10).roundToInt()
-                val answeredTasks = gameViewModel.gamesState.value.totalAnswers
+            if (settingsViewModel.settingsState.collectAsState().value.isModeEnabled) {
+                val totalTasks = (settingsViewModel.settingsState.collectAsState().value.limit * 10).roundToInt()
+                val answeredTasks = gameViewModel.gamesState.collectAsState().value.totalAnswers
                 Text(
                     text = "$answeredTasks/$totalTasks",
                     color = MaterialTheme.colorScheme.onPrimary,
@@ -93,7 +94,7 @@ fun GameTopBar(
                 CountdownTimer(
                     fontSize = fontSize,
                     navController = navController,
-                    time = settingsViewModel.settingsState.value.limit.toLong() * 60000L,
+                    time = settingsViewModel.settingsState.collectAsState().value.limit.toLong() * 60000L,
                 )
             }
         },

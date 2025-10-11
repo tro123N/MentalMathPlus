@@ -22,11 +22,13 @@ import com.helddertierwelt.mentalmath.data.dao.GameRecordDao
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 class GameRecordRepository @Inject constructor(
     private val gameRecordDao: GameRecordDao
 ) {
+
     private val _lastGameRecord = MutableStateFlow(
         GameRecord(
             id = -1,
@@ -50,33 +52,7 @@ class GameRecordRepository @Inject constructor(
             seed = 0
         )
     )
-    fun resetLastGameRecord() {
-        _lastGameRecord.value = GameRecord(
-            id = -1,
-            isModeEnabled = false,
-            modeLimit = 0,
-            additionRangeStart = 0,
-            additionRangeEnd = 0,
-            subtractionRangeStart = 0,
-            subtractionRangeEnd = 0,
-            multiplicationRangeStart = 0,
-            multiplicationRangeEnd = 0,
-            divisionRangeStart = 0,
-            divisionRangeEnd = 0,
-            totalAnswers = 0,
-            correctAnswers = 0,
-            activeTime = 0L,
-            totalTime = 0L,
-            activeScore = 0f,
-            totalScore = 0f,
-            taskResults = emptyList(),
-            seed = 0
-        )
-    }
-    fun setLastGameRecord(gameRecord: GameRecord) {
-        _lastGameRecord.value = gameRecord
-    }
-    val lastGameRecord: StateFlow<GameRecord> = _lastGameRecord
+    val lastGameRecord: StateFlow<GameRecord> = _lastGameRecord.asStateFlow()
 
     private val _loadedGameRecord = MutableStateFlow(
         GameRecord(
@@ -101,37 +77,14 @@ class GameRecordRepository @Inject constructor(
             seed = 0
         )
     )
+    val loadedGameRecord: StateFlow<GameRecord> = _loadedGameRecord.asStateFlow()
 
-    fun resetLoadedGameRecord() {
-        _loadedGameRecord.value = GameRecord(
-            id = -1,
-            isModeEnabled = false,
-            modeLimit = 0,
-            additionRangeStart = 0,
-            additionRangeEnd = 0,
-            subtractionRangeStart = 0,
-            subtractionRangeEnd = 0,
-            multiplicationRangeStart = 0,
-            multiplicationRangeEnd = 0,
-            divisionRangeStart = 0,
-            divisionRangeEnd = 0,
-            totalAnswers = 0,
-            correctAnswers = 0,
-            activeTime = 0L,
-            totalTime = 0L,
-            activeScore = 0f,
-            totalScore = 0f,
-            taskResults = emptyList(),
-            seed = 0
-        )
+    fun setLastGameRecord(gameRecord: GameRecord) {
+        _lastGameRecord.value = gameRecord
     }
-
     fun setLoadedGameRecord(gameRecord: GameRecord) {
         _loadedGameRecord.value = gameRecord
     }
-
-    val loadedGameRecord: StateFlow<GameRecord> = _loadedGameRecord
-
 
     suspend fun insertGameRecord(gameRecord: GameRecord) {
         val newId = gameRecordDao.insert(gameRecord)
@@ -192,6 +145,54 @@ class GameRecordRepository @Inject constructor(
 
     suspend fun deleteAllGameRecords() {
         gameRecordDao.deleteAll()
+    }
+
+    fun resetLastGameRecord() {
+        _lastGameRecord.value = GameRecord(
+            id = -1,
+            isModeEnabled = false,
+            modeLimit = 0,
+            additionRangeStart = 0,
+            additionRangeEnd = 0,
+            subtractionRangeStart = 0,
+            subtractionRangeEnd = 0,
+            multiplicationRangeStart = 0,
+            multiplicationRangeEnd = 0,
+            divisionRangeStart = 0,
+            divisionRangeEnd = 0,
+            totalAnswers = 0,
+            correctAnswers = 0,
+            activeTime = 0L,
+            totalTime = 0L,
+            activeScore = 0f,
+            totalScore = 0f,
+            taskResults = emptyList(),
+            seed = 0
+        )
+    }
+
+    fun resetLoadedGameRecord() {
+        _loadedGameRecord.value = GameRecord(
+            id = -1,
+            isModeEnabled = false,
+            modeLimit = 0,
+            additionRangeStart = 0,
+            additionRangeEnd = 0,
+            subtractionRangeStart = 0,
+            subtractionRangeEnd = 0,
+            multiplicationRangeStart = 0,
+            multiplicationRangeEnd = 0,
+            divisionRangeStart = 0,
+            divisionRangeEnd = 0,
+            totalAnswers = 0,
+            correctAnswers = 0,
+            activeTime = 0L,
+            totalTime = 0L,
+            activeScore = 0f,
+            totalScore = 0f,
+            taskResults = emptyList(),
+            seed = 0
+        )
     }
 
     suspend fun reset() {

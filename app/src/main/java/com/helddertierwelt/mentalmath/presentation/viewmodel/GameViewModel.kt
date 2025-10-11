@@ -18,8 +18,6 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.viewmodel
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
@@ -33,6 +31,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.max
@@ -47,10 +47,11 @@ class GameViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel(), DefaultLifecycleObserver {
 
-    private val _gameState = mutableStateOf(
+    private val _gameState = MutableStateFlow(
         savedStateHandle.get<GameState>("game_state") ?: GameState()
     )
-    val gamesState: State<GameState> = _gameState
+    val gamesState = _gameState.asStateFlow()
+
     private var timerJob: Job? = null
     private var random: Random = Random(System.currentTimeMillis())
 
@@ -59,21 +60,18 @@ class GameViewModel @Inject constructor(
             if (_gameState.value.input == "0") {
                 clearInput()
             }
-            _gameState.value = _gameState.value.copy(input = _gameState.value.input + number)
-            saveState()
+            saveState(_gameState.value.copy(input = _gameState.value.input + number))
         }
     }
 
     fun removeLastDigit() {
         if (_gameState.value.input.isNotEmpty()) {
-            _gameState.value = _gameState.value.copy(input = _gameState.value.input.dropLast(1))
-            saveState()
+            saveState(_gameState.value.copy(input = _gameState.value.input.dropLast(1)))
         }
     }
 
     fun clearInput() {
-        _gameState.value = _gameState.value.copy(input = "")
-        saveState()
+        saveState(_gameState.value.copy(input = ""))
     }
 
     fun generateNewTask() {
@@ -128,42 +126,42 @@ class GameViewModel @Inject constructor(
                         mathTask.operand2 to mathTask.operand1
                 }
             }
-
-            _gameState.value = _gameState.value.copy(
-                operand1 = operands.first,
-                operand2 = operands.second,
-                operator = operation,
-                input = "",
-                isCorrect = null
+            saveState(
+                _gameState.value.copy(
+                    operand1 = operands.first,
+                    operand2 = operands.second,
+                    operator = operation,
+                    input = "",
+                    isCorrect = null
+                )
             )
-            saveState()
         }
     }
 
     fun checkAnswerAndCount() {
         val correctResult = calculateResult()
         val userInput = _gameState.value.input.toIntOrNull()
-
+        val newState: GameState
         if (userInput == null) {
-            _gameState.value = _gameState.value.copy(
+            newState = _gameState.value.copy(
                 skippedAnswers = _gameState.value.skippedAnswers + 1,
                 totalAnswers = _gameState.value.totalAnswers + 1,
                 isCorrect = null
             )
         } else if (userInput == correctResult) {
-            _gameState.value = _gameState.value.copy(
+            newState = _gameState.value.copy(
                 correctAnswers = _gameState.value.correctAnswers + 1,
                 totalAnswers = _gameState.value.totalAnswers + 1,
                 isCorrect = true
             )
         } else {
-            _gameState.value = _gameState.value.copy(
+            newState = _gameState.value.copy(
                 wrongAnswers = _gameState.value.wrongAnswers + 1,
                 totalAnswers = _gameState.value.totalAnswers + 1,
                 isCorrect = false
             )
         }
-        saveState()
+        saveState(newState)
     }
 
     private fun calculateResult(): Int {
@@ -183,10 +181,11 @@ class GameViewModel @Inject constructor(
             correctResult = calculateResult(),
             userInput = _gameState.value.input
         )
-        _gameState.value = _gameState.value.copy(
-            tasks = _gameState.value.tasks + taskResult
+        saveState(
+            _gameState.value.copy(
+                tasks = _gameState.value.tasks + taskResult
+            )
         )
-        saveState()
     }
 
     fun setSettings(settingsViewModel: SettingsViewModel) {
@@ -216,24 +215,26 @@ class GameViewModel @Inject constructor(
                 settingsViewModel.settingsState.value.divisionRange
             )
         }
-        _gameState.value = _gameState.value.copy(
-            enabledOperators = enabledOperators,
-            isModeEnabled = settingsState.isModeEnabled,
-            modeLimit = settingsState.limit.toInt()
+        saveState(
+            _gameState.value.copy(
+                enabledOperators = enabledOperators,
+                isModeEnabled = settingsState.isModeEnabled,
+                modeLimit = settingsState.limit.toInt()
+            )
         )
-        saveState()
     }
 
     fun startGame(seed: Long) {
         random = Random(seed)
-        _gameState.value = _gameState.value.copy(
-            isGameStarted = true,
-            seed = seed
-        )
         generateNewTask()
         setStartTimestamp()
+        saveState(
+            _gameState.value.copy(
+                isGameStarted = true,
+                seed = seed
+            )
+        )
         startTimer()
-        saveState()
     }
 
     fun saveGameRecord() {
@@ -241,35 +242,22 @@ class GameViewModel @Inject constructor(
         val totalMinutes = max(1, (_gameState.value.totalTime / 1000)) / 60.0f
         val correctAnswers = _gameState.value.correctAnswers.toFloat()
         val totalAnswers = max(1, _gameState.value.totalAnswers).toFloat()
-
-        val activeScoreValue = 10f * correctAnswers.pow(2f) /
-                (activeMinutes * totalAnswers)
+        val activeScoreValue = 10f * correctAnswers.pow(2f) / (activeMinutes * totalAnswers)
         val activeScore = kotlin.math.round(activeScoreValue * 100) / 100f
-
-        val totalScoreValue = 10f * correctAnswers.pow(2f) /
-                (totalMinutes * totalAnswers)
+        val totalScoreValue = 10f * correctAnswers.pow(2f) / (totalMinutes * totalAnswers)
         val totalScore = kotlin.math.round(totalScoreValue * 100) / 100f
-
 
         val lastGame = GameRecord(
             isModeEnabled = _gameState.value.isModeEnabled,
             modeLimit = _gameState.value.modeLimit,
-            additionRangeStart = _gameState.value.enabledOperators[Operation.ADDITION]?.first?.toInt()
-                ?: 0,
-            additionRangeEnd = _gameState.value.enabledOperators[Operation.ADDITION]?.second?.toInt()
-                ?: 0,
-            subtractionRangeStart = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.first?.toInt()
-                ?: 0,
-            subtractionRangeEnd = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.second?.toInt()
-                ?: 0,
-            multiplicationRangeStart = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.first?.toInt()
-                ?: 0,
-            multiplicationRangeEnd = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.second?.toInt()
-                ?: 0,
-            divisionRangeStart = _gameState.value.enabledOperators[Operation.DIVISION]?.first?.toInt()
-                ?: 0,
-            divisionRangeEnd = _gameState.value.enabledOperators[Operation.DIVISION]?.second?.toInt()
-                ?: 0,
+            additionRangeStart = _gameState.value.enabledOperators[Operation.ADDITION]?.first?.toInt() ?: 0,
+            additionRangeEnd = _gameState.value.enabledOperators[Operation.ADDITION]?.second?.toInt() ?: 0,
+            subtractionRangeStart = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.first?.toInt() ?: 0,
+            subtractionRangeEnd = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.second?.toInt() ?: 0,
+            multiplicationRangeStart = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.first?.toInt() ?: 0,
+            multiplicationRangeEnd = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.second?.toInt() ?: 0,
+            divisionRangeStart = _gameState.value.enabledOperators[Operation.DIVISION]?.first?.toInt() ?: 0,
+            divisionRangeEnd = _gameState.value.enabledOperators[Operation.DIVISION]?.second?.toInt() ?: 0,
             totalAnswers = _gameState.value.totalAnswers,
             correctAnswers = _gameState.value.correctAnswers,
             totalTime = _gameState.value.totalTime,
@@ -289,8 +277,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun resetGame() {
-        _gameState.value = GameState()
-        saveState()
+        saveState(GameState())
     }
 
     fun resetGameData() {
@@ -301,23 +288,21 @@ class GameViewModel @Inject constructor(
     }
 
     fun setStartTimestamp() {
-        _gameState.value = _gameState.value.copy(startTimeStamp = System.currentTimeMillis())
-        saveState()
+        saveState(_gameState.value.copy(startTimeStamp = System.currentTimeMillis()))
     }
 
     fun startTimer() {
         if (!_gameState.value.isGameStarted) return
-
-        _gameState.value = _gameState.value.copy(isTimerRunning = true)
-        saveState()
+        saveState(_gameState.value.copy(isTimerRunning = true))
         timerJob = viewModelScope.launch(Dispatchers.Default) {
             while (_gameState.value.isTimerRunning) {
                 val elapsedTime = System.currentTimeMillis() - _gameState.value.startTimeStamp
-                _gameState.value = _gameState.value.copy(
-                    activeTime = elapsedTime - _gameState.value.totalPauseDuration,
-                    totalTime = elapsedTime
+                saveState(
+                    _gameState.value.copy(
+                        activeTime = elapsedTime - _gameState.value.totalPauseDuration,
+                        totalTime = elapsedTime
+                    )
                 )
-                saveState()
                 delay(100)
             }
         }
@@ -325,11 +310,12 @@ class GameViewModel @Inject constructor(
 
     fun pauseTimer() {
         if (_gameState.value.isGameStarted && _gameState.value.isTimerRunning) {
-            _gameState.value = _gameState.value.copy(
-                pausedAt = System.currentTimeMillis(),
-                isTimerRunning = false
+            saveState(
+                _gameState.value.copy(
+                    pausedAt = System.currentTimeMillis(),
+                    isTimerRunning = false
+                )
             )
-            saveState()
             timerJob?.cancel()
         }
     }
@@ -342,10 +328,8 @@ class GameViewModel @Inject constructor(
 
     fun resumeTimer() {
         if (_gameState.value.isGameStarted && !_gameState.value.isTimerRunning) {
-            val totalPauseDuration =
-                _gameState.value.totalPauseDuration + (System.currentTimeMillis() - _gameState.value.pausedAt)
-            _gameState.value = _gameState.value.copy(totalPauseDuration = totalPauseDuration)
-            saveState()
+            val totalPauseDuration = _gameState.value.totalPauseDuration + (System.currentTimeMillis() - _gameState.value.pausedAt)
+            saveState(_gameState.value.copy(totalPauseDuration = totalPauseDuration))
             startTimer()
         }
     }
@@ -353,8 +337,7 @@ class GameViewModel @Inject constructor(
     fun endGame() {
         pauseTimer()
         saveGameRecord()
-        _gameState.value = _gameState.value.copy(isGameStarted = false)
-        saveState()
+        saveState(_gameState.value.copy(isGameStarted = false))
     }
 
     override fun onPause(owner: LifecycleOwner) {
@@ -367,7 +350,8 @@ class GameViewModel @Inject constructor(
         resumeTimer()
     }
 
-    private fun saveState() {
-        savedStateHandle["game_state"] = _gameState.value
+    private fun saveState(newState: GameState) {
+        _gameState.value = newState
+        savedStateHandle["game_state"] = newState
     }
 }

@@ -49,11 +49,7 @@ fun SettingsOperatorColumn(
             range = if (difficultyRange.first == difficultyRange.second) {
                 difficultyRange.first.toString()
             } else {
-                String.format(
-                    "%s-%s",
-                    difficultyRange.first,
-                    difficultyRange.second
-                )
+                "%s-%s".format(difficultyRange.first, difficultyRange.second)
             }
         }
         Text(

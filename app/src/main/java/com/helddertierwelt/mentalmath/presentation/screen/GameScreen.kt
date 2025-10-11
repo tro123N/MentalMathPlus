@@ -67,6 +67,7 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
+import androidx.compose.runtime.collectAsState
 
 @Composable
 fun GameScreen(
@@ -83,8 +84,8 @@ fun GameScreen(
         gameViewModel.startTimerIfNeeded()
     }
 
-    val settingsState = settingsViewModel.settingsState.value
-    val gameState = gameViewModel.gamesState.value
+    val settingsState = settingsViewModel.settingsState.collectAsState().value
+    val gameState = gameViewModel.gamesState.collectAsState().value
     val coroutineScope = rememberCoroutineScope()
 
     // Calculate sizes based on screen height

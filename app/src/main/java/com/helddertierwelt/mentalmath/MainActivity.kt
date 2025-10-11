@@ -67,6 +67,7 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.util.LinkValidator
 import dagger.hilt.android.AndroidEntryPoint
 import java.math.BigInteger
+import androidx.compose.runtime.collectAsState
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -88,8 +89,8 @@ class MainActivity : ComponentActivity() {
             }
             val navController = rememberNavController()
             lifecycle.addObserver(gameViewModel)
-            MentalMathTheme(themeMode = settingsViewModel.settingsState.value.themeMode) {
-                val darkTheme = when (settingsViewModel.settingsState.value.themeMode) {
+            MentalMathTheme(themeMode = settingsViewModel.settingsState.collectAsState().value.themeMode) {
+                val darkTheme = when (settingsViewModel.settingsState.collectAsState().value.themeMode) {
                     ThemeMode.DARK -> true
                     ThemeMode.LIGHT -> false
                     ThemeMode.SYSTEM -> isSystemInDarkTheme()

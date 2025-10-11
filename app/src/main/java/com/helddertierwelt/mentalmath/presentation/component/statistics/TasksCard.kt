@@ -56,7 +56,6 @@ import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
-import java.util.Locale
 
 @Composable
 fun TasksCard(
@@ -112,9 +111,7 @@ fun TasksCard(
                             .padding(16.dp, 4.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        val exercise = String.format(
-                            Locale.getDefault(),
-                            "%d %s %d = %d",
+                        val exercise = "%d %s %d = %d".format(
                             task.operand1,
                             stringResource(task.operator.stringId),
                             task.operand2,

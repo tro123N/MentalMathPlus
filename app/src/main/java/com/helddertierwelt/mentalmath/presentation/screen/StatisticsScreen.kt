@@ -40,6 +40,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,10 +63,12 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.component.statistics.DoneButton
 import com.helddertierwelt.mentalmath.presentation.component.statistics.SettingsAndStatsCard
 import com.helddertierwelt.mentalmath.presentation.component.statistics.StatisticsTopBar
 import com.helddertierwelt.mentalmath.presentation.component.statistics.TasksCard
+import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import com.helddertierwelt.mentalmath.util.GameStringSerializer
@@ -110,16 +113,12 @@ fun StatisticsScreen(
 
     fun captureSettingsCardBitmap(): Bitmap? {
         val coordinates = statsCardCoordinates ?: return null
-
         val fullBitmap = localView.drawToBitmap()
-
         val bounds = coordinates.boundsInWindow()
-
         val left = bounds.left.toInt().coerceIn(0, fullBitmap.width)
         val top = bounds.top.toInt().coerceIn(0, fullBitmap.height)
         val width = bounds.width.toInt().coerceAtMost(fullBitmap.width - left)
         val height = bounds.height.toInt().coerceAtMost(fullBitmap.height - top)
-
         return Bitmap.createBitmap(fullBitmap, left, top, width, height)
     }
 
@@ -127,9 +126,7 @@ fun StatisticsScreen(
         val cachePath = File(context.cacheDir, "images")
         cachePath.mkdirs()
         val file = File(cachePath, "shared_image.png")
-        FileOutputStream(file).use { stream ->
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-        }
+        FileOutputStream(file).use { stream -> bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream) }
         return FileProvider.getUriForFile(
             context,
             "${context.packageName}.fileprovider",
@@ -146,7 +143,7 @@ fun StatisticsScreen(
                 statisticsViewModel.lastGameRecord.value
             }
             val settingsString = GameStringSerializer.serialize(record)
-            val totalScore = record.totalScore
+            val totalScore = "%.2f".format(record.totalScore)
             val appLink = "https://helddertierwelt.codeberg.page/mentalmath?settings=$settingsString"
             val shareText = "Try to beat my score of $totalScore in Mental Math - it's the exact same game:\n\n$appLink"
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
@@ -243,6 +240,48 @@ fun StatisticsScreen(
             }
         }
     )
+
+    val showScorePopUp by statisticsViewModel.showScorePopUp.collectAsState()
+    val linkScore by statisticsViewModel.scoreFromLink.collectAsState()
+    val currentScore = statisticsViewModel.lastGameRecord.collectAsState().value.totalScore
+    if (showScorePopUp && linkScore != null) {
+        val beaten = currentScore.compareTo(linkScore!!)
+        val title: String
+        val description: String
+        // TODO: Icon-Logik einbauen, wenn gewünscht
+        if (beaten > 0) {
+            title = "Victory!"
+            description = "You scored %.2f, beating your friend's score of %.2f – you earned that win.".format(currentScore, linkScore)
+        } else if (beaten == 0) {
+            title = "Draw"
+            description = "You both scored: %.2f - a perfect tie! Time for a decider!".format(currentScore)
+        } else {
+            title = "Defeat"
+            description = "You scored %.2f, which is below the link score of %.2f. Give it another try!".format(currentScore, linkScore)
+        }
+        val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
+        PopUp(
+            onDismissRequest = { statisticsViewModel.setShowScorePopUp(false) },
+            onConfirm = {
+                statisticsViewModel.setShowScorePopUp(false)
+                val bitmap = captureSettingsCardBitmap()
+                if (bitmap != null) {
+                    shareBitmapWithLink(context, bitmap)
+                } else {
+                    Log.e("StatisticsScreen", "Bitmap could not be captured")
+                }
+            },
+            onCancel = { statisticsViewModel.setShowScorePopUp(false) },
+            titleSize = titleFontSize,
+            descriptionSize = popUpDescriptionFontSize,
+            title = title,
+            description = description,
+            confirmationText = "Share",
+            cancelText = "Ok",
+            dismissColor = green,
+            confirmColor = green
+        )
+    }
 
     DisposableEffect(Unit) {
         val callback = object : OnBackPressedCallback(true) {

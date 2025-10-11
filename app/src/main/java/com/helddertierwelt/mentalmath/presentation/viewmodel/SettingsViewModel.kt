@@ -18,8 +18,6 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.viewmodel
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
@@ -39,27 +37,37 @@ class SettingsViewModel @Inject constructor(
     private val gameRecordRepository: GameRecordRepository
 ) : ViewModel() {
 
-    private val _settingsState = mutableStateOf(SettingsState())
-    val settingsState: State<SettingsState> = _settingsState
+    private val _isLoaded = MutableStateFlow(false)
+    val isLoaded = _isLoaded.asStateFlow()
 
-    val isLoaded = mutableStateOf(false)
-    val isMenuOpen = mutableStateOf(false)
-    val isScoreOpen = mutableStateOf(false)
+    private val _settingsState = MutableStateFlow(SettingsState())
+    val settingsState = _settingsState.asStateFlow()
+
+    private val _isMenuOpen = MutableStateFlow(false)
+    val isMenuOpen = _isMenuOpen.asStateFlow()
+
+    private val _isScoreOpen = MutableStateFlow(false)
+    val isScoreOpen = _isScoreOpen.asStateFlow()
 
     private val _bestActiveGames = MutableStateFlow<List<GameRecord>>(emptyList())
     val bestActiveGames = _bestActiveGames.asStateFlow()
+
     private val _bestTotalGames = MutableStateFlow<List<GameRecord>>(emptyList())
     val bestTotalGames = _bestTotalGames.asStateFlow()
-
-    val isScoreSheetEnabled = mutableStateOf(false)
 
     init {
         viewModelScope.launch {
             repository.settingsFlow.collect { loadedState ->
                 _settingsState.value = loadedState
-                isLoaded.value = true
+                _isLoaded.value = true
             }
         }
+    }
+
+    fun toggleMode() {
+        _settingsState.value =
+            _settingsState.value.copy(isModeEnabled = !_settingsState.value.isModeEnabled)
+        saveState()
     }
 
     fun updateLimit(value: Float) {
@@ -91,12 +99,6 @@ class SettingsViewModel @Inject constructor(
         saveState()
     }
 
-    fun toggleMode() {
-        _settingsState.value =
-            _settingsState.value.copy(isModeEnabled = !_settingsState.value.isModeEnabled)
-        saveState()
-    }
-
     fun toggleAddition() {
         _settingsState.value =
             _settingsState.value.copy(isAdditionEnabled = !_settingsState.value.isAdditionEnabled)
@@ -122,17 +124,22 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun toggleMenuOpen() {
-        if (isScoreOpen.value) {
-            isScoreOpen.value = false
+        if (_isScoreOpen.value) {
+            _isScoreOpen.value = false
         }
-        isMenuOpen.value = !isMenuOpen.value
+        _isMenuOpen.value = !_isMenuOpen.value
+    }
+
+    fun setThemeMode(mode: ThemeMode) {
+        _settingsState.value = _settingsState.value.copy(themeMode = mode)
+        saveState()
     }
 
     fun toggleScoreOpen() {
-        if (isMenuOpen.value) {
-            isMenuOpen.value = false
+        if (_isMenuOpen.value) {
+            _isMenuOpen.value = false
         }
-        isScoreOpen.value = !isScoreOpen.value
+        _isScoreOpen.value = !_isScoreOpen.value
     }
 
     fun toggleDefaultScoreOption() {
@@ -141,20 +148,13 @@ class SettingsViewModel @Inject constructor(
         saveState()
     }
 
-    fun disableScoreSheet() {
-        isScoreSheetEnabled.value = false
-    }
-
-    fun enableScoreSheet() {
-        isScoreSheetEnabled.value = true
-    }
-
-    fun setThemeMode(mode: ThemeMode) {
-        _settingsState.value = _settingsState.value.copy(themeMode = mode)
-        saveState()
-    }
     fun resetSettings() {
         _settingsState.value = SettingsState()
+        _isLoaded.value = false
+        _isMenuOpen.value = false
+        _isScoreOpen.value = false
+        _bestActiveGames.value = emptyList()
+        _bestTotalGames.value = emptyList()
         saveState()
     }
 
@@ -206,6 +206,7 @@ class SettingsViewModel @Inject constructor(
     fun applySettingsString(decodedSettingsString: String) {
         val isModeEnabled = decodedSettingsString[0] == '1'
         val limit = decodedSettingsString[1].digitToInt().toFloat()
+
         val additionRange = Pair(decodedSettingsString[2].digitToInt().toFloat(), decodedSettingsString[3].digitToInt().toFloat())
         val subtractionRange = Pair(decodedSettingsString[4].digitToInt().toFloat(), decodedSettingsString[5].digitToInt().toFloat())
         val multiplicationRange = Pair(decodedSettingsString[6].digitToInt().toFloat(), decodedSettingsString[7].digitToInt().toFloat())

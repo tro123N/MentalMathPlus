@@ -181,24 +181,18 @@ fun ScoreSideSheet(
             ) {
 
                 // load game records based on current settings
-                val settingsState = settingsViewModel.settingsState.value
                 val bestActiveGames by settingsViewModel.bestActiveGames.collectAsState()
                 val bestTotalGames by settingsViewModel.bestTotalGames.collectAsState()
                 val lastGameId = statisticsViewModel.lastGameRecord.collectAsState().value.id
 
-                if (bestActiveGames.isEmpty() && bestTotalGames.isEmpty()) {
-                    settingsViewModel.disableScoreSheet()
-                } else {
-                    settingsViewModel.enableScoreSheet()
-                    @Composable
-                    fun onScoreClick(): (GameRecord) -> Unit = { gameRecord ->
-                        statisticsViewModel.setLoadedGameRecord(gameRecord)
-                        statisticsViewModel.setShowLoadedGameRecord(true)
-                        navController.navigate("statistics") {
-                            popUpTo(0) { inclusive = true }
-                            launchSingleTop = true
-                        }
-                    }
+                // determine which score type is active
+                val activeScoreDefault = settingsViewModel.settingsState.collectAsState().value.isActiveScoreDefault
+                val scoreTitle = if (activeScoreDefault) "Active\nScore" else "Total  \nScore"
+                val iconColor = if (activeScoreDefault) green else yellow
+                val bestGames = if (activeScoreDefault) bestActiveGames else bestTotalGames
+                val scoreSelector = if (activeScoreDefault) { gameRecord: GameRecord -> gameRecord.activeScore } else { gameRecord: GameRecord -> gameRecord.totalScore }
+
+                if (!bestActiveGames.isEmpty() || !bestTotalGames.isEmpty()) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -209,7 +203,7 @@ fun ScoreSideSheet(
                     ) {
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            text = if (settingsState.isActiveScoreDefault) "Active\nScore" else "Total  \nScore",
+                            text = scoreTitle,
                             color = MaterialTheme.colorScheme.onPrimary,
                             fontSize = fontSizeTitle,
                             textAlign = TextAlign.Start,
@@ -218,26 +212,24 @@ fun ScoreSideSheet(
                             painter = painterResource(R.drawable.star_24dp),
                             contentDescription = "activeScore",
                             modifier = Modifier.size(128.dp),
-                            tint = if (settingsState.isActiveScoreDefault) green else yellow
+                            tint = iconColor
                         )
                     }
-                    if (settingsState.isActiveScoreDefault) {
-                        ScoreList(
-                            gameRecords = bestActiveGames,
-                            fontSizeScore = fontSizeScore,
-                            lastGameId = lastGameId,
-                            scoreSelector = { gameRecord -> gameRecord.activeScore },
-                            onClick = onScoreClick()
-                        )
-                    } else {
-                        ScoreList(
-                            gameRecords = bestTotalGames,
-                            fontSizeScore = fontSizeScore,
-                            lastGameId = lastGameId,
-                            scoreSelector = { gameRecord -> gameRecord.totalScore },
-                            onClick = onScoreClick()
-                        )
-                    }
+                    ScoreList(
+                        gameRecords = bestGames,
+                        fontSizeScore = fontSizeScore,
+                        lastGameId = lastGameId,
+                        scoreSelector = scoreSelector,
+                        onClick = { gameRecord ->
+                            statisticsViewModel.setLoadedGameRecord(gameRecord)
+                            statisticsViewModel.setShowLoadedGameRecord(true)
+                            navController.navigate("statistics") {
+                                popUpTo(0) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+
                 }
             }
         }
