@@ -276,12 +276,12 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun resetGame() {
+    fun reset() {
         saveState(GameState())
     }
 
     fun resetGameData() {
-        resetGame()
+        reset()
         viewModelScope.launch(Dispatchers.IO) {
             gameRecordRepository.reset()
         }

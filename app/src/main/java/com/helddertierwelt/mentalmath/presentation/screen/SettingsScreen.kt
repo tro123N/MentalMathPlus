@@ -65,6 +65,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import java.security.SecureRandom
 
 @Composable
@@ -95,6 +96,7 @@ fun SettingsScreen(
 
     val gameViewModel: GameViewModel = hiltViewModel(activity)
     val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
+    val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
     val settingsState = settingsViewModel.settingsState.collectAsState().value
     val isLoaded = settingsViewModel.isLoaded.collectAsState().value
     val bestTotalGames by settingsViewModel.bestTotalGames.collectAsState()
@@ -308,7 +310,11 @@ fun SettingsScreen(
                     }
                     StartButton(
                         onClick = {
-                            gameViewModel.resetGame()
+                            gameViewModel.reset()
+
+                            // TODO: set to false after testing
+                            statisticsViewModel.prepareGameFromLink(12.34f, 2342342342342342341L)
+
                             gameViewModel.setSettings(settingsViewModel)
                             navController.navigate("game") {
                                 popUpTo(0) { inclusive = true }

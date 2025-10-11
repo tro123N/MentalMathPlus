@@ -35,11 +35,14 @@ class StatisticsViewModel @Inject constructor(
     private val _showLoadedGameRecord = MutableStateFlow(false)
     val showLoadedGameRecord: StateFlow<Boolean> = _showLoadedGameRecord.asStateFlow()
 
-    private val _showScorePopUp = MutableStateFlow(false)
-    val showScorePopUp: StateFlow<Boolean> = _showScorePopUp.asStateFlow()
+    private val _showLinkGamePopUp = MutableStateFlow(false)
+    val showLinkGamePopUp: StateFlow<Boolean> = _showLinkGamePopUp.asStateFlow()
 
-    private val _scoreFromLink = MutableStateFlow<Float?>(null)
-    val scoreFromLink: StateFlow<Float?> = _scoreFromLink.asStateFlow()
+    private val _scoreFromLink = MutableStateFlow<Float>(0.0f)
+    val scoreFromLink: StateFlow<Float> = _scoreFromLink.asStateFlow()
+
+    private val _seedFromLink = MutableStateFlow<Long>(0L)
+    val seedFromLink: StateFlow<Long> = _seedFromLink.asStateFlow()
 
     val loadedGameRecord: StateFlow<GameRecord> = gameRecordRepository.loadedGameRecord
     val lastGameRecord: StateFlow<GameRecord> = gameRecordRepository.lastGameRecord
@@ -47,27 +50,28 @@ class StatisticsViewModel @Inject constructor(
     fun setShowLoadedGameRecord(value: Boolean) {
         _showLoadedGameRecord.value = value
     }
-    fun setShowScorePopUp(value: Boolean) {
-        _showScorePopUp.value = value
+    fun setShowLinkGamePopUp(value: Boolean) {
+        _showLinkGamePopUp.value = value
     }
-    fun setScoreFromLink(value: Float?) {
+    fun setScoreFromLink(value: Float) {
         _scoreFromLink.value = value
+    }
+    fun setSeedFromLink(value: Long) {
+        _seedFromLink.value = value
     }
     fun setLoadedGameRecord(gameRecord: GameRecord) {
         gameRecordRepository.setLoadedGameRecord(gameRecord)
     }
-
-    fun resetLinkData() {
-        setScoreFromLink(null)
-        setShowScorePopUp(false)
-    }
-
-    fun reset() {
-        gameRecordRepository.resetLoadedGameRecord()
+    fun resetLastGameRecord() {
         gameRecordRepository.resetLastGameRecord()
-        resetLinkData()
-        setShowLoadedGameRecord(false)
+    }
+    fun resetLoadedGameRecord() {
+        gameRecordRepository.resetLoadedGameRecord()
     }
 
-
+    fun prepareGameFromLink(score: Float, seed: Long) {
+        setScoreFromLink(score)
+        setSeedFromLink(seed)
+        setShowLinkGamePopUp(true)
+    }
 }

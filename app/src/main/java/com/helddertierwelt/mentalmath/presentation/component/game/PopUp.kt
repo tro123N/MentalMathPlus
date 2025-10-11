@@ -41,7 +41,7 @@ fun PopUp(
     cancelText: String,
     dismissColor: Color,
     confirmColor: Color,
-    icon: @Composable (() -> Unit)? = null,
+    icon: @Composable (() -> Unit)? = null
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,

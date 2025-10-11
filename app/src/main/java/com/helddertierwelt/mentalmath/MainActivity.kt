@@ -65,6 +65,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import com.helddertierwelt.mentalmath.util.SettingsLinkUtil.deserialize
 import com.helddertierwelt.mentalmath.util.SettingsLinkUtil.isValidSettingsString
 import dagger.hilt.android.AndroidEntryPoint
@@ -74,6 +75,7 @@ class MainActivity : ComponentActivity() {
 
     private val gameViewModel: GameViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
+    private val statisticsViewModel: StatisticsViewModel by viewModels()
     private val showDeepLinkPopUp = mutableStateOf(false)
     private val gameRecordFromAppLink = mutableStateOf<GameRecord>(GameRecord())
 
@@ -124,7 +126,11 @@ class MainActivity : ComponentActivity() {
                     PopUp(
                         onDismissRequest = { showDeepLinkPopUp.value = false },
                         onConfirm = {
-                            gameViewModel.resetGame()
+                            gameViewModel.reset()
+                            statisticsViewModel.prepareGameFromLink(
+                                gameRecordFromAppLink.value.totalScore,
+                                gameRecordFromAppLink.value.seed
+                            )
                             settingsViewModel.applySettingsFromLink(gameRecordFromAppLink.value)
                             gameViewModel.setSettings(settingsViewModel)
                             navController.navigate("game") {
@@ -132,7 +138,8 @@ class MainActivity : ComponentActivity() {
                                 launchSingleTop = true
                             }
                             gameViewModel.startGame(gameRecordFromAppLink.value.seed)
-                            dismissDeepLinkPopUp()                        },
+                            dismissDeepLinkPopUp()
+                        },
                         onCancel = { showDeepLinkPopUp.value = false },
                         titleSize = titleFontSize,
                         descriptionSize = popUpDescriptionFontSize,

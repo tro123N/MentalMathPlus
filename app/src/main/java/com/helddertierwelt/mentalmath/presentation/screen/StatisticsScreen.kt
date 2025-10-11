@@ -33,8 +33,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -48,6 +50,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -55,6 +58,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
@@ -68,7 +72,10 @@ import com.helddertierwelt.mentalmath.presentation.component.statistics.DoneButt
 import com.helddertierwelt.mentalmath.presentation.component.statistics.SettingsAndStatsCard
 import com.helddertierwelt.mentalmath.presentation.component.statistics.StatisticsTopBar
 import com.helddertierwelt.mentalmath.presentation.component.statistics.TasksCard
+import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
+import com.helddertierwelt.mentalmath.presentation.theme.red
+import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import com.helddertierwelt.mentalmath.util.SettingsLinkUtil
@@ -91,12 +98,10 @@ fun StatisticsScreen(
     val localView = LocalView.current
     val screenWidth = with(density) { containerSizePx.width.toDp() }
     val screenHeight = with(density) { containerSizePx.height.toDp() }
-
     val roundButtonSize = (0.09f * screenHeight.value).dp
     val doneButtonFontSize = (0.038f * screenHeight.value).sp
     val doneIconSize = (0.057f * screenHeight.value).dp
     val shareIconSize = (0.038f * screenHeight.value).dp
-
     val titleFontSize = (0.032f * screenHeight.value).sp
     val resultFontSize = (0.057f * screenWidth.value).sp
     val operatorFontSize = (0.057f * screenHeight.value).sp
@@ -126,7 +131,13 @@ fun StatisticsScreen(
         val cachePath = File(context.cacheDir, "images")
         cachePath.mkdirs()
         val file = File(cachePath, "shared_image.png")
-        FileOutputStream(file).use { stream -> bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream) }
+        FileOutputStream(file).use { stream ->
+            bitmap.compress(
+                Bitmap.CompressFormat.PNG,
+                100,
+                stream
+            )
+        }
         return FileProvider.getUriForFile(
             context,
             "${context.packageName}.fileprovider",
@@ -143,9 +154,8 @@ fun StatisticsScreen(
                 statisticsViewModel.lastGameRecord.value
             }
             val settingsString = SettingsLinkUtil.serialize(record)
-            val totalScore = "%.2f".format(record.totalScore)
-            val appLink = "https://helddertierwelt.codeberg.page/mentalmath?settings=$settingsString"
-            val shareText = "Try to beat my score of $totalScore in Mental Math - it's the exact same game:\n\n$appLink"
+            val appLink = "https://helddertierwelt.codeberg.page/mentalmath?settings=%s".format(settingsString)
+            val shareText = "Try to beat my score of %.2f in Mental Math.\nReplay my game with seed %d:\n\n%s".format(record.totalScore, record.seed, appLink)
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "image/png"
                 putExtra(Intent.EXTRA_STREAM, imageUri)
@@ -224,6 +234,10 @@ fun StatisticsScreen(
                     Spacer(modifier = Modifier.height(columnPadding))
                     DoneButton(
                         buttonTextId = R.string.done,
+                        size = roundButtonSize,
+                        fontSize = doneButtonFontSize,
+                        iconSize = doneIconSize,
+                        modifier = Modifier,
                         onClick = {
                             settingsViewModel.loadBestGames()
                             navController.navigate("settings") {
@@ -231,57 +245,76 @@ fun StatisticsScreen(
                                 launchSingleTop = true
                             }
                         },
-                        size = roundButtonSize,
-                        fontSize = doneButtonFontSize,
-                        iconSize = doneIconSize,
-                        modifier = Modifier
                     )
                 }
             }
         }
     )
 
-    val showScorePopUp by statisticsViewModel.showScorePopUp.collectAsState()
+    val showScorePopUp by statisticsViewModel.showLinkGamePopUp.collectAsState()
     val linkScore by statisticsViewModel.scoreFromLink.collectAsState()
+    val seed by statisticsViewModel.seedFromLink.collectAsState()
     val currentScore = statisticsViewModel.lastGameRecord.collectAsState().value.totalScore
-    if (showScorePopUp && linkScore != null) {
-        val beaten = currentScore.compareTo(linkScore!!)
-        val title: String
-        val description: String
-        // TODO: Icon-Logik einbauen, wenn gewünscht
-        if (beaten > 0) {
-            title = "Victory!"
-            description = "You scored %.2f, beating your friend's score of %.2f – you earned that win.".format(currentScore, linkScore)
-        } else if (beaten == 0) {
-            title = "Draw"
-            description = "You both scored: %.2f - a perfect tie! Time for a decider!".format(currentScore)
-        } else {
-            title = "Defeat"
-            description = "You scored %.2f, which is below the link score of %.2f. Give it another try!".format(currentScore, linkScore)
+    if (true) {
+        val (title, description) = if (linkScore == 0.0f) {
+            when{
+                currentScore > 0.0f -> "Easy Win" to "You: %.2f | Opponent: %.2f\nSeed: %d\nA win, but without a competition!".format(currentScore, linkScore, seed)
+                else -> "Anyone here?" to "You: %.2f | Opponent: %.2f\nSeed: %d\nA point-less game!".format(currentScore, linkScore, seed)
+            }
+        } else when {
+            currentScore / linkScore > 1.05f -> "Solid Win" to "You: %.2f | Opponent: %.2f\nSeed: %d\nThat was a strong performance!".format(currentScore, linkScore, seed)
+            currentScore / linkScore > 1.0f -> "Close Win" to "You: %.2f | Opponent: %.2f\nSeed: %d\nA tight win, but it counts!".format(currentScore, linkScore, seed)
+            currentScore / linkScore == 1.0f -> "Draw" to "You: %.2f | Opponent: %.2f\nSeed: %d\nA perfect tie - time for a decider!".format(currentScore, linkScore, seed)
+            currentScore / linkScore >= 0.95f -> "Close Loss" to "You: %.2f | Opponent: %.2f\nSeed: %d\nA tight loss, but you almost had it!".format(currentScore, linkScore, seed)
+            else -> "Defeat" to "You: %.2f | Opponent: %.2f\nSeed: %d\nShake it off and give it another try!".format(currentScore, linkScore, seed)
         }
-        val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
+        val icon: Int
+        val color: Color
+        if (linkScore == 0.0f) {
+            if (currentScore > 0.0f) {
+                icon = R.drawable.favorite_24dp
+                color = red
+            } else {
+                icon = R.drawable.question_mark_24dp
+                color = blue
+            }
+        } else {
+            val ratio = currentScore / linkScore
+            if (ratio > 1.0f) {
+                icon = R.drawable.trophy_24dp
+                color = yellow
+            } else if (ratio == 1.0f) {
+                icon = R.drawable.partner_heart_24dp
+                color = green
+            } else {
+                icon = R.drawable.rainy_24dp
+                color = blue
+            }
+        }
         PopUp(
-            onDismissRequest = { statisticsViewModel.setShowScorePopUp(false) },
-            onConfirm = {
-                statisticsViewModel.setShowScorePopUp(false)
-                val bitmap = captureSettingsCardBitmap()
-                if (bitmap != null) {
-                    shareBitmapWithLink(context, bitmap)
-                } else {
-                    Log.e("StatisticsScreen", "Bitmap could not be captured")
-                }
-            },
-            onCancel = { statisticsViewModel.setShowScorePopUp(false) },
             titleSize = titleFontSize,
-            descriptionSize = popUpDescriptionFontSize,
+            descriptionSize = (0.018f * screenHeight.value).sp,
             title = title,
             description = description,
             confirmationText = "Share",
             cancelText = "Ok",
+            icon = {
+                Icon(
+                    painter = painterResource(icon),
+                    contentDescription = "challenge result",
+                    tint = color,
+                    modifier = Modifier.size((0.1f * screenHeight.value).dp)
+                )
+            },
+            confirmColor = green,
             dismissColor = green,
-            confirmColor = green
+            onDismissRequest = { statisticsViewModel.setShowLinkGamePopUp(false) },
+            onCancel = { statisticsViewModel.setShowLinkGamePopUp(false) },
+            onConfirm  = {
+                statisticsViewModel.setShowLinkGamePopUp(false)}
         )
-    }
+        }
+
 
     DisposableEffect(Unit) {
         val callback = object : OnBackPressedCallback(true) {
