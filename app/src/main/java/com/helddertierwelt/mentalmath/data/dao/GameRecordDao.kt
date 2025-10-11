@@ -30,9 +30,6 @@ interface GameRecordDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(gameScore: GameRecord): Long
 
-    @Query("SELECT * FROM game_records WHERE id = :id")
-    suspend fun getById(id: Int): GameRecord?
-
     @Query(
         """SELECT * FROM game_records WHERE
         isModeEnabled = :isModeEnabled AND

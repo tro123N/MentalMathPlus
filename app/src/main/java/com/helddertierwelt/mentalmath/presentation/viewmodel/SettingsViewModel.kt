@@ -49,6 +49,9 @@ class SettingsViewModel @Inject constructor(
     private val _isScoreOpen = MutableStateFlow(false)
     val isScoreOpen = _isScoreOpen.asStateFlow()
 
+    private val _showResetPopUp = MutableStateFlow(false)
+    val showResetPopUp = _showResetPopUp.asStateFlow()
+
     private val _bestActiveGames = MutableStateFlow<List<GameRecord>>(emptyList())
     val bestActiveGames = _bestActiveGames.asStateFlow()
 
@@ -135,6 +138,10 @@ class SettingsViewModel @Inject constructor(
         saveState()
     }
 
+    fun setShowResetPopUp(value: Boolean) {
+        _showResetPopUp.value = value
+    }
+
     fun toggleScoreOpen() {
         if (_isMenuOpen.value) {
             _isMenuOpen.value = false
@@ -153,6 +160,7 @@ class SettingsViewModel @Inject constructor(
         _isLoaded.value = false
         _isMenuOpen.value = false
         _isScoreOpen.value = false
+        _showResetPopUp.value = false
         _bestActiveGames.value = emptyList()
         _bestTotalGames.value = emptyList()
         saveState()
@@ -203,14 +211,14 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun applySettingsString(decodedSettingsString: String) {
-        val isModeEnabled = decodedSettingsString[0] == '1'
-        val limit = decodedSettingsString[1].digitToInt().toFloat()
+    fun applySettingsFromLink(gameRecordFromLink: GameRecord) {
+        val isModeEnabled = gameRecordFromLink.isModeEnabled
+        val limit = gameRecordFromLink.modeLimit.toFloat()
 
-        val additionRange = Pair(decodedSettingsString[2].digitToInt().toFloat(), decodedSettingsString[3].digitToInt().toFloat())
-        val subtractionRange = Pair(decodedSettingsString[4].digitToInt().toFloat(), decodedSettingsString[5].digitToInt().toFloat())
-        val multiplicationRange = Pair(decodedSettingsString[6].digitToInt().toFloat(), decodedSettingsString[7].digitToInt().toFloat())
-        val divisionRange = Pair(decodedSettingsString[8].digitToInt().toFloat(), decodedSettingsString[9].digitToInt().toFloat())
+        val additionRange = Pair(gameRecordFromLink.additionRangeStart.toFloat(), gameRecordFromLink.additionRangeEnd.toFloat())
+        val subtractionRange = Pair(gameRecordFromLink.subtractionRangeStart.toFloat(), gameRecordFromLink.subtractionRangeEnd.toFloat())
+        val multiplicationRange = Pair(gameRecordFromLink.multiplicationRangeStart.toFloat(), gameRecordFromLink.multiplicationRangeEnd.toFloat())
+        val divisionRange = Pair(gameRecordFromLink.divisionRangeStart.toFloat(), gameRecordFromLink.divisionRangeEnd.toFloat())
 
         val isAdditionEnabled = additionRange.first != 0f && additionRange.second != 0f
         val isSubtractionEnabled = subtractionRange.first != 0f && subtractionRange.second != 0f

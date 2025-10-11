@@ -37,31 +37,31 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.TaskResult
 data class GameRecord(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
 
-    val isModeEnabled: Boolean,
-    val modeLimit: Int,
+    val isModeEnabled: Boolean = false,
+    val modeLimit: Int = 0,
 
-    val additionRangeStart: Int,
-    val additionRangeEnd: Int,
+    val additionRangeStart: Int = 0,
+    val additionRangeEnd: Int = 0,
 
-    val subtractionRangeStart: Int,
-    val subtractionRangeEnd: Int,
+    val subtractionRangeStart: Int = 0,
+    val subtractionRangeEnd: Int = 0,
 
-    val multiplicationRangeStart: Int,
-    val multiplicationRangeEnd: Int,
+    val multiplicationRangeStart: Int = 0,
+    val multiplicationRangeEnd: Int = 0,
 
-    val divisionRangeStart: Int,
-    val divisionRangeEnd: Int,
+    val divisionRangeStart: Int = 0,
+    val divisionRangeEnd: Int = 0,
 
-    val totalAnswers: Int,
-    val correctAnswers: Int,
+    val totalAnswers: Int = 0,
+    val correctAnswers: Int = 0,
 
-    val activeTime: Long,
-    val totalTime: Long,
+    val activeTime: Long = 0L,
+    val totalTime: Long = 0L,
 
-    val activeScore: Float,
-    val totalScore: Float,
+    val activeScore: Float = 0f,
+    val totalScore: Float = 0f,
 
-    val seed: Long,
+    val seed: Long = 0L,
 
-    val taskResults: List<TaskResult>
+    val taskResults: List<TaskResult> = emptyList()
 )

@@ -49,7 +49,7 @@ fun CountdownTimer(
     val activity = LocalActivity.current as ViewModelStoreOwner
     val gameViewModel: GameViewModel = hiltViewModel(activity)
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
-    var timeLeft = time - gameViewModel.gamesState.collectAsState().value.activeTime
+    var timeLeft = time - gameViewModel.gameState.collectAsState().value.activeTime
     var formattedTime by remember { mutableStateOf(formatTime(timeLeft)) }
 
     LaunchedEffect(timeLeft) {

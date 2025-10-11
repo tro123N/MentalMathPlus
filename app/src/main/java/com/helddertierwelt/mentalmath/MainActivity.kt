@@ -39,7 +39,6 @@ package com.helddertierwelt.mentalmath
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -48,6 +47,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.screen.Navigation
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
@@ -64,10 +65,9 @@ import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
-import com.helddertierwelt.mentalmath.util.LinkValidator
+import com.helddertierwelt.mentalmath.util.SettingsLinkUtil.deserialize
+import com.helddertierwelt.mentalmath.util.SettingsLinkUtil.isValidSettingsString
 import dagger.hilt.android.AndroidEntryPoint
-import java.math.BigInteger
-import androidx.compose.runtime.collectAsState
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -75,21 +75,26 @@ class MainActivity : ComponentActivity() {
     private val gameViewModel: GameViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
     private val showDeepLinkPopUp = mutableStateOf(false)
-    private val deepLinkSettingsString = mutableStateOf<String?>(null)
+    private val gameRecordFromAppLink = mutableStateOf<GameRecord>(GameRecord())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         handleDeepLinkIntent(intent)
         enableEdgeToEdge()
         setContent {
+
+            // Splash Screen as long as settings are loading
             installSplashScreen().apply {
                 setKeepOnScreenCondition {
                     !settingsViewModel.isLoaded.value
                 }
             }
+
             val navController = rememberNavController()
             lifecycle.addObserver(gameViewModel)
             MentalMathTheme(themeMode = settingsViewModel.settingsState.collectAsState().value.themeMode) {
+
+                // set system bar colors
                 val darkTheme = when (settingsViewModel.settingsState.collectAsState().value.themeMode) {
                     ThemeMode.DARK -> true
                     ThemeMode.LIGHT -> false
@@ -97,7 +102,6 @@ class MainActivity : ComponentActivity() {
                 }
                 val systemUiController = rememberSystemUiController()
                 val navBarColor = MaterialTheme.colorScheme.background
-
                 SideEffect {
                     systemUiController.setNavigationBarColor(
                         color = navBarColor,
@@ -108,37 +112,28 @@ class MainActivity : ComponentActivity() {
                         darkIcons = !darkTheme
                     )
                 }
-
                 Navigation(
                     navController = navController
                 )
+
+                // Deep Link PopUp
                 if (showDeepLinkPopUp.value) {
-                    val screenHeight =
-                        with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
+                    val screenHeight = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
                     val titleFontSize = (0.031f * screenHeight.value).sp
                     val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
                     PopUp(
-                        onDismissRequest = {
-                            showDeepLinkPopUp.value = false
-                        },
+                        onDismissRequest = { showDeepLinkPopUp.value = false },
                         onConfirm = {
-                            val settingsString = deepLinkSettingsString.value!!
                             gameViewModel.resetGame()
-                            settingsViewModel.applySettingsString(settingsString)
+                            settingsViewModel.applySettingsFromLink(gameRecordFromAppLink.value)
                             gameViewModel.setSettings(settingsViewModel)
-                            deepLinkSettingsString.value = null
-                            showDeepLinkPopUp.value = false
                             navController.navigate("game") {
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true
                             }
-                            gameViewModel.startGame(
-                                settingsString.substring(17, 35).toLong()
-                            )
-                        },
-                        onCancel = {
-                            showDeepLinkPopUp.value = false
-                        },
+                            gameViewModel.startGame(gameRecordFromAppLink.value.seed)
+                            dismissDeepLinkPopUp()                        },
+                        onCancel = { showDeepLinkPopUp.value = false },
                         titleSize = titleFontSize,
                         descriptionSize = popUpDescriptionFontSize,
                         title = "Start game from link?",
@@ -162,16 +157,16 @@ class MainActivity : ComponentActivity() {
     private fun handleDeepLinkIntent(intent: Intent?) {
         val data = intent?.data
         val encodedSettingsString = data?.getQueryParameter("settings")
-        if (encodedSettingsString != null && LinkValidator.isValidSettingsString(encodedSettingsString)) {
+        if (encodedSettingsString != null && isValidSettingsString(encodedSettingsString)) {
             showDeepLinkPopUp.value = true
-            deepLinkSettingsString.value = decode(encodedSettingsString)
+            gameRecordFromAppLink.value = deserialize(encodedSettingsString)
         } else {
             Log.d("DeepLink", "SettingsString is invalid or missing.")
         }
     }
 
-    private fun decode(encodedSettingsString: String): String {
-        val byteArray = Base64.decode(encodedSettingsString, Base64.URL_SAFE or Base64.NO_WRAP)
-        return BigInteger(byteArray).toString().padStart(35, '0')
+    private fun dismissDeepLinkPopUp() {
+        showDeepLinkPopUp.value = false
+        gameRecordFromAppLink.value = GameRecord()
     }
 }

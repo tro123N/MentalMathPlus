@@ -71,7 +71,7 @@ import com.helddertierwelt.mentalmath.presentation.component.statistics.TasksCar
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
-import com.helddertierwelt.mentalmath.util.GameStringSerializer
+import com.helddertierwelt.mentalmath.util.SettingsLinkUtil
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -142,7 +142,7 @@ fun StatisticsScreen(
             } else {
                 statisticsViewModel.lastGameRecord.value
             }
-            val settingsString = GameStringSerializer.serialize(record)
+            val settingsString = SettingsLinkUtil.serialize(record)
             val totalScore = "%.2f".format(record.totalScore)
             val appLink = "https://helddertierwelt.codeberg.page/mentalmath?settings=$settingsString"
             val shareText = "Try to beat my score of $totalScore in Mental Math - it's the exact same game:\n\n$appLink"

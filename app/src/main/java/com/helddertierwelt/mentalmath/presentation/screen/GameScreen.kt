@@ -85,7 +85,7 @@ fun GameScreen(
     }
 
     val settingsState = settingsViewModel.settingsState.collectAsState().value
-    val gameState = gameViewModel.gamesState.collectAsState().value
+    val gameState = gameViewModel.gameState.collectAsState().value
     val coroutineScope = rememberCoroutineScope()
 
     // Calculate sizes based on screen height
@@ -223,7 +223,7 @@ fun GameScreen(
                                 gameViewModel.checkAnswerAndCount()
                                 coroutineScope.launch {
                                     delay(50)
-                                    val totalAnswers = gameViewModel.gamesState.value.totalAnswers
+                                    val totalAnswers = gameViewModel.gameState.value.totalAnswers
                                     val totalTasks = (settingsState.limit * 10).roundToInt()
                                     if (settingsState.isModeEnabled && totalAnswers == totalTasks) {
                                         gameViewModel.endGame()

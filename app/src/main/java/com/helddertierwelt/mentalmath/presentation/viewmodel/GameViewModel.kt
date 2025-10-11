@@ -50,7 +50,7 @@ class GameViewModel @Inject constructor(
     private val _gameState = MutableStateFlow(
         savedStateHandle.get<GameState>("game_state") ?: GameState()
     )
-    val gamesState = _gameState.asStateFlow()
+    val gameState = _gameState.asStateFlow()
 
     private var timerJob: Job? = null
     private var random: Random = Random(System.currentTimeMillis())

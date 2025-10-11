@@ -76,14 +76,7 @@ fun SettingsScreen(
     val activity = LocalActivity.current as ViewModelStoreOwner
     val context = LocalContext.current
 
-    val gameViewModel: GameViewModel = hiltViewModel(activity)
-    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
-    val settingsState = settingsViewModel.settingsState.collectAsState().value
-    val isLoaded = settingsViewModel.isLoaded.collectAsState().value
-
-    val valueRangeOperators = 1f..9f
-
-    val containerSizePx = LocalWindowInfo.current.containerSize // IntSize in px
+    val containerSizePx = LocalWindowInfo.current.containerSize
     val density = LocalDensity.current
     val screenHeight = with(density) { containerSizePx.height.toDp() }
     val screenWidth = with(density) { containerSizePx.width.toDp() }
@@ -100,12 +93,14 @@ fun SettingsScreen(
     val columnPadding = (0.028f * screenHeight.value).dp
     val topBarIconSize = (0.038f * screenHeight.value).dp
 
-    var showDialog by remember { mutableStateOf(false) }
-    var isSliderActive by remember { mutableStateOf(false) }
+    val gameViewModel: GameViewModel = hiltViewModel(activity)
+    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
+    val settingsState = settingsViewModel.settingsState.collectAsState().value
+    val isLoaded = settingsViewModel.isLoaded.collectAsState().value
     val bestTotalGames by settingsViewModel.bestTotalGames.collectAsState()
     val bestActiveGames by settingsViewModel.bestActiveGames.collectAsState()
     val bestGamesEmpty = bestTotalGames.isEmpty() && bestActiveGames.isEmpty()
-
+    var isSliderActive by remember { mutableStateOf(false) }
 
     LaunchedEffect(isLoaded) {
         if (isLoaded) {
@@ -200,7 +195,7 @@ fun SettingsScreen(
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
-                            valueRange = valueRangeOperators,
+                            valueRange = 1f..9f,
                             value = settingsState.additionRange,
                             activeTrackColor = green,
                             isEnabled = settingsState.isAdditionEnabled,
@@ -232,7 +227,7 @@ fun SettingsScreen(
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
-                            valueRange = valueRangeOperators,
+                            valueRange = 1f..9f,
                             value = settingsState.subtractionRange,
                             activeTrackColor = red,
                             isEnabled = settingsState.isSubtractionEnabled,
@@ -264,7 +259,7 @@ fun SettingsScreen(
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
-                            valueRange = valueRangeOperators,
+                            valueRange = 1f..9f,
                             value = settingsState.multiplicationRange,
                             activeTrackColor = yellow,
                             isEnabled = settingsState.isMultiplicationEnabled,
@@ -296,7 +291,7 @@ fun SettingsScreen(
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
-                            valueRange = valueRangeOperators,
+                            valueRange = 1f..9f,
                             value = settingsState.divisionRange,
                             activeTrackColor = blue,
                             isEnabled = settingsState.isDivisionEnabled,
@@ -346,21 +341,20 @@ fun SettingsScreen(
                     screenWidth = screenWidth,
                     onDismissRequested = { settingsViewModel.toggleMenuOpen() },
                     screenHeight = screenHeight,
-                    onResetClick = { showDialog = true }
+                    onResetClick = { settingsViewModel.setShowResetPopUp(true) }
                 )
             }
         }
     )
 
-    if (showDialog) {
+    if (settingsViewModel.showResetPopUp.collectAsState().value) {
         PopUp(
-            onDismissRequest = { showDialog = false },
+            onDismissRequest = { settingsViewModel.setShowResetPopUp(false) },
             onConfirm = {
-                showDialog = false
                 gameViewModel.resetGameData()
                 settingsViewModel.resetSettings()
             },
-            onCancel = { showDialog = false },
+            onCancel = { settingsViewModel.setShowResetPopUp(false) },
             titleSize = titleFontSize,
             descriptionSize = popUpDescriptionFontSize,
             title = "Reset app?",

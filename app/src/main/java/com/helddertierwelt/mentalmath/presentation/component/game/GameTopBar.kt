@@ -83,7 +83,7 @@ fun GameTopBar(
         actions = {
             if (settingsViewModel.settingsState.collectAsState().value.isModeEnabled) {
                 val totalTasks = (settingsViewModel.settingsState.collectAsState().value.limit * 10).roundToInt()
-                val answeredTasks = gameViewModel.gamesState.collectAsState().value.totalAnswers
+                val answeredTasks = gameViewModel.gameState.collectAsState().value.totalAnswers
                 Text(
                     text = "$answeredTasks/$totalTasks",
                     color = MaterialTheme.colorScheme.onPrimary,
