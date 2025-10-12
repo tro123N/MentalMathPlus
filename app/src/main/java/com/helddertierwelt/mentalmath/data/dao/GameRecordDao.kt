@@ -41,7 +41,8 @@ interface GameRecordDao {
         multiplicationRangeStart = :multiplicationRangeStart AND
         multiplicationRangeEnd = :multiplicationRangeEnd AND
         divisionRangeStart = :divisionRangeStart AND
-        divisionRangeEnd = :divisionRangeEnd
+        divisionRangeEnd = :divisionRangeEnd AND
+        activeScore > 0.00
         ORDER BY activeScore DESC
         LIMIT 10
         """
@@ -70,7 +71,8 @@ interface GameRecordDao {
         multiplicationRangeStart = :multiplicationRangeStart AND
         multiplicationRangeEnd = :multiplicationRangeEnd AND
         divisionRangeStart = :divisionRangeStart AND
-        divisionRangeEnd = :divisionRangeEnd
+        divisionRangeEnd = :divisionRangeEnd AND
+        totalScore > 0.00
         ORDER BY totalScore DESC
         LIMIT 10
         """

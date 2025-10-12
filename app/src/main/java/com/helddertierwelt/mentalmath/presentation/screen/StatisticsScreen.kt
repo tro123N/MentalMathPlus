@@ -18,18 +18,11 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.screen
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
-import android.view.Gravity
-import android.view.View.MeasureSpec
-import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
@@ -47,7 +40,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -62,18 +54,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
-import androidx.core.graphics.createBitmap
 import androidx.core.view.drawToBitmap
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
@@ -104,6 +92,12 @@ fun StatisticsScreen(
     val viewModelStoreOwner = activity as ViewModelStoreOwner
     val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
+    val statisticsGameRecord =
+        if (statisticsViewModel.showLoadedGameRecord.collectAsState().value) {
+            statisticsViewModel.loadedGameRecord.collectAsState().value
+        } else {
+            statisticsViewModel.lastGameRecord.collectAsState().value
+        }
 
     // Calculate sizes based on screen size
     val containerSizePx = LocalWindowInfo.current.containerSize // IntSize in px
@@ -158,17 +152,12 @@ fun StatisticsScreen(
         )
     }
 
-    fun shareBitmapWithLink(context: Context, bitmap: Bitmap) {
+    fun shareBitmapWithCahllengeLink(context: Context, bitmap: Bitmap) {
         try {
             val imageUri = saveBitmapToCacheAndGetUri(context, bitmap)
-            val record = if (statisticsViewModel.showLoadedGameRecord.value) {
-                statisticsViewModel.loadedGameRecord.value
-            } else {
-                statisticsViewModel.lastGameRecord.value
-            }
-            val settingsString = SettingsLinkUtil.serialize(record)
+            val settingsString = SettingsLinkUtil.serialize(statisticsGameRecord)
             val appLink = "https://helddertierwelt.codeberg.page/mentalmath?settings=%s".format(settingsString)
-            val shareText = "Try to beat my score of %.2f in Mental Math.\nReplay my game with seed %d:\n\n%s".format(record.totalScore, record.seed, appLink)
+            val shareText = "Try to beat my score of %.2f in Mental Math.\nReplay my game with seed %d:\n\n%s".format(statisticsGameRecord.totalScore, statisticsGameRecord.seed, appLink)
             Log.d("StatisticsScreen", "Sharing link: $appLink")
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "image/png"
@@ -184,16 +173,18 @@ fun StatisticsScreen(
         }
     }
 
-    fun shareBitmapAsImage(context: Context, bitmap: Bitmap) {
+    fun shareBitmapOfChallengeResult(context: Context, bitmap: Bitmap, sharedText: String) {
         try {
             val imageUri = saveBitmapToCacheAndGetUri(context, bitmap)
+            Log.d("StatisticsScreen", "Sharing result: $sharedText")
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "image/png"
                 putExtra(Intent.EXTRA_STREAM, imageUri)
+                putExtra(Intent.EXTRA_TEXT, sharedText)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
             context.startActivity(
-                Intent.createChooser(shareIntent, context.getString(R.string.share_link_game_result))
+                Intent.createChooser(shareIntent, context.getString(R.string.share_score))
             )
         } catch (e: Exception) {
             Log.e("StatisticsScreen", "Error when sharing result of link-game", e)
@@ -211,7 +202,7 @@ fun StatisticsScreen(
                         scrollState.animateScrollTo(0)
                         val bitmap = captureSettingsCardBitmap()
                         if (bitmap != null) {
-                            shareBitmapWithLink(context, bitmap)
+                            shareBitmapWithCahllengeLink(context, bitmap)
                         } else {
                             Log.e("StatisticsScreen", "Bitmap could not be captured")
                         }
@@ -288,15 +279,15 @@ fun StatisticsScreen(
     if (showLinkGamePopUp) {
         val (title, description) = if (linkScore == 0.0f) {
             when{
-                currentScore > 0.0f -> "Easy Win" to "You: %.2f | Opponent: %.2f\nSeed: %d\nA win, but without a competition!".format(currentScore, linkScore, seed)
-                else -> "Anyone here?" to "You: %.2f | Opponent: %.2f\nSeed: %d\nA point-less game!".format(currentScore, linkScore, seed)
+                currentScore > 0.0f -> "Easy Win" to "You: %.2f | Opponent: %.2f\n\nSeed: %d\nA win, but without a competition!".format(currentScore, linkScore, seed)
+                else -> "Anyone here?" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA point-less game!".format(currentScore, linkScore, seed)
             }
         } else when {
-            currentScore / linkScore > 1.05f -> "Solid Win" to "You: %.2f | Opponent: %.2f\nSeed: %d\nThat was some serious mental math!".format(currentScore, linkScore, seed)
-            currentScore / linkScore > 1.0f -> "Close Win" to "You: %.2f | Opponent: %.2f\nSeed: %d\nA tight win, but it counts!".format(currentScore, linkScore, seed)
-            currentScore / linkScore == 1.0f -> "Draw" to "You: %.2f | Opponent: %.2f\nSeed: %d\nA perfect tie - time for a decider!".format(currentScore, linkScore, seed)
-            currentScore / linkScore >= 0.95f -> "Close Loss" to "You: %.2f | Opponent: %.2f\nSeed: %d\nA tight loss, but you almost had it!".format(currentScore, linkScore, seed)
-            else -> "Defeat" to "You: %.2f | Opponent: %.2f\nSeed: %d\nShake it off and give it another try!".format(currentScore, linkScore, seed)
+            currentScore / linkScore > 1.05f -> "Solid Win" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nThat was some serious mental math!".format(currentScore, linkScore, seed)
+            currentScore / linkScore > 1.0f -> "Close Win" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA tight win, but it counts!".format(currentScore, linkScore, seed)
+            currentScore / linkScore == 1.0f -> "Draw" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA perfect tie - time for a decider!".format(currentScore, linkScore, seed)
+            currentScore / linkScore >= 0.95f -> "Close Loss" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA tight loss, but you almost had it!".format(currentScore, linkScore, seed)
+            else -> "Defeat" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nShake it off and give it another try!".format(currentScore, linkScore, seed)
         }
         val icon: Int
         val color: Color
@@ -341,28 +332,18 @@ fun StatisticsScreen(
             onDismissRequest = { statisticsViewModel.setShowLinkGamePopUp(false) },
             onCancel = { statisticsViewModel.setShowLinkGamePopUp(false) },
             onConfirm  = {
-                renderChallengeResultContentToBitmap(
-                    activity = activity,
-                    icon = icon,
-                    iconTint = color,
-                    iconSize = (0.1f * screenHeight.value).dp,
-                    title = title,
-                    titleSize = titleFontSize,
-                    description = description,
-                    descriptionSize = (0.018f * screenHeight.value).sp,
-                    widthPx = 800,
-                    heightPx = 600
-                ) { bitmap ->
+                coroutineScope.launch {
+                    scrollState.animateScrollTo(0)
+                    val bitmap = captureSettingsCardBitmap()
                     if (bitmap != null) {
-                        shareBitmapAsImage(context, bitmap)
+                        shareBitmapOfChallengeResult(context, bitmap, description)
                     } else {
-                        Log.e("StatisticsScreen", "ChallengeResultContent Bitmap could not be rendered")
+                        Log.e("StatisticsScreen", "Bitmap could not be captured")
                     }
                 }
             }
         )
     }
-
 
     DisposableEffect(Unit) {
         val callback = object : OnBackPressedCallback(true) {
@@ -378,90 +359,5 @@ fun StatisticsScreen(
         onDispose {
             callback.remove()
         }
-    }
-}
-
-
-// Composable for sharing challenge result content
-@Composable
-fun ChallengeResultContent(
-    icon: Int,
-    iconTint: Color,
-    iconSize: Dp,
-    title: String,
-    titleSize: TextUnit,
-    description: String,
-    descriptionSize: TextUnit
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(16.dp)
-    ) {
-        Icon(
-            painter = painterResource(icon),
-            contentDescription = null,
-            tint = iconTint,
-            modifier = Modifier.size(iconSize)
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        Text(
-            text = title,
-            fontSize = titleSize,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = description,
-            fontSize = descriptionSize,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-    }
-}
-
-fun renderChallengeResultContentToBitmap(
-    activity: Activity,
-    icon: Int,
-    iconTint: Color,
-    iconSize: Dp,
-    title: String,
-    titleSize: TextUnit,
-    description: String,
-    descriptionSize: TextUnit,
-    widthPx: Int = 600,
-    heightPx: Int = 400,
-    onBitmapReady: (Bitmap?) -> Unit
-) {
-    val composeView = ComposeView(activity)
-    composeView.setContent {
-        MaterialTheme {
-            Surface(color = MaterialTheme.colorScheme.background) {
-                ChallengeResultContent(
-                    icon = icon,
-                    iconTint = iconTint,
-                    iconSize = iconSize,
-                    title = title,
-                    titleSize = titleSize,
-                    description = description,
-                    descriptionSize = descriptionSize
-                )
-            }
-        }
-    }
-    val container = FrameLayout(activity)
-    container.alpha = 0f
-    val params = FrameLayout.LayoutParams(widthPx, heightPx)
-    params.gravity = Gravity.CENTER
-    container.addView(composeView, params)
-    activity.addContentView(container, params)
-    Handler(Looper.getMainLooper()).post {
-        val widthSpec = MeasureSpec.makeMeasureSpec(widthPx, MeasureSpec.EXACTLY)
-        val heightSpec = MeasureSpec.makeMeasureSpec(heightPx, MeasureSpec.EXACTLY)
-        composeView.measure(widthSpec, heightSpec)
-        composeView.layout(0, 0, widthPx, heightPx)
-        val bitmap = createBitmap(widthPx, heightPx)
-        val canvas = android.graphics.Canvas(bitmap)
-        composeView.draw(canvas)
-        (container.parent as? ViewGroup)?.removeView(container)
-        onBitmapReady(bitmap)
     }
 }

@@ -268,11 +268,8 @@ class GameViewModel @Inject constructor(
             seed = _gameState.value.seed
         )
 
-        gameRecordRepository.setLastGameRecord(lastGame)
-        if (0f != activeScore || 0f != totalScore) {
-            viewModelScope.launch(Dispatchers.IO) {
-                gameRecordRepository.insertGameRecord(lastGame)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            gameRecordRepository.insertGameRecord(lastGame)
         }
     }
 

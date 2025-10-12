@@ -83,8 +83,6 @@ class MainActivity : ComponentActivity() {
     private val showDeepLinkPopUp = mutableStateOf(false)
     private val gameRecordFromAppLink = mutableStateOf<GameRecord>(GameRecord())
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch { handleDeepLinkIntent(intent) }
@@ -123,20 +121,16 @@ class MainActivity : ComponentActivity() {
                 Navigation(
                     navController = navController
                 )
-
                 val screenHeight = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
                 val titleFontSize = (0.031f * screenHeight.value).sp
                 val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
-                // Deep Link PopUp
+
+                // App link pop up
                 if (showDeepLinkPopUp.value) {
                     PopUp(
                         onDismissRequest = { showDeepLinkPopUp.value = false },
                         onConfirm = {
                             gameViewModel.reset()
-                            statisticsViewModel.prepareGameFromLink(
-                                gameRecordFromAppLink.value.totalScore,
-                                gameRecordFromAppLink.value.seed
-                            )
                             settingsViewModel.applySettingsFromLink(gameRecordFromAppLink.value)
                             gameViewModel.setSettings(settingsViewModel)
                             navController.navigate("game") {
@@ -144,6 +138,10 @@ class MainActivity : ComponentActivity() {
                                 launchSingleTop = true
                             }
                             gameViewModel.startGame(gameRecordFromAppLink.value.seed)
+                            statisticsViewModel.prepareGameFromLink(
+                                gameRecordFromAppLink.value.totalScore,
+                                gameRecordFromAppLink.value.seed
+                            )
                             dismissDeepLinkPopUp()
                         },
                         onCancel = { showDeepLinkPopUp.value = false },
@@ -158,6 +156,7 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
+                // Already played pop up
                 if (showAlreadyPlayedPopUp.value) {
                     PopUp(
                         onDismissRequest = { showAlreadyPlayedPopUp.value = false },
@@ -185,12 +184,19 @@ class MainActivity : ComponentActivity() {
         val encodedSettingsString = data?.getQueryParameter("settings")
         if (encodedSettingsString != null && isValidSettingsString(encodedSettingsString)) {
             val linkGameRecord = deserialize(encodedSettingsString)
-            if (settingsViewModel.checkIfGameWasAlreadyPlayed(linkGameRecord)) {
+            showDeepLinkPopUp.value = true
+            gameRecordFromAppLink.value = linkGameRecord
+
+            // Todo re-enable once the feature is fully tested
+            /*if (settingsViewModel.checkIfGameWasAlreadyPlayed(linkGameRecord)) {
+                showDeepLinkPopUp.value = false
                 showAlreadyPlayedPopUp.value = true
             } else {
+                showAlreadyPlayedPopUp.value = false
                 showDeepLinkPopUp.value = true
                 gameRecordFromAppLink.value = linkGameRecord
-            }
+            }*/
+
         } else {
             Log.d("DeepLink", "SettingsString is invalid or missing.")
         }

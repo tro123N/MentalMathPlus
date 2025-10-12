@@ -63,7 +63,6 @@ fun SettingsAndStatsCard(
 ) {
     val activity = LocalActivity.current as ViewModelStoreOwner
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
-
     val statisticsGameRecord =
         if (statisticsViewModel.showLoadedGameRecord.collectAsState().value) {
             statisticsViewModel.loadedGameRecord.collectAsState().value
@@ -88,7 +87,24 @@ fun SettingsAndStatsCard(
             Row(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(16.dp, 16.dp),
+                    .padding(16.dp, 8.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Seed: %d".format(statisticsGameRecord.seed),
+                    fontSize = fontSize/1.6f,
+                    modifier = modifier.padding(horizontal = 16.dp)
+                )
+            }
+            HorizontalDivider(
+                thickness = 2.dp,
+                color = MaterialTheme.colorScheme.background
+            )
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 SettingsModeColumn(
@@ -126,6 +142,28 @@ fun SettingsAndStatsCard(
                     operatorColor = blue
                 )
             }
+            /*Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+                    .padding(0.dp)
+            ) {
+                HorizontalDivider(
+                    modifier = Modifier.weight(1f),
+                    thickness = 1.8.dp,
+                    color = MaterialTheme.colorScheme.background
+                )
+                Text(
+                    text = "Seed: %d".format(statisticsGameRecord.seed),
+                    color = MaterialTheme.colorScheme.background,
+                    fontSize = fontSize / 2f,
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                )
+                HorizontalDivider(
+                    modifier = Modifier.weight(1f),
+                    thickness = 2.dp,
+                    color = MaterialTheme.colorScheme.background
+                )
+            }*/
             HorizontalDivider(
                 thickness = 2.dp,
                 color = MaterialTheme.colorScheme.background
@@ -133,7 +171,7 @@ fun SettingsAndStatsCard(
             Row(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(16.dp, 16.dp),
+                    .padding(16.dp, 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 StatsProgressColumn(
@@ -194,7 +232,7 @@ fun SettingsAndStatsCard(
             Row(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(16.dp, 8.dp),
+                    .padding(16.dp, 8.dp, 16.dp, 3.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -218,7 +256,7 @@ fun SettingsAndStatsCard(
             Row(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(16.dp, 8.dp),
+                    .padding(16.dp, 3.dp, 16.dp, 10.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
