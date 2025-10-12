@@ -42,6 +42,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -121,7 +122,12 @@ fun StatisticsScreen(
     val scrollState = rememberScrollState()
     var statsCardCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
     var hasCapturedCoordinates by remember { mutableStateOf(false) }
+    var isStatisticsScreenVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        isStatisticsScreenVisible = true
+    }
 
     fun captureSettingsCardBitmap(): Bitmap? {
         val coordinates = statsCardCoordinates ?: return null
@@ -276,17 +282,17 @@ fun StatisticsScreen(
     val linkScore by statisticsViewModel.scoreFromLink.collectAsState()
     val seed by statisticsViewModel.seedFromLink.collectAsState()
     val currentScore = statisticsViewModel.lastGameRecord.collectAsState().value.totalScore
-    if (showLinkGamePopUp) {
+    if (showLinkGamePopUp && isStatisticsScreenVisible) {
         val (title, description) = if (linkScore == 0.0f) {
             when{
-                currentScore > 0.0f -> "Easy Win" to "You: %.2f | Opponent: %.2f\n\nSeed: %d\nA win, but without a competition!".format(currentScore, linkScore, seed)
+                currentScore > 0.0f -> "Easy win" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA win, but without a competition!".format(currentScore, linkScore, seed)
                 else -> "Anyone here?" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA point-less game!".format(currentScore, linkScore, seed)
             }
         } else when {
-            currentScore / linkScore > 1.05f -> "Solid Win" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nThat was some serious mental math!".format(currentScore, linkScore, seed)
-            currentScore / linkScore > 1.0f -> "Close Win" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA tight win, but it counts!".format(currentScore, linkScore, seed)
+            currentScore / linkScore > 1.05f -> "You won" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nThat was some serious mental math!".format(currentScore, linkScore, seed)
+            currentScore / linkScore > 1.0f -> "Close call" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA tight win, but it counts!".format(currentScore, linkScore, seed)
             currentScore / linkScore == 1.0f -> "Draw" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA perfect tie - time for a decider!".format(currentScore, linkScore, seed)
-            currentScore / linkScore >= 0.95f -> "Close Loss" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA tight loss, but you almost had it!".format(currentScore, linkScore, seed)
+            currentScore / linkScore >= 0.95f -> "Too bad" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA tight loss, but you almost had it!".format(currentScore, linkScore, seed)
             else -> "Defeat" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nShake it off and give it another try!".format(currentScore, linkScore, seed)
         }
         val icon: Int
@@ -357,6 +363,7 @@ fun StatisticsScreen(
         }
         backPressedDispatcher?.addCallback(callback)
         onDispose {
+            isStatisticsScreenVisible = false
             callback.remove()
         }
     }

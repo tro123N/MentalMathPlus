@@ -184,18 +184,19 @@ class MainActivity : ComponentActivity() {
         val encodedSettingsString = data?.getQueryParameter("settings")
         if (encodedSettingsString != null && isValidSettingsString(encodedSettingsString)) {
             val linkGameRecord = deserialize(encodedSettingsString)
-            showDeepLinkPopUp.value = true
-            gameRecordFromAppLink.value = linkGameRecord
 
-            // Todo re-enable once the feature is fully tested
-            /*if (settingsViewModel.checkIfGameWasAlreadyPlayed(linkGameRecord)) {
+            // For testing purposes only - directly start the game from the link without checking if it was already played
+            /*showDeepLinkPopUp.value = true
+            gameRecordFromAppLink.value = linkGameRecord*/
+
+            if (settingsViewModel.checkIfGameWasAlreadyPlayed(linkGameRecord)) {
                 showDeepLinkPopUp.value = false
                 showAlreadyPlayedPopUp.value = true
             } else {
                 showAlreadyPlayedPopUp.value = false
                 showDeepLinkPopUp.value = true
                 gameRecordFromAppLink.value = linkGameRecord
-            }*/
+            }
 
         } else {
             Log.d("DeepLink", "SettingsString is invalid or missing.")
