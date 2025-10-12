@@ -32,14 +32,14 @@ import androidx.compose.ui.unit.TextUnit
 fun PopUp(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
-    onCancel: () -> Unit,
+    onCancel: (() -> Unit)? = null,
     titleSize: TextUnit,
     descriptionSize: TextUnit,
     title: String,
     description: String,
     confirmationText: String,
-    cancelText: String,
-    dismissColor: Color,
+    cancelText: String? = null,
+    dismissColor: Color? = null,
     confirmColor: Color,
     icon: @Composable (() -> Unit)? = null
 ) {
@@ -62,17 +62,19 @@ fun PopUp(
                 Text(confirmationText, fontSize = descriptionSize)
             }
         },
-        dismissButton = {
-            Button(
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = dismissColor,
-                    contentColor = MaterialTheme.colorScheme.onSecondary
-                ),
-                onClick = { onCancel() }
-            ) {
-                Text(cancelText, fontSize = descriptionSize)
+        dismissButton = if (onCancel != null && cancelText != null && dismissColor != null) {
+            {
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = dismissColor,
+                        contentColor = MaterialTheme.colorScheme.onSecondary
+                    ),
+                    onClick = { onCancel() }
+                ) {
+                    Text(cancelText, fontSize = descriptionSize)
+                }
             }
-        },
+        } else null,
         containerColor = MaterialTheme.colorScheme.primary,
         titleContentColor = MaterialTheme.colorScheme.onPrimary,
         textContentColor = MaterialTheme.colorScheme.onPrimary,

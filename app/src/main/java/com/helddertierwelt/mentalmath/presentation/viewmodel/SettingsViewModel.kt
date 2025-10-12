@@ -211,6 +211,10 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    suspend fun checkIfGameWasAlreadyPlayed(gameRecord: GameRecord): Boolean {
+        return gameRecordRepository.wasAlreadyPlayed(gameRecord)
+    }
+
     fun applySettingsFromLink(gameRecordFromLink: GameRecord) {
         val isModeEnabled = gameRecordFromLink.isModeEnabled
         val limit = gameRecordFromLink.modeLimit.toFloat()

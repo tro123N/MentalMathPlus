@@ -54,6 +54,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
@@ -69,6 +70,7 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import com.helddertierwelt.mentalmath.util.SettingsLinkUtil.deserialize
 import com.helddertierwelt.mentalmath.util.SettingsLinkUtil.isValidSettingsString
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -76,12 +78,16 @@ class MainActivity : ComponentActivity() {
     private val gameViewModel: GameViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
     private val statisticsViewModel: StatisticsViewModel by viewModels()
+
+    private val showAlreadyPlayedPopUp = mutableStateOf(false)
     private val showDeepLinkPopUp = mutableStateOf(false)
     private val gameRecordFromAppLink = mutableStateOf<GameRecord>(GameRecord())
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        handleDeepLinkIntent(intent)
+        lifecycleScope.launch { handleDeepLinkIntent(intent) }
         enableEdgeToEdge()
         setContent {
 
@@ -118,11 +124,11 @@ class MainActivity : ComponentActivity() {
                     navController = navController
                 )
 
+                val screenHeight = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
+                val titleFontSize = (0.031f * screenHeight.value).sp
+                val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
                 // Deep Link PopUp
                 if (showDeepLinkPopUp.value) {
-                    val screenHeight = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
-                    val titleFontSize = (0.031f * screenHeight.value).sp
-                    val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
                     PopUp(
                         onDismissRequest = { showDeepLinkPopUp.value = false },
                         onConfirm = {
@@ -144,10 +150,23 @@ class MainActivity : ComponentActivity() {
                         titleSize = titleFontSize,
                         descriptionSize = popUpDescriptionFontSize,
                         title = "Start game from link?",
-                        description = "Start a new game using the settings provided by the link. Any current game progress will be lost.",
+                        description = "Try to beat your friend's score by replaying the same game.\n\nAny current game progress will be lost.",
                         confirmationText = "Start",
                         cancelText = "Cancel",
                         dismissColor = red,
+                        confirmColor = green
+                    )
+                }
+
+                if (showAlreadyPlayedPopUp.value) {
+                    PopUp(
+                        onDismissRequest = { showAlreadyPlayedPopUp.value = false },
+                        onConfirm = { showAlreadyPlayedPopUp.value = false },
+                        titleSize = titleFontSize,
+                        descriptionSize = popUpDescriptionFontSize,
+                        title = "Game already played",
+                        description = "You’ve already played a game with the same seed and settings!\n\nPlease try a different link or start a new game.",
+                        confirmationText = "Ok",
                         confirmColor = green
                     )
                 }
@@ -158,15 +177,20 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         Log.d("DeepLink", "onNewIntent called. Intent: $intent")
         super.onNewIntent(intent)
-        handleDeepLinkIntent(intent)
+        lifecycleScope.launch { handleDeepLinkIntent(intent) }
     }
 
-    private fun handleDeepLinkIntent(intent: Intent?) {
+    private suspend fun handleDeepLinkIntent(intent: Intent?) {
         val data = intent?.data
         val encodedSettingsString = data?.getQueryParameter("settings")
         if (encodedSettingsString != null && isValidSettingsString(encodedSettingsString)) {
-            showDeepLinkPopUp.value = true
-            gameRecordFromAppLink.value = deserialize(encodedSettingsString)
+            val linkGameRecord = deserialize(encodedSettingsString)
+            if (settingsViewModel.checkIfGameWasAlreadyPlayed(linkGameRecord)) {
+                showAlreadyPlayedPopUp.value = true
+            } else {
+                showDeepLinkPopUp.value = true
+                gameRecordFromAppLink.value = linkGameRecord
+            }
         } else {
             Log.d("DeepLink", "SettingsString is invalid or missing.")
         }

@@ -13,4 +13,5 @@
     <string name="active_score">"Active"</string>
     <string name="total_score">"Total"</string>
     <string name="share_score">Share Score</string>
+    <string name="share_link_game_result">Share Result</string>
 </resources>

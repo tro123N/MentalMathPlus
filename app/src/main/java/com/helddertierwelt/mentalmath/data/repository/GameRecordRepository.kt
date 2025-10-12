@@ -143,6 +143,22 @@ class GameRecordRepository @Inject constructor(
         )
     }
 
+    suspend fun wasAlreadyPlayed(gameRecord: GameRecord): Boolean {
+        return gameRecordDao.wasAlreadyPlayed(
+            gameRecord.isModeEnabled,
+            gameRecord.modeLimit,
+            gameRecord.additionRangeStart,
+            gameRecord.additionRangeEnd,
+            gameRecord.subtractionRangeStart,
+            gameRecord.subtractionRangeEnd,
+            gameRecord.multiplicationRangeStart,
+            gameRecord.multiplicationRangeEnd,
+            gameRecord.divisionRangeStart,
+            gameRecord.divisionRangeEnd,
+            gameRecord.seed
+        )
+    }
+
     suspend fun deleteAllGameRecords() {
         gameRecordDao.deleteAll()
     }

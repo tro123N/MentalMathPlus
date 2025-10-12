@@ -310,11 +310,8 @@ fun SettingsScreen(
                     }
                     StartButton(
                         onClick = {
+                            statisticsViewModel.setShowLinkGamePopUp(false)
                             gameViewModel.reset()
-
-                            // TODO: set to false after testing
-                            statisticsViewModel.prepareGameFromLink(12.34f, 2342342342342342341L)
-
                             gameViewModel.setSettings(settingsViewModel)
                             navController.navigate("game") {
                                 popUpTo(0) { inclusive = true }

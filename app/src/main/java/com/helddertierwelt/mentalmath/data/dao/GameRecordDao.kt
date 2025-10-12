@@ -88,6 +88,35 @@ interface GameRecordDao {
         divisionRangeEnd: Int
     ): List<GameRecord>
 
+    @Query(
+        """SELECT EXISTS(SELECT 1 FROM game_records WHERE
+        isModeEnabled = :isModeEnabled AND
+        modeLimit = :modeLimit AND
+        additionRangeStart = :additionRangeStart AND
+        additionRangeEnd = :additionRangeEnd AND
+        subtractionRangeStart = :subtractionRangeStart AND
+        subtractionRangeEnd = :subtractionRangeEnd AND
+        multiplicationRangeStart = :multiplicationRangeStart AND
+        multiplicationRangeEnd = :multiplicationRangeEnd AND
+        divisionRangeStart = :divisionRangeStart AND
+        divisionRangeEnd = :divisionRangeEnd AND
+        seed = :seed
+        LIMIT 1)"""
+    )
+    suspend fun wasAlreadyPlayed(
+        isModeEnabled: Boolean,
+        modeLimit: Int,
+        additionRangeStart: Int,
+        additionRangeEnd: Int,
+        subtractionRangeStart: Int,
+        subtractionRangeEnd: Int,
+        multiplicationRangeStart: Int,
+        multiplicationRangeEnd: Int,
+        divisionRangeStart: Int,
+        divisionRangeEnd: Int,
+        seed: Long
+    ): Boolean
+
 
     @Query("DELETE FROM game_records")
     suspend fun deleteAll()

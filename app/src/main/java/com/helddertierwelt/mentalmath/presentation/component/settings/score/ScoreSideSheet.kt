@@ -223,6 +223,7 @@ fun ScoreSideSheet(
                         onClick = { gameRecord ->
                             statisticsViewModel.setLoadedGameRecord(gameRecord)
                             statisticsViewModel.setShowLoadedGameRecord(true)
+                            statisticsViewModel.setShowLinkGamePopUp(false)
                             navController.navigate("statistics") {
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true
