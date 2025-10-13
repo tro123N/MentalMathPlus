@@ -57,6 +57,8 @@ fun CountdownTimer(
         if (timeLeft <= 0) {
             gameViewModel.endGame()
             statisticsViewModel.setShowLoadedGameRecord(false)
+            val isLinkGame = gameViewModel.gameState.value.isLinkGame
+            if (isLinkGame) { statisticsViewModel.setShowLinkGamePopUp(true) }
             navController.navigate("statistics") {
                 popUpTo(0) { inclusive = true }
                 launchSingleTop = true
