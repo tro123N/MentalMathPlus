@@ -18,10 +18,8 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.viewmodel
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import java.io.Serializable
 
-@Parcelize
 data class GameState(
 
     val isModeEnabled: Boolean = false,
@@ -46,8 +44,10 @@ data class GameState(
     val startTimeStamp: Long = 0,
     val pausedAt: Long = Long.MAX_VALUE,
     val totalPauseDuration: Long = 0L,
-    val seed: Long = 0L
-) : Parcelable {
+    val seed: Long = 0L,
+    val isLinkGame: Boolean = false,
+
+    ) : Serializable {
     companion object {
         fun deserialize(serialized: String): GameState {
             val parts = serialized.split(",")
@@ -72,6 +72,7 @@ data class GameState(
             val pausedAt = parts[18].toLong()
             val totalPauseDuration = parts[19].toLong()
             val seed = parts[20].toLong()
+            val isLinkGame = parts[21].toBoolean()
             return GameState(
                 isModeEnabled = isModeEnabled,
                 modeLimit = modeLimit,
@@ -93,7 +94,8 @@ data class GameState(
                 startTimeStamp = startTimeStamp,
                 pausedAt = pausedAt,
                 totalPauseDuration = totalPauseDuration,
-                seed = seed
+                seed = seed,
+                isLinkGame = isLinkGame
             )
         }
     }

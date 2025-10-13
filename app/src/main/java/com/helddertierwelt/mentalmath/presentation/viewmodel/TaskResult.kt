@@ -18,16 +18,13 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.viewmodel
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
-import kotlinx.serialization.Serializable
+import java.io.Serializable
 
-@Parcelize
-@Serializable
+@kotlinx.serialization.Serializable
 data class TaskResult(
     val operand1: Int,
     val operand2: Int,
     val operator: Operation,
     val correctResult: Int,
     val userInput: String,
-) : Parcelable
+) : Serializable

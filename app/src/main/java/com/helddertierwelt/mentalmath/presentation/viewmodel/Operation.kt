@@ -19,10 +19,10 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.presentation.viewmodel
 
 import com.helddertierwelt.mentalmath.R
-import kotlinx.serialization.Serializable
+import java.io.Serializable
 
-@Serializable
-enum class Operation(val stringId: Int) {
+@kotlinx.serialization.Serializable
+enum class Operation(val stringId: Int) : Serializable {
     ADDITION(R.string.add),
     SUBTRACTION(R.string.subtract),
     MULTIPLICATION(R.string.multiply),

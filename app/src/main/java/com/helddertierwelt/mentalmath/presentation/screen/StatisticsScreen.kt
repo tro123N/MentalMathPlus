@@ -42,7 +42,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -122,12 +121,7 @@ fun StatisticsScreen(
     val scrollState = rememberScrollState()
     var statsCardCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
     var hasCapturedCoordinates by remember { mutableStateOf(false) }
-    var isStatisticsScreenVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
-
-    LaunchedEffect(Unit) {
-        isStatisticsScreenVisible = true
-    }
 
     fun captureSettingsCardBitmap(): Bitmap? {
         val coordinates = statsCardCoordinates ?: return null
@@ -282,7 +276,7 @@ fun StatisticsScreen(
     val linkScore by statisticsViewModel.scoreFromLink.collectAsState()
     val seed by statisticsViewModel.seedFromLink.collectAsState()
     val currentScore = statisticsViewModel.lastGameRecord.collectAsState().value.totalScore
-    if (showLinkGamePopUp && isStatisticsScreenVisible) {
+    if (showLinkGamePopUp) {
         val (title, description) = if (linkScore == 0.0f) {
             when{
                 currentScore > 0.0f -> "Easy win" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA win, but without a competition!".format(currentScore, linkScore, seed)
@@ -363,7 +357,6 @@ fun StatisticsScreen(
         }
         backPressedDispatcher?.addCallback(callback)
         onDispose {
-            isStatisticsScreenVisible = false
             callback.remove()
         }
     }

@@ -70,8 +70,8 @@ class StatisticsViewModel @Inject constructor(
     }
 
     fun prepareGameFromLink(score: Float, seed: Long) {
+        setShowLinkGamePopUp(false)
         setScoreFromLink(score)
         setSeedFromLink(seed)
-        setShowLinkGamePopUp(true)
     }
 }

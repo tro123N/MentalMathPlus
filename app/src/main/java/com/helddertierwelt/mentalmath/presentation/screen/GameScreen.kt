@@ -225,8 +225,10 @@ fun GameScreen(
                                     delay(50)
                                     val totalAnswers = gameViewModel.gameState.value.totalAnswers
                                     val totalTasks = (settingsState.limit * 10).roundToInt()
+                                    val isLinkGame = gameViewModel.gameState.value.isLinkGame
                                     if (settingsState.isModeEnabled && totalAnswers == totalTasks) {
                                         gameViewModel.endGame()
+                                        if (isLinkGame) { statisticsViewModel.setShowLinkGamePopUp(true) }
                                         statisticsViewModel.setShowLoadedGameRecord(false)
                                         navController.navigate("statistics") {
                                             popUpTo(0) { inclusive = true }

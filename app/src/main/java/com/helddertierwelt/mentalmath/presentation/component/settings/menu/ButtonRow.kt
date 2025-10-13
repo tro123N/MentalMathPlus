@@ -45,7 +45,7 @@ fun ButtonRow(
     text: String,
     fontSize: TextUnit,
     iconSize: Dp,
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier

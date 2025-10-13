@@ -173,6 +173,22 @@ fun MenuSideSheet(
                     onModeChange = { settingsViewModel.setThemeMode(it) }
                 )
 
+                // Website Link
+                LinkRow(
+                    iconResId = R.drawable.info_24dp,
+                    contentDescription = "About This App",
+                    text = "About This App",
+                    fontSize = fontSize,
+                    iconSize = iconSize,
+                    intentProvider = {
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            "market://details?id=com.helddertierwelt.mentalmath".toUri()
+                        )
+                    },
+                    context = context
+                )
+
                 // Source Code Link
                 LinkRow(
                     iconResId = R.drawable.code_24dp,

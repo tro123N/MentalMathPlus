@@ -224,6 +224,14 @@ class GameViewModel @Inject constructor(
         )
     }
 
+    fun setIsLinkGame(isLinkGame: Boolean) {
+        saveState(
+            _gameState.value.copy(
+                isLinkGame = isLinkGame
+            )
+        )
+    }
+
     fun startGame(seed: Long) {
         random = Random(seed)
         generateNewTask()

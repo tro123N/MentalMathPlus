@@ -131,17 +131,18 @@ class MainActivity : ComponentActivity() {
                         onDismissRequest = { showDeepLinkPopUp.value = false },
                         onConfirm = {
                             gameViewModel.reset()
+                            gameViewModel.setIsLinkGame(true)
                             settingsViewModel.applySettingsFromLink(gameRecordFromAppLink.value)
                             gameViewModel.setSettings(settingsViewModel)
+                            statisticsViewModel.prepareGameFromLink(
+                                gameRecordFromAppLink.value.totalScore,
+                                gameRecordFromAppLink.value.seed
+                            )
                             navController.navigate("game") {
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true
                             }
                             gameViewModel.startGame(gameRecordFromAppLink.value.seed)
-                            statisticsViewModel.prepareGameFromLink(
-                                gameRecordFromAppLink.value.totalScore,
-                                gameRecordFromAppLink.value.seed
-                            )
                             dismissDeepLinkPopUp()
                         },
                         onCancel = { showDeepLinkPopUp.value = false },
@@ -164,7 +165,7 @@ class MainActivity : ComponentActivity() {
                         titleSize = titleFontSize,
                         descriptionSize = popUpDescriptionFontSize,
                         title = "Game already played",
-                        description = "You’ve already played a game with the same seed and settings!\n\nPlease try a different link or start a new game.",
+                        description = "You’ve already played a game with the same seed and settings.\n\nPlease try a different link or start a new game.",
                         confirmationText = "Ok",
                         confirmColor = green
                     )
@@ -184,10 +185,6 @@ class MainActivity : ComponentActivity() {
         val encodedSettingsString = data?.getQueryParameter("settings")
         if (encodedSettingsString != null && isValidSettingsString(encodedSettingsString)) {
             val linkGameRecord = deserialize(encodedSettingsString)
-
-            // For testing purposes only - directly start the game from the link without checking if it was already played
-            /*showDeepLinkPopUp.value = true
-            gameRecordFromAppLink.value = linkGameRecord*/
 
             if (settingsViewModel.checkIfGameWasAlreadyPlayed(linkGameRecord)) {
                 showDeepLinkPopUp.value = false
