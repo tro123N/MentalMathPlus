@@ -92,9 +92,9 @@ fun ScoreSideSheet(
     val screenWidthPx = with(LocalDensity.current) { screenWidth.toPx() }
     val sheetWidthFactor = 0.5f
     var isFirstRender by remember { mutableStateOf(true) }
-    val offsetX = remember { Animatable(screenWidthPx) }
     val minOffset = screenWidthPx * (1f - sheetWidthFactor)
     val maxOffset = screenWidthPx
+    val offsetX = remember { Animatable(maxOffset) }
     val overlayAlpha = 0.4f * (1 - (offsetX.value - minOffset) / (maxOffset - minOffset))
 
     val fontSizeTitle = (0.031f * screenHeight.value).sp
@@ -103,7 +103,7 @@ fun ScoreSideSheet(
 
     // Handle side sheet open/close animation
     LaunchedEffect(isSheetOpen) {
-        val target = if (isSheetOpen) screenWidthPx * (1f - sheetWidthFactor) else screenWidthPx
+        val target = if (isSheetOpen) minOffset else maxOffset
         if (isFirstRender) {
             offsetX.snapTo(target)
             isFirstRender = false
@@ -151,19 +151,19 @@ fun ScoreSideSheet(
                     detectHorizontalDragGestures(
                         onHorizontalDrag = { _, dragAmount ->
                             val newOffset = (offsetX.value + dragAmount).coerceIn(
-                                screenWidthPx * (1f - sheetWidthFactor),
-                                screenWidthPx
+                                minOffset,
+                                maxOffset
                             )
                             coroutineScope.launch {
                                 offsetX.snapTo(newOffset)
                             }
                         },
                         onDragEnd = {
-                            if (offsetX.value > screenWidthPx * (1f - sheetWidthFactor) + screenWidthPx * sheetWidthFactor * 0.2f) {
+                            if (offsetX.value > minOffset+maxOffset * sheetWidthFactor * 0.2f) {
                                 onDismissRequested()
                             } else {
                                 coroutineScope.launch {
-                                    offsetX.animateTo(screenWidthPx * (1f - sheetWidthFactor))
+                                    offsetX.animateTo(minOffset)
                                 }
                             }
                         }

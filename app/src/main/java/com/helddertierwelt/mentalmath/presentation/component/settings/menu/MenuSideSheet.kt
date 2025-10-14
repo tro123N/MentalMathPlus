@@ -91,7 +91,7 @@ fun MenuSideSheet(
     // Handle side sheet open/close animation
     LaunchedEffect(isSheetOpen) {
         isInteractionEnabled = false
-        val target = if (isSheetOpen) 0f else minOffset
+        val target = if (isSheetOpen) maxOffset else minOffset
         if (offsetX.value != target) {
             offsetX.animateTo(
                 targetValue = target,
@@ -145,7 +145,7 @@ fun MenuSideSheet(
                                 onDismissRequested()
                             } else {
                                 coroutineScope.launch {
-                                    offsetX.animateTo(0f)
+                                    offsetX.animateTo(maxOffset)
                                 }
                             }
                         }
@@ -176,14 +176,14 @@ fun MenuSideSheet(
                 // Website Link
                 LinkRow(
                     iconResId = R.drawable.info_24dp,
-                    contentDescription = "About This App",
-                    text = "About This App",
+                    contentDescription = "Website",
+                    text = "About",
                     fontSize = fontSize,
                     iconSize = iconSize,
                     intentProvider = {
                         Intent(
                             Intent.ACTION_VIEW,
-                            "market://details?id=com.helddertierwelt.mentalmath".toUri()
+                            "https://helddertierwelt.codeberg.page".toUri()
                         )
                     },
                     context = context
@@ -268,7 +268,7 @@ fun MenuSideSheet(
                     intentProvider = {
                         Intent(
                             Intent.ACTION_VIEW,
-                            "https://www.example.com".toUri()
+                            "market://details?id=com.helddertierwelt.mentalmath".toUri()
                         )
                     },
                     context = context
