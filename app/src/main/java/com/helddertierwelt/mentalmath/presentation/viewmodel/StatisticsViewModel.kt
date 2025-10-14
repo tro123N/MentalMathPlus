@@ -69,9 +69,9 @@ class StatisticsViewModel @Inject constructor(
         gameRecordRepository.resetLoadedGameRecord()
     }
 
-    fun prepareGameFromLink(score: Float, seed: Long) {
+    fun prepareGameFromLink(gameRecord: GameRecord) {
         setShowLinkGamePopUp(false)
-        setScoreFromLink(score)
-        setSeedFromLink(seed)
+        setScoreFromLink(gameRecord.totalScore)
+        setSeedFromLink(gameRecord.seed)
     }
 }

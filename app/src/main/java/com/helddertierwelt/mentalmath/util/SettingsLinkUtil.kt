@@ -18,8 +18,8 @@ object SettingsLinkUtil {
             record.multiplicationRangeEnd.toString(),
             record.divisionRangeStart.toString(),
             record.divisionRangeEnd.toString(),
-            "%06d".format((record.totalScore * 100).toInt()),
-            "%019d".format(record.seed)
+            "%019d".format(record.seed),
+            "%06d".format((record.totalScore * 100).toInt())
         ).joinToString("").toBigInteger().toByteArray()
 
         val encoded = Base64.encodeToString(settingsStringByteArray, Base64.URL_SAFE or Base64.NO_WRAP)
@@ -28,7 +28,14 @@ object SettingsLinkUtil {
 
     fun deserialize(encoded: String): GameRecord {
         val byteArray = Base64.decode(encoded, Base64.URL_SAFE or Base64.NO_WRAP)
-        val bigIntString = BigInteger(byteArray).toString().padStart(35, '0')
+        val rawString = BigInteger(byteArray).toString()
+        val bigIntString = when (rawString.length) {
+            in 28..29 -> rawString.padStart(29, '0') // without totalScore
+            in 34..35 -> rawString.padStart(35, '0') // with totalScore
+            else -> rawString
+        }
+
+        val hasTotalScore = bigIntString.length == 35
 
         return GameRecord(
             id = 0,
@@ -47,17 +54,22 @@ object SettingsLinkUtil {
             activeTime = 0L,
             totalTime = 0L,
             activeScore = 0f,
-            totalScore = bigIntString.substring(10, 16).toInt() / 100f,
-            seed = bigIntString.substring(16, 35).toLong(),
+            seed = bigIntString.substring(10, 29).toLong(),
+            totalScore = if (hasTotalScore) bigIntString.substring(29, 35).toInt() / 100f else -1f,
             taskResults = emptyList()
         )
     }
 
-    fun isValidSettingsString(settingsString: String): Boolean {
+    fun isValidQueryParameter(settingsString: String): Boolean {
         try {
             Log.d("SettingsLinkUtil", "Input: $settingsString")
             val byteArray = Base64.decode(settingsString, Base64.URL_SAFE or Base64.NO_WRAP)
-            val bigIntString = BigInteger(byteArray).toString().padStart(35, '0')
+            val rawString = BigInteger(byteArray).toString()
+            val bigIntString = when (rawString.length) {
+                in 28..29 -> rawString.padStart(29, '0')
+                in 34..35 -> rawString.padStart(35, '0')
+                else -> return false
+            }
             Log.d("SettingsLinkUtil", "bigIntString: $bigIntString")
 
             val isModeEnabled = bigIntString.substring(0, 1)
@@ -88,15 +100,18 @@ object SettingsLinkUtil {
             Log.d("SettingsLinkUtil", "divStart: $divStart, divEnd: $divEnd")
             if (divStart !in 0..9 || divEnd !in 0..9 || divStart > divEnd) return false
 
-            val totalScoreRaw = bigIntString.substring(10, 16).toInt()
-            val totalScore = totalScoreRaw / 100f
-            Log.d("SettingsLinkUtil", "totalScoreRaw: $totalScoreRaw, totalScore: $totalScore")
-            if (totalScore < 0f || totalScore > 9999.99f) return false
-
-            val seed = bigIntString.substring(16, 35)
+            val seed = bigIntString.substring(10, 29)
             Log.d("SettingsLinkUtil", "seed: $seed")
-            val valid = seed.toLongOrNull() != null
-            return valid
+            if (seed.toLongOrNull() == null) return false
+
+            if (bigIntString.length == 35) {
+                val totalScoreRaw = bigIntString.substring(29, 35).toInt()
+                val totalScore = totalScoreRaw / 100f
+                Log.d("SettingsLinkUtil", "totalScoreRaw: $totalScoreRaw, totalScore: $totalScore")
+                if (totalScore < 0f || totalScore > 9999.99f) return false
+            }
+
+            return true
         } catch (e: Exception) {
             Log.e("SettingsLinkUtil", "Exception: ${e.message}", e)
             return false

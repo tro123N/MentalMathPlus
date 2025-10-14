@@ -19,6 +19,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.presentation.component.settings.menu
 
 import android.content.Intent
+import android.util.Log
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -63,6 +64,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import kotlinx.coroutines.launch
+import java.security.SecureRandom
 
 @Composable
 fun MenuSideSheet(
@@ -165,18 +167,10 @@ fun MenuSideSheet(
                 // App Logo
                 LogoRow(0.54f, R.drawable.mental_math)
 
-                // Dark Mode Toggle
-                DarkModeToggleRow(
-                    fontSize = fontSize,
-                    iconSize = iconSize,
-                    currentMode = settingsViewModel.settingsState.collectAsState().value.themeMode,
-                    onModeChange = { settingsViewModel.setThemeMode(it) }
-                )
-
                 // Website Link
-                LinkRow(
+                IntentRow(
                     iconResId = R.drawable.info_24dp,
-                    contentDescription = "Website",
+                    contentDescription = "About",
                     text = "About",
                     fontSize = fontSize,
                     iconSize = iconSize,
@@ -189,8 +183,39 @@ fun MenuSideSheet(
                     context = context
                 )
 
+                // Share Seed Game Link
+                IntentRow(
+                    iconResId = R.drawable.potted_plant_24dp,
+                    contentDescription = "Share Seed",
+                    text = "Share Seed",
+                    fontSize = fontSize,
+                    iconSize = iconSize,
+                    intentProvider = {
+                        Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            var seed: Long
+                            do {
+                                seed = SecureRandom().nextLong()
+                            } while (seed < 0)
+                            val seedLink = settingsViewModel.generateSeedLink(seed)
+                            val shareText = "Let’s play a round Mental Math!\nClick the link below to start a fresh game with my settings and this random seed:\n%d\n\n%s".format(seed, seedLink)
+                            Log.d("SettingsScreen", "Sharing seed game: $shareText")
+                            putExtra(Intent.EXTRA_TEXT, shareText)
+                        },context.getString(R.string.share_score))
+                    },
+                    context = context
+                )
+
+                // Dark Mode Toggle
+                DarkModeToggleRow(
+                    fontSize = fontSize,
+                    iconSize = iconSize,
+                    currentMode = settingsViewModel.settingsState.collectAsState().value.themeMode,
+                    onModeChange = { settingsViewModel.setThemeMode(it) }
+                )
+
                 // Source Code Link
-                LinkRow(
+                IntentRow(
                     iconResId = R.drawable.code_24dp,
                     contentDescription = "Source Code",
                     text = "Source Code",
@@ -206,7 +231,7 @@ fun MenuSideSheet(
                 )
 
                 // License Link
-                LinkRow(
+                IntentRow(
                     iconResId = R.drawable.balance_24dp,
                     contentDescription = "License",
                     text = "License",
@@ -222,7 +247,7 @@ fun MenuSideSheet(
                 )
 
                 // Privacy Policy Link
-                LinkRow(
+                IntentRow(
                     iconResId = R.drawable.domino_mask_24dp,
                     contentDescription = "Privacy Policy",
                     text = "Privacy Policy",
@@ -238,7 +263,7 @@ fun MenuSideSheet(
                 )
 
                 // Feedback Link
-                LinkRow(
+                IntentRow(
                     iconResId = R.drawable.feedback_24dp,
                     contentDescription = "Feedback",
                     text = "Feed\u200Bback",
@@ -259,7 +284,7 @@ fun MenuSideSheet(
                 )
 
                 // Recommendation Link
-                LinkRow(
+                IntentRow(
                     iconResId = R.drawable.thumb_up_24dp,
                     contentDescription = "Recommend",
                     text = "Recom\u200Bmend",
@@ -275,7 +300,7 @@ fun MenuSideSheet(
                 )
 
                 // Donation Link
-                LinkRow(
+                IntentRow(
                     iconResId = R.drawable.volunteer_activism_24dp,
                     contentDescription = "Donate",
                     text = "Donate",

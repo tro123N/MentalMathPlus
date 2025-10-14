@@ -18,6 +18,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.viewmodel
 
+import android.util.Base64
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
@@ -242,5 +243,25 @@ class SettingsViewModel @Inject constructor(
             isDivisionEnabled = isDivisionEnabled
         )
         saveState()
+    }
+
+    fun generateSeedLink(seed: Long): String {
+        val state = _settingsState.value
+        val settingsStringByteArray = listOf(
+            if (state.isModeEnabled) "1" else "0",
+            state.limit.toInt().toString(),
+            state.additionRange.first.toInt().toString(),
+            state.additionRange.second.toInt().toString(),
+            state.subtractionRange.first.toInt().toString(),
+            state.subtractionRange.second.toInt().toString(),
+            state.multiplicationRange.first.toInt().toString(),
+            state.multiplicationRange.second.toInt().toString(),
+            state.divisionRange.first.toInt().toString(),
+            state.divisionRange.second.toInt().toString(),
+            "%019d".format(seed)
+        ).joinToString("").toBigInteger().toByteArray()
+
+        val encoded = Base64.encodeToString(settingsStringByteArray, Base64.URL_SAFE or Base64.NO_WRAP)
+        return "https://helddertierwelt.codeberg.page/mentalmath?game=%s".format(encoded)
     }
 }

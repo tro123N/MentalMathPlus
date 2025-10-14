@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LinkRow(
+fun IntentRow(
     iconResId: Int,
     contentDescription: String,
     text: String,

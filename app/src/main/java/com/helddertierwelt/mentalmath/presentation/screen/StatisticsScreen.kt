@@ -152,13 +152,10 @@ fun StatisticsScreen(
         )
     }
 
-    fun shareBitmapWithCahllengeLink(context: Context, bitmap: Bitmap) {
+    fun shareResult(context: Context, bitmap: Bitmap, shareText: String) {
         try {
             val imageUri = saveBitmapToCacheAndGetUri(context, bitmap)
-            val settingsString = SettingsLinkUtil.serialize(statisticsGameRecord)
-            val appLink = "https://helddertierwelt.codeberg.page/mentalmath?settings=%s".format(settingsString)
-            val shareText = "Try to beat my score of %.2f in Mental Math.\nReplay my game with seed %d:\n\n%s".format(statisticsGameRecord.totalScore, statisticsGameRecord.seed, appLink)
-            Log.d("StatisticsScreen", "Sharing link: $appLink")
+            Log.d("StatisticsScreen", "Sharing result: $shareText")
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "image/png"
                 putExtra(Intent.EXTRA_STREAM, imageUri)
@@ -169,26 +166,13 @@ fun StatisticsScreen(
                 Intent.createChooser(shareIntent, context.getString(R.string.share_score))
             )
         } catch (e: Exception) {
-            Log.e("StatisticsScreen", "Error when sharing score and link", e)
+            Log.e("StatisticsScreen", "Error when sharing result of link-game", e)
         }
     }
 
-    fun shareBitmapOfChallengeResult(context: Context, bitmap: Bitmap, sharedText: String) {
-        try {
-            val imageUri = saveBitmapToCacheAndGetUri(context, bitmap)
-            Log.d("StatisticsScreen", "Sharing result: $sharedText")
-            val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                type = "image/png"
-                putExtra(Intent.EXTRA_STREAM, imageUri)
-                putExtra(Intent.EXTRA_TEXT, sharedText)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
-            context.startActivity(
-                Intent.createChooser(shareIntent, context.getString(R.string.share_score))
-            )
-        } catch (e: Exception) {
-            Log.e("StatisticsScreen", "Error when sharing result of link-game", e)
-        }
+    fun createLink() : String {
+        val settingsString = SettingsLinkUtil.serialize(statisticsGameRecord)
+        return "https://helddertierwelt.codeberg.page/mentalmath?game=%s".format(settingsString)
     }
 
     Scaffold(
@@ -202,7 +186,8 @@ fun StatisticsScreen(
                         scrollState.animateScrollTo(0)
                         val bitmap = captureSettingsCardBitmap()
                         if (bitmap != null) {
-                            shareBitmapWithCahllengeLink(context, bitmap)
+                            val shareText = "Try to beat my score of %.2f in Mental Math.\nReplay my game with seed %d:\n\n%s".format(statisticsGameRecord.totalScore, statisticsGameRecord.seed, createLink())
+                            shareResult(context, bitmap, shareText)
                         } else {
                             Log.e("StatisticsScreen", "Bitmap could not be captured")
                         }
@@ -277,7 +262,9 @@ fun StatisticsScreen(
     val seed by statisticsViewModel.seedFromLink.collectAsState()
     val currentScore = statisticsViewModel.lastGameRecord.collectAsState().value.totalScore
     if (showLinkGamePopUp) {
-        val (title, description) = if (linkScore == 0.0f) {
+        val (title, description) = if (linkScore < 0.0f) {
+            "Waiting for your opponent…" to "You: %.2f | Opponent: ??\nSeed: %d\n\nYou’ve set the bar! Let’s see if your opponent can catch up!".format(currentScore, seed)
+        } else if (linkScore == 0.0f) {
             when{
                 currentScore > 0.0f -> "Easy win" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA win, but without a competition!".format(currentScore, linkScore, seed)
                 else -> "Anyone here?" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA point-less game!".format(currentScore, linkScore, seed)
@@ -291,7 +278,10 @@ fun StatisticsScreen(
         }
         val icon: Int
         val color: Color
-        if (linkScore == 0.0f) {
+        if (linkScore < 0.0f) {
+            icon = R.drawable.hourglass_bottom_24dp
+            color = blue
+        } else if (linkScore == 0.0f) {
             if (currentScore > 0.0f) {
                 icon = R.drawable.favorite_24dp
                 color = red
@@ -336,7 +326,8 @@ fun StatisticsScreen(
                     scrollState.animateScrollTo(0)
                     val bitmap = captureSettingsCardBitmap()
                     if (bitmap != null) {
-                        shareBitmapOfChallengeResult(context, bitmap, description)
+                        val shareText = if (linkScore < 0.0f) { "%s\n\n%s".format(description,createLink()) } else { description }
+                        shareResult(context, bitmap, shareText)
                     } else {
                         Log.e("StatisticsScreen", "Bitmap could not be captured")
                     }

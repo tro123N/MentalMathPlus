@@ -44,7 +44,7 @@ class ExampleInstrumentedTest {
             activeScore = 12.34f,
             totalScore = 5622.10f,
             seed = 1234567890123456789L,
-            taskResults = listOf() // wird nicht serialisiert
+            taskResults = listOf()
         )
         val serialized = SettingsLinkUtil.serialize(original)
         val deserialized = SettingsLinkUtil.deserialize(serialized)

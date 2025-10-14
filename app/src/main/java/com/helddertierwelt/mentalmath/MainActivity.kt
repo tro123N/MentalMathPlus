@@ -65,10 +65,11 @@ import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.MainActivityViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import com.helddertierwelt.mentalmath.util.SettingsLinkUtil.deserialize
-import com.helddertierwelt.mentalmath.util.SettingsLinkUtil.isValidSettingsString
+import com.helddertierwelt.mentalmath.util.SettingsLinkUtil.isValidQueryParameter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -78,9 +79,8 @@ class MainActivity : ComponentActivity() {
     private val gameViewModel: GameViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
     private val statisticsViewModel: StatisticsViewModel by viewModels()
+    private val mainActivityViewModel: MainActivityViewModel by viewModels()
 
-    private val showAlreadyPlayedPopUp = mutableStateOf(false)
-    private val showDeepLinkPopUp = mutableStateOf(false)
     private val gameRecordFromAppLink = mutableStateOf<GameRecord>(GameRecord())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -125,19 +125,19 @@ class MainActivity : ComponentActivity() {
                 val titleFontSize = (0.031f * screenHeight.value).sp
                 val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
 
+                val showAlreadyPlayedPopUp = mainActivityViewModel.showAlreadyPlayedPopUp.collectAsState().value
+                val showDeepLinkPopUp = mainActivityViewModel.showDeepLinkPopUp.collectAsState().value
+
                 // App link pop up
-                if (showDeepLinkPopUp.value) {
+                if (showDeepLinkPopUp) {
                     PopUp(
-                        onDismissRequest = { showDeepLinkPopUp.value = false },
+                        onDismissRequest = { mainActivityViewModel.setShowDeepLinkPopUp(false) },
                         onConfirm = {
                             gameViewModel.reset()
                             gameViewModel.setIsLinkGame(true)
                             settingsViewModel.applySettingsFromLink(gameRecordFromAppLink.value)
                             gameViewModel.setSettings(settingsViewModel)
-                            statisticsViewModel.prepareGameFromLink(
-                                gameRecordFromAppLink.value.totalScore,
-                                gameRecordFromAppLink.value.seed
-                            )
+                            statisticsViewModel.prepareGameFromLink(gameRecordFromAppLink.value)
                             navController.navigate("game") {
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true
@@ -145,11 +145,15 @@ class MainActivity : ComponentActivity() {
                             gameViewModel.startGame(gameRecordFromAppLink.value.seed)
                             dismissDeepLinkPopUp()
                         },
-                        onCancel = { showDeepLinkPopUp.value = false },
+                        onCancel = { mainActivityViewModel.setShowDeepLinkPopUp(false) },
                         titleSize = titleFontSize,
                         descriptionSize = popUpDescriptionFontSize,
                         title = "Start game from link?",
-                        description = "Try to beat your friend's score by replaying the same game.\n\nAny current game progress will be lost.",
+                        description =  if (gameRecordFromAppLink.value.totalScore<0f) {
+                            "Play a new game with predefined settings and a random seed.\n\nAny current game progress will be lost."
+                        } else {
+                            "Try to beat your friend's score by replaying the same game.\n\nAny current game progress will be lost."
+                        },
                         confirmationText = "Start",
                         cancelText = "Cancel",
                         dismissColor = red,
@@ -158,10 +162,10 @@ class MainActivity : ComponentActivity() {
                 }
 
                 // Already played pop up
-                if (showAlreadyPlayedPopUp.value) {
+                if (showAlreadyPlayedPopUp) {
                     PopUp(
-                        onDismissRequest = { showAlreadyPlayedPopUp.value = false },
-                        onConfirm = { showAlreadyPlayedPopUp.value = false },
+                        onDismissRequest = { mainActivityViewModel.setShowAlreadyPlayedPopUp(false) },
+                        onConfirm = { mainActivityViewModel.setShowAlreadyPlayedPopUp(false) },
                         titleSize = titleFontSize,
                         descriptionSize = popUpDescriptionFontSize,
                         title = "Game already played",
@@ -182,16 +186,16 @@ class MainActivity : ComponentActivity() {
 
     private suspend fun handleDeepLinkIntent(intent: Intent?) {
         val data = intent?.data
-        val encodedSettingsString = data?.getQueryParameter("settings")
-        if (encodedSettingsString != null && isValidSettingsString(encodedSettingsString)) {
+        val encodedSettingsString = data?.getQueryParameter("game")
+        if (encodedSettingsString != null && isValidQueryParameter(encodedSettingsString)) {
             val linkGameRecord = deserialize(encodedSettingsString)
 
             if (settingsViewModel.checkIfGameWasAlreadyPlayed(linkGameRecord)) {
-                showDeepLinkPopUp.value = false
-                showAlreadyPlayedPopUp.value = true
+                mainActivityViewModel.setShowDeepLinkPopUp(false)
+                mainActivityViewModel.setShowAlreadyPlayedPopUp(true)
             } else {
-                showAlreadyPlayedPopUp.value = false
-                showDeepLinkPopUp.value = true
+                mainActivityViewModel.setShowAlreadyPlayedPopUp(false)
+                mainActivityViewModel.setShowDeepLinkPopUp(true)
                 gameRecordFromAppLink.value = linkGameRecord
             }
 
@@ -201,7 +205,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun dismissDeepLinkPopUp() {
-        showDeepLinkPopUp.value = false
+        mainActivityViewModel.setShowDeepLinkPopUp(false)
         gameRecordFromAppLink.value = GameRecord()
     }
 }
