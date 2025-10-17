@@ -56,8 +56,7 @@ fun GameTopBar(
     val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
 
     TopAppBar(
-        title = {
-        },
+        title = {},
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
             titleContentColor = MaterialTheme.colorScheme.onPrimary,
@@ -70,7 +69,8 @@ fun GameTopBar(
                         popUpTo(0) { inclusive = true }
                         launchSingleTop = true
                     }
-                }
+                },
+                modifier = Modifier.padding(start= 16.dp)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.close_24dp),
@@ -88,7 +88,7 @@ fun GameTopBar(
                     text = "$answeredTasks/$totalTasks",
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = fontSize,
-                    modifier = Modifier.padding(end = 16.dp)
+                    modifier = Modifier.padding(end = 24.dp)
                 )
             } else {
                 CountdownTimer(

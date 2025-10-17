@@ -18,7 +18,6 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.settings.settings
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -51,25 +49,25 @@ fun SettingsTopBar(
 ) {
     TopAppBar(
         title = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(
-                    onClick = onMenuClick,
-                    modifier = Modifier.padding(end = 8.dp)
-                ) {
-                    Icon(
-                        painterResource(R.drawable.menu_24dp),
-                        contentDescription = "menu",
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(iconSize),
-                    )
-                }
-                Text(text = stringResource(id = titleId), fontSize = titleFontSize)
-            }
+            Text(text = stringResource(id = titleId), fontSize = titleFontSize)
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
             titleContentColor = MaterialTheme.colorScheme.onPrimary,
         ),
+        navigationIcon = {
+            IconButton(
+                onClick = onMenuClick,
+                modifier = Modifier.padding(start = 16.dp)
+            ) {
+                Icon(
+                    painterResource(R.drawable.menu_24dp),
+                    contentDescription = "menu",
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(iconSize),
+                )
+            }
+        },
         actions = {
             IconButton(
                 enabled = scoreEnabled,
