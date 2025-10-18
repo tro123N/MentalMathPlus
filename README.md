@@ -2,10 +2,10 @@
 "Mental Math" is a simple and clean Android app for mental arithmetic training. You can practice on your own or challenge friends to compete and and improve your skills. The app is open source and respects your privacy.
 
 <p align="center">
-  <a href="https://f-droid.org/packages/com.example.appname/">
+  <a href="https://f-droid.org/packages/com.helddertierwelt.mentalmath/">
     <img src="./media/badges/fdroid-badge.png" alt="Get it on F-Droid" height="80">
   </a>
-  <a href="https://play.google.com/store/apps/details?id=com.example.appname">
+  <a href="https://play.google.com/store/apps/details?id=com.helddertierwelt.mentalmath">
     <img src="./media/badges/google-play-badge.png" alt="Get it on Google Play" height="80">
   </a>
   <a href="https://codeberg.org/HeldDerTierwelt/MentalMath">
