@@ -1,7 +1,7 @@
 # <a href="https://codeberg.org/HeldDerTierwelt/MentalMath"><img src="./media/app icon/Mental Math Transparent.svg" alt="Mental Math Icon" height="25"></a> Mental Math
 "Mental Math" is a simple and clean Android app for mental arithmetic training. You can practice on your own or challenge friends to compete and and improve your skills. The app is open source and respects your privacy.
 
-<p align="center">
+<p >
   <a href="https://f-droid.org/packages/com.helddertierwelt.mentalmath/">
     <img src="./media/badges/fdroid-badge.png" alt="Get it on F-Droid" height="80">
   </a>
@@ -17,7 +17,7 @@
 Select which arithmetic operations to include (+, −, ×, ÷). For each operation, choose from nine difficulty levels to customize your training precisely to your skill level.
 
 #### Two Game Modes
-• Task Mode lets you complete a fixed number of tasks (10, 20, 30, 40, or 50).
+• Task Mode lets you complete a fixed number of tasks (10, 20, 30, 40, or 50).  
 • Timed Mode challenges you to solve as many tasks as possible within a time limit (1, 2, 3, 4, or 5 minutes).
 
 #### Difficulty Calculation
@@ -27,10 +27,12 @@ Task difficulty is determined using algorithms based on column addition, column 
 After each game, view a detailed summary that includes your selected settings, your performance (accuracy, speed, and score), and a complete list of all your tasks and answers for review.
 
 #### Personal Leaderboard
-Your top 10 results are saved separately for each combination of settings, so you can keep track of your best performances. You can review detailed summaries of any of your top games at any time.
+Your top 10 results are saved separately for each combination of settings, so you can keep track of your best performances. You can review detailed summaries of your top games at any time.
 
 #### Challenge your Friends
-You can share a game link in two ways: *1.* Replay a completed game with the exact same tasks to compare scores with friends. *2.* Start a new game with preset settings for a fair and fresh challenge for everyone.
+You can share a game link in two ways:  
+*1.* Replay a completed game with the exact same tasks to compare scores with friends.  
+*2.* Start a new game with preset settings for a fair and fresh challenge for everyone.
 
 #### Open Source and Privacy
 "Mental Math" is fully open source, free to use, and does not collect or process any personal data. It requires no permissions, contains no ads, and runs entirely offline to respect your privacy.
@@ -39,7 +41,7 @@ You can share a game link in two ways: *1.* Replay a completed game with the exa
 A simple and minimalist app design with no unnecessary elements or distractions, designed to keep your focus fully on mental math training. Supports both light and dark modes.
 
 ## Screenshots
-<p align="center">
+<p >
   <img src="./fastlane/metadata/screenshots/en-US/1.png" alt="Main Screen" width="30%">
   <img src="./fastlane/metadata/screenshots/en-US/2.png" alt="Main Screen" width="30%">
   <img src="./fastlane/metadata/screenshots/en-US/3.png" alt="Main Screen" width="30%">
@@ -60,5 +62,5 @@ If you have any questions or feedback, feel free to reach out via the app's feed
 
 ## License Information
 Mental Math © 2025 HeldDerTierwelt
-This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html).
+This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html).  
 The full license text can be found in the LICENSE.md file.
