@@ -30,7 +30,7 @@ After each game, view a detailed summary that includes your selected settings, y
 Your top 10 results are saved separately for each combination of settings, so you can keep track of your best performances. You can review detailed summaries of your top games at any time.
 
 #### Challenge your Friends
-You can share a game link in two ways:  
+You can share a game link to:  
 *1.* Replay a completed game with the exact same tasks to compare scores with friends.  
 *2.* Start a new game with preset settings for a fair and fresh challenge for everyone.
 

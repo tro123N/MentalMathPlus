@@ -57,10 +57,10 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF3C3F41),
 )
 
-val yellow = Color(0xFFFBC02D)
 val green = Color(0xFF39A241)
-val blue = Color(0xFF1976D2)
 val red = Color(0xFFD34747)
+val yellow = Color(0xFFFBC02D)
+val blue = Color(0xFF1976D2)
 
 @Composable
 fun MentalMathTheme(
