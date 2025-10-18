@@ -1,7 +1,7 @@
 # <a href="https://codeberg.org/HeldDerTierwelt/MentalMath"><img src="./media/app icon/Mental Math Transparent.svg" alt="Mental Math Icon" height="25"></a> Mental Math
 "Mental Math" is a simple and clean Android app for mental arithmetic training. You can practice on your own or challenge friends to compete and and improve your skills. The app is open source and respects your privacy.
 
-<p >
+<p align="center">
   <a href="https://f-droid.org/packages/com.helddertierwelt.mentalmath/">
     <img src="./media/badges/fdroid-badge.png" alt="Get it on F-Droid" height="80">
   </a>
@@ -41,7 +41,7 @@ You can share a game link in two ways:
 A simple and minimalist app design with no unnecessary elements or distractions, designed to keep your focus fully on mental math training. Supports both light and dark modes.
 
 ## Screenshots
-<p >
+<p align="center">
   <img src="./fastlane/metadata/screenshots/en-US/1.png" alt="Main Screen" width="30%">
   <img src="./fastlane/metadata/screenshots/en-US/2.png" alt="Main Screen" width="30%">
   <img src="./fastlane/metadata/screenshots/en-US/3.png" alt="Main Screen" width="30%">
