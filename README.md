@@ -1,4 +1,6 @@
 # <a href="https://codeberg.org/HeldDerTierwelt/MentalMath"><img src="./media/app icon/Mental Math Transparent.svg" alt="Mental Math Icon" height="25"></a> Mental Math
+
+## App Overview
 "Mental Math" is a simple and clean Android app for mental arithmetic training. You can practice on your own or challenge friends to compete and and improve your skills. The app is open source and respects your privacy.
 
 <p align="center">
@@ -13,6 +15,7 @@
   </a>
 </p>
 
+## Features
 #### Customizable Training
 Select which arithmetic operations to include (+, −, ×, ÷). For each operation, choose from nine difficulty levels to customize your training precisely to your skill level.
 
@@ -58,9 +61,13 @@ A simple and minimalist app design with no unnecessary elements or distractions,
 ## Privacy Policy
 Your privacy is important. This app does not collect any personal data, does not require any permissions, and does not use any trackers, ads, or third- party services. Your use of the app is completely anonymous.
 
-If you have any questions or feedback, feel free to reach out via the app's feedback feature.
+If you have any questions or feedback, feel free to reach out via mental_math_feedback@pm.me.
 
 ## License Information
-Mental Math © 2025 HeldDerTierwelt
-This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html).  
-The full license text can be found in the LICENSE.md file.
+Mental Math © 2025 HeldDerTierwelt  
+This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html). The full license text can also be found in the [LICENSE.md]("https://codeberg.org/HeldDerTierwelt/MentalMath/src/branch/main/LICENSE.md") file.  
+  
+<p align="center">
+  <br>
+  <img src="./media/app icon/Mental Math Transparent.svg" alt="Mental Math Icon" width="200">
+</p>
