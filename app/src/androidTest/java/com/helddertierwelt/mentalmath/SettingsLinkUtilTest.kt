@@ -1,27 +1,33 @@
 package com.helddertierwelt.mentalmath
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
-import com.helddertierwelt.mentalmath.util.GameStringSerializer
+import com.helddertierwelt.mentalmath.util.SettingsLinkUtil
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.junit.runner.RunWith
 
 /**
- * Example local unit test, which will execute on the development machine (host).
+ * Instrumented test, which will execute on an Android device.
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-class ExampleUnitTest {
+@RunWith(AndroidJUnit4::class)
+class SettingsLinkUtilTest {
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun useAppContext() {
+        // Context of the app under test.
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        assertEquals("com.helddertierwelt.mentalmath", appContext.packageName)
     }
 
     @Test
-    fun testGameStringSerializer_roundTrip() {
+    fun testGameStringSerializerAndDeserializer() {
         val original = GameRecord(
             id = 42,
-            isModeEnabled = true,
+            isModeEnabled = false,
             modeLimit = 5,
             additionRangeStart = 2,
             additionRangeEnd = 7,
@@ -36,14 +42,13 @@ class ExampleUnitTest {
             activeTime = 5555L,
             totalTime = 9999L,
             activeScore = 12.34f,
-            totalScore = 56.78f,
+            totalScore = 5622.10f,
             seed = 1234567890123456789L,
-            taskResults = listOf() // wird nicht serialisiert
+            taskResults = listOf()
         )
-        val serialized = GameStringSerializer.serialize(original)
-        val deserialized = GameStringSerializer.deserialize(serialized)
+        val serialized = SettingsLinkUtil.serialize(original)
+        val deserialized = SettingsLinkUtil.deserialize(serialized)
 
-        // Vergleiche nur die serialisierten Felder
         assertEquals(original.isModeEnabled, deserialized.isModeEnabled)
         assertEquals(original.modeLimit, deserialized.modeLimit)
         assertEquals(original.additionRangeStart, deserialized.additionRangeStart)
@@ -57,7 +62,6 @@ class ExampleUnitTest {
         assertEquals(original.totalScore, deserialized.totalScore)
         assertEquals(original.seed, deserialized.seed)
 
-        // Nicht serialisierte Felder sollten Defaultwerte haben
         assertEquals(0, deserialized.id)
         assertEquals(0, deserialized.totalAnswers)
         assertEquals(0, deserialized.correctAnswers)

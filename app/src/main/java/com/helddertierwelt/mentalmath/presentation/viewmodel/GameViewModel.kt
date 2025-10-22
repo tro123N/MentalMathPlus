@@ -117,7 +117,7 @@ class GameViewModel @Inject constructor(
 
             val operands = when (operation) {
                 Operation.SUBTRACTION -> mathTask.operand1 to mathTask.operand2
-                Operation.DIVISION -> (mathTask.operand1 * mathTask.operand2) to mathTask.operand1
+                Operation.DIVISION -> mathTask.operand1 to mathTask.operand2
                 Operation.ADDITION,
                 Operation.MULTIPLICATION -> {
                     if (random.nextBoolean())

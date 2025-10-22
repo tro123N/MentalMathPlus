@@ -95,19 +95,17 @@ class MathTaskRepository @Inject constructor(
         random: Random,
         lastOperands: Pair<Int, Int>
     ): MathTask {
-        val lastOperand1 = lastOperands.second
-        val lastOperand2 = lastOperands.first / lastOperands.second
         val count = divisionDao.countDivisionTasksByDifficulty(
             difficulty,
-            lastOperands.second,
-            lastOperand2
+            lastOperands.first,
+            lastOperands.second
         )
         val offset = random.nextInt(count)
         return divisionDao.getDivisionTaskByDifficultyWithOffset(
             difficulty,
             offset,
-            lastOperand1,
-            lastOperand2
+            lastOperands.first,
+            lastOperands.second
         ).toMathTask()
     }
 }
