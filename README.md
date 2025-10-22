@@ -24,7 +24,7 @@ Select which arithmetic operations to include (+, −, ×, ÷). For each operati
 • Timed Mode challenges you to solve as many tasks as possible within a time limit (1, 2, 3, 4, or 5 minutes).
 
 #### Difficulty Calculation
-Task difficulty is determined using algorithms based on column addition, column subtraction, long multiplication, and long division, creating realistic and well-balanced exercises.
+Task difficulty is determined using [algorithms](https://codeberg.org/HeldDerTierwelt/MentalMathEvaluator) based on column addition, column subtraction, long multiplication, and long division, creating realistic and well-balanced exercises.
 
 #### Detailed Results
 After each game, view a detailed summary that includes your selected settings, your performance (accuracy, speed, and score), and a complete list of all your tasks and answers for review.
