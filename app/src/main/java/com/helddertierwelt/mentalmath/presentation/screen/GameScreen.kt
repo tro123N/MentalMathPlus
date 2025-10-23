@@ -74,42 +74,41 @@ fun GameScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-
-    val activity = LocalActivity.current as ViewModelStoreOwner
-    val gameViewModel: GameViewModel = hiltViewModel(activity)
-    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
-    val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
-
-    LaunchedEffect(Unit) {
-        gameViewModel.startTimerIfNeeded()
-    }
-
-    val settingsState = settingsViewModel.settingsState.collectAsState().value
-    val gameState = gameViewModel.gameState.collectAsState().value
+    val screenHeight = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
     val coroutineScope = rememberCoroutineScope()
 
-    // Calculate sizes based on screen height
-    val containerSizePx = LocalWindowInfo.current.containerSize // IntSize in px
-    val density = LocalDensity.current
-    val screenHeight = with(density) { containerSizePx.height.toDp() }
-
+    // font and icon sizes
     val roundButtonSize = (0.10f * screenHeight.value).dp
+    val resultLineWidth = (0.32f * screenHeight.value).dp
+    val columnPadding = (0.028f * screenHeight.value).dp
+    val closeIconSize = (0.057f * screenHeight.value).dp
+    val doubleArrowIconSize = (0.052f * screenHeight.value).dp
+    val backSpaceIconSize = (0.038f * screenHeight.value).dp
     val titleFontSize = (0.031f * screenHeight.value).sp
     val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
     val numberFontSize = (0.040f * screenHeight.value).sp
     val taskFontSize = (0.057f * screenHeight.value).sp
-    val iconSizeClose = (0.057f * screenHeight.value).dp
-    val iconSizeDoubleArrow = (0.052f * screenHeight.value).dp
-    val iconSizeBackSpace = (0.038f * screenHeight.value).dp
-    val columnPadding = (0.028f * screenHeight.value).dp
-    val resultLineWidth = (0.32f * screenHeight.value).dp
+
+    // viewModels
+    val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
+    val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
+    val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
+    val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
+
+    // variables
+    val settingsState = settingsViewModel.settingsState.collectAsState().value
+    val gameState = gameViewModel.gameState.collectAsState().value
+
+    LaunchedEffect(Unit) {
+        gameViewModel.startTimerIfNeeded()
+    }
 
     Scaffold(
         topBar = {
             Column {
                 GameTopBar(
                     navController = navController,
-                    iconSize = iconSizeClose,
+                    iconSize = closeIconSize,
                     fontSize = numberFontSize
                 )
                 LinearProgressIndicator(
@@ -209,7 +208,7 @@ fun GameScreen(
                         BackspaceButton(
                             onClick = { gameViewModel.removeLastDigit() },
                             size = roundButtonSize,
-                            iconSize = iconSizeBackSpace
+                            iconSize = backSpaceIconSize
                         )
                         NumberButton(
                             number = 0,
@@ -243,7 +242,7 @@ fun GameScreen(
                             size = roundButtonSize,
                             iconId1 = R.drawable.keyboard_double_arrow_right_24dp,
                             iconId2 = R.drawable.keyboard_tab_24dp,
-                            iconSize = iconSizeDoubleArrow
+                            iconSize = doubleArrowIconSize
                         )
                     }
                 }

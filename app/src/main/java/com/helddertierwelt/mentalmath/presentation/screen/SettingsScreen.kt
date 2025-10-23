@@ -71,32 +71,33 @@ import java.security.SecureRandom
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    modifier: Modifier = Modifier
 ) {
-
-    val activity = LocalActivity.current as ViewModelStoreOwner
     val context = LocalContext.current
-
     val containerSizePx = LocalWindowInfo.current.containerSize
     val density = LocalDensity.current
     val screenHeight = with(density) { containerSizePx.height.toDp() }
     val screenWidth = with(density) { containerSizePx.width.toDp() }
 
+    // font and icon sizes
     val roundButtonSize = (0.09f * screenHeight.value).dp
     val sliderSize = (0.05f * screenHeight.value).dp
-    val operatorButtonFontSize = (0.057f * screenHeight.value).sp
-    val startButtonFontSize = (0.038f * screenHeight.value).sp
-    val titleFontSize = (0.031f * screenHeight.value).sp
-    val textLabelFontSize = (0.024f * screenHeight.value).sp
-    val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
+    val columnPadding = (0.028f * screenHeight.value).dp
     val startIconSize = (0.057f * screenHeight.value).dp
     val modeIconSize = (0.048f * screenHeight.value).dp
-    val columnPadding = (0.028f * screenHeight.value).dp
     val topBarIconSize = (0.038f * screenHeight.value).dp
+    val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
+    val textLabelFontSize = (0.024f * screenHeight.value).sp
+    val titleFontSize = (0.031f * screenHeight.value).sp
+    val startButtonFontSize = (0.038f * screenHeight.value).sp
+    val operatorFontSize = (0.057f * screenHeight.value).sp
 
-    val gameViewModel: GameViewModel = hiltViewModel(activity)
-    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
-    val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
+    // viewModels
+    val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
+    val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
+    val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
+    val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
+
+    // variables
     val settingsState = settingsViewModel.settingsState.collectAsState().value
     val isLoaded = settingsViewModel.isLoaded.collectAsState().value
     val bestTotalGames by settingsViewModel.bestTotalGames.collectAsState()
@@ -130,7 +131,7 @@ fun SettingsScreen(
                 color = MaterialTheme.colorScheme.background
             ) {
                 Column(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxSize()
                         .padding(columnPadding, columnPadding),
                     verticalArrangement = Arrangement.SpaceBetween,
@@ -193,7 +194,7 @@ fun SettingsScreen(
                                 settingsViewModel.loadBestGames()
                             },
                             size = roundButtonSize,
-                            fontSize = operatorButtonFontSize,
+                            fontSize = operatorFontSize,
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
@@ -225,7 +226,7 @@ fun SettingsScreen(
                                 settingsViewModel.loadBestGames()
                             },
                             size = roundButtonSize,
-                            fontSize = operatorButtonFontSize
+                            fontSize = operatorFontSize
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
@@ -257,7 +258,7 @@ fun SettingsScreen(
                                 settingsViewModel.loadBestGames()
                             },
                             size = roundButtonSize,
-                            fontSize = operatorButtonFontSize
+                            fontSize = operatorFontSize
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
@@ -289,7 +290,7 @@ fun SettingsScreen(
                                 settingsViewModel.loadBestGames()
                             },
                             size = roundButtonSize,
-                            fontSize = operatorButtonFontSize
+                            fontSize = operatorFontSize
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(

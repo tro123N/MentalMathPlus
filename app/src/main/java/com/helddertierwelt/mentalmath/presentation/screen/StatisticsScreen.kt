@@ -87,41 +87,39 @@ import java.io.FileOutputStream
 fun StatisticsScreen(
     navController: NavController,
 ) {
+    val context = LocalContext.current
+    val localView = LocalView.current
+    val screenHeight = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
+    val coroutineScope = rememberCoroutineScope()
 
-    val activity = LocalActivity.current
-    val viewModelStoreOwner = activity as ViewModelStoreOwner
+    // font and icon sizes
+    val roundButtonSize = (0.09f * screenHeight.value).dp
+    val columnPadding = (0.028f * screenHeight.value).dp
+    val doneIconSize = (0.057f * screenHeight.value).dp
+    val modeIconSize = (0.048f * screenHeight.value).dp
+    val shareIconSize = (0.038f * screenHeight.value).dp
+    val taskIconSize = (0.032f * screenHeight.value).dp
+    val fontSize = (0.038f * screenHeight.value).sp
+    val titleFontSize = (0.032f * screenHeight.value).sp
+    val operatorFontSize = (0.057f * screenHeight.value).sp
+    val resultFontSize = (0.024f * screenHeight.value).sp
+
+
+    // viewModels
+    val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
     val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
+
+    // variables
+    var statsCardCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
+    var hasCapturedCoordinates by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
     val statisticsGameRecord =
         if (statisticsViewModel.showLoadedGameRecord.collectAsState().value) {
             statisticsViewModel.loadedGameRecord.collectAsState().value
         } else {
             statisticsViewModel.lastGameRecord.collectAsState().value
         }
-
-    // Calculate sizes based on screen size
-    val containerSizePx = LocalWindowInfo.current.containerSize // IntSize in px
-    val density = LocalDensity.current
-    val localView = LocalView.current
-    val screenWidth = with(density) { containerSizePx.width.toDp() }
-    val screenHeight = with(density) { containerSizePx.height.toDp() }
-    val roundButtonSize = (0.09f * screenHeight.value).dp
-    val doneButtonFontSize = (0.038f * screenHeight.value).sp
-    val doneIconSize = (0.057f * screenHeight.value).dp
-    val shareIconSize = (0.038f * screenHeight.value).dp
-    val titleFontSize = (0.032f * screenHeight.value).sp
-    val resultFontSize = (0.057f * screenWidth.value).sp
-    val operatorFontSize = (0.057f * screenHeight.value).sp
-    val taskIconSize = (0.032f * screenHeight.value).dp
-    val modeIconSize = (0.048f * screenHeight.value).dp
-    val columnPadding = (0.028f * screenHeight.value).dp
-    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-
-    val coroutineScope = rememberCoroutineScope()
-    val scrollState = rememberScrollState()
-    var statsCardCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
-    var hasCapturedCoordinates by remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
     fun captureSettingsCardBitmap(): Bitmap? {
         val coordinates = statsCardCoordinates ?: return null
@@ -241,7 +239,7 @@ fun StatisticsScreen(
                     DoneButton(
                         buttonTextId = R.string.done,
                         size = roundButtonSize,
-                        fontSize = doneButtonFontSize,
+                        fontSize = fontSize,
                         iconSize = doneIconSize,
                         modifier = Modifier,
                         onClick = {
@@ -336,6 +334,7 @@ fun StatisticsScreen(
         )
     }
 
+    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     DisposableEffect(Unit) {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {

@@ -88,6 +88,7 @@ fun MenuSideSheet(
 
     val fontSize = (0.020f * screenHeight.value).sp
     val iconSize = (0.032f * screenHeight.value).dp
+    val logoSize = (0.11f * screenHeight.value).dp
     var isInteractionEnabled by remember { mutableStateOf(true) }
 
     // Handle side sheet open/close animation
@@ -165,7 +166,7 @@ fun MenuSideSheet(
             ) {
 
                 // App Logo
-                LogoRow(0.54f, R.drawable.mental_math)
+                LogoRow(logoSize, R.drawable.mental_math)
 
                 // Website Link
                 IntentRow(

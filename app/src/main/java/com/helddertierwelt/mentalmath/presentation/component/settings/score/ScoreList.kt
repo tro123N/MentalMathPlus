@@ -61,7 +61,7 @@ fun ScoreList(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp, 8.dp)
+                    .padding(0.dp, 8.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .clickable { onClick(game) },
                 verticalAlignment = Alignment.CenterVertically,
@@ -80,7 +80,7 @@ fun ScoreList(
                     color = color,
                     fontSize = fontSizeScore,
                     textAlign = TextAlign.End,
-                    modifier = Modifier.weight(0.67f)
+                    modifier = Modifier.padding(12.dp, 0.dp).weight(0.67f)
                 )
             }
         }

@@ -38,7 +38,7 @@ You can share a game link to:
 *2.* Start a new game with preset settings for a fair and fresh challenge for everyone.
 
 #### Open Source and Privacy
-"Mental Math" is fully open source, free to use, and does not collect or process any personal data. It requires no permissions, contains no ads, and runs entirely offline to respect your privacy.
+"Mental Math" is fully [open source](https://codeberg.org/HeldDerTierwelt/MentalMath), free to use, and does not collect or process any personal data. It requires no permissions, contains no ads, and runs entirely offline to respect your privacy.
 
 #### Clean Design
 A simple and minimalist app design with no unnecessary elements or distractions, designed to keep your focus fully on mental math training. Supports both light and dark modes.

@@ -26,6 +26,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -196,7 +197,8 @@ fun ScoreSideSheet(
                             .padding(28.dp, 12.dp, 12.dp, 0.dp)
                             .clip(RoundedCornerShape(16.dp))
                             .clickable { settingsViewModel.toggleDefaultScoreOption() },
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End
                     ) {
                         Spacer(Modifier.width(8.dp))
                         Text(
