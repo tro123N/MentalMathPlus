@@ -1,4 +1,4 @@
-# <a href="https://codeberg.org/HeldDerTierwelt/MentalMath"><img src="./media/app icon/Mental Math Transparent.svg" alt="Mental Math Icon" height="25"></a> Mental Math
+# <a href="https://codeberg.org/Mental-Math/MentalMath"><img src="./media/app icon/Mental Math Transparent.svg" alt="Mental Math Icon" height="25"></a> Mental Math
 
 ## App Overview
 "Mental Math" is a simple and clean Android app for mental arithmetic training. You can practice on your own or challenge friends to compete and and improve your skills. The app is open source and respects your privacy.
@@ -10,7 +10,7 @@
   <a href="https://play.google.com/store/apps/details?id=com.helddertierwelt.mentalmath">
     <img src="./media/badges/google-play-badge.png" alt="Get it on Google Play" height="80">
   </a>
-  <a href="https://codeberg.org/HeldDerTierwelt/MentalMath">
+  <a href="https://codeberg.org/Mental-Math/MentalMath">
     <img src="./media/badges/codeberg-badge.png" alt="Get it on Codeberg" height="80">
   </a>
 </p>
@@ -24,7 +24,7 @@ Select which arithmetic operations to include (+, −, ×, ÷). For each operati
 • Timed Mode challenges you to solve as many tasks as possible within a time limit (1, 2, 3, 4, or 5 minutes).
 
 #### Difficulty Calculation
-Task difficulty is determined using [algorithms](https://codeberg.org/HeldDerTierwelt/MentalMathEvaluator) based on column addition, column subtraction, long multiplication, and long division, creating realistic and well-balanced exercises.
+Task difficulty is determined using [algorithms](https://codeberg.org/Mental-Math/MentalMathEvaluator) based on column addition, column subtraction, long multiplication, and long division, creating realistic and well-balanced exercises.
 
 #### Detailed Results
 After each game, view a detailed summary that includes your selected settings, your performance (accuracy, speed, and score), and a complete list of all your tasks and answers for review.
@@ -38,7 +38,7 @@ You can share a game link to:
 *2.* Start a new game with preset settings for a fair and fresh challenge for everyone.
 
 #### Open Source and Privacy
-"Mental Math" is fully [open source](https://codeberg.org/HeldDerTierwelt/MentalMath), free to use, and does not collect or process any personal data. It requires no permissions, contains no ads, and runs entirely offline to respect your privacy.
+"Mental Math" is fully [open source](https://codeberg.org/Mental-Math/MentalMath), free to use, and does not collect or process any personal data. It requires no permissions, contains no ads, and runs entirely offline to respect your privacy.
 
 #### Clean Design
 A simple and minimalist app design with no unnecessary elements or distractions, designed to keep your focus fully on mental math training. Supports both light and dark modes.
