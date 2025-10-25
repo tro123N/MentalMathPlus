@@ -178,7 +178,7 @@ fun MenuSideSheet(
                     intentProvider = {
                         Intent(
                             Intent.ACTION_VIEW,
-                            "https://helddertierwelt.codeberg.page".toUri()
+                            "https://mental-math.codeberg.page".toUri()
                         )
                     },
                     context = context
@@ -225,7 +225,7 @@ fun MenuSideSheet(
                     intentProvider = {
                         Intent(
                             Intent.ACTION_VIEW,
-                            "https://codeberg.org/HeldDerTierwelt/MentalMath".toUri()
+                            "https://codeberg.org/Mental-Math/MentalMath".toUri()
                         )
                     },
                     context = context
@@ -241,7 +241,7 @@ fun MenuSideSheet(
                     intentProvider = {
                         Intent(
                             Intent.ACTION_VIEW,
-                            "https://codeberg.org/HeldDerTierwelt/MentalMath/src/branch/main/LICENSE.md".toUri()
+                            "https://codeberg.org/Mental-Math/MentalMath/src/branch/main/LICENSE.md".toUri()
                         )
                     },
                     context = context
@@ -257,7 +257,7 @@ fun MenuSideSheet(
                     intentProvider = {
                         Intent(
                             Intent.ACTION_VIEW,
-                            "https://codeberg.org/HeldDerTierwelt/MentalMath/src/branch/main/PRIVACY_POLICY.md".toUri()
+                            "https://codeberg.org/Mental-Math/MentalMath/src/branch/main/PRIVACY_POLICY.md".toUri()
                         )
                     },
                     context = context

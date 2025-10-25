@@ -262,6 +262,6 @@ class SettingsViewModel @Inject constructor(
         ).joinToString("").toBigInteger().toByteArray()
 
         val encoded = Base64.encodeToString(settingsStringByteArray, Base64.URL_SAFE or Base64.NO_WRAP)
-        return "https://helddertierwelt.codeberg.page/mentalmath?game=%s".format(encoded)
+        return "https://mental-math.codeberg.page/?game=%s".format(encoded)
     }
 }
