@@ -10,7 +10,7 @@
   <a href="https://play.google.com/store/apps/details?id=com.helddertierwelt.mentalmath">
     <img src="./media/badges/google-play-badge.png" alt="Get it on Google Play" height="80">
   </a>
-  <a href="https://codeberg.org/Mental-Math/MentalMath">
+  <a href="https://codeberg.org/Mental-Math/MentalMath/releases">
     <img src="./media/badges/codeberg-badge.png" alt="Get it on Codeberg" height="80">
   </a>
 </p>
