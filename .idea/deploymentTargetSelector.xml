@@ -15,7 +15,7 @@
       </SelectionState>
       <SelectionState runConfigName="MentalMath.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-10-12T15:03:42.455004100Z">
+        <DropdownSelection timestamp="2025-10-23T15:07:31.527133600Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\alexg\.android\avd\Pixel_8.avd" />

@@ -45,8 +45,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,6 +58,7 @@ fun CustomRangeSlider(
     isEnabled: Boolean,
     activeTrackColor: Color,
     size: Dp,
+    thumbnailFontsize: TextUnit,
 ) {
     val startInteractionSource = remember { MutableInteractionSource() }
     val endInteractionSource = remember { MutableInteractionSource() }
@@ -80,7 +81,8 @@ fun CustomRangeSlider(
         fun thumbOffset(thumbValue: Float): Int {
             val positionFraction =
                 (thumbValue - valueRange.start) / (valueRange.endInclusive - valueRange.start)
-            return ((sliderWidth) * positionFraction - sliderWidth / 2).toInt()
+            val shorterSliderWidth = sliderWidth / 1.05
+            return (shorterSliderWidth * positionFraction - shorterSliderWidth / 2).toInt()
         }
 
         Text(
@@ -99,7 +101,7 @@ fun CustomRangeSlider(
                 .padding(horizontal = 6.dp),
             text = "%.0f".format(value.start),
             color = MaterialTheme.colorScheme.onSecondary,
-            fontSize = 12.sp
+            fontSize = thumbnailFontsize
         )
 
         Text(
@@ -118,7 +120,7 @@ fun CustomRangeSlider(
                 .padding(horizontal = 6.dp),
             text = "%.0f".format(value.endInclusive),
             color = MaterialTheme.colorScheme.onSecondary,
-            fontSize = 16.sp
+            fontSize = thumbnailFontsize
         )
 
         val sliderColors: SliderColors

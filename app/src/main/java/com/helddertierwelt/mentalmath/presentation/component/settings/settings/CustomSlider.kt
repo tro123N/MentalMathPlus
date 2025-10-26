@@ -45,8 +45,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
 
 @Composable
@@ -58,6 +58,7 @@ fun CustomSlider(
     isToggled: Boolean,
     activeTrackColor: Color,
     size: Dp,
+    thumbnailFontSize: TextUnit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isDragging by interactionSource.collectIsDraggedAsState()
@@ -79,9 +80,8 @@ fun CustomSlider(
 
         val positionFraction =
             (value - valueRange.start) / (valueRange.endInclusive - valueRange.start)
-        val offsetForLastTick = if (value == valueRange.endInclusive) lastTickSpace else 0.dp.value
-        val offsetX =
-            ((sliderWidth) * positionFraction - sliderWidth / 2 - offsetForLastTick).toInt()
+        val shorterSliderWidth = sliderWidth / 1.1
+        val offsetX = (shorterSliderWidth * positionFraction - shorterSliderWidth / 2).toInt()
         Text(
             modifier = Modifier
                 .offset {
@@ -96,7 +96,7 @@ fun CustomSlider(
                 .padding(horizontal = 6.dp),
             text = if (isToggled) "${(value * 10).roundToInt()}".format(value) else "${value.toInt()}min".format(value),
             color = MaterialTheme.colorScheme.onSecondary,
-            fontSize = 16.sp
+            fontSize = thumbnailFontSize
         )
 
         val sliderColors = SliderDefaults.colors(

@@ -90,6 +90,7 @@ fun SettingsScreen(
     val titleFontSize = (0.031f * screenHeight.value).sp
     val startButtonFontSize = (0.038f * screenHeight.value).sp
     val operatorFontSize = (0.057f * screenHeight.value).sp
+    val thumbnailFontSize = (0.015f * screenHeight.value).sp
 
     // viewModels
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
@@ -160,19 +161,20 @@ fun SettingsScreen(
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomSlider(
+                            valueRange = 1f..5f,
                             value = settingsState.limit,
                             onValueChange = {
                                 isSliderActive = true
                                 settingsViewModel.updateLimit(it)
                             },
-                            valueRange = 1f..5f,
-                            isToggled = settingsState.isModeEnabled,
-                            size = sliderSize,
-                            activeTrackColor = MaterialTheme.colorScheme.onSurface,
                             onValueChangeFinished = {
                                 isSliderActive = false
                                 settingsViewModel.loadBestGames()
-                            }
+                            },
+                            isToggled = settingsState.isModeEnabled,
+                            activeTrackColor = MaterialTheme.colorScheme.onSurface,
+                            size = sliderSize,
+                            thumbnailFontSize = thumbnailFontSize
                         )
                     }
                     Text(
@@ -200,17 +202,18 @@ fun SettingsScreen(
                         CustomRangeSlider(
                             valueRange = 1f..9f,
                             value = settingsState.additionRange,
-                            activeTrackColor = green,
-                            isEnabled = settingsState.isAdditionEnabled,
                             onValueChange = {
                                 isSliderActive = true
                                 settingsViewModel.updatePlusRange(it)
                             },
-                            size = sliderSize,
                             onValueChangeFinished = {
                                 isSliderActive = false
                                 settingsViewModel.loadBestGames()
-                            }
+                            },
+                            isEnabled = settingsState.isAdditionEnabled,
+                            activeTrackColor = green,
+                            size = sliderSize,
+                            thumbnailFontsize = thumbnailFontSize
                         )
                     }
                     Row(
@@ -232,17 +235,18 @@ fun SettingsScreen(
                         CustomRangeSlider(
                             valueRange = 1f..9f,
                             value = settingsState.subtractionRange,
-                            activeTrackColor = red,
-                            isEnabled = settingsState.isSubtractionEnabled,
                             onValueChange = {
                                 isSliderActive = true
                                 settingsViewModel.updateMinusRange(it)
                             },
-                            size = sliderSize,
                             onValueChangeFinished = {
                                 isSliderActive = false
                                 settingsViewModel.loadBestGames()
-                            }
+                            },
+                            isEnabled = settingsState.isSubtractionEnabled,
+                            activeTrackColor = red,
+                            size = sliderSize,
+                            thumbnailFontsize = thumbnailFontSize
                         )
                     }
                     Row(
@@ -264,17 +268,18 @@ fun SettingsScreen(
                         CustomRangeSlider(
                             valueRange = 1f..9f,
                             value = settingsState.multiplicationRange,
-                            activeTrackColor = yellow,
-                            isEnabled = settingsState.isMultiplicationEnabled,
                             onValueChange = {
                                 isSliderActive = true
                                 settingsViewModel.updateMultiplyRange(it)
                             },
-                            size = sliderSize,
                             onValueChangeFinished = {
                                 isSliderActive = false
                                 settingsViewModel.loadBestGames()
-                            }
+                            },
+                            isEnabled = settingsState.isMultiplicationEnabled,
+                            activeTrackColor = yellow,
+                            size = sliderSize,
+                            thumbnailFontsize = thumbnailFontSize
                         )
                     }
                     Row(
@@ -296,17 +301,18 @@ fun SettingsScreen(
                         CustomRangeSlider(
                             valueRange = 1f..9f,
                             value = settingsState.divisionRange,
-                            activeTrackColor = blue,
-                            isEnabled = settingsState.isDivisionEnabled,
                             onValueChange = {
                                 isSliderActive = true
                                 settingsViewModel.updateDivideRange(it)
                             },
-                            size = sliderSize,
                             onValueChangeFinished = {
                                 isSliderActive = false
                                 settingsViewModel.loadBestGames()
-                            }
+                            },
+                            isEnabled = settingsState.isDivisionEnabled,
+                            activeTrackColor = blue,
+                            size = sliderSize,
+                            thumbnailFontsize = thumbnailFontSize
                         )
                     }
                     StartButton(
