@@ -66,7 +66,10 @@ If you have any questions or feedback, feel free to reach out via mental_math_fe
 ## License Information
 Mental Math © 2025 HeldDerTierwelt  
 This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html). The full license text can also be found in the [LICENSE.md]("https://codeberg.org/HeldDerTierwelt/MentalMath/src/branch/main/LICENSE.md") file.  
-  
+
+## Donation
+If you enjoy this app, feel free to support me via [Ko-Fi](https://ko-fi.com/mental_math). It means a lot to me ❤️.
+
 <p align="center">
   <br>
   <img src="./media/app icon/Mental Math Transparent.svg" alt="Mental Math Icon" width="200">
