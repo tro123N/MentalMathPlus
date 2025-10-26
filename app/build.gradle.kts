@@ -29,6 +29,43 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("fossRelease") {
+            storeFile = file(project.property("FOSS_STORE_FILE") as String)
+            storePassword = project.property("FOSS_STORE_PASSWORD") as String
+            keyAlias = project.property("FOSS_KEY_ALIAS") as String
+            keyPassword = project.property("FOSS_KEY_PASSWORD") as String
+        }
+        create("playRelease") {
+            storeFile = file(project.property("PLAY_STORE_FILE") as String)
+            storePassword = project.property("PLAY_STORE_PASSWORD") as String
+            keyAlias = project.property("PLAY_KEY_ALIAS") as String
+            keyPassword = project.property("PLAY_KEY_PASSWORD") as String
+        }
+        create("devRelease") {
+            storeFile = file(project.property("DEV_STORE_FILE") as String)
+            storePassword = project.property("DEV_STORE_PASSWORD") as String
+            keyAlias = project.property("DEV_KEY_ALIAS") as String
+            keyPassword = project.property("DEV_KEY_PASSWORD") as String
+        }
+    }
+
+    flavorDimensions += "distribution"
+    productFlavors {
+        create("foss") {
+            dimension = "distribution"
+            signingConfig = signingConfigs.getByName("fossRelease")
+        }
+        create("play") {
+            dimension = "distribution"
+            signingConfig = signingConfigs.getByName("playRelease")
+        }
+        create("dev") {
+            dimension = "distribution"
+            signingConfig = signingConfigs.getByName("devRelease")
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
