@@ -199,7 +199,7 @@ fun MenuSideSheet(
                                 seed = SecureRandom().nextLong()
                             } while (seed < 0)
                             val seedLink = settingsViewModel.generateSeedLink(seed)
-                            val shareText = "Let’s play a round Mental Math!\nClick the link below to start a fresh game with my settings and this random seed:\n%d\n\n%s".format(seed, seedLink)
+                            val shareText = "Let’s play a round Mental Math!\nClick the link below to start a fresh game with my settings and seed:\n%d\n\n%s".format(seed, seedLink)
                             Log.d("SettingsScreen", "Sharing seed game: $shareText")
                             putExtra(Intent.EXTRA_TEXT, shareText)
                         },context.getString(R.string.share_score))

@@ -169,7 +169,7 @@ class MainActivity : ComponentActivity() {
 
     private suspend fun handleDeepLinkIntent(intent: Intent?) {
         val data = intent?.data
-        val encodedSettingsString = data?.getQueryParameter("game")
+        val encodedSettingsString = data?.getQueryParameter("s")
         if (encodedSettingsString != null && isValidQueryParameter(encodedSettingsString)) {
             val linkGameRecord = deserialize(encodedSettingsString)
 
