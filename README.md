@@ -45,17 +45,17 @@ A simple and minimalist app design with no unnecessary elements or distractions,
 
 ## Screenshots
 <p align="center">
-  <img src="./fastlane/metadata/screenshots/en-US/1.png" alt="Main Screen" width="30%">
-  <img src="./fastlane/metadata/screenshots/en-US/2.png" alt="Main Screen" width="30%">
-  <img src="./fastlane/metadata/screenshots/en-US/3.png" alt="Main Screen" width="30%">
-  <img src="./fastlane/metadata/screenshots/en-US/4.png" alt="Main Screen" width="30%">
-  <img src="./fastlane/metadata/screenshots/en-US/5.png" alt="Main Screen" width="30%">
-  <img src="./fastlane/metadata/screenshots/en-US/6.png" alt="Main Screen" width="30%">
-  <img src="./fastlane/metadata/screenshots/en-US/7.png" alt="Main Screen" width="30%">
-  <img src="./fastlane/metadata/screenshots/en-US/8.png" alt="Main Screen" width="30%">
-  <img src="./fastlane/metadata/screenshots/en-US/9.png" alt="Main Screen" width="30%">
-  <img src="./fastlane/metadata/screenshots/en-US/10.png" alt="Main Screen" width="30%">
-  <img src="./fastlane/metadata/screenshots/en-US/11.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/9.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/10.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/11.png" alt="Main Screen" width="30%">
 </p>
 
 ## Privacy Policy

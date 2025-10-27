@@ -23,5 +23,3 @@ Open Source and Privacy
 
 Clean Design
 A simple and minimalist app design with no unnecessary elements or distractions, designed to keep your focus fully on math training. Supports both light and dark modes.
-
-Mental Math is designed with a simple idea in mind: focused, customizable mental arithmetic practice in a clean, privacy-respecting, open-source app.

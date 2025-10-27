@@ -1,0 +1,1 @@
+fixed different fontSizes for the thumbnail of the difficulty-slider
