@@ -50,7 +50,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -72,12 +71,10 @@ import com.helddertierwelt.mentalmath.presentation.component.statistics.DoneButt
 import com.helddertierwelt.mentalmath.presentation.component.statistics.SettingsAndStatsCard
 import com.helddertierwelt.mentalmath.presentation.component.statistics.StatisticsTopBar
 import com.helddertierwelt.mentalmath.presentation.component.statistics.TasksCard
-import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
-import com.helddertierwelt.mentalmath.presentation.theme.red
-import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.util.GameResultInfoGenerator.getGamePopUpInfo
 import com.helddertierwelt.mentalmath.util.SettingsLinkUtil
 import kotlinx.coroutines.launch
 import java.io.File
@@ -256,62 +253,23 @@ fun StatisticsScreen(
     )
 
     val showLinkGamePopUp by statisticsViewModel.showLinkGamePopUp.collectAsState()
-    val linkScore by statisticsViewModel.scoreFromLink.collectAsState()
     val seed by statisticsViewModel.seedFromLink.collectAsState()
+    val linkScore by statisticsViewModel.scoreFromLink.collectAsState()
     val currentScore = statisticsViewModel.lastGameRecord.collectAsState().value.totalScore
     if (showLinkGamePopUp) {
-        val (title, description) = if (linkScore < 0.0f) {
-            "Waiting for your opponent…" to "You: %.2f | Opponent: ??\nSeed: %d\n\nYou’ve set the bar! Let’s see if your opponent can catch up!".format(currentScore, seed)
-        } else if (linkScore == 0.0f) {
-            when{
-                currentScore > 0.0f -> "Easy win" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA win, but without a competition!".format(currentScore, linkScore, seed)
-                else -> "Anyone here?" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA point-less game!".format(currentScore, linkScore, seed)
-            }
-        } else when {
-            currentScore / linkScore > 1.05f -> "You won" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nThat was some serious mental math!".format(currentScore, linkScore, seed)
-            currentScore / linkScore > 1.0f -> "Close call" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA tight win, but it counts!".format(currentScore, linkScore, seed)
-            currentScore / linkScore == 1.0f -> "Draw" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA perfect tie - time for a decider!".format(currentScore, linkScore, seed)
-            currentScore / linkScore >= 0.95f -> "Too bad" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nA tight loss, but you almost had it!".format(currentScore, linkScore, seed)
-            else -> "Defeat" to "You: %.2f | Opponent: %.2f\nSeed: %d\n\nShake it off and give it another try!".format(currentScore, linkScore, seed)
-        }
-        val icon: Int
-        val color: Color
-        if (linkScore < 0.0f) {
-            icon = R.drawable.hourglass_bottom_24dp
-            color = blue
-        } else if (linkScore == 0.0f) {
-            if (currentScore > 0.0f) {
-                icon = R.drawable.favorite_24dp
-                color = red
-            } else {
-                icon = R.drawable.question_mark_24dp
-                color = blue
-            }
-        } else {
-            val ratio = currentScore / linkScore
-            if (ratio > 1.0f) {
-                icon = R.drawable.trophy_24dp
-                color = yellow
-            } else if (ratio == 1.0f) {
-                icon = R.drawable.partner_heart_24dp
-                color = green
-            } else {
-                icon = R.drawable.rainy_24dp
-                color = blue
-            }
-        }
+        val gamePopUpInfo = getGamePopUpInfo(currentScore, linkScore, seed)
         PopUp(
             titleSize = titleFontSize,
             descriptionSize = (0.018f * screenHeight.value).sp,
-            title = title,
-            description = description,
+            title = gamePopUpInfo.title,
+            description = gamePopUpInfo.description,
             confirmationText = "Share",
             cancelText = "Ok",
             icon = {
                 Icon(
-                    painter = painterResource(icon),
+                    painter = painterResource(gamePopUpInfo.icon),
                     contentDescription = "challenge result",
-                    tint = color,
+                    tint = gamePopUpInfo.color,
                     modifier = Modifier.size((0.1f * screenHeight.value).dp)
                 )
             },
@@ -324,8 +282,7 @@ fun StatisticsScreen(
                     scrollState.animateScrollTo(0)
                     val bitmap = captureSettingsCardBitmap()
                     if (bitmap != null) {
-                        val shareText = if (linkScore < 0.0f) { "%s\n\n%s".format(description,createLink()) } else { description }
-                        shareResult(context, bitmap, shareText)
+                        shareResult(context, bitmap, gamePopUpInfo.description)
                     } else {
                         Log.e("StatisticsScreen", "Bitmap could not be captured")
                     }
