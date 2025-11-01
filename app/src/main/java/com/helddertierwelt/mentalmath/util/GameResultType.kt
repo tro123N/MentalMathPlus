@@ -170,6 +170,9 @@ enum class GameResultType(
 
     fun getRandomDescription(currentScore: Float, linkScore: Float, seed: Long): String {
         val template = descriptions.random()
+        if (linkScore < 0.0f ) {
+            return template.format(currentScore, seed)
+        }
         return template.format(currentScore, linkScore, seed)
     }
 }
