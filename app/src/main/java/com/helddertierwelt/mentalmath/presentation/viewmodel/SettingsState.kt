@@ -27,15 +27,15 @@ data class SettingsState(
     val isModeEnabled: Boolean = true,
     val limit: Float = 2f,
 
-    val additionRange: Pair<Float, Float> = 1f to 3f,
-    val subtractionRange: Pair<Float, Float> = 1f to 3f,
-    val multiplicationRange: Pair<Float, Float> = 1f to 3f,
-    val divisionRange: Pair<Float, Float> = 1f to 3f,
+    val additionRange: Pair<Float, Float> = 2f to 4f,
+    val subtractionRange: Pair<Float, Float> = 2f to 4f,
+    val multiplicationRange: Pair<Float, Float> = 2f to 4f,
+    val divisionRange: Pair<Float, Float> = 2f to 4f,
 
-    val isAdditionEnabled: Boolean = true,
-    val isSubtractionEnabled: Boolean = true,
-    val isMultiplicationEnabled: Boolean = true,
-    val isDivisionEnabled: Boolean = true,
+    val isAdditionEnabled: Boolean = false,
+    val isSubtractionEnabled: Boolean = false,
+    val isMultiplicationEnabled: Boolean = false,
+    val isDivisionEnabled: Boolean = false,
 
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val isActiveScoreDefault: Boolean = false,
