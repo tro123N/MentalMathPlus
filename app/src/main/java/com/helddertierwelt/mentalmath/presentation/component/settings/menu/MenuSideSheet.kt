@@ -26,9 +26,10 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -36,7 +37,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -48,10 +51,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -90,6 +91,7 @@ fun MenuSideSheet(
     val iconSize = (0.032f * screenHeight.value).dp
     val logoSize = (0.11f * screenHeight.value).dp
     var isInteractionEnabled by remember { mutableStateOf(true) }
+    val scrollState = rememberScrollState()
 
     // Handle side sheet open/close animation
     LaunchedEffect(isSheetOpen) {
@@ -132,206 +134,204 @@ fun MenuSideSheet(
                 .fillMaxHeight()
                 .width(screenWidth * sheetWidthFactor)
                 .offset { IntOffset(offsetX.value.toInt(), 0) }
-                .pointerInput(Unit) {
-                    detectHorizontalDragGestures(
-                        onHorizontalDrag = { _, dragAmount ->
-                            val newOffset = (offsetX.value + dragAmount).coerceIn(
-                                minOffset,
-                                maxOffset
-                            )
-                            coroutineScope.launch {
-                                offsetX.snapTo(newOffset)
-                            }
-                        },
-                        onDragEnd = {
-                            if (offsetX.value < minOffset * (0.2f)) {
+                .draggable(
+                    orientation = Orientation.Horizontal,
+                    state = rememberDraggableState { delta ->
+                        val newOffset = (offsetX.value + delta).coerceIn(minOffset, maxOffset)
+                        coroutineScope.launch {
+                            offsetX.snapTo(newOffset)
+                        }
+                    },
+                    onDragStopped = {
+                        coroutineScope.launch {
+                            if (offsetX.value < minOffset * 0.2f) {
                                 onDismissRequested()
                             } else {
-                                coroutineScope.launch {
-                                    offsetX.animateTo(maxOffset)
-                                }
+                                offsetX.animateTo(maxOffset)
                             }
                         }
-                    )
-                },
+                    }
+                ),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             )
         ) {
-
-            Column(
-                modifier = Modifier
-                    .padding(4.dp, 12.dp),
-            ) {
-
-                // App Logo
-                LogoRow(logoSize, R.drawable.mental_math)
-
-                // Website Link
-                IntentRow(
-                    iconResId = R.drawable.info_24dp,
-                    contentDescription = "About",
-                    text = "About",
-                    fontSize = fontSize,
-                    iconSize = iconSize,
-                    isEnabled = true,
-                    intentProvider = {
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            "https://mental-math.codeberg.page".toUri()
-                        )
-                    },
-                    context = context
-                )
-
-                // Share Seed Game Link
-                IntentRow(
-                    iconResId = R.drawable.potted_plant_24dp,
-                    contentDescription = "Share Seed",
-                    text = "Share Seed",
-                    fontSize = fontSize,
-                    iconSize = iconSize,
-                    isEnabled = settingsViewModel.isAnyOperationEnabled(),
-                    intentProvider = {
-                        Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
-                            type = "text/plain"
-                            var seed: Long
-                            do {
-                                seed = SecureRandom().nextLong()
-                            } while (seed < 0)
-                            val seedLink = settingsViewModel.generateSeedLink(seed)
-                            val shareText = "Let’s play a round Mental Math!\nClick the link below to start a fresh game with my settings and seed:\n%d\n\n%s".format(seed, seedLink)
-                            Log.d("SettingsScreen", "Sharing seed game: $shareText")
-                            putExtra(Intent.EXTRA_TEXT, shareText)
-                        },context.getString(R.string.share_score))
-                    },
-                    context = context
-                )
-
-                // Dark Mode Toggle
-                DarkModeToggleRow(
-                    fontSize = fontSize,
-                    iconSize = iconSize,
-                    currentMode = settingsViewModel.settingsState.collectAsState().value.themeMode,
-                    onModeChange = { settingsViewModel.setThemeMode(it) }
-                )
-
-                // Source Code Link
-                IntentRow(
-                    iconResId = R.drawable.code_24dp,
-                    contentDescription = "Source Code",
-                    text = "Source Code",
-                    fontSize = fontSize,
-                    iconSize = iconSize,
-                    isEnabled = true,
-                    intentProvider = {
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            "https://codeberg.org/Mental-Math/MentalMath".toUri()
-                        )
-                    },
-                    context = context
-                )
-
-                // License Link
-                IntentRow(
-                    iconResId = R.drawable.balance_24dp,
-                    contentDescription = "License",
-                    text = "License",
-                    fontSize = fontSize,
-                    iconSize = iconSize,
-                    isEnabled = true,
-                    intentProvider = {
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            "https://codeberg.org/Mental-Math/MentalMath/src/branch/main/LICENSE.md".toUri()
-                        )
-                    },
-                    context = context
-                )
-
-                // Privacy Policy Link
-                IntentRow(
-                    iconResId = R.drawable.domino_mask_24dp,
-                    contentDescription = "Privacy Policy",
-                    text = "Privacy Policy",
-                    fontSize = fontSize,
-                    iconSize = iconSize,
-                    isEnabled = true,
-                    intentProvider = {
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            "https://codeberg.org/Mental-Math/MentalMath/src/branch/main/PRIVACY_POLICY.md".toUri()
-                        )
-                    },
-                    context = context
-                )
-
-                // Feedback Link
-                IntentRow(
-                    iconResId = R.drawable.feedback_24dp,
-                    contentDescription = "Feedback",
-                    text = "Feed\u200Bback",
-                    fontSize = fontSize,
-                    iconSize = iconSize,
-                    isEnabled = true,
-                    intentProvider = {
-                        Intent(Intent.ACTION_SEND)
-                            .apply {
-                                selector = Intent(Intent.ACTION_SENDTO, "mailto:".toUri())
-                                putExtra(
-                                    Intent.EXTRA_EMAIL,
-                                    arrayOf("mental_math_feedback@pm.me")
-                                )
-                                putExtra(Intent.EXTRA_SUBJECT, "Mental Math: Feedback")
-                            }
-                    },
-                    context = context
-                )
-
-                // Recommendation Link
-                IntentRow(
-                    iconResId = R.drawable.thumb_up_24dp,
-                    contentDescription = "Recommend",
-                    text = "Recom\u200Bmend",
-                    fontSize = fontSize,
-                    iconSize = iconSize,
-                    isEnabled = true,
-                    intentProvider = {
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            "market://details?id=com.helddertierwelt.mentalmath".toUri()
-                        )
-                    },
-                    context = context
-                )
-
-                // Donation Link
-                IntentRow(
-                    iconResId = R.drawable.volunteer_activism_24dp,
-                    contentDescription = "Donate",
-                    text = "Donate",
-                    fontSize = fontSize,
-                    iconSize = iconSize,
-                    isEnabled = true,
-                    intentProvider = {
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            "https://ko-fi.com/mental_math".toUri()
-                        )
-                    },
-                    context = context
-                )
-            }
-
             Column(
                 modifier = Modifier
                     .padding(4.dp, 12.dp)
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.Start
+                    .fillMaxSize()
             ) {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(scrollState)
+                        .weight(1f)
+                ) {
+
+                    // App Logo
+                    LogoRow(logoSize, R.drawable.mental_math)
+
+                    // Website Link
+                    IntentRow(
+                        iconResId = R.drawable.info_24dp,
+                        contentDescription = "About",
+                        text = "About",
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        isEnabled = true,
+                        intentProvider = {
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                "https://mental-math.codeberg.page".toUri()
+                            )
+                        },
+                        context = context
+                    )
+
+                    // Share Seed Game Link
+                    IntentRow(
+                        iconResId = R.drawable.potted_plant_24dp,
+                        contentDescription = "Share Seed",
+                        text = "Share Seed",
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        isEnabled = settingsViewModel.isAnyOperationEnabled(),
+                        intentProvider = {
+                            Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                var seed: Long
+                                do {
+                                    seed = SecureRandom().nextLong()
+                                } while (seed < 0)
+                                val seedLink = settingsViewModel.generateSeedLink(seed)
+                                val shareText =
+                                    "Let’s play a round Mental Math!\nClick the link below to start a fresh game with my settings and seed:\n%d\n\n%s".format(
+                                        seed,
+                                        seedLink
+                                    )
+                                Log.d("SettingsScreen", "Sharing seed game: $shareText")
+                                putExtra(Intent.EXTRA_TEXT, shareText)
+                            }, context.getString(R.string.share_score))
+                        },
+                        context = context
+                    )
+
+                    // Dark Mode Toggle
+                    DarkModeToggleRow(
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        currentMode = settingsViewModel.settingsState.collectAsState().value.themeMode,
+                        onModeChange = { settingsViewModel.setThemeMode(it) }
+                    )
+
+                    // Source Code Link
+                    IntentRow(
+                        iconResId = R.drawable.code_24dp,
+                        contentDescription = "Source Code",
+                        text = "Source Code",
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        isEnabled = true,
+                        intentProvider = {
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                "https://codeberg.org/Mental-Math/MentalMath".toUri()
+                            )
+                        },
+                        context = context
+                    )
+
+                    // License Link
+                    IntentRow(
+                        iconResId = R.drawable.balance_24dp,
+                        contentDescription = "License",
+                        text = "License",
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        isEnabled = true,
+                        intentProvider = {
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                "https://codeberg.org/Mental-Math/MentalMath/src/branch/main/LICENSE.md".toUri()
+                            )
+                        },
+                        context = context
+                    )
+
+                    // Privacy Policy Link
+                    IntentRow(
+                        iconResId = R.drawable.domino_mask_24dp,
+                        contentDescription = "Privacy Policy",
+                        text = "Privacy Policy",
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        isEnabled = true,
+                        intentProvider = {
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                "https://codeberg.org/Mental-Math/MentalMath/src/branch/main/PRIVACY_POLICY.md".toUri()
+                            )
+                        },
+                        context = context
+                    )
+
+                    // Feedback Link
+                    IntentRow(
+                        iconResId = R.drawable.feedback_24dp,
+                        contentDescription = "Feedback",
+                        text = "Feed\u200Bback",
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        isEnabled = true,
+                        intentProvider = {
+                            Intent(Intent.ACTION_SEND)
+                                .apply {
+                                    selector = Intent(Intent.ACTION_SENDTO, "mailto:".toUri())
+                                    putExtra(
+                                        Intent.EXTRA_EMAIL,
+                                        arrayOf("mental_math_feedback@pm.me")
+                                    )
+                                    putExtra(Intent.EXTRA_SUBJECT, "Mental Math: Feedback")
+                                }
+                        },
+                        context = context
+                    )
+
+                    // Recommendation Link
+                    IntentRow(
+                        iconResId = R.drawable.thumb_up_24dp,
+                        contentDescription = "Recommend",
+                        text = "Recom\u200Bmend",
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        isEnabled = true,
+                        intentProvider = {
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                "market://details?id=com.helddertierwelt.mentalmath".toUri()
+                            )
+                        },
+                        context = context
+                    )
+
+                    // Donation Link
+                    IntentRow(
+                        iconResId = R.drawable.volunteer_activism_24dp,
+                        contentDescription = "Donate",
+                        text = "Donate",
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        isEnabled = true,
+                        intentProvider = {
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                "https://ko-fi.com/mental_math".toUri()
+                            )
+                        },
+                        context = context
+                    )
+                }
+
                 // Clear Data Button
                 ButtonRow(
                     iconResId = R.drawable.delete_24dp,

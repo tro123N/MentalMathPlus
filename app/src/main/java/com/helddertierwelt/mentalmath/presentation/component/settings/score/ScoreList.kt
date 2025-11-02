@@ -24,7 +24,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,8 +49,11 @@ fun ScoreList(
     onClick: (GameRecord) -> Unit,
 ) {
 
+    val scrollState = rememberScrollState()
     Column(
-        modifier = Modifier.padding(12.dp, 0.dp, 12.dp, 12.dp),
+        modifier = Modifier
+            .verticalScroll(scrollState)
+            .padding(12.dp, 0.dp, 12.dp, 12.dp),
         horizontalAlignment = Alignment.End
     ) {
         gameRecords.forEachIndexed { index, game ->
@@ -80,7 +85,9 @@ fun ScoreList(
                     color = color,
                     fontSize = fontSizeScore,
                     textAlign = TextAlign.End,
-                    modifier = Modifier.padding(12.dp, 0.dp).weight(0.67f)
+                    modifier = Modifier
+                        .padding(12.dp, 0.dp)
+                        .weight(0.67f)
                 )
             }
         }

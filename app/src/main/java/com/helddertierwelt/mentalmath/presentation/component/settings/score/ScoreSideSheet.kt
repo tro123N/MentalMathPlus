@@ -24,7 +24,9 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -56,7 +58,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -146,28 +147,24 @@ fun ScoreSideSheet(
                 .fillMaxHeight()
                 .width(screenWidth * sheetWidthFactor)
                 .offset { IntOffset(offsetX.value.toInt(), 0) }
-                .pointerInput(Unit) {
-                    detectHorizontalDragGestures(
-                        onHorizontalDrag = { _, dragAmount ->
-                            val newOffset = (offsetX.value + dragAmount).coerceIn(
-                                minOffset,
-                                maxOffset
-                            )
-                            coroutineScope.launch {
-                                offsetX.snapTo(newOffset)
-                            }
-                        },
-                        onDragEnd = {
-                            if (offsetX.value > minOffset+maxOffset * sheetWidthFactor * 0.2f) {
+                .draggable(
+                    orientation = Orientation.Horizontal,
+                    state = rememberDraggableState { delta ->
+                        val newOffset = (offsetX.value + delta).coerceIn(minOffset, maxOffset)
+                        coroutineScope.launch {
+                            offsetX.snapTo(newOffset)
+                        }
+                    },
+                    onDragStopped = {
+                        coroutineScope.launch {
+                            if (offsetX.value > minOffset + maxOffset * sheetWidthFactor * 0.2f) {
                                 onDismissRequested()
                             } else {
-                                coroutineScope.launch {
-                                    offsetX.animateTo(minOffset)
-                                }
+                                offsetX.animateTo(minOffset)
                             }
                         }
-                    )
-                },
+                    }
+                ),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
@@ -177,18 +174,19 @@ fun ScoreSideSheet(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-
                 // load game records based on current settings
                 val bestActiveGames by settingsViewModel.bestActiveGames.collectAsState()
                 val bestTotalGames by settingsViewModel.bestTotalGames.collectAsState()
                 val lastGameId = statisticsViewModel.lastGameRecord.collectAsState().value.id
 
                 // determine which score type is active
-                val activeScoreDefault = settingsViewModel.settingsState.collectAsState().value.isActiveScoreDefault
+                val activeScoreDefault =
+                    settingsViewModel.settingsState.collectAsState().value.isActiveScoreDefault
                 val scoreTitle = if (activeScoreDefault) "Active\nScore" else "Total  \nScore"
                 val iconColor = if (activeScoreDefault) green else yellow
                 val bestGames = if (activeScoreDefault) bestActiveGames else bestTotalGames
-                val scoreSelector = if (activeScoreDefault) { gameRecord: GameRecord -> gameRecord.activeScore } else { gameRecord: GameRecord -> gameRecord.totalScore }
+                val scoreSelector =
+                    if (activeScoreDefault) { gameRecord: GameRecord -> gameRecord.activeScore } else { gameRecord: GameRecord -> gameRecord.totalScore }
 
                 if (!bestActiveGames.isEmpty() || !bestTotalGames.isEmpty()) {
                     Row(
