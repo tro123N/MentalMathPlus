@@ -1,0 +1,5 @@
+- scrollable menu and leaderboard for smaller screens
+- more text-variants for the popup after playing a game link
+- disable "share seed" when no operation is selected
+- disabled all operations for the initial state
+- changed difficulty ranges for the initial state
