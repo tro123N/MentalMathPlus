@@ -90,33 +90,35 @@ object SettingsLinkUtil {
             }
             Log.d("SettingsLinkUtil", "bigIntString: $bigIntString")
 
-            val isModeEnabled = bigIntString.substring(0, 1)
+            val isModeEnabled = bigIntString.take(1)
             Log.d("SettingsLinkUtil", "isModeEnabled: $isModeEnabled")
             if (isModeEnabled != "0" && isModeEnabled != "1") return false
 
-            val modeLimit = bigIntString.substring(1, 2).toInt()
+            val modeLimit = bigIntString[1].digitToInt()
             Log.d("SettingsLinkUtil", "modeLimit: $modeLimit")
             if (modeLimit !in 1..5) return false
 
-            val addStart = bigIntString.substring(2, 3).toInt()
-            val addEnd = bigIntString.substring(3, 4).toInt()
+            val addStart = bigIntString[2].digitToInt()
+            val addEnd = bigIntString[3].digitToInt()
             Log.d("SettingsLinkUtil", "addStart: $addStart, addEnd: $addEnd")
             if (addStart !in 0..9 || addEnd !in 0..9 || addStart > addEnd) return false
 
-            val subStart = bigIntString.substring(4, 5).toInt()
-            val subEnd = bigIntString.substring(5, 6).toInt()
+            val subStart = bigIntString[4].digitToInt()
+            val subEnd = bigIntString[5].digitToInt()
             Log.d("SettingsLinkUtil", "subStart: $subStart, subEnd: $subEnd")
             if (subStart !in 0..9 || subEnd !in 0..9 || subStart > subEnd) return false
 
-            val mulStart = bigIntString.substring(6, 7).toInt()
-            val mulEnd = bigIntString.substring(7, 8).toInt()
+            val mulStart = bigIntString[6].digitToInt()
+            val mulEnd = bigIntString[7].digitToInt()
             Log.d("SettingsLinkUtil", "mulStart: $mulStart, mulEnd: $mulEnd")
             if (mulStart !in 0..9 || mulEnd !in 0..9 || mulStart > mulEnd) return false
 
-            val divStart = bigIntString.substring(8, 9).toInt()
-            val divEnd = bigIntString.substring(9, 10).toInt()
+            val divStart = bigIntString[8].digitToInt()
+            val divEnd = bigIntString[9].digitToInt()
             Log.d("SettingsLinkUtil", "divStart: $divStart, divEnd: $divEnd")
             if (divStart !in 0..9 || divEnd !in 0..9 || divStart > divEnd) return false
+
+            if (addStart == 0 && subStart == 0 && mulStart == 0 && divStart == 0) return false
 
             val seed = bigIntString.substring(10, 29)
             Log.d("SettingsLinkUtil", "seed: $seed")
@@ -126,7 +128,7 @@ object SettingsLinkUtil {
                 val totalScoreRaw = bigIntString.substring(29, 35).toInt()
                 val totalScore = totalScoreRaw / 100f
                 Log.d("SettingsLinkUtil", "totalScoreRaw: $totalScoreRaw, totalScore: $totalScore")
-                if (totalScore < 0f || totalScore > 9999.99f) return false
+                if (totalScore !in 0f..9999.99f) return false
             }
 
             return true

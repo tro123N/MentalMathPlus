@@ -33,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
@@ -47,16 +48,19 @@ fun IntentRow(
     fontSize: TextUnit,
     iconSize: Dp,
     intentProvider: () -> Intent,
-    context: Context
+    context: Context,
+    isEnabled: Boolean
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clip(RoundedCornerShape(16.dp))
-            .clickable {
-                context.startActivity(intentProvider())
-            },
+            .clickable(
+                enabled = isEnabled,
+                onClick = { context.startActivity(intentProvider()) }
+            )
+            .alpha(if (isEnabled) 1f else 0.4f),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Spacer(modifier = Modifier.width(16.dp))

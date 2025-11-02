@@ -127,6 +127,10 @@ class SettingsViewModel @Inject constructor(
         saveState()
     }
 
+    fun isAnyOperationEnabled(): Boolean {
+        return settingsState.value.isAdditionEnabled || settingsState.value.isSubtractionEnabled || settingsState.value.isMultiplicationEnabled || settingsState.value.isDivisionEnabled;
+    }
+
     fun toggleMenuOpen() {
         if (_isScoreOpen.value) {
             _isScoreOpen.value = false

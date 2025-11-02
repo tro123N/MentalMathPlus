@@ -60,7 +60,7 @@ fun StartButton(
                 painter = painterResource(R.drawable.play_arrow_24dp),
                 contentDescription = "Play",
                 modifier = Modifier.size(iconSize),
-                tint = if (isEnabled) green else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                tint = if (isEnabled) green else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
             )
             Text(
                 text = stringResource(R.string.start),

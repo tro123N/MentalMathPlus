@@ -175,6 +175,7 @@ fun MenuSideSheet(
                     text = "About",
                     fontSize = fontSize,
                     iconSize = iconSize,
+                    isEnabled = true,
                     intentProvider = {
                         Intent(
                             Intent.ACTION_VIEW,
@@ -191,6 +192,7 @@ fun MenuSideSheet(
                     text = "Share Seed",
                     fontSize = fontSize,
                     iconSize = iconSize,
+                    isEnabled = settingsViewModel.isAnyOperationEnabled(),
                     intentProvider = {
                         Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
                             type = "text/plain"
@@ -222,6 +224,7 @@ fun MenuSideSheet(
                     text = "Source Code",
                     fontSize = fontSize,
                     iconSize = iconSize,
+                    isEnabled = true,
                     intentProvider = {
                         Intent(
                             Intent.ACTION_VIEW,
@@ -238,6 +241,7 @@ fun MenuSideSheet(
                     text = "License",
                     fontSize = fontSize,
                     iconSize = iconSize,
+                    isEnabled = true,
                     intentProvider = {
                         Intent(
                             Intent.ACTION_VIEW,
@@ -254,6 +258,7 @@ fun MenuSideSheet(
                     text = "Privacy Policy",
                     fontSize = fontSize,
                     iconSize = iconSize,
+                    isEnabled = true,
                     intentProvider = {
                         Intent(
                             Intent.ACTION_VIEW,
@@ -270,6 +275,7 @@ fun MenuSideSheet(
                     text = "Feed\u200Bback",
                     fontSize = fontSize,
                     iconSize = iconSize,
+                    isEnabled = true,
                     intentProvider = {
                         Intent(Intent.ACTION_SEND)
                             .apply {
@@ -291,6 +297,7 @@ fun MenuSideSheet(
                     text = "Recom\u200Bmend",
                     fontSize = fontSize,
                     iconSize = iconSize,
+                    isEnabled = true,
                     intentProvider = {
                         Intent(
                             Intent.ACTION_VIEW,
@@ -307,6 +314,7 @@ fun MenuSideSheet(
                     text = "Donate",
                     fontSize = fontSize,
                     iconSize = iconSize,
+                    isEnabled = true,
                     intentProvider = {
                         Intent(
                             Intent.ACTION_VIEW,

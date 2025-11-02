@@ -78,7 +78,7 @@ fun SettingsTopBar(
                     painterResource(R.drawable.leaderboard_24dp),
                     contentDescription = "share",
                     tint = if (!isGreydOut) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(
-                        alpha = 0.38f
+                        alpha = 0.4f
                     ),
                     modifier = Modifier.size(iconSize),
                 )

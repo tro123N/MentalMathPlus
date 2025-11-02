@@ -192,28 +192,16 @@ class GameViewModel @Inject constructor(
         val settingsState = settingsViewModel.settingsState.value
         val enabledOperators: MutableMap<Operation, Pair<Float, Float>> = mutableMapOf()
         if (settingsState.isAdditionEnabled) {
-            enabledOperators.put(
-                Operation.ADDITION,
-                settingsViewModel.settingsState.value.additionRange
-            )
+            enabledOperators[Operation.ADDITION] = settingsViewModel.settingsState.value.additionRange
         }
         if (settingsState.isSubtractionEnabled) {
-            enabledOperators.put(
-                Operation.SUBTRACTION,
-                settingsViewModel.settingsState.value.subtractionRange
-            )
+            enabledOperators[Operation.SUBTRACTION] = settingsViewModel.settingsState.value.subtractionRange
         }
         if (settingsState.isMultiplicationEnabled) {
-            enabledOperators.put(
-                Operation.MULTIPLICATION,
-                settingsViewModel.settingsState.value.multiplicationRange
-            )
+            enabledOperators[Operation.MULTIPLICATION] = settingsViewModel.settingsState.value.multiplicationRange
         }
         if (settingsState.isDivisionEnabled) {
-            enabledOperators.put(
-                Operation.DIVISION,
-                settingsViewModel.settingsState.value.divisionRange
-            )
+            enabledOperators[Operation.DIVISION] = settingsViewModel.settingsState.value.divisionRange
         }
         saveState(
             _gameState.value.copy(
