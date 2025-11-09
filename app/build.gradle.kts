@@ -90,6 +90,11 @@ android {
     }
 }
 
+tasks.withType<Zip>().configureEach {
+    isPreserveFileTimestamps = false
+    isReproducibleFileOrder = true
+}
+
 dependencies {
 
     implementation(libs.accompanist.systemuicontroller)
