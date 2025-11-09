@@ -122,4 +122,17 @@ interface GameRecordDao {
 
     @Query("DELETE FROM game_records")
     suspend fun deleteAll()
+
+    @Query(
+        """UPDATE game_records SET 
+        totalAnswers = 0,
+        correctAnswers = 0,
+        activeTime = 0,
+        totalTime = 0,
+        activeScore = 0,
+        totalScore = 0,
+        taskResults = '[]'
+        """
+    )
+    suspend fun resetAllRecords()
 }

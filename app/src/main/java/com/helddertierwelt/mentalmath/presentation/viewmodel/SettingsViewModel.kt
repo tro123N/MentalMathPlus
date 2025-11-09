@@ -254,14 +254,14 @@ class SettingsViewModel @Inject constructor(
         val settingsStringByteArray = listOf(
             if (state.isModeEnabled) "1" else "0",
             state.limit.toInt().toString(),
-            state.additionRange.first.toInt().toString(),
-            state.additionRange.second.toInt().toString(),
-            state.subtractionRange.first.toInt().toString(),
-            state.subtractionRange.second.toInt().toString(),
-            state.multiplicationRange.first.toInt().toString(),
-            state.multiplicationRange.second.toInt().toString(),
-            state.divisionRange.first.toInt().toString(),
-            state.divisionRange.second.toInt().toString(),
+            if (state.isAdditionEnabled) state.additionRange.first.toInt().toString() else "0",
+            if (state.isAdditionEnabled) state.additionRange.second.toInt().toString() else "0",
+            if (state.isSubtractionEnabled) state.subtractionRange.first.toInt().toString() else "0",
+            if (state.isSubtractionEnabled) state.subtractionRange.second.toInt().toString() else "0",
+            if (state.isMultiplicationEnabled) state.multiplicationRange.first.toInt().toString() else "0",
+            if (state.isMultiplicationEnabled) state.multiplicationRange.second.toInt().toString() else "0",
+            if (state.isDivisionEnabled) state.divisionRange.first.toInt().toString() else "0",
+            if (state.isDivisionEnabled) state.divisionRange.second.toInt().toString() else "0",
             "%019d".format(seed)
         ).joinToString("").toBigInteger().toByteArray()
 

@@ -86,9 +86,9 @@ class GameRecordRepository @Inject constructor(
         _loadedGameRecord.value = gameRecord
     }
 
-    suspend fun insertGameRecord(gameRecord: GameRecord) {
+    suspend fun insertGameRecord(gameRecord: GameRecord):Long {
         val newId = gameRecordDao.insert(gameRecord)
-        setLastGameRecord(gameRecord.copy(id = newId.toInt()))
+        return newId
     }
 
     suspend fun findBestActiveGameRecords(
@@ -163,6 +163,10 @@ class GameRecordRepository @Inject constructor(
         gameRecordDao.deleteAll()
     }
 
+    suspend fun resetAllGameRecords() {
+        gameRecordDao.resetAllRecords()
+    }
+
     fun resetLastGameRecord() {
         _lastGameRecord.value = GameRecord(
             id = -1,
@@ -212,7 +216,7 @@ class GameRecordRepository @Inject constructor(
     }
 
     suspend fun reset() {
-        deleteAllGameRecords()
+        resetAllGameRecords()
         resetLastGameRecord()
         resetLoadedGameRecord()
     }

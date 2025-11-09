@@ -271,7 +271,7 @@ fun GameScreen(
             onDismissRequest = { showDialog = false },
             onConfirm = {
                 showDialog = false
-                gameViewModel.pauseTimer()
+                gameViewModel.cancelGame()
                 navController.navigate("settings") {
                     popUpTo(0) { inclusive = true }
                     launchSingleTop = true

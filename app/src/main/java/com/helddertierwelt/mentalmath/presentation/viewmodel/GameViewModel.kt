@@ -142,24 +142,28 @@ class GameViewModel @Inject constructor(
         val correctResult = calculateResult()
         val userInput = _gameState.value.input.toIntOrNull()
         val newState: GameState
-        if (userInput == null) {
-            newState = _gameState.value.copy(
-                skippedAnswers = _gameState.value.skippedAnswers + 1,
-                totalAnswers = _gameState.value.totalAnswers + 1,
-                isCorrect = null
-            )
-        } else if (userInput == correctResult) {
-            newState = _gameState.value.copy(
-                correctAnswers = _gameState.value.correctAnswers + 1,
-                totalAnswers = _gameState.value.totalAnswers + 1,
-                isCorrect = true
-            )
-        } else {
-            newState = _gameState.value.copy(
-                wrongAnswers = _gameState.value.wrongAnswers + 1,
-                totalAnswers = _gameState.value.totalAnswers + 1,
-                isCorrect = false
-            )
+        when (userInput) {
+            null -> {
+                newState = _gameState.value.copy(
+                    skippedAnswers = _gameState.value.skippedAnswers + 1,
+                    totalAnswers = _gameState.value.totalAnswers + 1,
+                    isCorrect = null
+                )
+            }
+            correctResult -> {
+                newState = _gameState.value.copy(
+                    correctAnswers = _gameState.value.correctAnswers + 1,
+                    totalAnswers = _gameState.value.totalAnswers + 1,
+                    isCorrect = true
+                )
+            }
+            else -> {
+                newState = _gameState.value.copy(
+                    wrongAnswers = _gameState.value.wrongAnswers + 1,
+                    totalAnswers = _gameState.value.totalAnswers + 1,
+                    isCorrect = false
+                )
+            }
         }
         saveState(newState)
     }
@@ -265,7 +269,28 @@ class GameViewModel @Inject constructor(
         )
 
         viewModelScope.launch(Dispatchers.IO) {
-            gameRecordRepository.insertGameRecord(lastGame)
+            val newId = gameRecordRepository.insertGameRecord(lastGame)
+            gameRecordRepository.setLastGameRecord(lastGame.copy(id = newId.toInt()))
+        }
+    }
+
+    fun saveCancelledGameRecord() {
+        val cancelledGame = GameRecord(
+            isModeEnabled = _gameState.value.isModeEnabled,
+            modeLimit = _gameState.value.modeLimit,
+            additionRangeStart = _gameState.value.enabledOperators[Operation.ADDITION]?.first?.toInt() ?: 0,
+            additionRangeEnd = _gameState.value.enabledOperators[Operation.ADDITION]?.second?.toInt() ?: 0,
+            subtractionRangeStart = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.first?.toInt() ?: 0,
+            subtractionRangeEnd = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.second?.toInt() ?: 0,
+            multiplicationRangeStart = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.first?.toInt() ?: 0,
+            multiplicationRangeEnd = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.second?.toInt() ?: 0,
+            divisionRangeStart = _gameState.value.enabledOperators[Operation.DIVISION]?.first?.toInt() ?: 0,
+            divisionRangeEnd = _gameState.value.enabledOperators[Operation.DIVISION]?.second?.toInt() ?: 0,
+            seed = _gameState.value.seed
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            gameRecordRepository.insertGameRecord(cancelledGame)
         }
     }
 
@@ -332,6 +357,13 @@ class GameViewModel @Inject constructor(
         saveGameRecord()
         saveState(_gameState.value.copy(isGameStarted = false))
     }
+
+    fun cancelGame() {
+        pauseTimer()
+        saveCancelledGameRecord()
+        saveState(_gameState.value.copy(isGameStarted = false))
+    }
+
 
     override fun onPause(owner: LifecycleOwner) {
         super.onPause(owner)

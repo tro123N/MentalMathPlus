@@ -64,7 +64,7 @@ fun GameTopBar(
         navigationIcon = {
             IconButton(
                 onClick = {
-                    gameViewModel.pauseTimer()
+                    gameViewModel.cancelGame()
                     navController.navigate("settings") {
                         popUpTo(0) { inclusive = true }
                         launchSingleTop = true
