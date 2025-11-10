@@ -224,6 +224,14 @@ fun MenuSideSheet(
                         onModeChange = { settingsViewModel.setThemeMode(it) }
                     )
 
+                    // Input Layout Toggle
+                    InputLayoutToggleRow(
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        isNumpad = settingsViewModel.settingsState.collectAsState().value.isNumpadDefault,
+                        onClick = { settingsViewModel.toggleLayout() }
+                    )
+
                     // Source Code Link
                     IntentRow(
                         iconResId = R.drawable.code_24dp,

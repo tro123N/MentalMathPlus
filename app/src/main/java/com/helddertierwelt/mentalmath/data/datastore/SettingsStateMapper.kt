@@ -43,6 +43,7 @@ fun SettingsState.toProto(): SettingsStateProto {
         .setIsMultiplyEnabled(isMultiplicationEnabled)
         .setIsDivideEnabled(isDivisionEnabled)
         .setIsActiveScoreDefault(isActiveScoreDefault)
+        .setIsNumpadDefault(isNumpadDefault)
         .setThemeMode(
             when (themeMode) {
                 ThemeMode.SYSTEM -> SYSTEM
@@ -66,6 +67,7 @@ fun SettingsStateProto.toSettingsState(): SettingsState {
         isMultiplicationEnabled = isMultiplyEnabled,
         isDivisionEnabled = isDivideEnabled,
         isActiveScoreDefault = isActiveScoreDefault,
+        isNumpadDefault = isNumpadDefault,
         themeMode = when (themeMode) {
             LIGHT -> ThemeMode.LIGHT
             DARK -> ThemeMode.DARK

@@ -160,6 +160,12 @@ class SettingsViewModel @Inject constructor(
         saveState()
     }
 
+    fun toggleLayout() {
+        _settingsState.value =
+            _settingsState.value.copy(isNumpadDefault = !_settingsState.value.isNumpadDefault)
+        saveState()
+    }
+
     fun resetSettings() {
         _settingsState.value = SettingsState()
         _isLoaded.value = false

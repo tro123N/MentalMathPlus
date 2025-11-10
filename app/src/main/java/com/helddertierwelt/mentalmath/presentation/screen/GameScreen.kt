@@ -98,6 +98,8 @@ fun GameScreen(
     // variables
     val settingsState = settingsViewModel.settingsState.collectAsState().value
     val gameState = gameViewModel.gameState.collectAsState().value
+    val upperNumberRow = if (settingsState.isNumpadDefault) 7..9 else 1..3
+    val lowerNumberRow = if (settingsState.isNumpadDefault) 1..3 else 7..9
 
     LaunchedEffect(Unit) {
         gameViewModel.startTimerIfNeeded()
@@ -163,7 +165,7 @@ fun GameScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        (1..3).forEach { number ->
+                        upperNumberRow.forEach { number ->
                             NumberButton(
                                 number = number,
                                 onClick = { gameViewModel.appendToInput(number) },
@@ -191,7 +193,7 @@ fun GameScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        (7..9).forEach { number ->
+                        (lowerNumberRow).forEach { number ->
                             NumberButton(
                                 number = number,
                                 onClick = { gameViewModel.appendToInput(number) },

@@ -4,5 +4,7 @@
 - disabled all operations for the initial state
 - changed difficulty ranges for the initial state
 - fixed bug for "share seed" button, that disabled operations  were not applied in the link.
-- reset only the scores to zero when the app is reset, instead of deleting all games entirely. so that a already played settings-seed combination cannot be restarted.
-- games that are canceled are also saved in the database so that a already played settings-seed combination cannot be restarted.
+- reset only the scores to zero when the app is reset, instead of deleting all games entirely. so that an already played settings-seed combination cannot be restarted.
+- games that are canceled are also saved in the database so that an already played settings-seed combination cannot be restarted.
+- changed minSdk to 24 to increase compatibility and reduce size
+- update dependencies
