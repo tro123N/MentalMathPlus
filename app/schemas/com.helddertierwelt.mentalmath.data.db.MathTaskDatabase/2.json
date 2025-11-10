@@ -1,0 +1,181 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "8681a990df86e7e79c3443e50f01f4f9",
+    "entities": [
+      {
+        "tableName": "tasks_addition",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`difficulty` INTEGER NOT NULL, `operand1` INTEGER NOT NULL, `operand2` INTEGER NOT NULL, PRIMARY KEY(`operand1`, `operand2`))",
+        "fields": [
+          {
+            "fieldPath": "difficulty",
+            "columnName": "difficulty",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "operand1",
+            "columnName": "operand1",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "operand2",
+            "columnName": "operand2",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "operand1",
+            "operand2"
+          ]
+        },
+        "indices": [
+          {
+            "name": "idx_difficulty_addition",
+            "unique": false,
+            "columnNames": [
+              "difficulty"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `idx_difficulty_addition` ON `${TABLE_NAME}` (`difficulty`)"
+          }
+        ]
+      },
+      {
+        "tableName": "tasks_subtraction",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`difficulty` INTEGER NOT NULL, `operand1` INTEGER NOT NULL, `operand2` INTEGER NOT NULL, PRIMARY KEY(`operand1`, `operand2`))",
+        "fields": [
+          {
+            "fieldPath": "difficulty",
+            "columnName": "difficulty",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "operand1",
+            "columnName": "operand1",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "operand2",
+            "columnName": "operand2",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "operand1",
+            "operand2"
+          ]
+        },
+        "indices": [
+          {
+            "name": "idx_difficulty_subtraction",
+            "unique": false,
+            "columnNames": [
+              "difficulty"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `idx_difficulty_subtraction` ON `${TABLE_NAME}` (`difficulty`)"
+          }
+        ]
+      },
+      {
+        "tableName": "tasks_multiplication",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`difficulty` INTEGER NOT NULL, `operand1` INTEGER NOT NULL, `operand2` INTEGER NOT NULL, PRIMARY KEY(`operand1`, `operand2`))",
+        "fields": [
+          {
+            "fieldPath": "difficulty",
+            "columnName": "difficulty",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "operand1",
+            "columnName": "operand1",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "operand2",
+            "columnName": "operand2",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "operand1",
+            "operand2"
+          ]
+        },
+        "indices": [
+          {
+            "name": "idx_difficulty_multiplication",
+            "unique": false,
+            "columnNames": [
+              "difficulty"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `idx_difficulty_multiplication` ON `${TABLE_NAME}` (`difficulty`)"
+          }
+        ]
+      },
+      {
+        "tableName": "tasks_division",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`difficulty` INTEGER NOT NULL, `operand1` INTEGER NOT NULL, `operand2` INTEGER NOT NULL, PRIMARY KEY(`operand1`, `operand2`))",
+        "fields": [
+          {
+            "fieldPath": "difficulty",
+            "columnName": "difficulty",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "operand1",
+            "columnName": "operand1",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "operand2",
+            "columnName": "operand2",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "operand1",
+            "operand2"
+          ]
+        },
+        "indices": [
+          {
+            "name": "idx_difficulty_division",
+            "unique": false,
+            "columnNames": [
+              "difficulty"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `idx_difficulty_division` ON `${TABLE_NAME}` (`difficulty`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8681a990df86e7e79c3443e50f01f4f9')"
+    ]
+  }
+}
