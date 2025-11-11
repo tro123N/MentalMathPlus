@@ -32,7 +32,7 @@ interface MultiplicationTaskDao {
         lastOperand2: Int
     ): Int
 
-    @Query("SELECT * FROM tasks_multiplication WHERE difficulty = :difficulty  AND (operand1 <> :lastOperand1 OR operand2 <> :lastOperand2) LIMIT 1 OFFSET :offset")
+    @Query("SELECT * FROM tasks_multiplication WHERE difficulty = :difficulty AND (operand1 <> :lastOperand1 OR operand2 <> :lastOperand2) LIMIT 1 OFFSET :offset")
     suspend fun getMultiplicationTaskByDifficultyWithOffset(
         difficulty: Int,
         offset: Int,

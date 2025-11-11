@@ -51,7 +51,7 @@ fun StatisticsTopBar(
         title = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(start= 16.dp)
+                modifier = Modifier.padding(start = 16.dp)
             ) {
                 Text(text = stringResource(id = titleId), fontSize = titleFontSize)
             }

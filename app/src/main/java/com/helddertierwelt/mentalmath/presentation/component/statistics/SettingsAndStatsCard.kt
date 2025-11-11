@@ -93,7 +93,7 @@ fun SettingsAndStatsCard(
             ) {
                 Text(
                     text = "Seed: %d".format(statisticsGameRecord.seed),
-                    fontSize = fontSize/1.6f,
+                    fontSize = fontSize / 1.6f,
                     modifier = modifier.padding(horizontal = 16.dp)
                 )
             }

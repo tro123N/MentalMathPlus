@@ -58,7 +58,7 @@ fun InputLayoutToggleRow(
     ) {
         Spacer(modifier = Modifier.width(16.dp))
         Icon(
-            painter = painterResource(id= R.drawable.dialpad_24dp),
+            painter = painterResource(id = R.drawable.dialpad_24dp),
             contentDescription = "input layout",
             modifier = Modifier.size(iconSize)
         )

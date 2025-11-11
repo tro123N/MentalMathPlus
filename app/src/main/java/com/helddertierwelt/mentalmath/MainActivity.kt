@@ -84,11 +84,12 @@ class MainActivity : ComponentActivity() {
             MentalMathTheme(themeMode = settingsViewModel.settingsState.collectAsState().value.themeMode) {
 
                 // set system bar colors
-                val darkTheme = when (settingsViewModel.settingsState.collectAsState().value.themeMode) {
-                    ThemeMode.DARK -> true
-                    ThemeMode.LIGHT -> false
-                    ThemeMode.SYSTEM -> isSystemInDarkTheme()
-                }
+                val darkTheme =
+                    when (settingsViewModel.settingsState.collectAsState().value.themeMode) {
+                        ThemeMode.DARK -> true
+                        ThemeMode.LIGHT -> false
+                        ThemeMode.SYSTEM -> isSystemInDarkTheme()
+                    }
                 val systemUiController = rememberSystemUiController()
                 val navBarColor = MaterialTheme.colorScheme.background
                 SideEffect {
@@ -132,7 +133,7 @@ class MainActivity : ComponentActivity() {
                         titleSize = titleFontSize,
                         descriptionSize = popUpDescriptionFontSize,
                         title = "Start game from link?",
-                        description =  if (gameRecordFromAppLink.value.totalScore<0f) {
+                        description = if (gameRecordFromAppLink.value.totalScore < 0f) {
                             "Play a new game with predefined settings and a random seed.\n\nAny current game progress will be lost."
                         } else {
                             "Try to beat your friend's score by replaying the same game.\n\nAny current game progress will be lost."

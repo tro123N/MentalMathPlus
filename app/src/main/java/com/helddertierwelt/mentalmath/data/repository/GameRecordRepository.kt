@@ -82,11 +82,12 @@ class GameRecordRepository @Inject constructor(
     fun setLastGameRecord(gameRecord: GameRecord) {
         _lastGameRecord.value = gameRecord
     }
+
     fun setLoadedGameRecord(gameRecord: GameRecord) {
         _loadedGameRecord.value = gameRecord
     }
 
-    suspend fun insertGameRecord(gameRecord: GameRecord):Long {
+    suspend fun insertGameRecord(gameRecord: GameRecord): Long {
         val newId = gameRecordDao.insert(gameRecord)
         return newId
     }

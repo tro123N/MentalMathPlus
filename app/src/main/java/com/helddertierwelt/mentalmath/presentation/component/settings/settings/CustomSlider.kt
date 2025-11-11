@@ -41,8 +41,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.TextUnit
@@ -63,19 +61,14 @@ fun CustomSlider(
     val interactionSource = remember { MutableInteractionSource() }
     val isDragging by interactionSource.collectIsDraggedAsState()
     var sliderWidth by remember { mutableIntStateOf(0) }
-    var sliderHeight by remember { mutableIntStateOf(0) }
-    val containerSizePx = LocalWindowInfo.current.containerSize
-    val density = LocalDensity.current
-    val screenWidth = with(density) { containerSizePx.width.toDp() }
-    val lastTickSpace = (0.084f * screenWidth.value)
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .onGloballyPositioned {
                 sliderWidth = it.size.width
-                sliderHeight = it.size.height
-            }, contentAlignment = Alignment.Center
+            },
+        contentAlignment = Alignment.Center
     ) {
 
         val positionFraction =

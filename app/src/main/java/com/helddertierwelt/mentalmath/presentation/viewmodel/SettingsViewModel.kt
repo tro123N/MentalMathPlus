@@ -128,7 +128,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun isAnyOperationEnabled(): Boolean {
-        return settingsState.value.isAdditionEnabled || settingsState.value.isSubtractionEnabled || settingsState.value.isMultiplicationEnabled || settingsState.value.isDivisionEnabled;
+        return settingsState.value.isAdditionEnabled || settingsState.value.isSubtractionEnabled || settingsState.value.isMultiplicationEnabled || settingsState.value.isDivisionEnabled
     }
 
     fun toggleMenuOpen() {

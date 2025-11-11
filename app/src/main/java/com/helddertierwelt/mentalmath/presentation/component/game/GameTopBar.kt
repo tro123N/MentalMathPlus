@@ -70,7 +70,7 @@ fun GameTopBar(
                         launchSingleTop = true
                     }
                 },
-                modifier = Modifier.padding(start= 16.dp)
+                modifier = Modifier.padding(start = 16.dp)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.close_24dp),

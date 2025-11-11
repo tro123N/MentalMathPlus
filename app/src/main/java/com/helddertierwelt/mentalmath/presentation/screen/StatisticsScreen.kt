@@ -165,7 +165,7 @@ fun StatisticsScreen(
         }
     }
 
-    fun createLink() : String {
+    fun createLink(): String {
         val settingsString = SettingsLinkUtil.serialize(statisticsGameRecord)
         return "https://mental-math.codeberg.page/app?s=%s".format(settingsString)
     }
@@ -181,7 +181,12 @@ fun StatisticsScreen(
                         scrollState.animateScrollTo(0)
                         val bitmap = captureSettingsCardBitmap()
                         if (bitmap != null) {
-                            val shareText = "Try to beat my score of %.2f in Mental Math.\nReplay my game with seed %d:\n\n%s".format(statisticsGameRecord.totalScore, statisticsGameRecord.seed, createLink())
+                            val shareText =
+                                "Try to beat my score of %.2f in Mental Math.\nReplay my game with seed %d:\n\n%s".format(
+                                    statisticsGameRecord.totalScore,
+                                    statisticsGameRecord.seed,
+                                    createLink()
+                                )
                             shareResult(context, bitmap, shareText)
                         } else {
                             Log.e("StatisticsScreen", "Bitmap could not be captured")
@@ -277,7 +282,7 @@ fun StatisticsScreen(
             dismissColor = green,
             onDismissRequest = { statisticsViewModel.setShowLinkGamePopUp(false) },
             onCancel = { statisticsViewModel.setShowLinkGamePopUp(false) },
-            onConfirm  = {
+            onConfirm = {
                 coroutineScope.launch {
                     scrollState.animateScrollTo(0)
                     val bitmap = captureSettingsCardBitmap()

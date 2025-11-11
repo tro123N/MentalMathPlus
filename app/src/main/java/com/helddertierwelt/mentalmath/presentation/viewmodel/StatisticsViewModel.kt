@@ -50,21 +50,27 @@ class StatisticsViewModel @Inject constructor(
     fun setShowLoadedGameRecord(value: Boolean) {
         _showLoadedGameRecord.value = value
     }
+
     fun setShowLinkGamePopUp(value: Boolean) {
         _showLinkGamePopUp.value = value
     }
+
     fun setScoreFromLink(value: Float) {
         _scoreFromLink.value = value
     }
+
     fun setSeedFromLink(value: Long) {
         _seedFromLink.value = value
     }
+
     fun setLoadedGameRecord(gameRecord: GameRecord) {
         gameRecordRepository.setLoadedGameRecord(gameRecord)
     }
+
     fun resetLastGameRecord() {
         gameRecordRepository.resetLastGameRecord()
     }
+
     fun resetLoadedGameRecord() {
         gameRecordRepository.resetLoadedGameRecord()
     }

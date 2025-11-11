@@ -59,7 +59,7 @@ enum class GameResultType(
             "You: %.2f | Opponent: %.2f\nSeed: %d\n\nYour opponent didn’t show up — you win by default!",
             "You: %.2f | Opponent: %.2f\nSeed: %d\n\nVictory is yours… and your opponent didn’t even try.",
             "You: %.2f | Opponent: %.2f\nSeed: %d\n\nDid anybody even try? Because it doesn’t look like it.",
-            "You: %.2f | Opponent: %.2f\nSeed: %d\n\nYour opponent’s strategy: not showing up. Your strategy: winning!",
+            "You: %.2f | Opponent: %.2f\nSeed: %d\n\nYour opponent’s strategy: Not showing up. Your strategy: Winning!",
             "You: %.2f | Opponent: %.2f\nSeed: %d\n\nYour opponent didn’t bring their A-game… or any game at all!",
             "You: %.2f | Opponent: %.2f\nSeed: %d\n\nYou could have played blindfolded and still won.",
             "You: %.2f | Opponent: %.2f\nSeed: %d\n\nYou won while your opponent was still figuring out the rules."
@@ -79,7 +79,7 @@ enum class GameResultType(
             "You: %.2f | Opponent: %.2f\nSeed: %d\n\nNobody scored… but hey, at least nobody lost!",
             "You: %.2f | Opponent: %.2f\nSeed: %d\n\nLooks like nobody wanted to take the first step.",
             "You: %.2f | Opponent: %.2f\nSeed: %d\n\nThe scoreboard had an easy day today.",
-            "You: %.2f | Opponent: %.2f\nSeed: %d\n\nBreaking news: nothing ever happened!"
+            "You: %.2f | Opponent: %.2f\nSeed: %d\n\nBreaking news: Nothing ever happened!"
         )
     ),
     WIN(
@@ -96,7 +96,7 @@ enum class GameResultType(
             "You: %.2f | Opponent: %.2f\nSeed: %d\n\nMath skills activated — opponent defeated!",
             "You: %.2f | Opponent: %.2f\nSeed: %d\n\nAnother win! Your opponent might want a tutorial.",
             "You: %.2f | Opponent: %.2f\nSeed: %d\n\nResults don’t lie — you nailed it.",
-            "You: %.2f | Opponent: %.2f\nSeed: %d\n\nFacts over feelings: you crushed it!",
+            "You: %.2f | Opponent: %.2f\nSeed: %d\n\nFacts over feelings: You crushed it!",
         )
     ),
     CLOSE_WIN(
@@ -165,12 +165,12 @@ enum class GameResultType(
             "You: %.2f | Opponent: %.2f\nSeed: %d\n\nLet your rival enjoy the win. Everyone needs their moment.",
             "You: %.2f | Opponent: %.2f\nSeed: %d\n\nYour opponent is probably telling everyone already. Adorable.",
             "You: %.2f | Opponent: %.2f\nSeed: %d\n\nLet your opponent enjoy these fifteen seconds of fame.",
-            )
+        )
     );
 
     fun getRandomDescription(currentScore: Float, linkScore: Float, seed: Long): String {
         val template = descriptions.random()
-        if (linkScore < 0.0f ) {
+        if (linkScore < 0.0f) {
             return template.format(currentScore, seed)
         }
         return template.format(currentScore, linkScore, seed)
