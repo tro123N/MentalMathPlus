@@ -65,8 +65,6 @@ import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Composable
@@ -74,8 +72,9 @@ fun GameScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    val screenHeight = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
-    val coroutineScope = rememberCoroutineScope()
+    val screenHeight =
+        with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
+    rememberCoroutineScope()
 
     // font and icon sizes
     val roundButtonSize = (0.10f * screenHeight.value).dp
@@ -222,22 +221,21 @@ fun GameScreen(
                             onClick = {
                                 gameViewModel.addTaskResultToList()
                                 gameViewModel.checkAnswerAndCount()
-                                coroutineScope.launch {
-                                    delay(50)
-                                    val totalAnswers = gameViewModel.gameState.value.totalAnswers
-                                    val totalTasks = (settingsState.limit * 10).roundToInt()
-                                    val isLinkGame = gameViewModel.gameState.value.isLinkGame
-                                    if (settingsState.isModeEnabled && totalAnswers == totalTasks) {
-                                        gameViewModel.endGame()
-                                        if (isLinkGame) { statisticsViewModel.setShowLinkGamePopUp(true) }
-                                        statisticsViewModel.setShowLoadedGameRecord(false)
-                                        navController.navigate("statistics") {
-                                            popUpTo(0) { inclusive = true }
-                                            launchSingleTop = true
-                                        }
-                                    } else {
-                                        gameViewModel.generateNewTask()
+                                val totalAnswers = gameViewModel.gameState.value.totalAnswers
+                                val totalTasks = (settingsState.limit * 10).roundToInt()
+                                val isLinkGame = gameViewModel.gameState.value.isLinkGame
+                                if (settingsState.isModeEnabled && totalAnswers == totalTasks) {
+                                    gameViewModel.endGame()
+                                    if (isLinkGame) {
+                                        statisticsViewModel.setShowLinkGamePopUp(true)
                                     }
+                                    statisticsViewModel.setShowLoadedGameRecord(false)
+                                    navController.navigate("statistics") {
+                                        popUpTo(0) { inclusive = true }
+                                        launchSingleTop = true
+                                    }
+                                } else {
+                                    gameViewModel.generateNewTask()
                                 }
                             },
                             isToggled = gameState.input.isEmpty(),
