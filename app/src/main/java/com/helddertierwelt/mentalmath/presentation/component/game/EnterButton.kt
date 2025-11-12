@@ -40,6 +40,7 @@ fun EnterButton(
     onClick: () -> Unit,
     iconSize: Dp,
     isToggled: Boolean,
+    enabled: Boolean,
     size: Dp,
 ) {
 
@@ -50,12 +51,15 @@ fun EnterButton(
 
     Button(
         onClick = onClick,
+        enabled = enabled,
         shape = CircleShape,
         modifier = Modifier.size(size),
         contentPadding = PaddingValues(0.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
-            contentColor = MaterialTheme.colorScheme.primary
+            contentColor = MaterialTheme.colorScheme.primary,
+            disabledContainerColor = containerColor,
+            disabledContentColor = MaterialTheme.colorScheme.primary
         )
     ) {
         Icon(

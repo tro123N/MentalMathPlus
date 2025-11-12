@@ -97,6 +97,7 @@ fun GameScreen(
     // variables
     val settingsState = settingsViewModel.settingsState.collectAsState().value
     val gameState = gameViewModel.gameState.collectAsState().value
+    val isGeneratingTask by gameViewModel.isGeneratingTask.collectAsState()
     val upperNumberRow = if (settingsState.isNumpadDefault) 7..9 else 1..3
     val lowerNumberRow = if (settingsState.isNumpadDefault) 1..3 else 7..9
 
@@ -238,6 +239,7 @@ fun GameScreen(
                                     gameViewModel.generateNewTask()
                                 }
                             },
+                            enabled = !isGeneratingTask,
                             isToggled = gameState.input.isEmpty(),
                             size = roundButtonSize,
                             iconId1 = R.drawable.keyboard_double_arrow_right_24dp,

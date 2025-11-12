@@ -51,7 +51,7 @@ fun OperatorButton(
         Text(
             text = stringResource(buttonTextId),
             fontSize = fontSize,
-            color = if (isSelected) textColor else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+            color = if (isSelected) textColor else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
         )
     }
 }

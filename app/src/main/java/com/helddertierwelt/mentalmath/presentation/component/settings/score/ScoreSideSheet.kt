@@ -95,7 +95,7 @@ fun ScoreSideSheet(
     val minOffset = screenWidthPx * (1f - sheetWidthFactor)
     val maxOffset = screenWidthPx
     val offsetX = remember { Animatable(maxOffset) }
-    val overlayAlpha = 0.4f * (1 - (offsetX.value - minOffset) / (maxOffset - minOffset))
+    val overlayAlpha = 0.38f * (1 - (offsetX.value - minOffset) / (maxOffset - minOffset))
 
     val fontSizeTitle = (0.031f * screenHeight.value).sp
     val fontSizeScore = (0.020f * screenHeight.value).sp

@@ -60,7 +60,7 @@ fun IntentRow(
                 enabled = isEnabled,
                 onClick = { context.startActivity(intentProvider()) }
             )
-            .alpha(if (isEnabled) 1f else 0.4f),
+            .alpha(if (isEnabled) 1f else 0.38f),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Spacer(modifier = Modifier.width(16.dp))

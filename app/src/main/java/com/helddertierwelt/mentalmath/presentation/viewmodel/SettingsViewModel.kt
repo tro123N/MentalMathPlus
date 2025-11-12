@@ -59,6 +59,12 @@ class SettingsViewModel @Inject constructor(
     private val _bestTotalGames = MutableStateFlow<List<GameRecord>>(emptyList())
     val bestTotalGames = _bestTotalGames.asStateFlow()
 
+    private val _isStartButtonClicked = MutableStateFlow(false)
+    val isStartButtonClicked = _isStartButtonClicked.asStateFlow()
+
+    private val _isSliderActive = MutableStateFlow(false)
+    val isSliderActive = _isSliderActive.asStateFlow()
+
     init {
         viewModelScope.launch {
             repository.settingsFlow.collect { loadedState ->
@@ -145,6 +151,14 @@ class SettingsViewModel @Inject constructor(
 
     fun setShowResetPopUp(value: Boolean) {
         _showResetPopUp.value = value
+    }
+
+    fun setIsStartButtonClicked(value: Boolean) {
+        _isStartButtonClicked.value = value
+    }
+
+    fun setIsSliderActive(value: Boolean) {
+        _isSliderActive.value = value
     }
 
     fun toggleScoreOpen() {

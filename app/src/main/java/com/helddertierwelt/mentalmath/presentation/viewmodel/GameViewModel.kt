@@ -34,6 +34,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
@@ -54,6 +57,11 @@ class GameViewModel @Inject constructor(
 
     private var timerJob: Job? = null
     private var random: Random = Random(System.currentTimeMillis())
+    private val randomMutex = Mutex()
+
+    private val _isGeneratingTask = MutableStateFlow(false)
+    val isGeneratingTask = _isGeneratingTask.asStateFlow()
+
 
     fun appendToInput(number: Int) {
         if (_gameState.value.input.length < 7) {
@@ -75,66 +83,53 @@ class GameViewModel @Inject constructor(
     }
 
     fun generateNewTask() {
-        val enabledOperators = _gameState.value.enabledOperators
-        val operationSetting =
-            enabledOperators.entries.elementAt(random.nextInt(enabledOperators.size))
-        val operation = operationSetting.key
-        val difficulty = random.nextInt(
-            operationSetting.value.first.toInt(),
-            operationSetting.value.second.toInt() + 1
-        )
-        val lastOperands = max(
-            _gameState.value.operand1,
-            _gameState.value.operand2
-        ) to min(_gameState.value.operand1, _gameState.value.operand2)
+
         viewModelScope.launch(Dispatchers.IO) {
-            val mathTask: MathTask = when (operation) {
-                Operation.ADDITION -> mathTaskRepository.getRandomAdditionTaskByDifficulty(
-                    difficulty,
-                    random,
-                    lastOperands
-                )
+            _isGeneratingTask.value = true
 
-                Operation.SUBTRACTION -> mathTaskRepository.getRandomSubtractionTaskByDifficulty(
-                    difficulty,
-                    random,
-                    lastOperands
-                )
+            // lock all calls with the random-object to keep the order of tasks deterministic
+            val (operation, operands) = randomMutex.withLock {
+                val enabledOperators = _gameState.value.enabledOperators
+                val operationSetting = enabledOperators.entries.elementAt(random.nextInt(enabledOperators.size))
+                val operation = operationSetting.key
+                val difficulty = random.nextInt(operationSetting.value.first.toInt(), operationSetting.value.second.toInt() + 1)
+                val lastOperands = max(_gameState.value.operand1, _gameState.value.operand2) to min(_gameState.value.operand1, _gameState.value.operand2)
 
-                Operation.MULTIPLICATION -> mathTaskRepository.getRandomMultiplicationTaskByDifficulty(
-                    difficulty,
-                    random,
-                    lastOperands
-                )
-
-                Operation.DIVISION -> mathTaskRepository.getRandomDivisionTaskByDifficulty(
-                    difficulty,
-                    random,
-                    lastOperands
-                )
-            }
-
-            val operands = when (operation) {
-                Operation.SUBTRACTION -> mathTask.operand1 to mathTask.operand2
-                Operation.DIVISION -> mathTask.operand1 to mathTask.operand2
-                Operation.ADDITION,
-                Operation.MULTIPLICATION -> {
-                    if (random.nextBoolean())
-                        mathTask.operand1 to mathTask.operand2
-                    else
-                        mathTask.operand2 to mathTask.operand1
+                val mathTask: MathTask = when (operation) {
+                    Operation.ADDITION -> mathTaskRepository.getRandomAdditionTaskByDifficulty(difficulty, random, lastOperands)
+                    Operation.SUBTRACTION -> mathTaskRepository.getRandomSubtractionTaskByDifficulty(difficulty, random, lastOperands)
+                    Operation.MULTIPLICATION -> mathTaskRepository.getRandomMultiplicationTaskByDifficulty(difficulty, random, lastOperands)
+                    Operation.DIVISION -> mathTaskRepository.getRandomDivisionTaskByDifficulty(difficulty, random, lastOperands)
                 }
+
+                val operands = when (operation) {
+                    Operation.SUBTRACTION -> mathTask.operand1 to mathTask.operand2
+                    Operation.DIVISION -> mathTask.operand1 to mathTask.operand2
+                    Operation.ADDITION,
+                    Operation.MULTIPLICATION -> {
+                        if (random.nextBoolean())
+                            mathTask.operand1 to mathTask.operand2
+                        else
+                            mathTask.operand2 to mathTask.operand1
+                    }
+                }
+                operation to operands
             }
+
+            // delay to let the ui show if the answer was correct
             delay(80)
-            saveState(
-                _gameState.value.copy(
-                    operand1 = operands.first,
-                    operand2 = operands.second,
-                    operator = operation,
-                    input = "",
-                    isCorrect = null
+            withContext(Dispatchers.Main) {
+                saveState(
+                    _gameState.value.copy(
+                        operand1 = operands.first,
+                        operand2 = operands.second,
+                        operator = operation,
+                        input = "",
+                        isCorrect = null
+                    )
                 )
-            )
+                _isGeneratingTask.value = false
+            }
         }
     }
 

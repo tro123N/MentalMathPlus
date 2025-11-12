@@ -85,7 +85,7 @@ fun MenuSideSheet(
     val minOffset = -screenWidthPx * sheetWidthFactor
     val maxOffset = 0f
     val offsetX = remember { Animatable(minOffset) }
-    val overlayAlpha = 0.4f * (offsetX.value - minOffset) / (maxOffset - minOffset)
+    val overlayAlpha = 0.38f * (offsetX.value - minOffset) / (maxOffset - minOffset)
 
     val fontSize = (0.020f * screenHeight.value).sp
     val iconSize = (0.032f * screenHeight.value).dp

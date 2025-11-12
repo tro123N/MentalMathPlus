@@ -34,10 +34,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -101,14 +97,16 @@ fun SettingsScreen(
     // variables
     val settingsState = settingsViewModel.settingsState.collectAsState().value
     val isLoaded = settingsViewModel.isLoaded.collectAsState().value
-    val bestTotalGames by settingsViewModel.bestTotalGames.collectAsState()
-    val bestActiveGames by settingsViewModel.bestActiveGames.collectAsState()
+    val bestTotalGames = settingsViewModel.bestTotalGames.collectAsState().value
+    val bestActiveGames = settingsViewModel.bestActiveGames.collectAsState().value
     val bestGamesEmpty = bestTotalGames.isEmpty() && bestActiveGames.isEmpty()
-    var isSliderActive by remember { mutableStateOf(false) }
+    val isSliderActive = settingsViewModel.isSliderActive.collectAsState().value
+    val isStartButtonClicked = settingsViewModel.isStartButtonClicked.collectAsState().value
 
     LaunchedEffect(isLoaded) {
         if (isLoaded) {
             settingsViewModel.loadBestGames()
+            settingsViewModel.setIsStartButtonClicked(false)
         }
     }
 
@@ -164,11 +162,11 @@ fun SettingsScreen(
                             valueRange = 1f..5f,
                             value = settingsState.limit,
                             onValueChange = {
-                                isSliderActive = true
+                                settingsViewModel.setIsSliderActive(true)
                                 settingsViewModel.updateLimit(it)
                             },
                             onValueChangeFinished = {
-                                isSliderActive = false
+                                settingsViewModel.setIsSliderActive(false)
                                 settingsViewModel.loadBestGames()
                             },
                             isToggled = settingsState.isModeEnabled,
@@ -203,11 +201,11 @@ fun SettingsScreen(
                             valueRange = 1f..9f,
                             value = settingsState.additionRange,
                             onValueChange = {
-                                isSliderActive = true
+                                settingsViewModel.setIsSliderActive(true)
                                 settingsViewModel.updatePlusRange(it)
                             },
                             onValueChangeFinished = {
-                                isSliderActive = false
+                                settingsViewModel.setIsSliderActive(false)
                                 settingsViewModel.loadBestGames()
                             },
                             isEnabled = settingsState.isAdditionEnabled,
@@ -236,11 +234,11 @@ fun SettingsScreen(
                             valueRange = 1f..9f,
                             value = settingsState.subtractionRange,
                             onValueChange = {
-                                isSliderActive = true
+                                settingsViewModel.setIsSliderActive(true)
                                 settingsViewModel.updateMinusRange(it)
                             },
                             onValueChangeFinished = {
-                                isSliderActive = false
+                                settingsViewModel.setIsSliderActive(false)
                                 settingsViewModel.loadBestGames()
                             },
                             isEnabled = settingsState.isSubtractionEnabled,
@@ -269,11 +267,11 @@ fun SettingsScreen(
                             valueRange = 1f..9f,
                             value = settingsState.multiplicationRange,
                             onValueChange = {
-                                isSliderActive = true
+                                settingsViewModel.setIsSliderActive(true)
                                 settingsViewModel.updateMultiplyRange(it)
                             },
                             onValueChangeFinished = {
-                                isSliderActive = false
+                                settingsViewModel.setIsSliderActive(false)
                                 settingsViewModel.loadBestGames()
                             },
                             isEnabled = settingsState.isMultiplicationEnabled,
@@ -302,11 +300,11 @@ fun SettingsScreen(
                             valueRange = 1f..9f,
                             value = settingsState.divisionRange,
                             onValueChange = {
-                                isSliderActive = true
+                                settingsViewModel.setIsSliderActive(true)
                                 settingsViewModel.updateDivideRange(it)
                             },
                             onValueChangeFinished = {
-                                isSliderActive = false
+                                settingsViewModel.setIsSliderActive(false)
                                 settingsViewModel.loadBestGames()
                             },
                             isEnabled = settingsState.isDivisionEnabled,
@@ -317,6 +315,7 @@ fun SettingsScreen(
                     }
                     StartButton(
                         onClick = {
+                            settingsViewModel.setIsStartButtonClicked(true)
                             statisticsViewModel.setShowLinkGamePopUp(false)
                             gameViewModel.reset()
                             gameViewModel.setSettings(settingsViewModel)
@@ -324,6 +323,7 @@ fun SettingsScreen(
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true
                             }
+
                             var seed: Long
                             do {
                                 seed = SecureRandom().nextLong()
@@ -336,7 +336,8 @@ fun SettingsScreen(
                         isEnabled = settingsState.isAdditionEnabled ||
                                 settingsState.isSubtractionEnabled ||
                                 settingsState.isMultiplicationEnabled ||
-                                settingsState.isDivisionEnabled
+                                settingsState.isDivisionEnabled,
+                        isClicked = isStartButtonClicked
                     )
                 }
                 ScoreSideSheet(

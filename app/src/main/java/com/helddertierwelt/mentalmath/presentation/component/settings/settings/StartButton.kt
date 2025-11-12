@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -43,11 +44,18 @@ fun StartButton(
     iconSize: Dp,
     size: Dp,
     fontSize: TextUnit,
-    isEnabled: Boolean = true
+    isEnabled: Boolean,
+    isClicked: Boolean
 ) {
     Button(
-        enabled = isEnabled,
+        enabled = isEnabled && !isClicked,
         onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            disabledContainerColor = if (isClicked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0.38f),
+            disabledContentColor = if (isClicked) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f),
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .height(size)
@@ -60,7 +68,7 @@ fun StartButton(
                 painter = painterResource(R.drawable.play_arrow_24dp),
                 contentDescription = "Play",
                 modifier = Modifier.size(iconSize),
-                tint = if (isEnabled) green else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                tint = if (!isEnabled) MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f) else green
             )
             Text(
                 text = stringResource(R.string.start),
