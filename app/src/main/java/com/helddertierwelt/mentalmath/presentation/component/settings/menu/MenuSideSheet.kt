@@ -62,8 +62,12 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.presentation.theme.red
+import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import kotlinx.coroutines.launch
 import java.security.SecureRandom
 
@@ -71,17 +75,19 @@ import java.security.SecureRandom
 fun MenuSideSheet(
     isSheetOpen: Boolean,
     screenWidth: Dp,
-    onDismissRequested: () -> Unit,
-    onResetClick: () -> Unit,
     screenHeight: Dp,
+    navController: NavController
 ) {
-    val activity = LocalActivity.current as ViewModelStoreOwner
-    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
+    val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
+    val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
+    val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
+    val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     val screenWidthPx = with(LocalDensity.current) { screenWidth.toPx() }
     val sheetWidthFactor = 0.6f
+    var isFirstRender by remember { mutableStateOf(true) }
     val minOffset = -screenWidthPx * sheetWidthFactor
     val maxOffset = 0f
     val offsetX = remember { Animatable(minOffset) }
@@ -93,11 +99,13 @@ fun MenuSideSheet(
     var isInteractionEnabled by remember { mutableStateOf(true) }
     val scrollState = rememberScrollState()
 
-    // Handle side sheet open/close animation
     LaunchedEffect(isSheetOpen) {
-        isInteractionEnabled = false
         val target = if (isSheetOpen) maxOffset else minOffset
-        if (offsetX.value != target) {
+        if (isFirstRender) {
+            offsetX.snapTo(target)
+            isFirstRender = false
+        } else {
+            isInteractionEnabled = false
             offsetX.animateTo(
                 targetValue = target,
                 animationSpec = tween(
@@ -120,7 +128,7 @@ fun MenuSideSheet(
                             Modifier.clickable(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }
-                            ) { onDismissRequested() }
+                            ) { settingsViewModel.toggleMenuOpen() }
                         } else {
                             Modifier
                         }
@@ -145,7 +153,7 @@ fun MenuSideSheet(
                     onDragStopped = {
                         coroutineScope.launch {
                             if (offsetX.value < minOffset * 0.2f) {
-                                onDismissRequested()
+                                settingsViewModel.toggleMenuOpen()
                             } else {
                                 offsetX.animateTo(maxOffset)
                             }
@@ -188,7 +196,7 @@ fun MenuSideSheet(
                         context = context
                     )
 
-                    // Share Seed Game Link
+                    // Share Game Link
                     IntentRow(
                         iconResId = R.drawable.potted_plant_24dp,
                         contentDescription = "Share Seed",
@@ -216,12 +224,28 @@ fun MenuSideSheet(
                         context = context
                     )
 
-                    // Dark Mode Toggle
-                    DarkModeToggleRow(
+                    // Random Game
+                    ButtonRow(
+                        iconResId = R.drawable.casino_24dp,
+                        contentDescription = "Random Game",
+                        text = "Random Game",
                         fontSize = fontSize,
                         iconSize = iconSize,
-                        currentMode = settingsViewModel.settingsState.collectAsState().value.themeMode,
-                        onModeChange = { settingsViewModel.setThemeMode(it) }
+                        onClick = {
+                            statisticsViewModel.setShowLinkGamePopUp(false)
+                            gameViewModel.reset()
+                            settingsViewModel.applyRandomSettings()
+                            gameViewModel.setSettings(settingsViewModel)
+                            navController.navigate("game") {
+                                popUpTo(0) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                            var seed: Long
+                            do {
+                                seed = SecureRandom().nextLong()
+                            } while (seed < 0)
+                            gameViewModel.startGame(seed)
+                        }
                     )
 
                     // Input Layout Toggle
@@ -230,6 +254,14 @@ fun MenuSideSheet(
                         iconSize = iconSize,
                         isNumpad = settingsViewModel.settingsState.collectAsState().value.isNumpadDefault,
                         onClick = { settingsViewModel.toggleLayout() }
+                    )
+
+                    // Dark Mode Toggle
+                    DarkModeToggleRow(
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        currentMode = settingsViewModel.settingsState.collectAsState().value.themeMode,
+                        onModeChange = { settingsViewModel.setThemeMode(it) }
                     )
 
                     // Source Code Link
@@ -347,7 +379,8 @@ fun MenuSideSheet(
                     text = "Reset App",
                     fontSize = fontSize,
                     iconSize = iconSize,
-                    onClick = onResetClick
+                    onClick = { settingsViewModel.setShowResetPopUp(true) },
+                    color = red
                 )
             }
         }

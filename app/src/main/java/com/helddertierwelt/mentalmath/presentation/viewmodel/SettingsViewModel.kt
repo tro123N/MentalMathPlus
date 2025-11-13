@@ -269,6 +269,41 @@ class SettingsViewModel @Inject constructor(
         saveState()
     }
 
+    fun applyRandomSettings() {
+
+        // random mode an limit
+        val isModeEnabled = listOf(true, false).random()
+        val limit = (1..5).random().toFloat()
+
+        // random difficultyRanges
+        val pairs = (1..9).flatMap { a -> (a..9).map { b -> a.toFloat() to b.toFloat() } }
+        val additionRange = pairs.random()
+        val subtractionRange = pairs.random()
+        val multiplicationRange = pairs.random()
+        val divisionRange = pairs.random()
+
+        // random selection of operations
+        val operationSelection = (1..15).random()
+        val isAdditionEnabled = operationSelection shr 0 and 1 == 1
+        val isSubtractionEnabled = operationSelection shr 1 and 1 == 1
+        val isMultiplicationEnabled = operationSelection shr 2 and 1 == 1
+        val isDivisionEnabled = operationSelection shr 3 and 1 == 1
+
+        _settingsState.value = _settingsState.value.copy(
+            isModeEnabled = isModeEnabled,
+            limit = limit,
+            additionRange = additionRange,
+            subtractionRange = subtractionRange,
+            multiplicationRange = multiplicationRange,
+            divisionRange = divisionRange,
+            isAdditionEnabled = isAdditionEnabled,
+            isSubtractionEnabled = isSubtractionEnabled,
+            isMultiplicationEnabled = isMultiplicationEnabled,
+            isDivisionEnabled = isDivisionEnabled
+        )
+        saveState()
+    }
+
     fun generateSeedLink(seed: Long): String {
         val state = _settingsState.value
         val settingsStringByteArray = listOf(

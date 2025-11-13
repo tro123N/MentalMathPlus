@@ -160,7 +160,7 @@ class MainActivity : ComponentActivity() {
                         titleSize = titleFontSize,
                         descriptionSize = popUpDescriptionFontSize,
                         title = "Game already played",
-                        description = "You’ve already played a game with the same seed and settings.\n\nPlease try a different link or start a new game.",
+                        description = "You’ve already played a game with the same settings and seed.\n\nPlease try a different link or start a new game.",
                         confirmationText = "Ok",
                         confirmColor = green
                     )

@@ -342,7 +342,6 @@ fun SettingsScreen(
                 }
                 ScoreSideSheet(
                     isSheetOpen = settingsViewModel.isScoreOpen.collectAsState().value,
-                    onDismissRequested = { settingsViewModel.toggleScoreOpen() },
                     screenWidth = screenWidth,
                     screenHeight = screenHeight,
                     navController = navController,
@@ -350,9 +349,8 @@ fun SettingsScreen(
                 MenuSideSheet(
                     isSheetOpen = settingsViewModel.isMenuOpen.collectAsState().value,
                     screenWidth = screenWidth,
-                    onDismissRequested = { settingsViewModel.toggleMenuOpen() },
                     screenHeight = screenHeight,
-                    onResetClick = { settingsViewModel.setShowResetPopUp(true) }
+                    navController = navController
                 )
             }
         }

@@ -79,14 +79,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun ScoreSideSheet(
     isSheetOpen: Boolean,
-    onDismissRequested: () -> Unit,
     screenWidth: Dp,
     screenHeight: Dp,
     navController: NavController,
 ) {
-    val activity = LocalActivity.current as ViewModelStoreOwner
-    val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
-    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
+    val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
+    val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
+    val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
 
     val coroutineScope = rememberCoroutineScope()
     val screenWidthPx = with(LocalDensity.current) { screenWidth.toPx() }
@@ -133,7 +132,7 @@ fun ScoreSideSheet(
                             Modifier.clickable(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }
-                            ) { onDismissRequested() }
+                            ) { settingsViewModel.toggleScoreOpen() }
                         } else {
                             Modifier
                         }
@@ -158,7 +157,7 @@ fun ScoreSideSheet(
                     onDragStopped = {
                         coroutineScope.launch {
                             if (offsetX.value > minOffset + maxOffset * sheetWidthFactor * 0.2f) {
-                                onDismissRequested()
+                                settingsViewModel.toggleScoreOpen()
                             } else {
                                 offsetX.animateTo(minOffset)
                             }

@@ -27,16 +27,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import com.helddertierwelt.mentalmath.presentation.theme.red
 
 @Composable
 fun ButtonRow(
@@ -45,7 +46,8 @@ fun ButtonRow(
     text: String,
     fontSize: TextUnit,
     iconSize: Dp,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    color: Color = LocalContentColor.current
 ) {
     Row(
         modifier = Modifier
@@ -61,14 +63,14 @@ fun ButtonRow(
             painter = painterResource(iconResId),
             contentDescription = contentDescription,
             modifier = Modifier.size(iconSize),
-            tint = red
+            tint = color
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = text,
             fontSize = fontSize,
             lineHeight = fontSize,
-            color = red
+            color = color
         )
     }
 }
