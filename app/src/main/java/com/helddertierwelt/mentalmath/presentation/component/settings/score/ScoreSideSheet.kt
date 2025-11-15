@@ -118,6 +118,7 @@ fun ScoreSideSheet(
             )
         }
         isInteractionEnabled = true
+        settingsViewModel.setIsScoreClicked(false)
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -215,12 +216,15 @@ fun ScoreSideSheet(
                     }
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    val isScoreClicked = settingsViewModel.isScoreClicked.collectAsState().value
                     ScoreList(
                         gameRecords = bestGames,
                         fontSizeScore = fontSizeScore,
                         lastGameId = lastGameId,
                         scoreSelector = scoreSelector,
+                        isEnabled = !isScoreClicked,
                         onClick = { gameRecord ->
+                            settingsViewModel.setIsScoreClicked(true)
                             statisticsViewModel.setLoadedGameRecord(gameRecord)
                             statisticsViewModel.setShowLoadedGameRecord(true)
                             statisticsViewModel.setShowLinkGamePopUp(false)

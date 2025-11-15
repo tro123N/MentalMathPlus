@@ -47,6 +47,7 @@ fun ScoreList(
     lastGameId: Int,
     scoreSelector: (GameRecord) -> Float,
     onClick: (GameRecord) -> Unit,
+    isEnabled: Boolean = true
 ) {
 
     val scrollState = rememberScrollState()
@@ -67,7 +68,7 @@ fun ScoreList(
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp, vertical = 8.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .clickable { onClick(game) },
+                    .clickable(enabled = isEnabled) { onClick(game) },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
