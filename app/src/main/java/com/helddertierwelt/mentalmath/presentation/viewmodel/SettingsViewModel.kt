@@ -62,6 +62,9 @@ class SettingsViewModel @Inject constructor(
     private val _isStartButtonClicked = MutableStateFlow(false)
     val isStartButtonClicked = _isStartButtonClicked.asStateFlow()
 
+    private val _isRandomGameButtonClicked = MutableStateFlow(false)
+    val isRandomGameButtonClicked = _isRandomGameButtonClicked.asStateFlow()
+
     private val _isSliderActive = MutableStateFlow(false)
     val isSliderActive = _isSliderActive.asStateFlow()
 
@@ -155,6 +158,10 @@ class SettingsViewModel @Inject constructor(
 
     fun setIsStartButtonClicked(value: Boolean) {
         _isStartButtonClicked.value = value
+    }
+
+    fun setIsRandomGameButtonClicked(value: Boolean) {
+        _isRandomGameButtonClicked.value = value
     }
 
     fun setIsSliderActive(value: Boolean) {

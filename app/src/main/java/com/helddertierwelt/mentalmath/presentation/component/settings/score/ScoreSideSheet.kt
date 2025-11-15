@@ -36,6 +36,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -187,17 +188,18 @@ fun ScoreSideSheet(
                 val scoreSelector =
                     if (activeScoreDefault) { gameRecord: GameRecord -> gameRecord.activeScore } else { gameRecord: GameRecord -> gameRecord.totalScore }
 
+                Spacer(modifier = Modifier.height(16.dp))
                 if (!bestActiveGames.isEmpty() || !bestTotalGames.isEmpty()) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(28.dp, 12.dp, 12.dp, 0.dp)
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
                             .clip(RoundedCornerShape(16.dp))
                             .clickable { settingsViewModel.toggleDefaultScoreOption() },
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.End
                     ) {
-                        Spacer(Modifier.width(8.dp))
+                        Spacer(Modifier.width(16.dp))
                         Text(
                             text = scoreTitle,
                             color = MaterialTheme.colorScheme.onPrimary,
@@ -207,10 +209,12 @@ fun ScoreSideSheet(
                         Icon(
                             painter = painterResource(R.drawable.star_24dp),
                             contentDescription = "activeScore",
-                            modifier = Modifier.size(128.dp),
+                            modifier = Modifier.size(100.dp),
                             tint = iconColor
                         )
                     }
+                    Spacer(modifier = Modifier.height(16.dp))
+
                     ScoreList(
                         gameRecords = bestGames,
                         fontSizeScore = fontSizeScore,

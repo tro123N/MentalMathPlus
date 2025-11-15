@@ -91,16 +91,14 @@ fun StatisticsScreen(
 
     // font and icon sizes
     val roundButtonSize = (0.09f * screenHeight.value).dp
-    val columnPadding = (0.028f * screenHeight.value).dp
     val doneIconSize = (0.057f * screenHeight.value).dp
-    val modeIconSize = (0.048f * screenHeight.value).dp
+    val modeIconSize = (0.046f * screenHeight.value).dp
     val shareIconSize = (0.038f * screenHeight.value).dp
     val taskIconSize = (0.032f * screenHeight.value).dp
     val fontSize = (0.038f * screenHeight.value).sp
     val titleFontSize = (0.032f * screenHeight.value).sp
     val operatorFontSize = (0.057f * screenHeight.value).sp
     val resultFontSize = (0.024f * screenHeight.value).sp
-
 
     // viewModels
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
@@ -206,7 +204,7 @@ fun StatisticsScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(columnPadding),
+                        .padding(24.dp),
                 ) {
                     Column(
                         modifier = Modifier
@@ -218,7 +216,6 @@ fun StatisticsScreen(
                     ) {
                         SettingsAndStatsCard(
                             fontSize = resultFontSize,
-                            operatorSize = operatorFontSize,
                             iconSize = modeIconSize,
                             modifier = Modifier
                                 .onGloballyPositioned { coordinates ->
@@ -237,7 +234,7 @@ fun StatisticsScreen(
                             iconSize = taskIconSize
                         )
                     }
-                    Spacer(modifier = Modifier.height(columnPadding))
+                    Spacer(modifier = Modifier.height(24.dp))
                     DoneButton(
                         buttonTextId = R.string.done,
                         size = roundButtonSize,

@@ -40,7 +40,7 @@ fun StatsColumn(
     statsText: String,
     iconId: Int,
     iconSize: Dp,
-    iconColor: Color,
+    iconColor: Color? = null,
 ) {
 
     Column(
@@ -52,7 +52,7 @@ fun StatsColumn(
             painter = painterResource(iconId),
             contentDescription = "modeIcon",
             modifier = Modifier.size(iconSize),
-            tint = iconColor
+            tint = iconColor ?: Color.Unspecified
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(

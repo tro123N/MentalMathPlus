@@ -80,12 +80,12 @@ fun SettingsScreen(
     val columnPadding = (0.028f * screenHeight.value).dp
     val startIconSize = (0.057f * screenHeight.value).dp
     val modeIconSize = (0.048f * screenHeight.value).dp
+    val operationIconSize = (0.043f * screenHeight.value).dp
     val topBarIconSize = (0.038f * screenHeight.value).dp
     val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
     val textLabelFontSize = (0.024f * screenHeight.value).sp
     val titleFontSize = (0.031f * screenHeight.value).sp
     val startButtonFontSize = (0.038f * screenHeight.value).sp
-    val operatorFontSize = (0.057f * screenHeight.value).sp
     val thumbnailFontSize = (0.015f * screenHeight.value).sp
 
     // viewModels
@@ -186,7 +186,7 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         OperatorButton(
-                            buttonTextId = R.string.add,
+                            icon = R.drawable.addition_24dp,
                             textColor = green,
                             isSelected = settingsState.isAdditionEnabled,
                             onClick = {
@@ -194,7 +194,7 @@ fun SettingsScreen(
                                 settingsViewModel.loadBestGames()
                             },
                             size = roundButtonSize,
-                            fontSize = operatorFontSize,
+                            iconSize = operationIconSize,
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
@@ -219,7 +219,7 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         OperatorButton(
-                            buttonTextId = R.string.subtract,
+                            icon = R.drawable.subtraction_24dp,
                             textColor = red,
                             isSelected = settingsState.isSubtractionEnabled,
                             onClick = {
@@ -227,7 +227,7 @@ fun SettingsScreen(
                                 settingsViewModel.loadBestGames()
                             },
                             size = roundButtonSize,
-                            fontSize = operatorFontSize
+                            iconSize = operationIconSize
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
@@ -252,7 +252,7 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         OperatorButton(
-                            buttonTextId = R.string.multiply,
+                            icon = R.drawable.multiplication_24dp,
                             textColor = yellow,
                             isSelected = settingsState.isMultiplicationEnabled,
                             onClick = {
@@ -260,7 +260,7 @@ fun SettingsScreen(
                                 settingsViewModel.loadBestGames()
                             },
                             size = roundButtonSize,
-                            fontSize = operatorFontSize
+                            iconSize = operationIconSize
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
@@ -285,7 +285,7 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         OperatorButton(
-                            buttonTextId = R.string.divide,
+                            icon = R.drawable.division_24dp,
                             textColor = blue,
                             isSelected = settingsState.isDivisionEnabled,
                             onClick = {
@@ -293,7 +293,7 @@ fun SettingsScreen(
                                 settingsViewModel.loadBestGames()
                             },
                             size = roundButtonSize,
-                            fontSize = operatorFontSize
+                            iconSize = operationIconSize
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(

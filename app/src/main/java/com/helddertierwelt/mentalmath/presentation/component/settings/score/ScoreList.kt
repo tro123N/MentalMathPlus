@@ -52,8 +52,7 @@ fun ScoreList(
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
-            .verticalScroll(scrollState)
-            .padding(12.dp, 0.dp, 12.dp, 12.dp),
+            .verticalScroll(scrollState),
         horizontalAlignment = Alignment.End
     ) {
         gameRecords.forEachIndexed { index, game ->
@@ -66,7 +65,7 @@ fun ScoreList(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(0.dp, 8.dp)
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .clickable { onClick(game) },
                 verticalAlignment = Alignment.CenterVertically,

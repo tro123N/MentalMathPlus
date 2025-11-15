@@ -19,6 +19,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.presentation.component.statistics
 
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,22 +48,26 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
+import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import kotlin.math.max
 
 @Composable
 fun SettingsAndStatsCard(
-    operatorSize: TextUnit,
     fontSize: TextUnit,
     iconSize: Dp,
     modifier: Modifier
 ) {
     val activity = LocalActivity.current as ViewModelStoreOwner
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
+    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
+
+    val themeMode = settingsViewModel.settingsState.collectAsState().value.themeMode
     val statisticsGameRecord =
         if (statisticsViewModel.showLoadedGameRecord.collectAsState().value) {
             statisticsViewModel.loadedGameRecord.collectAsState().value
@@ -111,59 +116,65 @@ fun SettingsAndStatsCard(
                     modeEnabled = statisticsGameRecord.isModeEnabled,
                     fontSize = fontSize,
                     iconSize = iconSize,
-                    limit = statisticsGameRecord.modeLimit.toInt()
+                    limit = statisticsGameRecord.modeLimit
                 )
-                SettingsOperatorColumn(
-                    operatorSize = operatorSize,
+
+                val additionRange = statisticsGameRecord.additionRangeStart to statisticsGameRecord.additionRangeEnd
+                val additionRangeString = when {
+                    additionRange.first <= 0 || additionRange.second <= 0 -> "-"
+                    additionRange.first ==  additionRange.second ->  additionRange.first.toString()
+                    else -> "${additionRange.first}-${additionRange.second}"
+                }
+                StatsColumn(
                     fontSize = fontSize,
-                    difficultyRange = statisticsGameRecord.additionRangeStart to statisticsGameRecord.additionRangeEnd,
-                    operatorId = R.string.add,
-                    operatorColor = green
+                    statsText = additionRangeString,
+                    iconId = R.drawable.addition_24dp,
+                    iconSize = iconSize,
+                    iconColor = green
                 )
-                SettingsOperatorColumn(
-                    operatorSize = operatorSize,
+
+                val subtractionRange = statisticsGameRecord.subtractionRangeStart to statisticsGameRecord.subtractionRangeEnd
+                val subtractionRangeString = when {
+                    subtractionRange.first <= 0 || subtractionRange.second <= 0 -> "-"
+                    subtractionRange.first ==  subtractionRange.second ->  subtractionRange.first.toString()
+                    else -> "${subtractionRange.first}-${subtractionRange.second}"
+                }
+                StatsColumn(
                     fontSize = fontSize,
-                    difficultyRange = statisticsGameRecord.subtractionRangeStart to statisticsGameRecord.subtractionRangeEnd,
-                    operatorId = R.string.subtract,
-                    operatorColor = red
+                    statsText = subtractionRangeString,
+                    iconId = R.drawable.subtraction_24dp,
+                    iconSize = iconSize,
+                    iconColor = red
                 )
-                SettingsOperatorColumn(
-                    operatorSize = operatorSize,
+
+                val multiplicationRange = statisticsGameRecord.multiplicationRangeStart to statisticsGameRecord.multiplicationRangeEnd
+                val multiplicationRangeString = when {
+                    multiplicationRange.first <= 0 || multiplicationRange.second <= 0 -> "-"
+                    multiplicationRange.first ==  multiplicationRange.second ->  multiplicationRange.first.toString()
+                    else -> "${multiplicationRange.first}-${multiplicationRange.second}"
+                }
+                StatsColumn(
                     fontSize = fontSize,
-                    difficultyRange = statisticsGameRecord.multiplicationRangeStart to statisticsGameRecord.multiplicationRangeEnd,
-                    operatorId = R.string.multiply,
-                    operatorColor = yellow
+                    statsText = multiplicationRangeString,
+                    iconId = R.drawable.multiplication_24dp,
+                    iconSize = iconSize,
+                    iconColor = yellow
                 )
-                SettingsOperatorColumn(
-                    operatorSize = operatorSize,
+
+                val divisionRange = statisticsGameRecord.divisionRangeStart to statisticsGameRecord.divisionRangeEnd
+                val divisionRangeString = when {
+                    divisionRange.first <= 0 || divisionRange.second <= 0 -> "-"
+                    divisionRange.first ==  divisionRange.second ->  divisionRange.first.toString()
+                    else -> "${divisionRange.first}-${divisionRange.second}"
+                }
+                StatsColumn(
                     fontSize = fontSize,
-                    difficultyRange = statisticsGameRecord.divisionRangeStart to statisticsGameRecord.divisionRangeEnd,
-                    operatorId = R.string.divide,
-                    operatorColor = blue
+                    statsText = divisionRangeString,
+                    iconId = R.drawable.division_24dp,
+                    iconSize = iconSize,
+                    iconColor = blue
                 )
             }
-            /*Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-                    .padding(0.dp)
-            ) {
-                HorizontalDivider(
-                    modifier = Modifier.weight(1f),
-                    thickness = 1.8.dp,
-                    color = MaterialTheme.colorScheme.background
-                )
-                Text(
-                    text = "Seed: %d".format(statisticsGameRecord.seed),
-                    color = MaterialTheme.colorScheme.background,
-                    fontSize = fontSize / 2f,
-                    modifier = Modifier.padding(horizontal = 4.dp)
-                )
-                HorizontalDivider(
-                    modifier = Modifier.weight(1f),
-                    thickness = 2.dp,
-                    color = MaterialTheme.colorScheme.background
-                )
-            }*/
             HorizontalDivider(
                 thickness = 2.dp,
                 color = MaterialTheme.colorScheme.background
@@ -201,14 +212,16 @@ fun SettingsAndStatsCard(
 
                 val activeMinutes = max(1, (statisticsGameRecord.activeTime / 1000)) / 60.0f
                 val correctPerMinute = "%.1f".format(statisticsGameRecord.correctAnswers.toFloat() / activeMinutes)
-                StatsCorrectPerMinuteColumn(
-                    iconId = R.drawable.check_24dp,
-                    iconSize = iconSize,
-                    iconColor = green,
-                    iconText = "min",
-                    iconFontSize = fontSize / 2,
+                val darkTheme = when (themeMode) {
+                    ThemeMode.DARK -> true
+                    ThemeMode.LIGHT -> false
+                    ThemeMode.SYSTEM -> isSystemInDarkTheme()
+                }
+                StatsColumn(
                     fontSize = fontSize,
-                    text = correctPerMinute
+                    statsText = correctPerMinute,
+                    iconId = if (darkTheme) R.drawable.check_min_dark_24dp else R.drawable.check_min_light_24dp,
+                    iconSize = iconSize,
                 )
 
                 StatsColumn(

@@ -47,14 +47,15 @@ fun ButtonRow(
     fontSize: TextUnit,
     iconSize: Dp,
     onClick: () -> Unit,
-    color: Color = LocalContentColor.current
+    color: Color = LocalContentColor.current,
+    isEnabled: Boolean = true
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(horizontal = 12.dp, vertical = 8.dp)
             .clip(RoundedCornerShape(16.dp))
-            .clickable { onClick() },
+            .clickable(enabled = isEnabled) { onClick() },
         verticalAlignment = Alignment.CenterVertically,
 
         ) {

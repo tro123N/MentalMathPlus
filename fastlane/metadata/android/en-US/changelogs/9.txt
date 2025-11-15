@@ -1,0 +1,6 @@
+- disable "random game"-button after clicking to prevent double start of a game
+- change padding for menu side sheet
+- renamed "share seed" to "share game" to make the purpose more clear
+- made the logo clickable to navigate to the "Mental Math"-Website
+- replaced the operation-strings with icons to have fixed and same proportions in the result-card
+- added own icon for the "correct answers per minute"-stat to be more stable when scaling display or font

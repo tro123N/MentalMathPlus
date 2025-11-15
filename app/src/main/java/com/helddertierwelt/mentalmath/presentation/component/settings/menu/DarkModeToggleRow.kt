@@ -61,7 +61,7 @@ fun DarkModeToggleRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(horizontal = 12.dp, vertical = 8.dp)
             .clip(RoundedCornerShape(16.dp))
             .clickable {
                 val nextIndex = (currentIndex + 1) % modes.size
