@@ -73,8 +73,8 @@ import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
 import kotlinx.coroutines.launch
 
 @Composable

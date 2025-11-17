@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.presentation.viewmodel
+package com.helddertierwelt.mentalmath.presentation.viewmodel.game
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -27,6 +27,8 @@ import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.data.entity.MathTask
 import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
 import com.helddertierwelt.mentalmath.data.repository.MathTaskRepository
+import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.game.TaskResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -41,6 +43,7 @@ import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
+import kotlin.math.round
 import kotlin.random.Random
 
 @HiltViewModel
@@ -244,9 +247,9 @@ class GameViewModel @Inject constructor(
         val correctAnswers = _gameState.value.correctAnswers.toFloat()
         val totalAnswers = max(1, _gameState.value.totalAnswers).toFloat()
         val activeScoreValue = 10f * correctAnswers.pow(2f) / (activeMinutes * totalAnswers)
-        val activeScore = kotlin.math.round(activeScoreValue * 100) / 100f
+        val activeScore = round(activeScoreValue * 100) / 100f
         val totalScoreValue = 10f * correctAnswers.pow(2f) / (totalMinutes * totalAnswers)
-        val totalScore = kotlin.math.round(totalScoreValue * 100) / 100f
+        val totalScore = round(totalScoreValue * 100) / 100f
 
         val lastGame = GameRecord(
             isModeEnabled = _gameState.value.isModeEnabled,

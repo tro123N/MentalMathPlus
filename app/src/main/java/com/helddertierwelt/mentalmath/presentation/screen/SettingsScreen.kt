@@ -59,9 +59,9 @@ import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
-import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.game.GameViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
 import java.security.SecureRandom
 
 @Composable
@@ -77,7 +77,6 @@ fun SettingsScreen(
     // font and icon sizes
     val roundButtonSize = (0.09f * screenHeight.value).dp
     val sliderSize = (0.05f * screenHeight.value).dp
-    val columnPadding = (0.028f * screenHeight.value).dp
     val startIconSize = (0.057f * screenHeight.value).dp
     val modeIconSize = (0.048f * screenHeight.value).dp
     val operationIconSize = (0.043f * screenHeight.value).dp
@@ -132,7 +131,7 @@ fun SettingsScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(columnPadding, columnPadding),
+                        .padding(24.dp),
                     verticalArrangement = Arrangement.SpaceBetween,
                     horizontalAlignment = Alignment.Start
                 ) {

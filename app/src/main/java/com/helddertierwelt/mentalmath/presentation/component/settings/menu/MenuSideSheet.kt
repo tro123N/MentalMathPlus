@@ -66,9 +66,10 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.red
-import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.game.GameViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.history.HistoryViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
 import kotlinx.coroutines.launch
 import java.security.SecureRandom
 
@@ -83,6 +84,7 @@ fun MenuSideSheet(
     val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
     val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
+    val historyViewModel: HistoryViewModel = hiltViewModel(viewModelStoreOwner)
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -246,6 +248,22 @@ fun MenuSideSheet(
                         isEnabled = !isRandomGameButtonClicked
                     )
 
+                    // History
+                    ButtonRow(
+                        iconResId = R.drawable.history_24dp,
+                        contentDescription = "History",
+                        text = "History",
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        onClick = {
+                            historyViewModel.loadAllGames()
+                            navController.navigate("history") {
+                                popUpTo(0) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+
                     // Input Layout Toggle
                     InputLayoutToggleRow(
                         fontSize = fontSize,
@@ -292,7 +310,7 @@ fun MenuSideSheet(
                         }
                     )
 
-                    // License Link
+                    /*// License Link
                     IntentRow(
                         iconResId = R.drawable.balance_24dp,
                         contentDescription = "License",
@@ -320,7 +338,7 @@ fun MenuSideSheet(
                                 "https://codeberg.org/Mental-Math/MentalMath/src/branch/main/PRIVACY_POLICY.md".toUri()
                             )
                         }
-                    )
+                    )*/
 
                     // Feedback Link
                     IntentRow(

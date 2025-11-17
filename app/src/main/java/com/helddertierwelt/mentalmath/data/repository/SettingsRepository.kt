@@ -25,7 +25,7 @@ import com.helddertierwelt.mentalmath.SettingsStateProto
 import com.helddertierwelt.mentalmath.data.datastore.SettingsStateSerializer
 import com.helddertierwelt.mentalmath.data.datastore.toProto
 import com.helddertierwelt.mentalmath.data.datastore.toSettingsState
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsState
+import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

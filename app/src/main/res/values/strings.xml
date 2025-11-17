@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Mental Math</string>
     <string name="game_result">"Result"</string>
+    <string name="history">"History"</string>
     <string name="start">Start</string>
     <string name="add">"&#43;"</string>
     <string name="subtract">"&#8722;"</string>

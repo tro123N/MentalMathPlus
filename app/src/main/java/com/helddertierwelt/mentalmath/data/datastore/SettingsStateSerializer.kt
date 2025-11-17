@@ -20,7 +20,7 @@ package com.helddertierwelt.mentalmath.data.datastore
 
 import androidx.datastore.core.Serializer
 import com.helddertierwelt.mentalmath.SettingsStateProto
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsState
+import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsState
 import java.io.InputStream
 import java.io.OutputStream
 

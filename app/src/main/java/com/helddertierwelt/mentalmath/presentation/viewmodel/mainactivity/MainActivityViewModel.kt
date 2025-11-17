@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.presentation.viewmodel
+package com.helddertierwelt.mentalmath.presentation.viewmodel.mainactivity
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,4 +37,3 @@ class MainActivityViewModel : ViewModel() {
         _showDeepLinkPopUp.value = value
     }
 }
-

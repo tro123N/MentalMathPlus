@@ -34,7 +34,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
 
 @Composable
 fun Navigation(
@@ -80,6 +80,14 @@ fun Navigation(
                 }
             ) {
                 StatisticsScreen(
+                    navController = navController
+                )
+            }
+
+            composable(
+                route = "history",
+            ) {
+                HistoryScreen(
                     navController = navController
                 )
             }
