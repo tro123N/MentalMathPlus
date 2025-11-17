@@ -16,15 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.presentation.viewmodel
+package com.helddertierwelt.mentalmath.presentation.component.history
 
-import com.helddertierwelt.mentalmath.R
-import java.io.Serializable
-
-@kotlinx.serialization.Serializable
-enum class Operation(val stringId: Int) : Serializable {
-    ADDITION(R.string.add),
-    SUBTRACTION(R.string.subtract),
-    MULTIPLICATION(R.string.multiply),
-    DIVISION(R.string.divide)
+enum class SortMode {
+    TIME_ASCENDING, TIME_DESCENDING, ALPHA_ASCENDING, ALPHA_DESCENDING
 }

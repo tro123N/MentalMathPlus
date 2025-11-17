@@ -40,8 +40,8 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.red
-import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.game.GameViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,9 +51,9 @@ fun GameTopBar(
     iconSize: Dp,
     fontSize: TextUnit
 ) {
-    val activity = LocalActivity.current as ViewModelStoreOwner
-    val gameViewModel: GameViewModel = hiltViewModel(activity)
-    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
+    val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
+    val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
+    val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
 
     TopAppBar(
         title = {},

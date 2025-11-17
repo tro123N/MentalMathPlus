@@ -164,6 +164,10 @@ class GameRecordRepository @Inject constructor(
         gameRecordDao.deleteAll()
     }
 
+    suspend fun findAllGameRecords(): List<GameRecord> {
+        return gameRecordDao.findAll()
+    }
+
     suspend fun resetAllGameRecords() {
         gameRecordDao.resetAllRecords()
     }

@@ -59,9 +59,7 @@ fun MathTaskDisplay(
             textAlign = TextAlign.Center,
             lineHeight = fontSize
         )
-
         Spacer(modifier = Modifier.height((0.5 * fontSize.value).dp))
-
         Box(
             modifier = Modifier.width(width + (1.2 * fontSize.value).dp),
             contentAlignment = Alignment.CenterStart
@@ -73,6 +71,7 @@ fun MathTaskDisplay(
             Spacer(modifier = Modifier.width(8.dp))
             val color = MaterialTheme.colorScheme.onSurface
             Box(
+                contentAlignment = Alignment.CenterStart,
                 modifier = Modifier
                     .align(Alignment.Center)
                     .width(width)
@@ -84,17 +83,13 @@ fun MathTaskDisplay(
                             end = Offset(size.width, size.height),
                             strokeWidth = 2.dp.toPx()
                         )
-                    },
-                contentAlignment = Alignment.CenterStart
+                    }
             ) {
-
-                val textColor =
-                    if (isCorrect == true) green else if (isCorrect == false) red else MaterialTheme.colorScheme.onPrimary
                 Text(
                     text = input,
                     fontSize = fontSize,
                     modifier = Modifier.align(Alignment.Center),
-                    color = textColor
+                    color = if (isCorrect == true) green else if (isCorrect == false) red else MaterialTheme.colorScheme.onPrimary
                 )
             }
         }

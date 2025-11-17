@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.presentation.component.settings.settings
+package com.helddertierwelt.mentalmath.presentation.component.settings.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -58,7 +58,7 @@ fun CustomRangeSlider(
     isEnabled: Boolean,
     activeTrackColor: Color,
     size: Dp,
-    thumbnailFontsize: TextUnit,
+    thumbnailFontSize: TextUnit,
 ) {
     val startInteractionSource = remember { MutableInteractionSource() }
     val endInteractionSource = remember { MutableInteractionSource() }
@@ -66,7 +66,7 @@ fun CustomRangeSlider(
     val isDraggingEnd by endInteractionSource.collectIsDraggedAsState()
     var sliderWidth by remember { mutableIntStateOf(0) }
     var sliderHeight by remember { mutableIntStateOf(0) }
-    var value = value.first..value.second
+    val value = value.first..value.second
 
     Box(
         modifier = Modifier
@@ -101,7 +101,7 @@ fun CustomRangeSlider(
                 .padding(horizontal = 6.dp),
             text = "%.0f".format(value.start),
             color = MaterialTheme.colorScheme.onSecondary,
-            fontSize = thumbnailFontsize
+            fontSize = thumbnailFontSize
         )
 
         Text(
@@ -120,7 +120,7 @@ fun CustomRangeSlider(
                 .padding(horizontal = 6.dp),
             text = "%.0f".format(value.endInclusive),
             color = MaterialTheme.colorScheme.onSecondary,
-            fontSize = thumbnailFontsize
+            fontSize = thumbnailFontSize
         )
 
         val sliderColors: SliderColors

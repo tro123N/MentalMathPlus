@@ -47,10 +47,10 @@ import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
-import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.MainActivityViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.game.GameViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.mainactivity.MainActivityViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
 import com.helddertierwelt.mentalmath.util.SettingsLinkUtil.deserialize
 import com.helddertierwelt.mentalmath.util.SettingsLinkUtil.isValidQueryParameter
 import dagger.hilt.android.AndroidEntryPoint

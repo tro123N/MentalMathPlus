@@ -21,7 +21,7 @@ package com.helddertierwelt.mentalmath.data.entity
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.helddertierwelt.mentalmath.presentation.viewmodel.TaskResult
+import com.helddertierwelt.mentalmath.presentation.viewmodel.game.TaskResult
 
 @Entity(
     tableName = "game_records",

@@ -46,10 +46,16 @@ fun PopUp(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
-            Text(text = title, fontSize = titleSize)
+            Text(
+                text = title,
+                fontSize = titleSize
+            )
         },
         text = {
-            Text(text = description, fontSize = descriptionSize)
+            Text(
+                text = description,
+                fontSize = descriptionSize
+            )
         },
         confirmButton = {
             Button(
@@ -59,7 +65,10 @@ fun PopUp(
                 ),
                 onClick = { onConfirm() }
             ) {
-                Text(confirmationText, fontSize = descriptionSize)
+                Text(
+                    text = confirmationText,
+                    fontSize = descriptionSize
+                )
             }
         },
         dismissButton = if (onCancel != null && cancelText != null && dismissColor != null) {
@@ -71,7 +80,10 @@ fun PopUp(
                     ),
                     onClick = { onCancel() }
                 ) {
-                    Text(cancelText, fontSize = descriptionSize)
+                    Text(
+                        text = cancelText,
+                        fontSize = descriptionSize
+                    )
                 }
             }
         } else null,

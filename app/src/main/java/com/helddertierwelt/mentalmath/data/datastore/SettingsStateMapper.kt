@@ -24,7 +24,7 @@ import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.LIGHT
 import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.SYSTEM
 import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.UNRECOGNIZED
 import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsState
+import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsState
 
 fun SettingsState.toProto(): SettingsStateProto {
     return SettingsStateProto.newBuilder()

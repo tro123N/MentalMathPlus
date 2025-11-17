@@ -72,8 +72,8 @@ import com.helddertierwelt.mentalmath.presentation.component.statistics.Settings
 import com.helddertierwelt.mentalmath.presentation.component.statistics.StatisticsTopBar
 import com.helddertierwelt.mentalmath.presentation.component.statistics.TasksCard
 import com.helddertierwelt.mentalmath.presentation.theme.green
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
 import com.helddertierwelt.mentalmath.util.GameResultInfoGenerator.getGamePopUpInfo
 import com.helddertierwelt.mentalmath.util.SettingsLinkUtil
 import kotlinx.coroutines.launch
@@ -97,7 +97,6 @@ fun StatisticsScreen(
     val taskIconSize = (0.032f * screenHeight.value).dp
     val fontSize = (0.038f * screenHeight.value).sp
     val titleFontSize = (0.032f * screenHeight.value).sp
-    val operatorFontSize = (0.057f * screenHeight.value).sp
     val resultFontSize = (0.024f * screenHeight.value).sp
 
     // viewModels
@@ -109,6 +108,7 @@ fun StatisticsScreen(
     var statsCardCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
     var hasCapturedCoordinates by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+    val navigatedFromHistory = statisticsViewModel.navigatedFromHistory.collectAsState().value
     val statisticsGameRecord =
         if (statisticsViewModel.showLoadedGameRecord.collectAsState().value) {
             statisticsViewModel.loadedGameRecord.collectAsState().value
@@ -172,8 +172,8 @@ fun StatisticsScreen(
         topBar = {
             StatisticsTopBar(
                 R.string.game_result,
-                titleFontSize,
-                shareIconSize,
+                titleFontSize = titleFontSize,
+                iconSize = shareIconSize,
                 onShareClick = {
                     coroutineScope.launch {
                         scrollState.animateScrollTo(0)
@@ -200,7 +200,6 @@ fun StatisticsScreen(
                     .padding(padding),
                 color = MaterialTheme.colorScheme.background
             ) {
-
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -217,16 +216,15 @@ fun StatisticsScreen(
                         SettingsAndStatsCard(
                             fontSize = resultFontSize,
                             iconSize = modeIconSize,
-                            modifier = Modifier
-                                .onGloballyPositioned { coordinates ->
-                                    if (!hasCapturedCoordinates) {
-                                        val size = coordinates.size
-                                        if (size.width > 50 && size.height > 50) {
-                                            statsCardCoordinates = coordinates
-                                            hasCapturedCoordinates = true
-                                        }
+                            modifier = Modifier.onGloballyPositioned { coordinates ->
+                                if (!hasCapturedCoordinates) {
+                                    val size = coordinates.size
+                                    if (size.width > 50 && size.height > 50) {
+                                        statsCardCoordinates = coordinates
+                                        hasCapturedCoordinates = true
                                     }
                                 }
+                            }
                         )
                         Spacer(modifier = Modifier.height(24.dp))
                         TasksCard(
@@ -242,12 +240,20 @@ fun StatisticsScreen(
                         iconSize = doneIconSize,
                         modifier = Modifier,
                         onClick = {
-                            settingsViewModel.loadBestGames()
-                            navController.navigate("settings") {
-                                popUpTo(0) { inclusive = true }
-                                launchSingleTop = true
+                            if (!navigatedFromHistory) {
+                                settingsViewModel.loadBestGames()
+                                navController.navigate("settings") {
+                                    popUpTo(0) { inclusive = true }
+                                    launchSingleTop = true
+                                }
+                            } else {
+                                statisticsViewModel.setNavigatedFromHistory(false)
+                                navController.navigate("history") {
+                                    popUpTo(0) { inclusive = true }
+                                    launchSingleTop = true
+                                }
                             }
-                        },
+                        }
                     )
                 }
             }
@@ -297,10 +303,18 @@ fun StatisticsScreen(
     DisposableEffect(Unit) {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                settingsViewModel.loadBestGames()
-                navController.navigate("settings") {
-                    popUpTo(0) { inclusive = true }
-                    launchSingleTop = true
+                if (!navigatedFromHistory) {
+                    settingsViewModel.loadBestGames()
+                    navController.navigate("settings") {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                } else {
+                    statisticsViewModel.setNavigatedFromHistory(false)
+                    navController.navigate("history") {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
                 }
             }
         }

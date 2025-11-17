@@ -49,19 +49,19 @@ import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.component.settings.menu.MenuSideSheet
 import com.helddertierwelt.mentalmath.presentation.component.settings.score.ScoreSideSheet
-import com.helddertierwelt.mentalmath.presentation.component.settings.settings.CustomRangeSlider
-import com.helddertierwelt.mentalmath.presentation.component.settings.settings.CustomSlider
-import com.helddertierwelt.mentalmath.presentation.component.settings.settings.ModeButton
-import com.helddertierwelt.mentalmath.presentation.component.settings.settings.OperatorButton
-import com.helddertierwelt.mentalmath.presentation.component.settings.settings.SettingsTopBar
-import com.helddertierwelt.mentalmath.presentation.component.settings.settings.StartButton
+import com.helddertierwelt.mentalmath.presentation.component.settings.screen.CustomRangeSlider
+import com.helddertierwelt.mentalmath.presentation.component.settings.screen.CustomSlider
+import com.helddertierwelt.mentalmath.presentation.component.settings.screen.ModeButton
+import com.helddertierwelt.mentalmath.presentation.component.settings.screen.OperatorButton
+import com.helddertierwelt.mentalmath.presentation.component.settings.screen.SettingsTopBar
+import com.helddertierwelt.mentalmath.presentation.component.settings.screen.StartButton
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
-import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.game.GameViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
 import java.security.SecureRandom
 
 @Composable
@@ -77,7 +77,6 @@ fun SettingsScreen(
     // font and icon sizes
     val roundButtonSize = (0.09f * screenHeight.value).dp
     val sliderSize = (0.05f * screenHeight.value).dp
-    val columnPadding = (0.028f * screenHeight.value).dp
     val startIconSize = (0.057f * screenHeight.value).dp
     val modeIconSize = (0.048f * screenHeight.value).dp
     val operationIconSize = (0.043f * screenHeight.value).dp
@@ -132,7 +131,7 @@ fun SettingsScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(columnPadding, columnPadding),
+                        .padding(24.dp),
                     verticalArrangement = Arrangement.SpaceBetween,
                     horizontalAlignment = Alignment.Start
                 ) {
@@ -211,7 +210,7 @@ fun SettingsScreen(
                             isEnabled = settingsState.isAdditionEnabled,
                             activeTrackColor = green,
                             size = sliderSize,
-                            thumbnailFontsize = thumbnailFontSize
+                            thumbnailFontSize = thumbnailFontSize
                         )
                     }
                     Row(
@@ -244,7 +243,7 @@ fun SettingsScreen(
                             isEnabled = settingsState.isSubtractionEnabled,
                             activeTrackColor = red,
                             size = sliderSize,
-                            thumbnailFontsize = thumbnailFontSize
+                            thumbnailFontSize = thumbnailFontSize
                         )
                     }
                     Row(
@@ -277,7 +276,7 @@ fun SettingsScreen(
                             isEnabled = settingsState.isMultiplicationEnabled,
                             activeTrackColor = yellow,
                             size = sliderSize,
-                            thumbnailFontsize = thumbnailFontSize
+                            thumbnailFontSize = thumbnailFontSize
                         )
                     }
                     Row(
@@ -310,7 +309,7 @@ fun SettingsScreen(
                             isEnabled = settingsState.isDivisionEnabled,
                             activeTrackColor = blue,
                             size = sliderSize,
-                            thumbnailFontsize = thumbnailFontSize
+                            thumbnailFontSize = thumbnailFontSize
                         )
                     }
                     StartButton(

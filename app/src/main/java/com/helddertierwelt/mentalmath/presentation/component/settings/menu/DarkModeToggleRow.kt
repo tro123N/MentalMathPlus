@@ -59,6 +59,7 @@ fun DarkModeToggleRow(
     val modes = listOf(ThemeMode.DARK, ThemeMode.LIGHT, ThemeMode.SYSTEM)
     val currentIndex = modes.indexOf(currentMode).coerceAtLeast(0)
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 8.dp)
@@ -66,8 +67,7 @@ fun DarkModeToggleRow(
             .clickable {
                 val nextIndex = (currentIndex + 1) % modes.size
                 onModeChange(modes[nextIndex])
-            },
-        verticalAlignment = Alignment.CenterVertically,
+            }
     ) {
         Spacer(modifier = Modifier.width(16.dp))
         Icon(
