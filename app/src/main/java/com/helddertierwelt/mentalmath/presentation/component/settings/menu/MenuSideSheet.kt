@@ -310,36 +310,6 @@ fun MenuSideSheet(
                         }
                     )
 
-                    /*// License Link
-                    IntentRow(
-                        iconResId = R.drawable.balance_24dp,
-                        contentDescription = "License",
-                        text = "License",
-                        fontSize = fontSize,
-                        iconSize = iconSize,
-                        intentProvider = {
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                "https://codeberg.org/Mental-Math/MentalMath/src/branch/main/LICENSE.md".toUri()
-                            )
-                        }
-                    )
-
-                    // Privacy Policy Link
-                    IntentRow(
-                        iconResId = R.drawable.domino_mask_24dp,
-                        contentDescription = "Privacy Policy",
-                        text = "Privacy Policy",
-                        fontSize = fontSize,
-                        iconSize = iconSize,
-                        intentProvider = {
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                "https://codeberg.org/Mental-Math/MentalMath/src/branch/main/PRIVACY_POLICY.md".toUri()
-                            )
-                        }
-                    )*/
-
                     // Feedback Link
                     IntentRow(
                         iconResId = R.drawable.feedback_24dp,

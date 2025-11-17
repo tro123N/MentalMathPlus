@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
+import com.helddertierwelt.mentalmath.presentation.component.history.SortMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,8 +41,11 @@ class HistoryViewModel @Inject constructor(
     private val _showActiveScore = MutableStateFlow(false)
     val showActiveScore = _showActiveScore.asStateFlow()
 
-    private val _ascending = MutableStateFlow(false)
-    val ascending = _ascending.asStateFlow()
+    private val _isEntryClicked = MutableStateFlow(false)
+    val isEntryClicked = _isEntryClicked.asStateFlow()
+
+    private val _sortMode = MutableStateFlow(SortMode.TIME_DESCENDING)
+    val sortMode = _sortMode.asStateFlow()
 
     fun loadAllGames() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -54,7 +58,11 @@ class HistoryViewModel @Inject constructor(
         _showActiveScore.value = !_showActiveScore.value
     }
 
-    fun toggleAscending() {
-        _ascending.value = !_ascending.value
+    fun setSortMode(sortMode: SortMode) {
+        _sortMode.value = sortMode
+    }
+
+    fun setIsEntryClicked(isEntryClicked: Boolean) {
+        _isEntryClicked.value = isEntryClicked
     }
 }

@@ -45,11 +45,10 @@ fun CountdownTimer(
     navController: NavController,
     time: Long,
 ) {
-
-    val activity = LocalActivity.current as ViewModelStoreOwner
-    val gameViewModel: GameViewModel = hiltViewModel(activity)
-    val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
-    var timeLeft = time - gameViewModel.gameState.collectAsState().value.activeTime
+    val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
+    val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
+    val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
+    val timeLeft = time - gameViewModel.gameState.collectAsState().value.activeTime
     var formattedTime by remember { mutableStateOf(formatTime(timeLeft)) }
 
     LaunchedEffect(timeLeft) {

@@ -49,12 +49,12 @@ import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.component.settings.menu.MenuSideSheet
 import com.helddertierwelt.mentalmath.presentation.component.settings.score.ScoreSideSheet
-import com.helddertierwelt.mentalmath.presentation.component.settings.settings.CustomRangeSlider
-import com.helddertierwelt.mentalmath.presentation.component.settings.settings.CustomSlider
-import com.helddertierwelt.mentalmath.presentation.component.settings.settings.ModeButton
-import com.helddertierwelt.mentalmath.presentation.component.settings.settings.OperatorButton
-import com.helddertierwelt.mentalmath.presentation.component.settings.settings.SettingsTopBar
-import com.helddertierwelt.mentalmath.presentation.component.settings.settings.StartButton
+import com.helddertierwelt.mentalmath.presentation.component.settings.screen.CustomRangeSlider
+import com.helddertierwelt.mentalmath.presentation.component.settings.screen.CustomSlider
+import com.helddertierwelt.mentalmath.presentation.component.settings.screen.ModeButton
+import com.helddertierwelt.mentalmath.presentation.component.settings.screen.OperatorButton
+import com.helddertierwelt.mentalmath.presentation.component.settings.screen.SettingsTopBar
+import com.helddertierwelt.mentalmath.presentation.component.settings.screen.StartButton
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
@@ -210,7 +210,7 @@ fun SettingsScreen(
                             isEnabled = settingsState.isAdditionEnabled,
                             activeTrackColor = green,
                             size = sliderSize,
-                            thumbnailFontsize = thumbnailFontSize
+                            thumbnailFontSize = thumbnailFontSize
                         )
                     }
                     Row(
@@ -243,7 +243,7 @@ fun SettingsScreen(
                             isEnabled = settingsState.isSubtractionEnabled,
                             activeTrackColor = red,
                             size = sliderSize,
-                            thumbnailFontsize = thumbnailFontSize
+                            thumbnailFontSize = thumbnailFontSize
                         )
                     }
                     Row(
@@ -276,7 +276,7 @@ fun SettingsScreen(
                             isEnabled = settingsState.isMultiplicationEnabled,
                             activeTrackColor = yellow,
                             size = sliderSize,
-                            thumbnailFontsize = thumbnailFontSize
+                            thumbnailFontSize = thumbnailFontSize
                         )
                     }
                     Row(
@@ -309,7 +309,7 @@ fun SettingsScreen(
                             isEnabled = settingsState.isDivisionEnabled,
                             activeTrackColor = blue,
                             size = sliderSize,
-                            thumbnailFontsize = thumbnailFontSize
+                            thumbnailFontSize = thumbnailFontSize
                         )
                     }
                     StartButton(

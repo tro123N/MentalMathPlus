@@ -57,8 +57,7 @@ fun ButtonRow(
             .clip(RoundedCornerShape(16.dp))
             .clickable(enabled = isEnabled) { onClick() },
         verticalAlignment = Alignment.CenterVertically,
-
-        ) {
+    ) {
         Spacer(modifier = Modifier.width(16.dp))
         Icon(
             painter = painterResource(iconResId),

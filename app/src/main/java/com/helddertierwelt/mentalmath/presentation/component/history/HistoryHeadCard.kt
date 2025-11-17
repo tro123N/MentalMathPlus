@@ -99,7 +99,6 @@ fun HistoryHeadCard(
                     .clickable{ onClick() },
                 tint = if (showActiveScore) green else yellow
             )
-
         }
     }
 }

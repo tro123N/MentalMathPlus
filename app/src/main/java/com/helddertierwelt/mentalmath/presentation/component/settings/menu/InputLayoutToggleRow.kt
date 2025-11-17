@@ -47,14 +47,14 @@ fun InputLayoutToggleRow(
 ) {
 
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 8.dp)
             .clip(RoundedCornerShape(16.dp))
             .clickable {
                 onClick()
-            },
-        verticalAlignment = Alignment.CenterVertically,
+            }
     ) {
         Spacer(modifier = Modifier.width(16.dp))
         Icon(

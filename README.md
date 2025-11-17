@@ -23,6 +23,11 @@ Select which arithmetic operations to include (+, −, ×, ÷). For each operati
 • Task Mode lets you complete a fixed number of tasks (10, 20, 30, 40, or 50).  
 • Timed Mode challenges you to solve as many tasks as possible within a time limit (1, 2, 3, 4, or 5 minutes).
 
+#### Challenge your Friends
+You can share a game link to:  
+*1.* Replay a completed game with the exact same tasks to compare scores with friends.  
+*2.* Start a new game with preset settings for a fair and fresh challenge for everyone.
+
 #### Difficulty Calculation
 Task difficulty is determined using [algorithms](https://codeberg.org/Mental-Math/MentalMathEvaluator) based on column addition, column subtraction, long multiplication, and long division, creating realistic and well-balanced exercises.
 
@@ -30,12 +35,10 @@ Task difficulty is determined using [algorithms](https://codeberg.org/Mental-Mat
 After each game, view a detailed summary that includes your selected settings, your performance (accuracy, speed, and score), and a complete list of all your tasks and answers for review.
 
 #### Personal Leaderboard
-Your top 10 results are saved separately for each combination of settings, so you can keep track of your best performances. You can review detailed summaries of your top games at any time.
+Your top 10 results are displayed separately for each combination of settings, allowing you to easily track your progress. You can also review detailed summaries of your top games at any time.
 
-#### Challenge your Friends
-You can share a game link to:  
-*1.* Replay a completed game with the exact same tasks to compare scores with friends.  
-*2.* Start a new game with preset settings for a fair and fresh challenge for everyone.
+#### Game History
+Explore the complete history of all your scored games. You can sort the list by time or numerically to find specific games. Anytime, you can revisit any match to view a detailed summary of its results.
 
 #### Open Source and Privacy
 "Mental Math" is fully [open source](https://codeberg.org/Mental-Math/MentalMath), free to use, and does not collect or process any personal data. It requires no permissions, contains no ads, and runs entirely offline to respect your privacy.

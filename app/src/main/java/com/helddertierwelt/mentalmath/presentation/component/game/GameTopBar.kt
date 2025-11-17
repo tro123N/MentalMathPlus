@@ -51,9 +51,9 @@ fun GameTopBar(
     iconSize: Dp,
     fontSize: TextUnit
 ) {
-    val activity = LocalActivity.current as ViewModelStoreOwner
-    val gameViewModel: GameViewModel = hiltViewModel(activity)
-    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
+    val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
+    val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
+    val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
 
     TopAppBar(
         title = {},

@@ -33,6 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,19 +52,14 @@ import com.helddertierwelt.mentalmath.presentation.component.history.HistoryTopB
 import com.helddertierwelt.mentalmath.presentation.viewmodel.history.HistoryViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
 
-
 @Composable
 fun HistoryScreen(
     navController: NavController,
 ) {
-
     // viewModels
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
     val historyViewModel: HistoryViewModel = hiltViewModel(viewModelStoreOwner)
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
-    val allGames = historyViewModel.allGames.collectAsState().value
-    val showActiveScore = historyViewModel.showActiveScore.collectAsState().value
-    val ascending = historyViewModel.ascending.collectAsState().value
 
     // font and icon sizes
     val screenHeight = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
@@ -74,23 +70,32 @@ fun HistoryScreen(
     val titleFontSize = (0.032f * screenHeight.value).sp
     val scrollState = rememberScrollState()
 
+    // variables
+    val allGames = historyViewModel.allGames.collectAsState().value
+    val showActiveScore = historyViewModel.showActiveScore.collectAsState().value
+    val currentSortMode = historyViewModel.sortMode.collectAsState().value
+    val isEntryClicked = historyViewModel.isEntryClicked.collectAsState().value
+
+    LaunchedEffect(Unit) {
+        historyViewModel.setIsEntryClicked(false)
+    }
+
     Scaffold(
         topBar = {
             HistoryTopBar(
                 R.string.history,
                 titleFontSize = titleFontSize,
                 iconSize = iconSize,
-                onClick = { historyViewModel.toggleAscending() },
-                ascending = ascending
+                onClick = { historyViewModel.setSortMode(it) },
+                currentSortMode = currentSortMode
             )
-
         },
         content = { padding ->
             Surface(
+                color = MaterialTheme.colorScheme.background,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding),
-                color = MaterialTheme.colorScheme.background
+                    .padding(padding)
             ) {
                 Column(
                     modifier = Modifier
@@ -104,28 +109,29 @@ fun HistoryScreen(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Column(
-                        modifier = Modifier
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.Start,
+                                modifier = Modifier
                             .verticalScroll(scrollState)
                             .fillMaxWidth()
-                            .weight(1f),
-                        verticalArrangement = Arrangement.Top,
-                        horizontalAlignment = Alignment.Start
+                            .weight(1f)
                     ) {
                         HistoryEntriesCard(
                             gameRecords = allGames,
+                            showActiveScore = showActiveScore,
+                            currentSortMode = currentSortMode,
+                            fontSize = 12.sp,
+                            isEnabled = !isEntryClicked,
                             onClick = { gameRecord ->
+                                historyViewModel.setIsEntryClicked(true)
                                 statisticsViewModel.setNavigatedFromHistory(true)
                                 statisticsViewModel.setLoadedGameRecord(gameRecord)
                                 statisticsViewModel.setShowLoadedGameRecord(true)
                                 statisticsViewModel.setShowLinkGamePopUp(false)
                                 navController.navigate("statistics")
-                            },
-                            showActiveScore = showActiveScore,
-                            ascending = ascending,
-                            fontSize = 12.sp
+                            }
                         )
                     }
-
                     Spacer(modifier = Modifier.height(24.dp))
                     HistoryDoneButton(
                         buttonTextId = R.string.done,

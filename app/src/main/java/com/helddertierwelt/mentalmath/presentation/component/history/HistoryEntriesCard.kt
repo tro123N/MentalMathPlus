@@ -1,3 +1,21 @@
+/*
+Mental Math - Android app for practicing mental arithmetic
+Copyright (C) 2025 HeldDerTierwelt
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
+*/
+
 package com.helddertierwelt.mentalmath.presentation.component.history
 
 import androidx.compose.foundation.clickable
@@ -8,6 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,10 +43,42 @@ fun HistoryEntriesCard(
     fontSize: TextUnit,
     onClick: (GameRecord) -> Unit,
     isEnabled: Boolean = true,
-    ascending: Boolean,
+    currentSortMode: SortMode,
     showActiveScore: Boolean
 ) {
-    val gameRecordsForHistory = if (ascending) gameRecords.asReversed() else gameRecords
+    fun sortGameRecords(records: List<GameRecord>, ascending: Boolean): List<GameRecord> {
+        return records.sortedWith { record1, record2 ->
+            compareValuesBy(
+                record1, record2,
+                GameRecord::isModeEnabled,
+                GameRecord::modeLimit,
+                GameRecord::additionRangeStart,
+                GameRecord::additionRangeEnd,
+                GameRecord::subtractionRangeStart,
+                GameRecord::subtractionRangeEnd,
+                GameRecord::multiplicationRangeStart,
+                GameRecord::multiplicationRangeEnd,
+                GameRecord::divisionRangeStart,
+                GameRecord::divisionRangeEnd,
+                GameRecord::totalScore
+            )
+        }.let { if (ascending) it else it.asReversed() }
+    }
+
+    fun formatRange(rangeStart: Int, rangeEnd: Int): String {
+        return when {
+            rangeStart <= 0 || rangeEnd <= 0 -> "-"
+            rangeStart == rangeEnd -> rangeStart.toString()
+            else -> "$rangeStart-$rangeEnd"
+        }
+    }
+
+    val gameRecordsForHistory = when (currentSortMode) {
+        SortMode.TIME_DESCENDING -> gameRecords
+        SortMode.TIME_ASCENDING -> gameRecords.asReversed()
+        SortMode.ALPHA_DESCENDING -> sortGameRecords(gameRecords, ascending = false)
+        SortMode.ALPHA_ASCENDING -> sortGameRecords(gameRecords, ascending = true)
+    }
     Card(
         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
         modifier = Modifier.fillMaxWidth(),
@@ -36,85 +87,51 @@ fun HistoryEntriesCard(
             contentColor = MaterialTheme.colorScheme.onPrimary
         )
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             if (gameRecords.isEmpty()) {
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
-                ) {
+                Row(Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 8.dp)) {
                     Text(
-                        "There are no games with a score",
-                        Modifier.weight(1f),
+                        text = "There are no games with a score",
                         fontSize = fontSize,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.weight(1f)
                     )
                 }
             } else {
-                gameRecordsForHistory.forEachIndexed { _, game ->
+                gameRecordsForHistory.forEachIndexed { index, game ->
                     val limit = if (game.isModeEnabled) "%d0".format(game.modeLimit) else "%d:00".format(game.modeLimit)
-                    val additionRange = game.additionRangeStart to game.additionRangeEnd
-                    val additionRangeString = when {
-                        additionRange.first <= 0 || additionRange.second <= 0 -> "-"
-                        additionRange.first == additionRange.second -> additionRange.first.toString()
-                        else -> "${additionRange.first}-${additionRange.second}"
+                    val rangeStrings = listOf(
+                        formatRange(game.additionRangeStart, game.additionRangeEnd),
+                        formatRange(game.subtractionRangeStart, game.subtractionRangeEnd),
+                        formatRange(game.multiplicationRangeStart, game.multiplicationRangeEnd),
+                        formatRange(game.divisionRangeStart, game.divisionRangeEnd)
+                    )
+                    val scoreString = "%.2f".format(if (showActiveScore) game.activeScore else game.totalScore)
+                    val allStrings = listOf(limit) + rangeStrings + scoreString
+
+                    if (index > 0) {
+                        HorizontalDivider(
+                            thickness = 2.dp,
+                            color = MaterialTheme.colorScheme.background
+                        )
                     }
-                    val subtractionRange = game.subtractionRangeStart to game.subtractionRangeEnd
-                    val subtractionRangeString = when {
-                        subtractionRange.first <= 0 || subtractionRange.second <= 0 -> "-"
-                        subtractionRange.first == subtractionRange.second -> subtractionRange.first.toString()
-                        else -> "${subtractionRange.first}-${subtractionRange.second}"
-                    }
-                    val multiplicationRange = game.multiplicationRangeStart to game.multiplicationRangeEnd
-                    val multiplicationRangeString = when {
-                        multiplicationRange.first <= 0 || multiplicationRange.second <= 0 -> "-"
-                        multiplicationRange.first == multiplicationRange.second -> multiplicationRange.first.toString()
-                        else -> "${multiplicationRange.first}-${multiplicationRange.second}"
-                    }
-                    val divisionRange = game.divisionRangeStart to game.divisionRangeEnd
-                    val divisionRangeString = when {
-                        divisionRange.first <= 0 || divisionRange.second <= 0 -> "-"
-                        divisionRange.first == divisionRange.second -> divisionRange.first.toString()
-                        else -> "${divisionRange.first}-${divisionRange.second}"
-                    }
-                    val score = if (showActiveScore) game.activeScore else game.totalScore
-                    val scoreString = "%.2f".format(score)
                     Row(
-                        Modifier
+                        modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 12.dp, vertical = 8.dp)
                             .clip(RoundedCornerShape(16.dp))
-                            .clickable(enabled = isEnabled) { onClick(game) },
+                            .clickable(enabled = isEnabled) { onClick(game) }
                     ) {
-                        Text(limit, Modifier.weight(1f), fontSize = fontSize, textAlign = TextAlign.Center)
-                        Text(
-                            additionRangeString,
-                            Modifier.weight(1f),
-                            fontSize = fontSize,
-                            textAlign = TextAlign.Center
-                        )
-                        Text(
-                            subtractionRangeString,
-                            Modifier.weight(1f),
-                            fontSize = fontSize,
-                            textAlign = TextAlign.Center
-                        )
-                        Text(
-                            multiplicationRangeString,
-                            Modifier.weight(1f),
-                            fontSize = fontSize,
-                            textAlign = TextAlign.Center
-                        )
-                        Text(
-                            divisionRangeString,
-                            Modifier.weight(1f),
-                            fontSize = fontSize,
-                            textAlign = TextAlign.Center
-                        )
-                        Text(scoreString, Modifier.weight(1f), fontSize = fontSize, textAlign = TextAlign.Center)
+                        allStrings.forEach { textContent ->
+                            Text(
+                                text = textContent,
+                                modifier = Modifier.weight(1f),
+                                fontSize = fontSize,
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
             }
