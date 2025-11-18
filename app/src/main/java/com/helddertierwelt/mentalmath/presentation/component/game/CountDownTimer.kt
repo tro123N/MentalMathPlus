@@ -69,7 +69,7 @@ fun CountdownTimer(
         text = formattedTime,
         color = MaterialTheme.colorScheme.onPrimary,
         fontSize = fontSize,
-        modifier = Modifier.padding(end = 16.dp)
+        modifier = Modifier.padding(end = 24.dp)
     )
 }
 

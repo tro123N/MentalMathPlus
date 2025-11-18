@@ -120,6 +120,7 @@ fun TasksCard(
                         Text(
                             text = exercise,
                             fontSize = resultFontSize,
+                            modifier = Modifier.align(Alignment.CenterVertically)
                         )
 
                         val isCorrect =

@@ -59,6 +59,7 @@ A simple and minimalist app design with no unnecessary elements or distractions,
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/9.png" alt="Main Screen" width="30%">
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/10.png" alt="Main Screen" width="30%">
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/11.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/12.png" alt="Main Screen" width="30%">
 </p>
 
 ## Privacy Policy
