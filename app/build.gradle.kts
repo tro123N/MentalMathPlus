@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.protobuf)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.serialization)
+
+    id("org.gradlex.reproducible-builds") version "1.1"
 }
 hilt {
     enableAggregatingTask = false
@@ -25,8 +27,8 @@ android {
         targetSdk = 36
         versionCode = 11
         versionName = "1.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     ksp {
@@ -96,9 +98,27 @@ android {
     buildFeatures {
         compose = true
     }
+
+    tasks.withType<AbstractArchiveTask>().configureEach {
+        isPreserveFileTimestamps = false
+        isReproducibleFileOrder = true
+    }
+
+    packaging {
+        jniLibs.keepDebugSymbols += "**/*.so"
+    }
+}
+
+tasks.matching { it.name.contains("Profile", ignoreCase = true) }.configureEach {
+    enabled = false
 }
 
 tasks.withType<Zip>().configureEach {
+    isPreserveFileTimestamps = false
+    isReproducibleFileOrder = true
+}
+
+tasks.withType<Jar>().configureEach {
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
 }
