@@ -57,6 +57,9 @@ android {
 
     flavorDimensions += "distribution"
     productFlavors {
+        create("default") {
+            dimension = "distribution"
+        }
         create("foss") {
             dimension = "distribution"
             signingConfig = signingConfigs.getByName("fossRelease")

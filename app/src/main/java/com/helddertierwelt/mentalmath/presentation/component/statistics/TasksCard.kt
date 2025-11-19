@@ -83,7 +83,6 @@ fun TasksCard(
         ) {
             Text(
                 modifier = Modifier.weight(1f),
-
                 text = stringResource(R.string.exercises),
                 fontSize = resultFontSize
             )
