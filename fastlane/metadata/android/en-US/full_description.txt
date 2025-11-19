@@ -19,7 +19,7 @@ Personal Leaderboard
 Your top 10 results are displayed separately for each combination of settings, allowing you to easily track your progress. You can also review detailed summaries of your top games at any time.
 
 Game History
-Explore the complete history of all your scored games. You can sort the list by time or numerically to find specific games. Anytime, you can revisit any match to view a detailed summary of its results.
+Explore the complete history of all your scored games. You can sort the list by time or numerically to find specific games. Anytime, you can revisit any game to view a detailed summary of its results.
 
 Open Source and Privacy
 "Mental Math" is fully open source, free to use, and does not collect or process any personal data. It requires no permissions, contains no ads, and runs entirely offline to respect your privacy.
