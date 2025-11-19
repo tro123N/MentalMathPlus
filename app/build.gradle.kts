@@ -1,3 +1,4 @@
+
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
@@ -61,6 +62,7 @@ android {
     productFlavors {
         create("fdroid") {
             dimension = "distribution"
+            signingConfig = null
         }
         create("foss") {
             dimension = "distribution"
@@ -89,38 +91,47 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    tasks.withType<KotlinJvmCompile>().configureEach {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
-            freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
-        }
-    }
     buildFeatures {
         compose = true
     }
-
-    tasks.withType<AbstractArchiveTask>().configureEach {
-        isPreserveFileTimestamps = false
-        isReproducibleFileOrder = true
-    }
-
     packaging {
         jniLibs.keepDebugSymbols += "**/*.so"
+    }
+}
+
+androidComponents {
+    onVariants { variant ->
+        val mergeAssetsTask = tasks.named("merge${variant.name.replaceFirstChar { it.uppercase() }}Assets")
+        mergeAssetsTask.configure {
+            doLast {
+                val dexoptDir = layout.buildDirectory.get().asFile
+                    .resolve("intermediates/merged_assets/${variant.name}/out/assets/dexopt")
+                dexoptDir.deleteRecursively()
+            }
+        }
     }
 }
 
 tasks.matching { it.name.contains("Profile", ignoreCase = true) }.configureEach {
     enabled = false
 }
-
+tasks.withType<AbstractArchiveTask>().configureEach {
+    isPreserveFileTimestamps = false
+    isReproducibleFileOrder = true
+}
 tasks.withType<Zip>().configureEach {
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
 }
-
 tasks.withType<Jar>().configureEach {
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
+}
+tasks.withType<KotlinJvmCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
+        freeCompilerArgs.addAll(listOf("-Xdeterministic", "-opt-in=kotlin.RequiresOptIn"))
+    }
 }
 
 dependencies {
