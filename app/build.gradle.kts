@@ -57,7 +57,7 @@ android {
 
     flavorDimensions += "distribution"
     productFlavors {
-        create("default") {
+        create("fdroid") {
             dimension = "distribution"
         }
         create("foss") {
