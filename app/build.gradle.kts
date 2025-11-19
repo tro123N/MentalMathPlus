@@ -101,12 +101,17 @@ android {
 
 androidComponents {
     onVariants { variant ->
-        val mergeAssetsTask = tasks.named("merge${variant.name.replaceFirstChar { it.uppercase() }}Assets")
-        mergeAssetsTask.configure {
-            doLast {
+        val taskName = "merge${variant.name.replaceFirstChar { it.uppercase() }}Assets"
+        val mergeAssetsTask = tasks.findByName(taskName)
+
+        mergeAssetsTask?.let { task ->
+            task.doLast {
                 val dexoptDir = layout.buildDirectory.get().asFile
                     .resolve("intermediates/merged_assets/${variant.name}/out/assets/dexopt")
-                dexoptDir.deleteRecursively()
+                if (dexoptDir.exists()) {
+                    dexoptDir.deleteRecursively()
+                    println("Deleted dexopt for ${variant.name}")
+                }
             }
         }
     }
