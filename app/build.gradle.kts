@@ -81,10 +81,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            isShrinkResources = false
         }
     }
     compileOptions {
@@ -97,22 +94,10 @@ android {
     packaging {
         jniLibs.keepDebugSymbols += "**/*.so"
     }
-}
-
-androidComponents {
-    onVariants { variant ->
-        val taskName = "merge${variant.name.replaceFirstChar { it.uppercase() }}Assets"
-        val mergeAssetsTask = tasks.findByName(taskName)
-
-        mergeAssetsTask?.let { task ->
-            task.doLast {
-                val dexoptDir = layout.buildDirectory.get().asFile
-                    .resolve("intermediates/merged_assets/${variant.name}/out/assets/dexopt")
-                if (dexoptDir.exists()) {
-                    dexoptDir.deleteRecursively()
-                    println("Deleted dexopt for ${variant.name}")
-                }
-            }
+    packaging {
+        resources {
+            excludes += "assets/dexopt/baseline.prof"
+            excludes += "assets/dexopt/baseline.profm"
         }
     }
 }
