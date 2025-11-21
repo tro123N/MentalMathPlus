@@ -100,6 +100,13 @@ android {
             excludes += "assets/dexopt/baseline.profm"
         }
     }
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs.
+        includeInApk = false
+        // Disables dependency metadata when building Android App Bundles.
+        includeInBundle = false
+    }
+
 }
 
 tasks.matching { it.name.contains("Profile", ignoreCase = true) }.configureEach {
