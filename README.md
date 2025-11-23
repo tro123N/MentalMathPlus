@@ -40,23 +40,23 @@ Your top 10 results are displayed separately for each combination of settings, a
 #### Game History
 Explore the complete history of all your scored games. You can sort the list by time or numerically to find specific games. Anytime, you can revisit any match to view a detailed summary of its results.
 
-#### Open Source and Privacy
-"Mental Math" is fully [open source](https://codeberg.org/Mental-Math/MentalMath), free to use, and does not collect or process any personal data. It requires no permissions, contains no ads, and runs entirely offline to respect your privacy.
-
 #### Clean Design
 A simple and minimalist app design with no unnecessary elements or distractions, designed to keep your focus fully on mental math training. Supports both light and dark modes.
 
+#### Open Source and Privacy
+"Mental Math" is fully [open source](https://codeberg.org/Mental-Math/MentalMath), free to use, and does not collect or process any personal data. It requires no permissions, contains no ads, and runs entirely offline to respect your privacy.
+
 ## Screenshots
 <p align="center">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/9.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/01.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/02.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/03.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/04.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/05.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/06.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/07.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/08.png" alt="Main Screen" width="30%">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/09.png" alt="Main Screen" width="30%">
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/10.png" alt="Main Screen" width="30%">
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/11.png" alt="Main Screen" width="30%">
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/12.png" alt="Main Screen" width="30%">
