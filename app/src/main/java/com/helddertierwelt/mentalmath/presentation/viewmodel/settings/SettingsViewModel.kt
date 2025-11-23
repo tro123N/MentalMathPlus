@@ -202,6 +202,10 @@ class SettingsViewModel @Inject constructor(
         _showResetPopUp.value = false
         _bestActiveGames.value = emptyList()
         _bestTotalGames.value = emptyList()
+        _isScoreClicked.value =  false
+        _isStartButtonClicked.value = false
+        _isRandomGameButtonClicked.value = false
+        _isSliderActive.value = false
         saveState()
     }
 

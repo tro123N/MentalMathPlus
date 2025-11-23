@@ -123,7 +123,7 @@ interface GameRecordDao {
     @Query("DELETE FROM game_records")
     suspend fun deleteAll()
 
-    @Query("SELECT * FROM game_records WHERE totalScore > 0 ORDER BY id DESC")
+    @Query("SELECT * FROM game_records WHERE totalScore > 0 OR activeScore > 0 ORDER BY id DESC")
     suspend fun findAll(): List<GameRecord>
 
     @Query(

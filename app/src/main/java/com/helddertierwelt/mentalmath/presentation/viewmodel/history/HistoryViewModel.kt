@@ -58,11 +58,22 @@ class HistoryViewModel @Inject constructor(
         _showActiveScore.value = !_showActiveScore.value
     }
 
+    fun setShowActiveScore(showActiveScore: Boolean) {
+        _showActiveScore.value = showActiveScore
+    }
+
     fun setSortMode(sortMode: SortMode) {
         _sortMode.value = sortMode
     }
 
     fun setIsEntryClicked(isEntryClicked: Boolean) {
         _isEntryClicked.value = isEntryClicked
+    }
+
+    fun resetHistory() {
+        setShowActiveScore(false)
+        setSortMode(SortMode.TIME_DESCENDING)
+        setIsEntryClicked(false)
+        loadAllGames()
     }
 }

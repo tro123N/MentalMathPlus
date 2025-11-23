@@ -20,7 +20,7 @@ class StatisticsViewModel @Inject constructor(
     private val _showLinkGamePopUp = MutableStateFlow(false)
     val showLinkGamePopUp: StateFlow<Boolean> = _showLinkGamePopUp.asStateFlow()
 
-    private val _scoreFromLink = MutableStateFlow<Float>(0.0f)
+    private val _scoreFromLink = MutableStateFlow<Float>(0.00f)
     val scoreFromLink: StateFlow<Float> = _scoreFromLink.asStateFlow()
 
     private val _navigatedFromHistory = MutableStateFlow(false)
@@ -54,6 +54,14 @@ class StatisticsViewModel @Inject constructor(
 
     fun setLoadedGameRecord(gameRecord: GameRecord) {
         gameRecordRepository.setLoadedGameRecord(gameRecord)
+    }
+
+    fun resetStatistics() {
+        setNavigatedFromHistory(false)
+        setShowLinkGamePopUp(false)
+        setShowLoadedGameRecord(false)
+        setScoreFromLink(0.00f)
+        setSeedFromLink(0L)
     }
 
     fun prepareGameFromLink(gameRecord: GameRecord) {

@@ -60,6 +60,8 @@ import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.game.GameViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.history.HistoryViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.mainactivity.MainActivityViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
 import java.security.SecureRandom
@@ -92,6 +94,8 @@ fun SettingsScreen(
     val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
     val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
+    val historyViewModel: HistoryViewModel = hiltViewModel(viewModelStoreOwner)
+    val mainActivityViewModel: MainActivityViewModel = hiltViewModel(viewModelStoreOwner)
 
     // variables
     val settingsState = settingsViewModel.settingsState.collectAsState().value
@@ -361,6 +365,9 @@ fun SettingsScreen(
             onConfirm = {
                 gameViewModel.resetGameData()
                 settingsViewModel.resetSettings()
+                statisticsViewModel.resetStatistics()
+                historyViewModel.resetHistory()
+                mainActivityViewModel.resetMainActivity()
             },
             onCancel = { settingsViewModel.setShowResetPopUp(false) },
             titleSize = titleFontSize,

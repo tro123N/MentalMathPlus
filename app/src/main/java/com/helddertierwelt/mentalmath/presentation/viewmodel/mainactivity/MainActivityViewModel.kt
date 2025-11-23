@@ -36,4 +36,9 @@ class MainActivityViewModel : ViewModel() {
     fun setShowDeepLinkPopUp(value: Boolean) {
         _showDeepLinkPopUp.value = value
     }
+
+    fun resetMainActivity() {
+        setShowAlreadyPlayedPopUp(false)
+        setShowDeepLinkPopUp(false)
+    }
 }
