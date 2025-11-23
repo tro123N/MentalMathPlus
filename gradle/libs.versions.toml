@@ -22,7 +22,6 @@ protobufPlugin = "0.9.5"
 splashScreen = "1.2.0"
 kotlinxSerializationPlugin = "2.2.21"
 
-
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
