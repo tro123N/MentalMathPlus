@@ -1,0 +1,1 @@
+- disabled a "score"-entry in the leaderboard after clicking to prevent navigate to the same game twice when clicking too fast
