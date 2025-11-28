@@ -1,3 +1,4 @@
+# <a href="https://codeberg.org/Mental-Math/MentalMath"><img src="./media/app icon/Mental Math Transparent.svg" alt="Mental Math Icon" height="25"></a> Mental Math
 <p align="center">
   <img src="fastlane/metadata/android/en-US/images/featureGraphic.png" alt="Main Screen" width="100%">
 </p>
