@@ -28,7 +28,6 @@ import com.helddertierwelt.mentalmath.data.entity.MathTask
 import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
 import com.helddertierwelt.mentalmath.data.repository.MathTaskRepository
 import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.game.TaskResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -394,6 +393,13 @@ class GameViewModel @Inject constructor(
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
         resumeTimer()
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
+        super.onDestroy(owner)
+        if (_gameState.value.isGameStarted) {
+            cancelGame()
+        }
     }
 
     private fun saveState(newState: GameState) {

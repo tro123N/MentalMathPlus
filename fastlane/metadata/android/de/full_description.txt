@@ -1,10 +1,10 @@
-„Mental Math“ ist eine simple Android-App um Kopfrechnen zu trainieren. Du kannst nur für dich üben oder Freunde zu einem Wettkampf herausfordern, um deine Fähigkeiten zu verbessern. Die App ist Open Source und respektiert deine Privatsphäre.
+Mit „Mental Math“ kannst du deine Kopfrechenfähigkeiten verbessern. Trainiere allein oder fordere Freunde zu einem Duell heraus. Die App ist Open Source und respektiert deine Privatsphäre.
 
 Anpassbares Training
-Entscheide welche Rechenoperationen du einbeziehen möchtest (+, −, ×, ÷). Für jede Operation kannst du aus neun Schwierigkeitsstufen wählen, um dein Training genau auf das eigene Können abzustimmen.
+Entscheide welche Rechenoperationen du einbeziehen möchtest (+, −, ×, ÷). Für jede Operation kannst du aus neun Schwierigkeitsstufen wählen, um dein Training genau auf dein Können abzustimmen.
 
 Zwei Spielmodi
-• Im ersten Modus musst du eine feste Anzahl von Aufgaben (10, 20, 30, 40 oder 50) lösen.
+• Im Anzahl-Modus musst du eine feste Anzahl von Aufgaben (10, 20, 30, 40 oder 50) lösen.
 • Im Zeitmodus musst du innerhalb einer bestimmten Zeit (1, 2, 3, 4 oder 5 Minuten) so viele Aufgaben wie möglich lösen.
 
 Fordere deine Freunde heraus
@@ -16,16 +16,16 @@ Realistische Schwierigkeitsgrade
 Der Schwierigkeitsgrad der Aufgaben wird mithilfe von Algorithmen ermittelt, die auf der schriftlichen Addition, Subtraktion, Multiplikation und Division basieren. Dadurch sollen realistische und ausgewogene Schwierigkeits-Level entstehen.
 
 Detaillierte Ergebnisse
-Nach jedem Spiel kannst du eine detaillierte Zusammenfassung einsehen, die deine ausgewählten Einstellungen, deine Leistung (Genauigkeit, Geschwindigkeit und Punktzahl) sowie eine vollständige Liste aller  Aufgaben und Antworten zur Überprüfung enthält.
+Nach jedem Spiel kannst du eine detaillierte Zusammenfassung einsehen, die deine ausgewählten Einstellungen, deine Leistung (Richtigkeit, Geschwindigkeit und Punktzahl) sowie eine vollständige Liste aller Aufgaben und Antworten zur Überprüfung enthält.
 
 Persönliches Scoreboard
-Deine 10 besten Scores werden für jede Kombination von Einstellungen separat angezeigt, sodass du deinen Fortschritt einfach verfolgen kannst. Du kannst auch jederzeit die detaillierten Zusammenfassungen der besten Spiele einsehen.
+Deine 10 besten Scores werden für jede Kombination von Einstellungen separat angezeigt, sodass du deinen Fortschritt einfach verfolgen kannst. Dabei lassen sich die detaillierten Zusammenfassungen dieser Spiele jederzeit einsehen.
 
 Spielverlauf
-Du kannst den kompletten Spielverlauf all deiner Spiele mit Punktzahl einsehen. Dabei kannst du die Liste nach Zeit oder numerisch sortieren, um bestimmte Spiele zu finden. Außerdem kannst du dir jederzeit die detaillierte Zusammenfassung dieser Spiele anzeigen lassen.
+Du kannst den kompletten Spielverlauf all deiner Spiele mit Punktzahl einsehen. Die Liste lässt sich nach Zeit oder numerisch sortieren, um bestimmte Spiele zu finden. Außerdem kannst du dir jederzeit die detaillierte Zusammenfassung von jedem Spiel anzeigen lassen.
 
 Übersichtliches Design
-Die App besitzt eineinfaches und minimalistisches App-Design ohne unnötige Elemente, damit du dich voll und ganz auf das Kopfrechnen-Training konzentrieren kannst. Es wird sowohl ein Light- als auch ein Dark-Mode unterstützt.
+Die App besitzt ein einfaches und minimalistisches Design ohne unnötige Elemente, damit du dich voll und ganz auf das Kopfrechnen-Training konzentrieren kannst. Es wird sowohl ein Light- als auch ein Dark-Mode unterstützt.
 
 Open Source und Datenschutz
 „Mental Math“ ist vollständig Open Source, kostenlos nutzbar und sammelt oder verarbeitet keine personenbezogenen Daten. Es erfordert keine Berechtigungen, enthält keine Werbung und funktioniert vollständig offline, um deine Privatsphäre zu schützen.

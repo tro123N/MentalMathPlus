@@ -63,12 +63,13 @@ class MainActivity : ComponentActivity() {
     private val settingsViewModel: SettingsViewModel by viewModels()
     private val statisticsViewModel: StatisticsViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by viewModels()
-
-    private val gameRecordFromAppLink = mutableStateOf<GameRecord>(GameRecord())
+    private val gameRecordFromAppLink = mutableStateOf(GameRecord())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launch { handleDeepLinkIntent(intent) }
+        if (savedInstanceState == null) {
+            lifecycleScope.launch { handleDeepLinkIntent(intent) }
+        }
         enableEdgeToEdge(
             navigationBarStyle = SystemBarStyle.auto(
                 lightScrim = Color(0xFFEEEEEE).toArgb(),
@@ -134,7 +135,8 @@ class MainActivity : ComponentActivity() {
                                 launchSingleTop = true
                             }
                             gameViewModel.startGame(gameRecordFromAppLink.value.seed)
-                            dismissDeepLinkPopUp()
+                            gameRecordFromAppLink.value = GameRecord()
+                            mainActivityViewModel.setShowDeepLinkPopUp(false)
                         },
                         onCancel = { mainActivityViewModel.setShowDeepLinkPopUp(false) },
                         titleSize = titleFontSize,
@@ -157,6 +159,7 @@ class MainActivity : ComponentActivity() {
                     PopUp(
                         onDismissRequest = { mainActivityViewModel.setShowAlreadyPlayedPopUp(false) },
                         onConfirm = { mainActivityViewModel.setShowAlreadyPlayedPopUp(false) },
+                        onCancel = { mainActivityViewModel.setShowAlreadyPlayedPopUp(false) },
                         titleSize = titleFontSize,
                         descriptionSize = popUpDescriptionFontSize,
                         title = "Game already played",
@@ -193,10 +196,5 @@ class MainActivity : ComponentActivity() {
         } else {
             Log.d("DeepLink", "SettingsString is invalid or missing.")
         }
-    }
-
-    private fun dismissDeepLinkPopUp() {
-        mainActivityViewModel.setShowDeepLinkPopUp(false)
-        gameRecordFromAppLink.value = GameRecord()
     }
 }
