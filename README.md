@@ -1,8 +1,4 @@
 # <a href="https://codeberg.org/Mental-Math/MentalMath"><img src="./fastlane/metadata/android/en-US/images/icon_transparent.svg" alt="Mental Math Icon" height="25"></a> Mental Math
-<p align="center">
-  <img src="fastlane/metadata/android/en-US/images/featureGraphic.png" alt="Main Screen" width="100%">
-</p>
-
 
 ## App Overview
 "Mental Math" is a simple and clean Android app for mental arithmetic training. You can practice on your own or challenge friends to compete and improve your skills. The app is open source and respects your privacy.
@@ -69,14 +65,14 @@ A simple and minimalist app design with no unnecessary elements or distractions,
 ## Build Instructions
 Clone the repository and navigate to the project directory:
 
-```sh
+```bash
 git clone https://codeberg.org/Mental-Math/MentalMath.git
 cd MentalMath
 ```
 
 Make sure you have the required Android SDK and JDK (Java 17) installed. The project uses multiple product flavors (dev, foss, and play). To build a specific version, use one of the following commands:
 
-```sh
+```bash
 ./gradlew assembleDevRelease
 ./gradlew assembleFossRelease
 ./gradlew assemblePlayRelease
