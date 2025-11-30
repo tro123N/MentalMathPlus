@@ -1,4 +1,3 @@
-
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
@@ -38,43 +37,51 @@ android {
     }
 
     signingConfigs {
-        create("fossRelease") {
-            storeFile = file(project.property("FOSS_STORE_FILE") as String)
-            storePassword = project.property("FOSS_STORE_PASSWORD") as String
-            keyAlias = project.property("FOSS_KEY_ALIAS") as String
-            keyPassword = project.property("FOSS_KEY_PASSWORD") as String
+        if (project.hasProperty("DEV_STORE_FILE") && project.hasProperty("DEV_STORE_PASSWORD") &&
+            project.hasProperty("DEV_KEY_ALIAS") && project.hasProperty("DEV_KEY_PASSWORD")
+        ) {
+            create("devRelease") {
+                storeFile = file(project.property("DEV_STORE_FILE") as String)
+                storePassword = project.property("DEV_STORE_PASSWORD") as String
+                keyAlias = project.property("DEV_KEY_ALIAS") as String
+                keyPassword = project.property("DEV_KEY_PASSWORD") as String
+            }
         }
-        create("playRelease") {
-            storeFile = file(project.property("PLAY_STORE_FILE") as String)
-            storePassword = project.property("PLAY_STORE_PASSWORD") as String
-            keyAlias = project.property("PLAY_KEY_ALIAS") as String
-            keyPassword = project.property("PLAY_KEY_PASSWORD") as String
+        if (project.hasProperty("FOSS_STORE_FILE") && project.hasProperty("FOSS_STORE_PASSWORD") &&
+            project.hasProperty("FOSS_KEY_ALIAS") && project.hasProperty("FOSS_KEY_PASSWORD")
+        ) {
+            create("fossRelease") {
+                storeFile = file(project.property("FOSS_STORE_FILE") as String)
+                storePassword = project.property("FOSS_STORE_PASSWORD") as String
+                keyAlias = project.property("FOSS_KEY_ALIAS") as String
+                keyPassword = project.property("FOSS_KEY_PASSWORD") as String
+            }
         }
-        create("devRelease") {
-            storeFile = file(project.property("DEV_STORE_FILE") as String)
-            storePassword = project.property("DEV_STORE_PASSWORD") as String
-            keyAlias = project.property("DEV_KEY_ALIAS") as String
-            keyPassword = project.property("DEV_KEY_PASSWORD") as String
+        if (project.hasProperty("PLAY_STORE_FILE") && project.hasProperty("PLAY_STORE_PASSWORD") &&
+            project.hasProperty("PLAY_KEY_ALIAS") && project.hasProperty("PLAY_KEY_PASSWORD")
+        ) {
+            create("playRelease") {
+                storeFile = file(project.property("PLAY_STORE_FILE") as String)
+                storePassword = project.property("PLAY_STORE_PASSWORD") as String
+                keyAlias = project.property("PLAY_KEY_ALIAS") as String
+                keyPassword = project.property("PLAY_KEY_PASSWORD") as String
+            }
         }
     }
 
     flavorDimensions += "distribution"
     productFlavors {
-        create("fdroid") {
+        create("dev") {
             dimension = "distribution"
-            signingConfig = null
+            signingConfig = signingConfigs.findByName("devRelease")
         }
         create("foss") {
             dimension = "distribution"
-            signingConfig = signingConfigs.getByName("fossRelease")
+            signingConfig = signingConfigs.findByName("fossRelease")
         }
         create("play") {
             dimension = "distribution"
-            signingConfig = signingConfigs.getByName("playRelease")
-        }
-        create("dev") {
-            dimension = "distribution"
-            signingConfig = signingConfigs.getByName("devRelease")
+            signingConfig = signingConfigs.findByName("playRelease")
         }
     }
 

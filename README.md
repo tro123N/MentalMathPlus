@@ -9,13 +9,13 @@
 
 <p align="center">
   <a href="https://f-droid.org/packages/com.helddertierwelt.mentalmath/">
-    <img src="./media/badges/fdroid-badge.png" alt="Get it on F-Droid" height="80">
+    <img src="fastlane/metadata/android/en-US/images/badges/fdroid-badge.png" alt="Get it on F-Droid" height="80">
   </a>
   <a href="https://play.google.com/store/apps/details?id=com.helddertierwelt.mentalmath">
-    <img src="./media/badges/google-play-badge.png" alt="Get it on Google Play" height="80">
+    <img src="fastlane/metadata/android/en-US/images/badges/google-play-badge.png" alt="Get it on Google Play" height="80">
   </a>
   <a href="https://codeberg.org/Mental-Math/MentalMath/releases">
-    <img src="./media/badges/codeberg-badge.png" alt="Get it on Codeberg" height="80">
+    <img src="fastlane/metadata/android/en-US/images/badges/codeberg-badge.png" alt="Get it on Codeberg" height="80">
   </a>
 </p>
 
@@ -85,5 +85,5 @@ mental_math_app@pm.me
 
 <p align="center">
   <br>
-  <img src="./media/app icon/Mental Math Transparent.svg" alt="Mental Math Icon" width="200">
+  <img src="fastlane/metadata/android/en-US/images/icon_transparent.svg" alt="Mental Math Icon" width="200">
 </p>
