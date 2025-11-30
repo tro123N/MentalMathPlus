@@ -69,14 +69,14 @@ A simple and minimalist app design with no unnecessary elements or distractions,
 ## Build Instructions
 Clone the repository and navigate to the project directory:
 
-```bash
+```sh
 git clone https://codeberg.org/Mental-Math/MentalMath.git
 cd MentalMath
 ```
 
 Make sure you have the required Android SDK and JDK (Java 17) installed. The project uses multiple product flavors (dev, foss, and play). To build a specific version, use one of the following commands:
 
-```bash
+```sh
 ./gradlew assembleDevRelease
 ./gradlew assembleFossRelease
 ./gradlew assemblePlayRelease
@@ -108,15 +108,15 @@ This project is licensed under the [GNU General Public License Version 3 (GPLv3)
 ## Privacy Policy
 Your privacy is important. This app does not collect any personal data, does not require any permissions, and does not use any trackers, ads, or third- party services. Your use of the app is completely anonymous.
 
+## Donation
+If you enjoy this app, you can support me via [Ko-Fi](https://ko-fi.com/mental_math). It means a lot to me ❤️.
+
 ## Contact
 Feel free to contact me for questions, feedback, issues or any other reason:
 
 Alexander Goy  
 aka HeldDerTierwelt  
 mental_math_app@pm.me
-
-## Donation
-If you enjoy this app, you can support me via [Ko-Fi](https://ko-fi.com/mental_math). It means a lot to me ❤️.
 
 <p align="center">
   <br>
