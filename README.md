@@ -66,15 +66,47 @@ A simple and minimalist app design with no unnecessary elements or distractions,
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/12.png" alt="Main Screen" width="30%">
 </p>
 
-## Privacy Policy
-Your privacy is important. This app does not collect any personal data, does not require any permissions, and does not use any trackers, ads, or third- party services. Your use of the app is completely anonymous.
+## Build Instructions
+Clone the repository and navigate to the project directory:
+
+```bash
+git clone https://codeberg.org/Mental-Math/MentalMath.git
+cd MentalMath
+```
+
+Make sure you have the required Android SDK and JDK (Java 17) installed. The project uses multiple product flavors (dev, foss, and play). To build a specific version, use one of the following commands:
+
+```bash
+./gradlew assembleDevRelease
+./gradlew assembleFossRelease
+./gradlew assemblePlayRelease
+```
+
+For successful signing, configure the keys in your gradle.properties file (compare signingConfigs in build.gradle.kts). If no keys are provided, the build will be unsigned. Since the original signing keys are private, using your own keys will break the app links. To make them work, follow these steps:
+
+- Replace all instances of “mental-math.codeberg.page” relating to the game links with your own domain.
+- On your website, create an assetlinks.json file and place it at https://<your-domain>/.well-known/assetlinks.json
+- Add the SHA256 fingerprint of your key to the assetlinks.json like this:
+
+```json
+{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.helddertierwelt.mentalmath",
+    "sha256_cert_fingerprints": [
+      "YOUR_SHA256_FINGERPRINT"
+    ]
+  }
+}
+```
 
 ## License Information
 Mental Math © 2025 HeldDerTierwelt  
 This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html). The full license text can also be found in the [LICENSE.md]("https://codeberg.org/HeldDerTierwelt/MentalMath/src/branch/main/LICENSE.md") file.  
 
-## Donation
-If you enjoy this app, feel free to support me via [Ko-Fi](https://ko-fi.com/mental_math). It means a lot to me ❤️.
+## Privacy Policy
+Your privacy is important. This app does not collect any personal data, does not require any permissions, and does not use any trackers, ads, or third- party services. Your use of the app is completely anonymous.
 
 ## Contact
 Feel free to contact me for questions, feedback, issues or any other reason:
@@ -82,6 +114,9 @@ Feel free to contact me for questions, feedback, issues or any other reason:
 Alexander Goy  
 aka HeldDerTierwelt  
 mental_math_app@pm.me
+
+## Donation
+If you enjoy this app, you can support me via [Ko-Fi](https://ko-fi.com/mental_math). It means a lot to me ❤️.
 
 <p align="center">
   <br>
