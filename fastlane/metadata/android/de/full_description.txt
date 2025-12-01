@@ -25,7 +25,7 @@ Spielverlauf
 Du kannst den kompletten Spielverlauf all deiner Spiele mit Punktzahl einsehen. Die Liste lässt sich nach Zeit oder numerisch sortieren, um bestimmte Spiele zu finden. Außerdem kannst du dir jederzeit die detaillierte Zusammenfassung von jedem Spiel anzeigen lassen.
 
 Übersichtliches Design
-Die App besitzt ein einfaches und minimalistisches Design ohne unnötige Elemente, damit du dich voll und ganz auf das Kopfrechnen-Training konzentrieren kannst. Es wird sowohl ein Light- als auch ein Dark-Mode unterstützt.
+Die App besitzt ein einfaches und minimalistisches Design ohne unnötige Elemente, damit du dich voll und ganz auf das Kopfrechentraining konzentrieren kannst. Es wird sowohl ein Light- als auch ein Dark-Mode unterstützt.
 
 Open Source und Datenschutz
 „Mental Math“ ist vollständig Open Source, kostenlos nutzbar und sammelt oder verarbeitet keine personenbezogenen Daten. Es erfordert keine Berechtigungen, enthält keine Werbung und funktioniert vollständig offline, um deine Privatsphäre zu schützen.

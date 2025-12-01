@@ -81,10 +81,10 @@ Make sure you have the required Android SDK and JDK (Java 17) installed. The pro
 ./gradlew assemblePlayRelease
 ```
 
-For successful signing, configure the keys in your gradle.properties file (compare signingConfigs in build.gradle.kts). If no keys are provided, the build will be unsigned. Since the original signing keys are private, using your own keys will break the app links. To make them work, follow these steps:
+For successful signing, configure the keys in your gradle.properties file (compare signingConfigs in build.gradle.kts). If no keys are provided, the build will be unsigned. Since the original signing keys are private, using your own keys will break the [app links](https://developer.android.com/training/app-links/about?hl=de) for sharing a game. To make them work, follow these steps:
 
-- Replace all instances of “mental-math.codeberg.page” relating to the game links with your own domain.
-- On your website, create an assetlinks.json file and place it at https://<your-domain>/.well-known/assetlinks.json
+- Replace all instances of “mental-math.codeberg.page” relating to app links with your own domain.
+- On your website, create an assetlinks.json file and place it at https://&lt;your-domain&gt;/.well-known/assetlinks.json
 - Add the SHA256 fingerprint of your key to the assetlinks.json like this:
 
 ```json
