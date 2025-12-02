@@ -25,8 +25,8 @@ android {
         applicationId = "com.helddertierwelt.mentalmath"
         minSdk = 24
         targetSdk = 36
-        versionCode = 16
-        versionName = "16"
+        versionCode = 17
+        versionName = "17"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -97,6 +97,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         jniLibs.keepDebugSymbols += "**/*.so"

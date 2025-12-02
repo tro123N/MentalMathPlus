@@ -1,0 +1,3 @@
+- display app version under the logo in the menu
+- click of logo leads to the release entry for current version on codeberg
+- fixed small issues in the description

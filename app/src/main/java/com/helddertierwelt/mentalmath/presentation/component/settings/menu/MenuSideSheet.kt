@@ -64,6 +64,7 @@ import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
+import com.helddertierwelt.mentalmath.BuildConfig
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.game.GameViewModel
@@ -181,18 +182,19 @@ fun MenuSideSheet(
                 ) {
 
                     // App Logo
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                     LogoRow(
                         size = logoSize,
                         imageId = R.drawable.mental_math,
+                        text = " v${BuildConfig.VERSION_NAME}",
                         intentProvider = {
                             Intent(
                                 Intent.ACTION_VIEW,
-                                "https://mental-math.codeberg.page".toUri()
+                                "https://codeberg.org/Mental-Math/MentalMath/releases/tag/v${BuildConfig.VERSION_NAME}".toUri()
                             )
                         }
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
 
                     // Share Game Link
@@ -309,6 +311,20 @@ fun MenuSideSheet(
                             )
                         }
                     )
+                    // Version Link
+                    /*IntentRow(
+                        iconResId = R.drawable.sell_24dp,
+                        contentDescription = "Version",
+                        text = "Version ${BuildConfig.VERSION_NAME}",
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        intentProvider = {
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                "https://codeberg.org/Mental-Math/MentalMath/releases/tag/v${BuildConfig.VERSION_NAME}".toUri()
+                            )
+                        }
+                    )*/
 
                     // Feedback Link
                     IntentRow(
