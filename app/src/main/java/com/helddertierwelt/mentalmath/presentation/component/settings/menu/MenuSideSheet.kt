@@ -311,20 +311,6 @@ fun MenuSideSheet(
                             )
                         }
                     )
-                    // Version Link
-                    /*IntentRow(
-                        iconResId = R.drawable.sell_24dp,
-                        contentDescription = "Version",
-                        text = "Version ${BuildConfig.VERSION_NAME}",
-                        fontSize = fontSize,
-                        iconSize = iconSize,
-                        intentProvider = {
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                "https://codeberg.org/Mental-Math/MentalMath/releases/tag/v${BuildConfig.VERSION_NAME}".toUri()
-                            )
-                        }
-                    )*/
 
                     // Feedback Link
                     IntentRow(
