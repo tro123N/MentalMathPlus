@@ -188,9 +188,15 @@ class SettingsViewModel @Inject constructor(
         saveState()
     }
 
-    fun toggleLayout() {
+    fun toggleInputLayout() {
         _settingsState.value =
             _settingsState.value.copy(isNumpadDefault = !_settingsState.value.isNumpadDefault)
+        saveState()
+    }
+
+    fun toggleInputMethod() {
+        _settingsState.value =
+            _settingsState.value.copy(isRightToLeft = !_settingsState.value.isRightToLeft)
         saveState()
     }
 

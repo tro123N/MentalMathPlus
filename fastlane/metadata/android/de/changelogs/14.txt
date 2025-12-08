@@ -1,4 +1,0 @@
-- added column headers to the 'Task Card' to make it clearer which is the correct solution and which is the user's input
-- added contact section for README.md
-- synchronized versionName and versionCode to keep it simple
-- added monochrome-tag for adaptive icon

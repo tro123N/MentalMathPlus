@@ -1,4 +1,0 @@
-- build.gradle.kts will now build the app unsigned if no keys are provided
-- added build-instructions for ReadMe
-- improved screenshots for de
-- fixed the shortDescription for de

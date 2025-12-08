@@ -271,7 +271,15 @@ fun MenuSideSheet(
                         fontSize = fontSize,
                         iconSize = iconSize,
                         isNumpad = settingsViewModel.settingsState.collectAsState().value.isNumpadDefault,
-                        onClick = { settingsViewModel.toggleLayout() }
+                        onClick = { settingsViewModel.toggleInputLayout() }
+                    )
+
+                    // Input Method Toggle
+                    InputMethodToggleRow(
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        rightToLeft = settingsViewModel.settingsState.collectAsState().value.isRightToLeft,
+                        onClick = { settingsViewModel.toggleInputMethod() }
                     )
 
                     // Dark Mode Toggle

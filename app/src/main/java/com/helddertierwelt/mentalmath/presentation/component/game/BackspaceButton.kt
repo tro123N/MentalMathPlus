@@ -38,6 +38,7 @@ fun BackspaceButton(
     onClick: () -> Unit,
     iconSize: Dp,
     size: Dp,
+    isRightToLeft: Boolean,
 ) {
 
     Button(
@@ -51,7 +52,7 @@ fun BackspaceButton(
         )
     ) {
         Icon(
-            painter = painterResource(R.drawable.backspace_24dp),
+            painter = painterResource(if (isRightToLeft) R.drawable.backspace_reverse_24dp else R.drawable.backspace_24dp),
             contentDescription = "Backspace",
             modifier = Modifier.size(iconSize),
         )

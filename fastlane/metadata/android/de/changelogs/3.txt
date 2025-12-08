@@ -1,1 +1,0 @@
-added the prefix "app" to the url when sharing a link so that the app won't open when clicking the "About"-button, which leads to the website

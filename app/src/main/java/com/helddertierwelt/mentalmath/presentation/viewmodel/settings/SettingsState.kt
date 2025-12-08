@@ -39,5 +39,6 @@ data class SettingsState(
 
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val isNumpadDefault: Boolean = false,
+    val isRightToLeft: Boolean = false,
     val isActiveScoreDefault: Boolean = false,
 ) : Parcelable

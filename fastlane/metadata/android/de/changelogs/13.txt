@@ -1,3 +1,0 @@
-- show also games in game-history with only activeScore is greater than 0
-- improvements for resetting the game
-- new screenshots and fixed order of screenshots for f-droid

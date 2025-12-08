@@ -1,2 +1,0 @@
-- added an option for an alternative layout of the input-buttons
-- added ksp schema location

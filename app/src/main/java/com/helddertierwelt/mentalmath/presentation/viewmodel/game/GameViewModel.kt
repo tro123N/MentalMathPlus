@@ -65,12 +65,24 @@ class GameViewModel @Inject constructor(
     val isGeneratingTask = _isGeneratingTask.asStateFlow()
 
 
-    fun appendToInput(number: Int) {
+    fun addLastDigit(number: Int) {
         if (_gameState.value.input.length < 7) {
             if (_gameState.value.input == "0") {
                 clearInput()
             }
             saveState(_gameState.value.copy(input = _gameState.value.input + number))
+        }
+    }
+
+    fun addFirstDigit(number: Int) {
+        if (_gameState.value.input.length < 7) {
+            saveState(_gameState.value.copy(input = number.toString() + _gameState.value.input))
+        }
+    }
+
+    fun removeFirstDigit() {
+        if (_gameState.value.input.isNotEmpty()) {
+            saveState(_gameState.value.copy(input = _gameState.value.input.drop(1)))
         }
     }
 
@@ -182,7 +194,11 @@ class GameViewModel @Inject constructor(
             operand2 = _gameState.value.operand2,
             operator = _gameState.value.operator,
             correctResult = calculateResult(),
-            userInput = _gameState.value.input
+            userInput = if (_gameState.value.input.isNotEmpty()) {
+                _gameState.value.input.trimStart('0').ifEmpty { "0" }
+            } else {
+                ""
+            }
         )
         saveState(
             _gameState.value.copy(

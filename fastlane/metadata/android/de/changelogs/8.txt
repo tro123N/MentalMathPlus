@@ -1,1 +1,0 @@
-- new button in menu to start a complete random game

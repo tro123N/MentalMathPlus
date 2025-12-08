@@ -1,5 +1,0 @@
-- save a game as cancelled when the app-session is destroyed, to prevent cheating
-- fixed a bug where the “Game Already Played”-PopUp would reappear during recomposition even though the dialog had been confirmed/canceled/dismissed before.
-- changed german full description
-- new screenshots for german store entry
-- new featureGraphic

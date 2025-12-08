@@ -96,10 +96,11 @@ fun GameScreen(
 
     // variables
     val settingsState = settingsViewModel.settingsState.collectAsState().value
-    val gameState = gameViewModel.gameState.collectAsState().value
-    val isGeneratingTask by gameViewModel.isGeneratingTask.collectAsState()
+    val isRightToLeft = settingsState.isRightToLeft
     val upperNumberRow = if (settingsState.isNumpadDefault) 7..9 else 1..3
     val lowerNumberRow = if (settingsState.isNumpadDefault) 1..3 else 7..9
+    val gameState = gameViewModel.gameState.collectAsState().value
+    val isGeneratingTask by gameViewModel.isGeneratingTask.collectAsState()
 
     LaunchedEffect(Unit) {
         gameViewModel.startTimerIfNeeded()
@@ -168,7 +169,13 @@ fun GameScreen(
                         upperNumberRow.forEach { number ->
                             NumberButton(
                                 number = number,
-                                onClick = { gameViewModel.appendToInput(number) },
+                                onClick = {
+                                    if (isRightToLeft) {
+                                        gameViewModel.addFirstDigit(number)
+                                    } else {
+                                        gameViewModel.addLastDigit(number)
+                                    }
+                                },
                                 size = roundButtonSize,
                                 fontSize = numberFontSize
                             )
@@ -182,7 +189,13 @@ fun GameScreen(
                         (4..6).forEach { number ->
                             NumberButton(
                                 number = number,
-                                onClick = { gameViewModel.appendToInput(number) },
+                                onClick = {
+                                    if (isRightToLeft) {
+                                        gameViewModel.addFirstDigit(number)
+                                    } else {
+                                        gameViewModel.addLastDigit(number)
+                                    }
+                                },
                                 size = roundButtonSize,
                                 fontSize = numberFontSize
                             )
@@ -196,7 +209,13 @@ fun GameScreen(
                         (lowerNumberRow).forEach { number ->
                             NumberButton(
                                 number = number,
-                                onClick = { gameViewModel.appendToInput(number) },
+                                onClick = {
+                                    if (isRightToLeft) {
+                                        gameViewModel.addFirstDigit(number)
+                                    } else {
+                                        gameViewModel.addLastDigit(number)
+                                    }
+                                },
                                 size = roundButtonSize,
                                 fontSize = numberFontSize
                             )
@@ -208,13 +227,26 @@ fun GameScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         BackspaceButton(
-                            onClick = { gameViewModel.removeLastDigit() },
+                            onClick = {
+                                if (isRightToLeft) {
+                                    gameViewModel.removeFirstDigit()
+                                } else {
+                                    gameViewModel.removeLastDigit()
+                                }
+                            },
+                            isRightToLeft = isRightToLeft,
                             size = roundButtonSize,
                             iconSize = backSpaceIconSize
                         )
                         NumberButton(
                             number = 0,
-                            onClick = { gameViewModel.appendToInput(0) },
+                            onClick = {
+                                if (isRightToLeft) {
+                                    gameViewModel.addFirstDigit(0)
+                                } else {
+                                    gameViewModel.addLastDigit(0)
+                                }
+                            },
                             size = roundButtonSize,
                             fontSize = numberFontSize
                         )
