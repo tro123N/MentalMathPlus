@@ -65,7 +65,6 @@ fun CustomRangeSlider(
     val isDraggingStart by startInteractionSource.collectIsDraggedAsState()
     val isDraggingEnd by endInteractionSource.collectIsDraggedAsState()
     var sliderWidth by remember { mutableIntStateOf(0) }
-    var sliderHeight by remember { mutableIntStateOf(0) }
     val value = value.first..value.second
 
     Box(
@@ -73,7 +72,6 @@ fun CustomRangeSlider(
             .fillMaxWidth()
             .onGloballyPositioned {
                 sliderWidth = it.size.width
-                sliderHeight = it.size.height
             },
         contentAlignment = Alignment.Center
     ) {

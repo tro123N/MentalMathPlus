@@ -20,13 +20,13 @@ class StatisticsViewModel @Inject constructor(
     private val _showLinkGamePopUp = MutableStateFlow(false)
     val showLinkGamePopUp: StateFlow<Boolean> = _showLinkGamePopUp.asStateFlow()
 
-    private val _scoreFromLink = MutableStateFlow<Float>(0.00f)
+    private val _scoreFromLink = MutableStateFlow(0.00f)
     val scoreFromLink: StateFlow<Float> = _scoreFromLink.asStateFlow()
 
     private val _navigatedFromHistory = MutableStateFlow(false)
     val navigatedFromHistory: StateFlow<Boolean> = _navigatedFromHistory.asStateFlow()
 
-    private val _seedFromLink = MutableStateFlow<Long>(0L)
+    private val _seedFromLink = MutableStateFlow(0L)
     val seedFromLink: StateFlow<Long> = _seedFromLink.asStateFlow()
 
     val loadedGameRecord: StateFlow<GameRecord> = gameRecordRepository.loadedGameRecord

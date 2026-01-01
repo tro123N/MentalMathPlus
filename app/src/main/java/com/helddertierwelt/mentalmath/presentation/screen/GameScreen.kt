@@ -117,7 +117,7 @@ fun GameScreen(
                 LinearProgressIndicator(
                     progress = {
                         if (settingsState.isModeEnabled) {
-                            gameState.totalAnswers / (settingsState.limit * 10).toFloat()
+                            gameState.totalAnswers / (settingsState.limit * 10)
                         } else {
                             gameState.activeTime / (settingsState.limit * 60000L)
                         }

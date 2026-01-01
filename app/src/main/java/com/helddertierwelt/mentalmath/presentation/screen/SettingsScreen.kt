@@ -122,7 +122,7 @@ fun SettingsScreen(
                 onScoreClick = { settingsViewModel.toggleScoreOpen() },
                 iconSize = topBarIconSize,
                 scoreEnabled = !bestGamesEmpty && !isSliderActive,
-                isGreydOut = bestGamesEmpty
+                isGreyedOut = bestGamesEmpty
             )
         },
         content = { padding ->
@@ -344,13 +344,11 @@ fun SettingsScreen(
                     )
                 }
                 ScoreSideSheet(
-                    isSheetOpen = settingsViewModel.isScoreOpen.collectAsState().value,
                     screenWidth = screenWidth,
                     screenHeight = screenHeight,
                     navController = navController,
                 )
                 MenuSideSheet(
-                    isSheetOpen = settingsViewModel.isMenuOpen.collectAsState().value,
                     screenWidth = screenWidth,
                     screenHeight = screenHeight,
                     navController = navController

@@ -54,7 +54,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -76,7 +75,6 @@ import java.security.SecureRandom
 
 @Composable
 fun MenuSideSheet(
-    isSheetOpen: Boolean,
     screenWidth: Dp,
     screenHeight: Dp,
     navController: NavController
@@ -86,7 +84,6 @@ fun MenuSideSheet(
     val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
     val historyViewModel: HistoryViewModel = hiltViewModel(viewModelStoreOwner)
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     val screenWidthPx = with(LocalDensity.current) { screenWidth.toPx() }
@@ -99,6 +96,8 @@ fun MenuSideSheet(
     val fontSize = (0.020f * screenHeight.value).sp
     val iconSize = (0.032f * screenHeight.value).dp
     val logoSize = (0.11f * screenHeight.value).dp
+
+    val isSheetOpen = settingsViewModel.isMenuOpen.collectAsState().value
     val scrollState = rememberScrollState()
     var isInteractionEnabled by remember { mutableStateOf(true) }
     var isFirstRender by remember { mutableStateOf(true) }
@@ -194,7 +193,7 @@ fun MenuSideSheet(
                             )
                         }
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
 
 
                     // Share Game Link
@@ -206,21 +205,24 @@ fun MenuSideSheet(
                         iconSize = iconSize,
                         isEnabled = settingsViewModel.isAnyOperationEnabled(),
                         intentProvider = {
-                            Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
-                                type = "text/plain"
-                                var seed: Long
-                                do {
-                                    seed = SecureRandom().nextLong()
-                                } while (seed < 0)
-                                val seedLink = settingsViewModel.generateSeedLink(seed)
-                                val shareText =
-                                    "Let’s play a round Mental Math!\nClick the link below to start a fresh game with my settings and seed:\n%d\n\n%s".format(
-                                        seed,
-                                        seedLink
-                                    )
-                                Log.d("SettingsScreen", "Sharing seed game: $shareText")
-                                putExtra(Intent.EXTRA_TEXT, shareText)
-                            }, context.getString(R.string.share_score))
+                            Intent.createChooser(
+                                Intent(Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    var seed: Long
+                                    do {
+                                        seed = SecureRandom().nextLong()
+                                    } while (seed < 0)
+                                    val seedLink = settingsViewModel.generateSeedLink(seed)
+                                    val shareText =
+                                        "Let’s play a round Mental Math!\nClick the link below to start a fresh game with my settings and seed:\n%d\n\n%s".format(
+                                            seed,
+                                            seedLink
+                                        )
+                                    Log.d("SettingsScreen", "Sharing seed game: $shareText")
+                                    putExtra(Intent.EXTRA_TEXT, shareText)
+                                },
+                                "Share Game"
+                            )
                         }
                     )
 

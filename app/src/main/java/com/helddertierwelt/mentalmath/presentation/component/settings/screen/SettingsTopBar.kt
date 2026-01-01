@@ -45,7 +45,7 @@ fun SettingsTopBar(
     onScoreClick: () -> Unit,
     iconSize: Dp,
     scoreEnabled: Boolean,
-    isGreydOut: Boolean,
+    isGreyedOut: Boolean,
 ) {
     TopAppBar(
         title = {
@@ -77,7 +77,7 @@ fun SettingsTopBar(
                 Icon(
                     painterResource(R.drawable.leaderboard_24dp),
                     contentDescription = "share",
-                    tint = if (!isGreydOut) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(
+                    tint = if (!isGreyedOut) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(
                         alpha = 0.38f
                     ),
                     modifier = Modifier.size(iconSize),

@@ -18,9 +18,6 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.viewmodel.game
 
-import com.helddertierwelt.mentalmath.presentation.viewmodel.game.Operation
-import com.helddertierwelt.mentalmath.presentation.viewmodel.game.TaskResult
-import com.helddertierwelt.mentalmath.presentation.viewmodel.game.TaskResultConverter
 import java.io.Serializable
 
 data class GameState(

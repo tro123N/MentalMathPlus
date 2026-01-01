@@ -6,7 +6,7 @@ import kotlinx.serialization.json.Json
 class TaskResultConverter {
     @TypeConverter
     fun fromTaskResultList(value: List<TaskResult>): String {
-        return Json.Default.encodeToString(value)
+        return Json.encodeToString(value)
     }
 
     @TypeConverter

@@ -79,7 +79,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ScoreSideSheet(
-    isSheetOpen: Boolean,
     screenWidth: Dp,
     screenHeight: Dp,
     navController: NavController,
@@ -99,6 +98,8 @@ fun ScoreSideSheet(
 
     val fontSizeTitle = (0.031f * screenHeight.value).sp
     val fontSizeScore = (0.020f * screenHeight.value).sp
+
+    val isSheetOpen = settingsViewModel.isScoreOpen.collectAsState().value
     var isInteractionEnabled by remember { mutableStateOf(true) }
 
     // Handle side sheet open/close animation
