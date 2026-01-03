@@ -19,8 +19,6 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.presentation.component.statistics
 
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -68,21 +66,17 @@ fun TasksCard(
         ),
     ) {
         Spacer(modifier = Modifier.height(12.dp))
-        Row(
+        TaskCardRow(
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(16.dp, 4.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = stringResource(R.string.solution),
                 fontSize = resultFontSize,
-                modifier = Modifier.align(Alignment.CenterVertically)
             )
             Text(
                 text = stringResource(R.string.input),
                 fontSize = resultFontSize,
-                modifier = Modifier.align(Alignment.CenterVertically)
             )
         }
         val statisticsGameRecord =
@@ -93,11 +87,9 @@ fun TasksCard(
             }
         statisticsGameRecord
             .forEach { task ->
-                FlowRow(
+                TaskCardRow(
                     modifier = Modifier
-                        .fillMaxWidth()
                         .padding(16.dp, 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     val exercise = "%d %s %d = %d".format(
                         task.operand1,
@@ -105,27 +97,31 @@ fun TasksCard(
                         task.operand2,
                         task.correctResult
                     )
-                    Text(
-                        text = exercise,
-                        fontSize = resultFontSize,
-                        modifier = Modifier.align(Alignment.CenterVertically)
-                    )
+                    Row {
+                        Text(
+                            text = exercise,
+                            fontSize = resultFontSize,
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
+                    }
 
                     val isCorrect =
                         if (!task.userInput.isEmpty()) task.correctResult == task.userInput.toInt() else null
+
                     when (isCorrect) {
 
-                        true -> Icon(
-                            painter = painterResource(R.drawable.check_circle_24dp),
-                            contentDescription = "Correct",
-                            modifier = Modifier
-                                .size(iconSize)
-                                .align(Alignment.CenterVertically),
-                            tint = green
-                        )
+                        true -> Row {
+                            Icon(
+                                painter = painterResource(R.drawable.check_circle_24dp),
+                                contentDescription = "Correct",
+                                modifier = Modifier
+                                    .size(iconSize)
+                                    .align(Alignment.CenterVertically),
+                                tint = green
+                            )
+                        }
 
-                        false -> {
-                            Spacer(modifier = Modifier.weight(1f))
+                        false -> Row {
                             Text(
                                 text = task.userInput,
                                 color = red,
@@ -135,7 +131,7 @@ fun TasksCard(
                             Spacer(modifier = Modifier.width(4.dp))
                             Icon(
                                 painter = painterResource(R.drawable.cancel_24dp),
-                                contentDescription = "Skipped",
+                                contentDescription = "Incorrect",
                                 modifier = Modifier
                                     .size(iconSize)
                                     .align(Alignment.CenterVertically),
@@ -143,15 +139,16 @@ fun TasksCard(
                             )
                         }
 
-
-                        null -> Icon(
-                            painter = painterResource(R.drawable.cancel_24dp),
-                            contentDescription = "Skipped",
-                            modifier = Modifier
-                                .size(iconSize)
-                                .align(Alignment.CenterVertically),
-                            tint = yellow
-                        )
+                        null -> Row {
+                            Icon(
+                                painter = painterResource(R.drawable.cancel_24dp),
+                                contentDescription = "Skipped",
+                                modifier = Modifier
+                                    .size(iconSize)
+                                    .align(Alignment.CenterVertically),
+                                tint = yellow
+                            )
+                        }
                     }
                 }
             }

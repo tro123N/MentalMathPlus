@@ -1,2 +1,3 @@
+- improved behavior of the task overview in cases where the task and input are too long for the line
 - dependency updates
 - minor code improvements
