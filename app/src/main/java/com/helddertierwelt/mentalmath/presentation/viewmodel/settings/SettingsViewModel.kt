@@ -308,10 +308,10 @@ class SettingsViewModel @Inject constructor(
 
         // random selection of operations
         val operationSelection = (1..15).random()
-        val isAdditionEnabled = operationSelection shr 0 and 1 == 1
-        val isSubtractionEnabled = operationSelection shr 1 and 1 == 1
-        val isMultiplicationEnabled = operationSelection shr 2 and 1 == 1
-        val isDivisionEnabled = operationSelection shr 3 and 1 == 1
+        val isAdditionEnabled = ((operationSelection shr 0) and 1) == 1
+        val isSubtractionEnabled = ((operationSelection shr 1) and 1) == 1
+        val isMultiplicationEnabled = ((operationSelection shr 2) and 1) == 1
+        val isDivisionEnabled = ((operationSelection shr 3) and 1) == 1
 
         _settingsState.value = _settingsState.value.copy(
             isModeEnabled = isModeEnabled,
