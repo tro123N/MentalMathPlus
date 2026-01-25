@@ -241,6 +241,7 @@ class SettingsViewModel @Inject constructor(
         _isStartButtonClicked.value = false
         _isRandomGameButtonClicked.value = false
         _isSliderActive.value = false
+        _showNotificationPermissionPopUp.value = false
         saveState()
     }
 
