@@ -19,10 +19,14 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.data.datastore
 
 import com.helddertierwelt.mentalmath.SettingsStateProto
+import com.helddertierwelt.mentalmath.SettingsStateProto.NotificationMode.DAILY
+import com.helddertierwelt.mentalmath.SettingsStateProto.NotificationMode.OFF
+import com.helddertierwelt.mentalmath.SettingsStateProto.NotificationMode.THREEDAILY
+import com.helddertierwelt.mentalmath.SettingsStateProto.NotificationMode.WEEKLY
 import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.DARK
 import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.LIGHT
 import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.SYSTEM
-import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.UNRECOGNIZED
+import com.helddertierwelt.mentalmath.presentation.component.settings.menu.NotificationMode
 import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
 import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsState
 
@@ -52,6 +56,14 @@ fun SettingsState.toProto(): SettingsStateProto {
                 ThemeMode.DARK -> DARK
             }
         )
+        .setNotificationMode(
+            when (notificationMode) {
+                NotificationMode.OFF -> OFF
+                NotificationMode.DAILY -> DAILY
+                NotificationMode.THREEDAILY -> THREEDAILY
+                NotificationMode.WEEKLY -> WEEKLY
+            }
+        )
         .build()
 }
 
@@ -74,7 +86,14 @@ fun SettingsStateProto.toSettingsState(): SettingsState {
             LIGHT -> ThemeMode.LIGHT
             DARK -> ThemeMode.DARK
             SYSTEM -> ThemeMode.SYSTEM
-            UNRECOGNIZED -> ThemeMode.SYSTEM
+            SettingsStateProto.ThemeMode.UNRECOGNIZED -> ThemeMode.SYSTEM
+        },
+        notificationMode = when (notificationMode) {
+            OFF -> NotificationMode.OFF
+            DAILY -> NotificationMode.DAILY
+            THREEDAILY -> NotificationMode.THREEDAILY
+            WEEKLY -> NotificationMode.WEEKLY
+            SettingsStateProto.NotificationMode.UNRECOGNIZED -> NotificationMode.OFF
         }
     )
 }

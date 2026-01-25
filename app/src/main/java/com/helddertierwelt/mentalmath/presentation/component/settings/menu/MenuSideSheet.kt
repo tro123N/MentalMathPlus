@@ -18,7 +18,11 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.settings.menu
 
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import android.util.Log
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.core.Animatable
@@ -54,6 +58,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -65,11 +70,14 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.BuildConfig
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
+import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.game.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.history.HistoryViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
+import com.helddertierwelt.mentalmath.util.NotificationScheduler
 import kotlinx.coroutines.launch
 import java.security.SecureRandom
 
@@ -85,6 +93,7 @@ fun MenuSideSheet(
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
     val historyViewModel: HistoryViewModel = hiltViewModel(viewModelStoreOwner)
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     val screenWidthPx = with(LocalDensity.current) { screenWidth.toPx() }
     val sheetWidthFactor = 0.6f
@@ -94,6 +103,8 @@ fun MenuSideSheet(
     val overlayAlpha = 0.38f * (offsetX.value - minOffset) / (maxOffset - minOffset)
 
     val fontSize = (0.020f * screenHeight.value).sp
+    val titleFontSize = (0.031f * screenHeight.value).sp
+    val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
     val iconSize = (0.032f * screenHeight.value).dp
     val logoSize = (0.11f * screenHeight.value).dp
 
@@ -102,6 +113,32 @@ fun MenuSideSheet(
     var isInteractionEnabled by remember { mutableStateOf(true) }
     var isFirstRender by remember { mutableStateOf(true) }
     val isRandomGameButtonClicked = settingsViewModel.isRandomGameButtonClicked.collectAsState().value
+
+    fun openNotificationSettings(context: Context) {
+        val intent =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                    putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                }
+            } else {
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = Uri.fromParts("package", context.packageName, null)
+                }
+            }
+
+        context.startActivity(intent)
+    }
+
+    LaunchedEffect(Unit) {
+        settingsViewModel.settingsState.collect { settingsState ->
+            if (settingsState.notificationMode != NotificationMode.OFF) {
+                if (!settingsViewModel.isPermissionGranted(context)) {
+                    settingsViewModel.setNotificationMode(NotificationMode.OFF)
+                    NotificationScheduler.scheduleNotificationWork(context, NotificationMode.OFF)
+                }
+            }
+        }
+    }
 
     LaunchedEffect(isSheetOpen) {
         val target = if (isSheetOpen) maxOffset else minOffset
@@ -284,6 +321,20 @@ fun MenuSideSheet(
                         onClick = { settingsViewModel.toggleInputMethod() }
                     )
 
+                    NotificationToggleRow(
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        currentMode = settingsViewModel.settingsState.collectAsState().value.notificationMode,
+                        onModeChange = {
+                            if (settingsViewModel.isPermissionGranted(context) || it == NotificationMode.OFF) {
+                                settingsViewModel.setNotificationMode(it)
+                                NotificationScheduler.scheduleNotificationWork(context, it)
+                            } else {
+                                settingsViewModel.setShowNotificationPermissionPopUp(true)
+                            }
+                        }
+                    )
+
                     // Dark Mode Toggle
                     DarkModeToggleRow(
                         fontSize = fontSize,
@@ -386,5 +437,23 @@ fun MenuSideSheet(
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
+    }
+    if (settingsViewModel.showNotificationPermissionPopUp.collectAsState().value) {
+        PopUp(
+            onDismissRequest = { settingsViewModel.setShowNotificationPermissionPopUp(false) },
+            onConfirm = {
+                openNotificationSettings(context)
+                settingsViewModel.setShowNotificationPermissionPopUp(false)
+            },
+            onCancel = { settingsViewModel.setShowNotificationPermissionPopUp(false) },
+            titleSize = titleFontSize,
+            descriptionSize = popUpDescriptionFontSize,
+            title = "Enable notifications?",
+            description = "Please enable notifications in your system settings to set reminders.",
+            confirmationText = "Open settings",
+            cancelText = "Cancel",
+            dismissColor = red,
+            confirmColor = green
+        )
     }
 }

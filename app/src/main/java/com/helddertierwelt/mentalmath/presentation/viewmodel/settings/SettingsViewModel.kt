@@ -18,12 +18,18 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.viewmodel.settings
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Base64
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
 import com.helddertierwelt.mentalmath.data.repository.SettingsRepository
+import com.helddertierwelt.mentalmath.presentation.component.settings.menu.NotificationMode
 import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -52,6 +58,9 @@ class SettingsViewModel @Inject constructor(
 
     private val _showResetPopUp = MutableStateFlow(false)
     val showResetPopUp = _showResetPopUp.asStateFlow()
+
+    private val _showNotificationPermissionPopUp = MutableStateFlow(false)
+    val showNotificationPermissionPopUp = _showNotificationPermissionPopUp.asStateFlow()
 
     private val _bestActiveGames = MutableStateFlow<List<GameRecord>>(emptyList())
     val bestActiveGames = _bestActiveGames.asStateFlow()
@@ -155,8 +164,28 @@ class SettingsViewModel @Inject constructor(
         saveState()
     }
 
+    fun setNotificationMode(mode: NotificationMode) {
+        _settingsState.value = _settingsState.value.copy(notificationMode = mode)
+        saveState()
+    }
+
     fun setShowResetPopUp(value: Boolean) {
         _showResetPopUp.value = value
+    }
+
+    fun setShowNotificationPermissionPopUp(value: Boolean) {
+        _showNotificationPermissionPopUp.value = value
+    }
+
+    fun isPermissionGranted(context: Context): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
+        }
     }
 
     fun setIsStartButtonClicked(value: Boolean) {

@@ -64,7 +64,7 @@ fun InputMethodToggleRow(
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = if (rightToLeft) "Right-To-Left" else "Left-To-Right",
+            text = if (rightToLeft) "Right-To-\u200BLeft" else "Left-To-\u200BRight",
             fontSize = fontSize,
             lineHeight = fontSize
         )

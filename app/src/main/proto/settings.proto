@@ -53,4 +53,13 @@ message SettingsStateProto {
   bool is_active_score_default = 17;
   bool is_numpad_default = 18;
   bool is_right_to_left = 19;
+
+  enum NotificationMode {
+    OFF = 0;
+    DAILY = 1;
+    THREEDAILY = 2;
+    WEEKLY = 3;
+  }
+
+  NotificationMode notification_mode = 20;
 }
