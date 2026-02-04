@@ -24,6 +24,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -218,7 +219,7 @@ fun MenuSideSheet(
                 ) {
 
                     // App Logo
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     LogoRow(
                         size = logoSize,
                         imageId = R.drawable.mental_math,
@@ -230,8 +231,6 @@ fun MenuSideSheet(
                             )
                         }
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
-
 
                     // Share Game Link
                     IntentRow(
@@ -329,6 +328,13 @@ fun MenuSideSheet(
                             if (settingsViewModel.isPermissionGranted(context) || it == NotificationMode.OFF) {
                                 settingsViewModel.setNotificationMode(it)
                                 NotificationScheduler.scheduleNotificationWork(context, it)
+                                if (it == NotificationMode.DAILY) {
+                                    Toast.makeText(
+                                        context,
+                                        "Reminders start in the morning after the interval",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             } else {
                                 settingsViewModel.setShowNotificationPermissionPopUp(true)
                             }
@@ -354,21 +360,6 @@ fun MenuSideSheet(
                             Intent(
                                 Intent.ACTION_VIEW,
                                 "https://mental-math.codeberg.page".toUri()
-                            )
-                        }
-                    )
-
-                    // Source Code Link
-                    IntentRow(
-                        iconResId = R.drawable.code_24dp,
-                        contentDescription = "Source Code",
-                        text = "Source Code",
-                        fontSize = fontSize,
-                        iconSize = iconSize,
-                        intentProvider = {
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                "https://codeberg.org/Mental-Math/MentalMath".toUri()
                             )
                         }
                     )

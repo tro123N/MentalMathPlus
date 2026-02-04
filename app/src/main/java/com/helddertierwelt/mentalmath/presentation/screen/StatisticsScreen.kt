@@ -266,6 +266,7 @@ fun StatisticsScreen(
     val currentScore = statisticsViewModel.lastGameRecord.collectAsState().value.totalScore
     if (showLinkGamePopUp) {
         val gamePopUpInfo = getGamePopUpInfo(currentScore, linkScore, seed)
+        val shareMessage = "Me: %.2f | You: %.2f\nSeed: %d".format(currentScore, seed)
         PopUp(
             titleSize = titleFontSize,
             descriptionSize = (0.018f * screenHeight.value).sp,
@@ -290,7 +291,7 @@ fun StatisticsScreen(
                     scrollState.animateScrollTo(0)
                     val bitmap = captureSettingsCardBitmap()
                     if (bitmap != null) {
-                        shareResult(context, bitmap, gamePopUpInfo.description)
+                        shareResult(context, bitmap, shareMessage)
                     } else {
                         Log.e("StatisticsScreen", "Bitmap could not be captured")
                     }

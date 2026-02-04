@@ -18,24 +18,45 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.util
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
-import android.graphics.drawable.Icon
+import android.content.Intent
+import android.os.Build
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.helddertierwelt.mentalmath.MainActivity
 import com.helddertierwelt.mentalmath.R
-
+import com.helddertierwelt.mentalmath.presentation.component.settings.menu.NotificationMode
 
 class NotificationWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
     override fun doWork(): Result {
-        val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        createNotificationChannel()
+        val notificationManager =
+            applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        val intent = Intent(applicationContext, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         val notification = NotificationCompat.Builder(applicationContext, "mental_math")
-            .setContentTitle("Mental Math: Reminder")
-            .setContentText("Take a moment for your mental math practice.")
-            .setSmallIcon(R.drawable.ic_launcher_monochrome)
-            .setLargeIcon(Icon.createWithResource(applicationContext, R.drawable.ic_launcher))
+            .setContentTitle("Reminder")
+            .setContentText("Take a moment to practice mental math")
+            .setSmallIcon(R.drawable.icon_notification_monochrome)
+            .setColor(Color(0xFF3C3F41).toArgb())
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setSilent(true)
             .setDefaults(0)
@@ -43,7 +64,34 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
 
         notificationManager.notify(0, notification)
 
+        val repeatInterval = inputData.getLong("repeat_interval_days", 0L)
+        NotificationScheduler.scheduleNotificationWork(applicationContext, repeatIntervalToMode(repeatInterval))
+
         return Result.success()
     }
 
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "mental_math",
+                "Mental Math Reminders",
+                NotificationManager.IMPORTANCE_LOW
+            ).apply {
+                description = "Channel for daily mental math reminders"
+            }
+
+            val notificationManager =
+                applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun repeatIntervalToMode(repeatInterval: Long): NotificationMode {
+        return when (repeatInterval) {
+            1L -> NotificationMode.DAILY
+            3L -> NotificationMode.THREEDAILY
+            7L -> NotificationMode.WEEKLY
+            else -> NotificationMode.OFF
+        }
+    }
 }

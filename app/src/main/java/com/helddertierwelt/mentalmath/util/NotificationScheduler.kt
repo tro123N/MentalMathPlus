@@ -19,9 +19,10 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.util
 
 import android.content.Context
-import android.widget.Toast
-import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.helddertierwelt.mentalmath.presentation.component.settings.menu.NotificationMode
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -35,7 +36,6 @@ object NotificationScheduler {
             workManager.cancelAllWorkByTag("mental_math_reminder_tag")
             return
         }
-
 
         val calendar = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 7)
@@ -52,16 +52,20 @@ object NotificationScheduler {
         val delay = calendar.timeInMillis - System.currentTimeMillis()
 
         val workRequest =
-            PeriodicWorkRequestBuilder<NotificationWorker>(repeatInterval, TimeUnit.DAYS)
+            OneTimeWorkRequestBuilder<NotificationWorker>()
                 .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+                .setInputData(
+                    workDataOf(
+                        "repeat_interval_days" to repeatInterval
+                    )
+                )
                 .addTag("mental_math_reminder_tag")
                 .build()
 
-
-        workManager.cancelAllWorkByTag("mental_math_reminder_tag")
-        workManager.enqueue(workRequest)
-        if(notificationMode == NotificationMode.DAILY){
-            Toast.makeText(context, "Reminders will start in the morning after the selected interval.", Toast.LENGTH_SHORT).show()
-        }
+        workManager.enqueueUniqueWork(
+            "mental_math_reminder",
+            ExistingWorkPolicy.REPLACE,
+            workRequest
+        )
     }
 }

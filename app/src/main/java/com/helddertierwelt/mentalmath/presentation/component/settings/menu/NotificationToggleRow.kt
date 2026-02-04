@@ -55,7 +55,7 @@ fun NotificationToggleRow(
     val texts = listOf(
         "Reminder Off",
         "Daily Reminder",
-        "3-Daily Reminder",
+        "Every 3 Days",
         "Weekly Reminder"
     )
     val modes = listOf(NotificationMode.OFF, NotificationMode.DAILY, NotificationMode.THREEDAILY, NotificationMode.WEEKLY)
