@@ -48,7 +48,6 @@ import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.component.settings.menu.MenuSideSheet
-import com.helddertierwelt.mentalmath.presentation.component.settings.menu.NotificationMode
 import com.helddertierwelt.mentalmath.presentation.component.settings.score.ScoreSideSheet
 import com.helddertierwelt.mentalmath.presentation.component.settings.screen.CustomRangeSlider
 import com.helddertierwelt.mentalmath.presentation.component.settings.screen.CustomSlider
@@ -365,7 +364,7 @@ fun SettingsScreen(
             onConfirm = {
                 gameViewModel.resetGameData()
                 settingsViewModel.resetSettings()
-                NotificationScheduler.scheduleNotificationWork(context, NotificationMode.OFF)
+                NotificationScheduler.cancelNotificationWork(context)
                 statisticsViewModel.resetStatistics()
                 historyViewModel.resetHistory()
                 mainActivityViewModel.resetMainActivity()

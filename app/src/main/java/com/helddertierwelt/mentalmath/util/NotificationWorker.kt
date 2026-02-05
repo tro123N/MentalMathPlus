@@ -64,8 +64,9 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
 
         notificationManager.notify(0, notification)
 
-        val repeatInterval = inputData.getLong("repeat_interval_days", 0L)
-        NotificationScheduler.scheduleNotificationWork(applicationContext, repeatIntervalToMode(repeatInterval))
+        val repeatInterval = inputData.getInt("repeat_interval_days", 0)
+        val anchorTime = inputData.getLong("anchor_time", 0L)
+        NotificationScheduler.scheduleNotificationWork(applicationContext, repeatIntervalToMode(repeatInterval), anchorTime)
 
         return Result.success()
     }
@@ -86,11 +87,11 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
         }
     }
 
-    private fun repeatIntervalToMode(repeatInterval: Long): NotificationMode {
+    private fun repeatIntervalToMode(repeatInterval: Int): NotificationMode {
         return when (repeatInterval) {
-            1L -> NotificationMode.DAILY
-            3L -> NotificationMode.THREEDAILY
-            7L -> NotificationMode.WEEKLY
+            1 -> NotificationMode.DAILY
+            3 -> NotificationMode.THREEDAILY
+            7 -> NotificationMode.WEEKLY
             else -> NotificationMode.OFF
         }
     }

@@ -29,43 +29,58 @@ import java.util.concurrent.TimeUnit
 
 object NotificationScheduler {
 
-    fun scheduleNotificationWork(context: Context, notificationMode: NotificationMode) {
+    fun scheduleNotificationWork(context: Context, notificationMode: NotificationMode, anchorTime: Long) {
 
-        val workManager = WorkManager.getInstance(context)
         if (notificationMode == NotificationMode.OFF) {
-            workManager.cancelAllWorkByTag("mental_math_reminder_tag")
+            WorkManager.getInstance(context).cancelAllWorkByTag("mental_math_reminder_tag")
             return
         }
 
-        val calendar = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 7)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }
-        val repeatInterval: Long = when (notificationMode) {
-            NotificationMode.DAILY -> 1L
-            NotificationMode.THREEDAILY -> 3L
-            NotificationMode.WEEKLY -> 7L
-        }
-        calendar.add(Calendar.DAY_OF_YEAR, repeatInterval.toInt())
-        val delay = calendar.timeInMillis - System.currentTimeMillis()
+        val repeatInterval: Int = notificationMode.intervalDays
+        val triggerAt = nextTriggerTime(anchorTime, repeatInterval)
+        val delay = triggerAt - System.currentTimeMillis()
 
         val workRequest =
             OneTimeWorkRequestBuilder<NotificationWorker>()
                 .setInitialDelay(delay, TimeUnit.MILLISECONDS)
                 .setInputData(
                     workDataOf(
+                        "anchor_time" to anchorTime,
                         "repeat_interval_days" to repeatInterval
                     )
                 )
                 .addTag("mental_math_reminder_tag")
                 .build()
 
-        workManager.enqueueUniqueWork(
+        WorkManager.getInstance(context).enqueueUniqueWork(
             "mental_math_reminder",
             ExistingWorkPolicy.REPLACE,
             workRequest
         )
+    }
+
+    fun cancelNotificationWork(context: Context) {
+        WorkManager.getInstance(context).cancelAllWorkByTag("mental_math_reminder_tag")
+    }
+
+    private fun nextTriggerTime(anchorTimeMillis: Long, intervalDays: Int): Long {
+        val now = System.currentTimeMillis()
+        if (now < anchorTimeMillis) return anchorTimeMillis
+
+        val intervalMillis = intervalDays * 24L * 60 * 60 * 1000
+        val passedIntervals = (now - anchorTimeMillis) / intervalMillis + 1
+        return anchorTimeMillis + passedIntervals * intervalMillis
+    }
+
+     fun calculateAnchorTime(hour: Int, notificationMode: NotificationMode): Long {
+        val anchor = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+            add(Calendar.DAY_OF_YEAR, notificationMode.intervalDays)
+        }
+
+        return anchor.timeInMillis
     }
 }

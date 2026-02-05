@@ -79,6 +79,7 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.history.HistoryView
 import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
 import com.helddertierwelt.mentalmath.util.NotificationScheduler
+import com.helddertierwelt.mentalmath.util.NotificationScheduler.calculateAnchorTime
 import kotlinx.coroutines.launch
 import java.security.SecureRandom
 
@@ -135,7 +136,7 @@ fun MenuSideSheet(
             if (settingsState.notificationMode != NotificationMode.OFF) {
                 if (!settingsViewModel.isPermissionGranted(context)) {
                     settingsViewModel.setNotificationMode(NotificationMode.OFF)
-                    NotificationScheduler.scheduleNotificationWork(context, NotificationMode.OFF)
+                    NotificationScheduler.cancelNotificationWork(context)
                 }
             }
         }
@@ -327,11 +328,11 @@ fun MenuSideSheet(
                         onModeChange = {
                             if (settingsViewModel.isPermissionGranted(context) || it == NotificationMode.OFF) {
                                 settingsViewModel.setNotificationMode(it)
-                                NotificationScheduler.scheduleNotificationWork(context, it)
+                                NotificationScheduler.scheduleNotificationWork(context, it, calculateAnchorTime(18,it))
                                 if (it == NotificationMode.DAILY) {
                                     Toast.makeText(
                                         context,
-                                        "Reminders start in the morning after the interval",
+                                        "Reminders start in the evening after the interval",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }

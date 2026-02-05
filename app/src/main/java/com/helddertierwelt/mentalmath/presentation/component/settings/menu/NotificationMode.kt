@@ -18,6 +18,9 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.settings.menu
 
-enum class NotificationMode {
-    OFF, DAILY, THREEDAILY, WEEKLY,
+enum class NotificationMode(val intervalDays: Int) {
+    OFF(0),
+    DAILY(1),
+    THREEDAILY(3),
+    WEEKLY(7)
 }
