@@ -68,6 +68,13 @@ A simple and minimalist app design with no unnecessary elements or distractions,
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/12.png" alt="Main Screen" width="30%">
 </p>
 
+## App Verification
+To verify the integrity of the downloaded file, compare its SHA-256 hash with the values below. If the hash matches, you can be confident that the file is authentic and has not been modified:
+
+- FOSS Release SHA-256: `DE:19:7B:4C:F2:B8:58:80:E0:21:11:59:B6:0B:6E:3C:39:F9:6F:F0:68:68:AE:48:39:C4:2D:8A:4D:6F:3F:E5`
+
+- Google Play Release SHA-256: `4D:C3:38:FD:7C:2D:9D:CB:8C:9F:B1:76:AB:90:D3:D3:E0:B1:97:AB:D5:21:EC:05:E5:BD:BB:D7:60:B8:21:AE`
+
 ## Build Instructions
 Clone the repository and navigate to the project directory:
 
@@ -104,15 +111,15 @@ For successful signing, configure the keys in your gradle.properties file (compa
 ```
 
 ## License Information
-Mental Math © 2025 HeldDerTierwelt  
+Mental Math © 202 HeldDerTierwelt  
 This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html). The full license text can also be found in the [LICENSE.md]("https://codeberg.org/HeldDerTierwelt/MentalMath/src/branch/main/LICENSE.md") file.  
 
 ## Privacy Policy
 Your privacy is important. Here’s what you should know:
 
 - The app does not collect any personal data, use trackers, ads, or third-party services.
-- It requires no permissions by default; only if you choose to set reminders will it request permission to send notifications, which is used exclusively for that feature.
-- Opening a shared game link requires a brief internet connection only the first time you open such a link, so that Android can verify it and open it in the app. Otherwise, your use of the app remains completely offline.
+- By default, no permissions are required. Only if you choose to set reminders will it request permission to send notifications, which is used exclusively for that feature.
+- Opening a shared game link requires a brief internet connection only the first time you open such a link, so that Android can verify it and open the app. Apart from that, no internet connection is required.
 
 ## Donation
 If you enjoy this app, you can support me via [Ko-fi](https://ko-fi.com/mental_math). It means a lot to me ❤️.

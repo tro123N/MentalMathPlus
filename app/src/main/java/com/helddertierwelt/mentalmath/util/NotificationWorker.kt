@@ -53,7 +53,7 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
 
         val notification = NotificationCompat.Builder(applicationContext, "mental_math")
             .setContentTitle("Reminder")
-            .setContentText("Take a moment to practice mental math &#43; &#8722; &#215 &#247;")
+            .setContentText("Take a moment to practice mental math + − × ÷")
             .setSmallIcon(R.drawable.icon_notification_monochrome)
             .setColor(Color(0xFF3C3F41).toArgb())
             .setContentIntent(pendingIntent)
