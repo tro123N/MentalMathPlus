@@ -27,12 +27,14 @@ import com.helddertierwelt.mentalmath.presentation.component.settings.menu.Notif
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
+private const val MENTAL_MATH_REMINDER_TAG = "mental_math_reminder_tag"
+
 object NotificationScheduler {
 
     fun scheduleNotificationWork(context: Context, notificationMode: NotificationMode, anchorTime: Long) {
 
         if (notificationMode == NotificationMode.OFF) {
-            WorkManager.getInstance(context).cancelAllWorkByTag("mental_math_reminder_tag")
+            WorkManager.getInstance(context).cancelAllWorkByTag(MENTAL_MATH_REMINDER_TAG)
             return
         }
 
@@ -49,7 +51,7 @@ object NotificationScheduler {
                         "repeat_interval_days" to repeatInterval
                     )
                 )
-                .addTag("mental_math_reminder_tag")
+                .addTag(MENTAL_MATH_REMINDER_TAG)
                 .build()
 
         WorkManager.getInstance(context).enqueueUniqueWork(
@@ -60,7 +62,7 @@ object NotificationScheduler {
     }
 
     fun cancelNotificationWork(context: Context) {
-        WorkManager.getInstance(context).cancelAllWorkByTag("mental_math_reminder_tag")
+        WorkManager.getInstance(context).cancelAllWorkByTag(MENTAL_MATH_REMINDER_TAG)
     }
 
     private fun nextTriggerTime(anchorTimeMillis: Long, intervalDays: Int): Long {

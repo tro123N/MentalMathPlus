@@ -34,6 +34,9 @@ import com.helddertierwelt.mentalmath.MainActivity
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.component.settings.menu.NotificationMode
 
+private const val CHANNEL_ID = "mental_math"
+private const val CHANNEL_NAME = "Mental Math Reminders"
+
 class NotificationWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
     override fun doWork(): Result {
@@ -51,7 +54,7 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val notification = NotificationCompat.Builder(applicationContext, "mental_math")
+        val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setContentTitle("Reminder")
             .setContentText("Take a moment to practice mental math + − × ÷")
             .setSmallIcon(R.drawable.icon_notification_monochrome)
@@ -75,11 +78,11 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                "mental_math",
-                "Mental Math Reminders",
+                CHANNEL_ID,
+                CHANNEL_NAME,
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
-                description = "Channel for daily mental math reminders"
+                description = "Channel for mental math reminders"
             }
 
             val notificationManager =

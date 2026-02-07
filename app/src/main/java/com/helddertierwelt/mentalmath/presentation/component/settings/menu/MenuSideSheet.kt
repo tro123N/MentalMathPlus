@@ -326,9 +326,9 @@ fun MenuSideSheet(
                         iconSize = iconSize,
                         currentMode = settingsViewModel.settingsState.collectAsState().value.notificationMode,
                         onModeChange = {
-                            if (settingsViewModel.isPermissionGranted(context) || it == NotificationMode.OFF) {
+                            if (it == NotificationMode.OFF || settingsViewModel.isPermissionGranted(context)) {
                                 settingsViewModel.setNotificationMode(it)
-                                NotificationScheduler.scheduleNotificationWork(context, it, calculateAnchorTime(18,it))
+                                NotificationScheduler.scheduleNotificationWork(context, it, calculateAnchorTime(18, it))
                                 if (it == NotificationMode.DAILY) {
                                     Toast.makeText(
                                         context,
