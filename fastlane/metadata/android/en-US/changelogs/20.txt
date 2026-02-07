@@ -1,2 +1,2 @@
-- Added reminder feature: You can now set up periodic reminders to practice mental math. Choose from daily, every three days, or weekly reminders to help you stay on track.
-- Notifications are silent and non-intrusive, providing a pleasant and gentle reminder experience.
+- Reminder feature: Periodic reminders for mental math practice (daily, every three days, or weekly).
+- Notifications are sent in the evening (around 6 p.m.).

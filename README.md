@@ -4,7 +4,7 @@
 </p>
 
 ## App Overview
-"Mental Math" is a simple and clean Android app for mental arithmetic training. You can practice on your own or challenge friends to compete and improve your skills. The app is open source and respects your privacy.
+"Mental Math" is a simple and clean Android app for mental arithmetic training. You can practice on your own or challenge friends to compete and improve your skills. The app is [open source](https://codeberg.org/Mental-Math/MentalMath) and respects your privacy.
 
 <p align="center">
   <a href="https://f-droid.org/packages/com.helddertierwelt.mentalmath/">
@@ -42,6 +42,9 @@ Your top 10 results are displayed separately for each combination of settings, a
 
 #### Game History
 Explore the complete history of all your scored games. You can sort the list by time or numerically to find specific games. Anytime, you can revisit any match to view a detailed summary of its results.
+
+#### Practice Reminders
+Set up periodic reminders to support regular mental math practice. Notifications are sent in the evening (around 6 p.m.) and can be scheduled daily, every three days, or weekly.
 
 #### Clean Design
 A simple and minimalist app design with no unnecessary elements or distractions, designed to keep your focus fully on mental math training. Supports both light and dark modes.
@@ -105,7 +108,11 @@ Mental Math © 2025 HeldDerTierwelt
 This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html). The full license text can also be found in the [LICENSE.md]("https://codeberg.org/HeldDerTierwelt/MentalMath/src/branch/main/LICENSE.md") file.  
 
 ## Privacy Policy
-Your privacy is important. This app does not collect any personal data, does not require any permissions, and does not use any trackers, ads, or third- party services. Your use of the app is completely anonymous.
+Your privacy is important. Here’s what you should know:
+
+- The app does not collect any personal data, use trackers, ads, or third-party services.
+- It requires no permissions by default; only if you choose to set reminders will it request permission to send notifications, which is used exclusively for that feature.
+- Opening a shared game link requires a brief internet connection only the first time you open such a link, so that Android can verify it and open it in the app. Otherwise, your use of the app remains completely offline.
 
 ## Donation
 If you enjoy this app, you can support me via [Ko-fi](https://ko-fi.com/mental_math). It means a lot to me ❤️.
