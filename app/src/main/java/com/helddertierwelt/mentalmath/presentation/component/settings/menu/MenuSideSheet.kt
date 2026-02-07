@@ -333,7 +333,7 @@ fun MenuSideSheet(
                                     Toast.makeText(
                                         context,
                                         "Reminders start in the evening after the interval",
-                                        Toast.LENGTH_SHORT
+                                        Toast.LENGTH_LONG
                                     ).show()
                                 }
                             } else {

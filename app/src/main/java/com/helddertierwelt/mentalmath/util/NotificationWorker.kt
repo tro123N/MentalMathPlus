@@ -18,6 +18,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.util
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -52,14 +53,14 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
 
         val notification = NotificationCompat.Builder(applicationContext, "mental_math")
             .setContentTitle("Reminder")
-            .setContentText("Take a moment to practice mental math")
+            .setContentText("Take a moment to practice mental math &#43; &#8722; &#215 &#247;")
             .setSmallIcon(R.drawable.icon_notification_monochrome)
             .setColor(Color(0xFF3C3F41).toArgb())
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setSilent(true)
-            .setDefaults(0)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setDefaults(Notification.DEFAULT_SOUND or Notification.DEFAULT_VIBRATE)
+            .setLights(0, 0, 0)
             .build()
 
         notificationManager.notify(0, notification)
@@ -76,7 +77,7 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
             val channel = NotificationChannel(
                 "mental_math",
                 "Mental Math Reminders",
-                NotificationManager.IMPORTANCE_LOW
+                NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
                 description = "Channel for daily mental math reminders"
             }
