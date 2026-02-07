@@ -113,7 +113,7 @@ For successful signing, configure the keys in your gradle.properties file (compa
 ```
 
 ## License Information
-Mental Math © 202 HeldDerTierwelt  
+Mental Math © 2026 HeldDerTierwelt  
 This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html). The full license text can also be found in the [LICENSE.md]("https://codeberg.org/HeldDerTierwelt/MentalMath/src/branch/main/LICENSE.md") file.  
 
 ## Privacy Policy
