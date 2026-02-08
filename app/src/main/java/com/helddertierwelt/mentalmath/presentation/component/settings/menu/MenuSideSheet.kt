@@ -220,7 +220,7 @@ fun MenuSideSheet(
                 ) {
 
                     // App Logo
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     LogoRow(
                         size = logoSize,
                         imageId = R.drawable.mental_math,
@@ -328,7 +328,7 @@ fun MenuSideSheet(
                         onModeChange = {
                             if (it == NotificationMode.OFF || settingsViewModel.isPermissionGranted(context)) {
                                 settingsViewModel.setNotificationMode(it)
-                                NotificationScheduler.scheduleNotificationWork(context, it, calculateAnchorTime(18, it))
+                                NotificationScheduler.scheduleNotificationWork(context, it, calculateAnchorTime(it))
                                 if (it == NotificationMode.DAILY) {
                                     Toast.makeText(
                                         context,

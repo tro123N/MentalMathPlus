@@ -74,9 +74,9 @@ object NotificationScheduler {
         return anchorTimeMillis + passedIntervals * intervalMillis
     }
 
-     fun calculateAnchorTime(hour: Int, notificationMode: NotificationMode): Long {
+     fun calculateAnchorTime(notificationMode: NotificationMode): Long {
         val anchor = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.HOUR_OF_DAY, 18)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)

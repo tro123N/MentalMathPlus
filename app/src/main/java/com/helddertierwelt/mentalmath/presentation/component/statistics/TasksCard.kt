@@ -141,7 +141,7 @@ fun TasksCard(
 
                         null -> Row {
                             Icon(
-                                painter = painterResource(R.drawable.cancel_24dp),
+                                painter = painterResource(R.drawable.skipped_24dp),
                                 contentDescription = "Skipped",
                                 modifier = Modifier
                                     .size(iconSize)
