@@ -24,6 +24,9 @@ Deine 10 besten Scores werden für jede Kombination von Einstellungen separat an
 Spielverlauf
 Du kannst den kompletten Spielverlauf all deiner Spiele mit Punktzahl einsehen. Die Liste lässt sich nach Zeit oder numerisch sortieren, um bestimmte Spiele zu finden. Außerdem kannst du dir jederzeit die detaillierte Zusammenfassung von jedem Spiel anzeigen lassen.
 
+Übungs-Erinnerungen
+Erhalte regelmäßige Erinnerungen für dein Kopfrechentraining. Die Benachrichtigungen werden am frühen Abend (nach 18 Uhr) gesendet und können täglich, alle drei Tage oder wöchentlich geplant werden.
+
 Übersichtliches Design
 Die App besitzt ein einfaches und minimalistisches Design ohne unnötige Elemente, damit du dich voll und ganz auf das Kopfrechentraining konzentrieren kannst. Es wird sowohl ein Light- als auch ein Dark-Mode unterstützt.
 

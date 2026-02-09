@@ -1,2 +1,4 @@
 - Reminder feature: Periodic reminders for mental math practice (daily, every three days, or weekly).
-- Notifications are sent in the evening (around 6 p.m.).
+- Notifications are sent in the evening (around 6 p.m.), unless suppressed by battery optimization settings.
+- Added new icon for skipped exercises in the task overview to make it clearer.
+- Removed the “Source Code” menu item (link is available on the About website).
