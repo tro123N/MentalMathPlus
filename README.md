@@ -69,7 +69,7 @@ A simple and minimalist app design with no unnecessary elements or distractions,
 </p>
 
 ## Certificate Verification
-To verify the authenticity of the app, compare the SHA-256 fingerprint of the app's signing certificate with the values below. A matching fingerprint confirms that the apk was signed with an official developer key.
+To verify the authenticity of the apk, compare the SHA-256 fingerprint of the app's signing certificate with the values below. A matching fingerprint confirms that the apk was signed with an official developer key.
 
 - FOSS Release:  
   `DE:19:7B:4C:F2:B8:58:80:E0:21:11:59:B6:0B:6E:3C:39:F9:6F:F0:68:68:AE:48:39:C4:2D:8A:4D:6F:3F:E5`
