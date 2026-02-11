@@ -49,8 +49,8 @@ Set up periodic reminders to support regular mental math practice. Notifications
 #### Clean Design
 A simple and minimalist app design with no unnecessary elements or distractions, designed to keep your focus fully on mental math training. Supports both light and dark modes.
 
-#### Open Source and Privacy
-"Mental Math" is fully [open source](https://codeberg.org/Mental-Math/MentalMath), free to use, and does not collect or process any personal data. It requires no permissions, contains no ads, and runs entirely offline to respect your privacy.
+#### Open Source, Private, Free & Ad-free
+"Mental Math" is fully [open source](https://codeberg.org/Mental-Math/MentalMath), free to use, and does not contain any ads. It also does not collect, store, or process any personal data, nor does it use trackers or third-party services.
 
 ## Screenshots
 <p align="center">
@@ -69,7 +69,7 @@ A simple and minimalist app design with no unnecessary elements or distractions,
 </p>
 
 ## Certificate Verification
-To verify the authenticity of the apk, compare the SHA-256 fingerprint of the app's signing certificate with the values below. A matching fingerprint confirms that the apk was signed with an official developer key.
+To verify the APK’s authenticity, compare the SHA-256 fingerprint of its signing certificate with the values below. A matching fingerprint confirms that the APK was signed with an official developer key.
 
 - FOSS Release:  
   `DE:19:7B:4C:F2:B8:58:80:E0:21:11:59:B6:0B:6E:3C:39:F9:6F:F0:68:68:AE:48:39:C4:2D:8A:4D:6F:3F:E5`
@@ -117,11 +117,11 @@ Mental Math © 2026 HeldDerTierwelt
 This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html). The full license text can also be found in the [LICENSE.md]("https://codeberg.org/HeldDerTierwelt/MentalMath/src/branch/main/LICENSE.md") file.  
 
 ## Privacy Policy
-Your privacy is important. Here’s what you should know:
+Your privacy is important. Here are the key facts:
 
-- The app does not collect any personal data, use trackers, ads, or third-party services.
-- By default, no permissions are required. Only if you choose to set reminders will it request permission to send notifications, which is used exclusively for that feature.
-- Opening a shared game link requires a brief internet connection only the first time you open such a link, so that Android can verify it and open the app. Apart from that, no internet connection is required.
+- "Mental Math" does not collect, store, or process any personal data and does not use trackers, ads, or third-party services.
+- By default, no permissions are required. Only if you choose to set reminders will it request permission to send notifications.
+- Android may require a brief internet connection once to verify the domain used for the app’s game links. Apart from that, no internet connection is required.
 
 ## Donation
 If you enjoy this app, you can support me via [Ko-fi](https://ko-fi.com/mental_math). It means a lot to me ❤️.
