@@ -30,5 +30,5 @@ Set up periodic reminders to support regular mental math practice. Notifications
 Clean Design
 A simple and minimalist app design with no unnecessary elements or distractions, designed to keep your focus fully on mental math training. Supports both light and dark modes.
 
-Open Source and Privacy
-"Mental Math" is fully open source, free to use, and does not collect or process any personal data. It contains no ads and only requests notification permission if you enable reminders.
+Open Source, Private, Free & Ad-free
+"Mental Math" is fully open source, free to use, and does not contain any ads. It also does not collect, store, or process any personal data, nor does it use trackers or third-party services.
