@@ -165,7 +165,7 @@ fun StatisticsScreen(
 
     fun createLink(): String {
         val settingsString = SettingsLinkUtil.serialize(statisticsGameRecord)
-        return "https://mental-math.codeberg.page/app?s=%s".format(settingsString)
+        return "https://mental-math.codeberg.page/101?s=%s".format(settingsString)
     }
 
     Scaffold(

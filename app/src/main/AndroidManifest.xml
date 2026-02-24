@@ -30,7 +30,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:scheme="https"
                       android:host="mental-math.codeberg.page"
-                      android:pathPrefix="/app" />
+                      android:pathPrefix="/101" />
             </intent-filter>
         </activity>
         <provider
