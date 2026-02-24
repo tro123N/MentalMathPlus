@@ -268,7 +268,11 @@ fun StatisticsScreen(
     val currentScore = statisticsViewModel.lastGameRecord.collectAsState().value.totalScore
     if (showLinkGamePopUp) {
         val gamePopUpInfo = getGamePopUpInfo(currentScore, linkScore, seed)
-        val shareMessage = "Me: %.2f | You: %.2f\nSeed: %d".format(Locale.ENGLISH, currentScore, seed)
+        val shareMessage = if (linkScore < 0f) {
+            "Me: %.2f | You: ??\nSeed: %d".format(Locale.ENGLISH, currentScore, seed)
+        } else {
+            "Me: %.2f | You: %.2f\nSeed: %d".format(Locale.ENGLISH, currentScore, linkScore, seed)
+        }
         PopUp(
             titleSize = titleFontSize,
             descriptionSize = (0.018f * screenHeight.value).sp,
