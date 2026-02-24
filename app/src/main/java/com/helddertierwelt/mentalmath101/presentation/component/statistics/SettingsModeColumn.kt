@@ -33,7 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath101.R
 import java.util.Locale
 
 @Composable
