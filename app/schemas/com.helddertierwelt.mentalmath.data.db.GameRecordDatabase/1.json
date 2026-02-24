@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3469e80051c498427cddbb7c4b6eebed",
+    "identityHash": "75c080e51fcdbe3e991c0981b4c80a30",
     "entities": [
       {
         "tableName": "game_records",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `isModeEnabled` INTEGER NOT NULL, `modeLimit` INTEGER NOT NULL, `additionRangeStart` INTEGER NOT NULL, `additionRangeEnd` INTEGER NOT NULL, `subtractionRangeStart` INTEGER NOT NULL, `subtractionRangeEnd` INTEGER NOT NULL, `multiplicationRangeStart` INTEGER NOT NULL, `multiplicationRangeEnd` INTEGER NOT NULL, `divisionRangeStart` INTEGER NOT NULL, `divisionRangeEnd` INTEGER NOT NULL, `totalAnswers` INTEGER NOT NULL, `correctAnswers` INTEGER NOT NULL, `activeTime` INTEGER NOT NULL, `totalTime` INTEGER NOT NULL, `activeScore` REAL NOT NULL, `totalScore` REAL NOT NULL, `seed` INTEGER NOT NULL, `taskResults` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `isModeEnabled` INTEGER NOT NULL, `modeLimit` INTEGER NOT NULL, `isAdditionEnabled` INTEGER NOT NULL, `isSubtractionEnabled` INTEGER NOT NULL, `isMultiplicationEnabled` INTEGER NOT NULL, `isDivisionEnabled` INTEGER NOT NULL, `totalAnswers` INTEGER NOT NULL, `correctAnswers` INTEGER NOT NULL, `activeTime` INTEGER NOT NULL, `totalTime` INTEGER NOT NULL, `activeScore` REAL NOT NULL, `totalScore` REAL NOT NULL, `seed` INTEGER NOT NULL, `taskResults` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -27,50 +27,26 @@
             "notNull": true
           },
           {
-            "fieldPath": "additionRangeStart",
-            "columnName": "additionRangeStart",
+            "fieldPath": "isAdditionEnabled",
+            "columnName": "isAdditionEnabled",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "additionRangeEnd",
-            "columnName": "additionRangeEnd",
+            "fieldPath": "isSubtractionEnabled",
+            "columnName": "isSubtractionEnabled",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "subtractionRangeStart",
-            "columnName": "subtractionRangeStart",
+            "fieldPath": "isMultiplicationEnabled",
+            "columnName": "isMultiplicationEnabled",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "subtractionRangeEnd",
-            "columnName": "subtractionRangeEnd",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "multiplicationRangeStart",
-            "columnName": "multiplicationRangeStart",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "multiplicationRangeEnd",
-            "columnName": "multiplicationRangeEnd",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "divisionRangeStart",
-            "columnName": "divisionRangeStart",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "divisionRangeEnd",
-            "columnName": "divisionRangeEnd",
+            "fieldPath": "isDivisionEnabled",
+            "columnName": "isDivisionEnabled",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -131,29 +107,25 @@
         },
         "indices": [
           {
-            "name": "index_game_records_isModeEnabled_modeLimit_additionRangeStart_additionRangeEnd_subtractionRangeStart_subtractionRangeEnd_multiplicationRangeStart_multiplicationRangeEnd_divisionRangeStart_divisionRangeEnd",
+            "name": "index_game_records_isModeEnabled_modeLimit_isAdditionEnabled_isSubtractionEnabled_isMultiplicationEnabled_isDivisionEnabled",
             "unique": false,
             "columnNames": [
               "isModeEnabled",
               "modeLimit",
-              "additionRangeStart",
-              "additionRangeEnd",
-              "subtractionRangeStart",
-              "subtractionRangeEnd",
-              "multiplicationRangeStart",
-              "multiplicationRangeEnd",
-              "divisionRangeStart",
-              "divisionRangeEnd"
+              "isAdditionEnabled",
+              "isSubtractionEnabled",
+              "isMultiplicationEnabled",
+              "isDivisionEnabled"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_game_records_isModeEnabled_modeLimit_additionRangeStart_additionRangeEnd_subtractionRangeStart_subtractionRangeEnd_multiplicationRangeStart_multiplicationRangeEnd_divisionRangeStart_divisionRangeEnd` ON `${TABLE_NAME}` (`isModeEnabled`, `modeLimit`, `additionRangeStart`, `additionRangeEnd`, `subtractionRangeStart`, `subtractionRangeEnd`, `multiplicationRangeStart`, `multiplicationRangeEnd`, `divisionRangeStart`, `divisionRangeEnd`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_game_records_isModeEnabled_modeLimit_isAdditionEnabled_isSubtractionEnabled_isMultiplicationEnabled_isDivisionEnabled` ON `${TABLE_NAME}` (`isModeEnabled`, `modeLimit`, `isAdditionEnabled`, `isSubtractionEnabled`, `isMultiplicationEnabled`, `isDivisionEnabled`)"
           }
         ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3469e80051c498427cddbb7c4b6eebed')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '75c080e51fcdbe3e991c0981b4c80a30')"
     ]
   }
 }

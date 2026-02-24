@@ -1,14 +1,18 @@
 <resources>
-    <string name="app_name">Mental Math</string>
+    <string name="app_name">Mental Math 101</string>
     <string name="game_result">"Result"</string>
     <string name="history">"History"</string>
     <string name="start">Start</string>
+    <string name="addition">Addition</string>
+    <string name="subtraction">Subtraction</string>
+    <string name="multiplication">Multiplication</string>
+    <string name="division">Division</string>
     <string name="add">"&#43;"</string>
     <string name="subtract">"&#8722;"</string>
     <string name="multiply">"&#215;"</string>
     <string name="divide">"&#247;"</string>
     <string name="mode_instruction">"Select mode and limit!"</string>
-    <string name="operator_instruction">"Select operations and difficulty!"</string>
+    <string name="operator_instruction">"Select operations!"</string>
     <string name="done">Done</string>
     <string name="solution">"Solution"</string>
     <string name="input">"Input"</string>

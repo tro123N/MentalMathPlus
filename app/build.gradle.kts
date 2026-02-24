@@ -18,15 +18,15 @@ hilt {
 }
 
 android {
-    namespace = "com.helddertierwelt.mentalmath"
+    namespace = "com.helddertierwelt.mentalmath101"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.helddertierwelt.mentalmath"
+        applicationId = "com.helddertierwelt.mentalmath101"
         minSdk = 24
         targetSdk = 36
-        versionCode = 20
-        versionName = "20"
+        versionCode = 1
+        versionName = "1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
