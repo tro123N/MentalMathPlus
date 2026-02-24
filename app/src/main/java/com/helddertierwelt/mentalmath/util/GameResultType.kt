@@ -24,6 +24,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
+import java.util.Locale
 
 enum class GameResultType(
     val icon: Int,
@@ -171,8 +172,8 @@ enum class GameResultType(
     fun getRandomDescription(currentScore: Float, linkScore: Float, seed: Long): String {
         val template = descriptions.random()
         if (linkScore < 0.0f) {
-            return template.format(currentScore, seed)
+            return template.format(Locale.ENGLISH, currentScore, seed)
         }
-        return template.format(currentScore, linkScore, seed)
+        return template.format(Locale.ENGLISH, currentScore, linkScore, seed)
     }
 }

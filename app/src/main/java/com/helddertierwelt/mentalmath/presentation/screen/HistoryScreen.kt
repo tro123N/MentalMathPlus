@@ -111,7 +111,7 @@ fun HistoryScreen(
                     Column(
                         verticalArrangement = Arrangement.Top,
                         horizontalAlignment = Alignment.Start,
-                                modifier = Modifier
+                        modifier = Modifier
                             .verticalScroll(scrollState)
                             .fillMaxWidth()
                             .weight(1f)

@@ -55,6 +55,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
+import java.util.Locale
 import kotlin.math.max
 
 @Composable
@@ -96,7 +97,7 @@ fun SettingsAndStatsCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Seed: %d".format(statisticsGameRecord.seed),
+                    text = "Seed: %d".format(Locale.ENGLISH, statisticsGameRecord.seed),
                     fontSize = fontSize / 1.6f,
                     modifier = modifier.padding(horizontal = 16.dp)
                 )
@@ -121,7 +122,7 @@ fun SettingsAndStatsCard(
                 val additionRange = statisticsGameRecord.additionRangeStart to statisticsGameRecord.additionRangeEnd
                 val additionRangeString = when {
                     additionRange.first <= 0 || additionRange.second <= 0 -> "-"
-                    additionRange.first ==  additionRange.second ->  additionRange.first.toString()
+                    additionRange.first == additionRange.second -> additionRange.first.toString()
                     else -> "${additionRange.first}-${additionRange.second}"
                 }
                 StatsColumn(
@@ -135,7 +136,7 @@ fun SettingsAndStatsCard(
                 val subtractionRange = statisticsGameRecord.subtractionRangeStart to statisticsGameRecord.subtractionRangeEnd
                 val subtractionRangeString = when {
                     subtractionRange.first <= 0 || subtractionRange.second <= 0 -> "-"
-                    subtractionRange.first ==  subtractionRange.second ->  subtractionRange.first.toString()
+                    subtractionRange.first == subtractionRange.second -> subtractionRange.first.toString()
                     else -> "${subtractionRange.first}-${subtractionRange.second}"
                 }
                 StatsColumn(
@@ -149,7 +150,7 @@ fun SettingsAndStatsCard(
                 val multiplicationRange = statisticsGameRecord.multiplicationRangeStart to statisticsGameRecord.multiplicationRangeEnd
                 val multiplicationRangeString = when {
                     multiplicationRange.first <= 0 || multiplicationRange.second <= 0 -> "-"
-                    multiplicationRange.first ==  multiplicationRange.second ->  multiplicationRange.first.toString()
+                    multiplicationRange.first == multiplicationRange.second -> multiplicationRange.first.toString()
                     else -> "${multiplicationRange.first}-${multiplicationRange.second}"
                 }
                 StatsColumn(
@@ -163,7 +164,7 @@ fun SettingsAndStatsCard(
                 val divisionRange = statisticsGameRecord.divisionRangeStart to statisticsGameRecord.divisionRangeEnd
                 val divisionRangeString = when {
                     divisionRange.first <= 0 || divisionRange.second <= 0 -> "-"
-                    divisionRange.first ==  divisionRange.second ->  divisionRange.first.toString()
+                    divisionRange.first == divisionRange.second -> divisionRange.first.toString()
                     else -> "${divisionRange.first}-${divisionRange.second}"
                 }
                 StatsColumn(
@@ -200,7 +201,7 @@ fun SettingsAndStatsCard(
                 )
 
                 val percentage = statisticsGameRecord.correctAnswers.toFloat() / statisticsGameRecord.totalAnswers.toFloat() * 100f
-                val percentageString = if (percentage.isNaN()) "-" else "%.1f".format(percentage)
+                val percentageString = if (percentage.isNaN()) "-" else "%.1f".format(Locale.ENGLISH, percentage)
                 StatsColumn(
                     fontSize = fontSize,
                     statsText = percentageString,
@@ -210,7 +211,7 @@ fun SettingsAndStatsCard(
                 )
 
                 val activeMinutes = max(1, (statisticsGameRecord.activeTime / 1000)) / 60.0f
-                val correctPerMinute = "%.1f".format(statisticsGameRecord.correctAnswers.toFloat() / activeMinutes)
+                val correctPerMinute = "%.1f".format(Locale.ENGLISH, statisticsGameRecord.correctAnswers.toFloat() / activeMinutes)
                 val darkTheme = when (themeMode) {
                     ThemeMode.DARK -> true
                     ThemeMode.LIGHT -> false
@@ -238,6 +239,7 @@ fun SettingsAndStatsCard(
             Spacer(modifier = modifier.height(8.dp))
 
             val activeScore = "%-6s  %.2f".format(
+                Locale.ENGLISH,
                 stringResource(R.string.active_score) + ":",
                 statisticsGameRecord.activeScore
             )
@@ -262,6 +264,7 @@ fun SettingsAndStatsCard(
             }
 
             val totalScore = "%-8s  %.2f".format(
+                Locale.ENGLISH,
                 stringResource(R.string.total_score) + ":",
                 statisticsGameRecord.totalScore
             )

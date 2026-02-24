@@ -53,8 +53,12 @@ fun StartButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
-            disabledContainerColor = if (isClicked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0.38f),
-            disabledContentColor = if (isClicked) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f),
+            disabledContainerColor = if (isClicked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(
+                alpha = 0.38f
+            ),
+            disabledContentColor = if (isClicked) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimary.copy(
+                alpha = 0.38f
+            ),
         ),
         modifier = Modifier
             .fillMaxWidth()

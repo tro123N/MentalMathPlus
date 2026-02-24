@@ -70,7 +70,11 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
 
         val repeatInterval = inputData.getInt("repeat_interval_days", 0)
         val anchorTime = inputData.getLong("anchor_time", 0L)
-        NotificationScheduler.scheduleNotificationWork(applicationContext, repeatIntervalToMode(repeatInterval), anchorTime)
+        NotificationScheduler.scheduleNotificationWork(
+            applicationContext,
+            repeatIntervalToMode(repeatInterval),
+            anchorTime
+        )
 
         return Result.success()
     }

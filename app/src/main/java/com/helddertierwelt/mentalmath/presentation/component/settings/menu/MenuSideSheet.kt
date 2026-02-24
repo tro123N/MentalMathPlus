@@ -82,6 +82,7 @@ import com.helddertierwelt.mentalmath.util.NotificationScheduler
 import com.helddertierwelt.mentalmath.util.NotificationScheduler.calculateAnchorTime
 import kotlinx.coroutines.launch
 import java.security.SecureRandom
+import java.util.Locale
 
 @Composable
 fun MenuSideSheet(
@@ -252,6 +253,7 @@ fun MenuSideSheet(
                                     val seedLink = settingsViewModel.generateSeedLink(seed)
                                     val shareText =
                                         "Let’s play a round Mental Math!\nClick the link below to start a fresh game with my settings and seed:\n%d\n\n%s".format(
+                                            Locale.ENGLISH,
                                             seed,
                                             seedLink
                                         )

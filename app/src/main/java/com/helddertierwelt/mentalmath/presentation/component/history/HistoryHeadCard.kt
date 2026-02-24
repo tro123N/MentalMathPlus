@@ -96,7 +96,7 @@ fun HistoryHeadCard(
                 modifier = Modifier
                     .size(iconSize)
                     .clip(RoundedCornerShape(16.dp))
-                    .clickable{ onClick() },
+                    .clickable { onClick() },
                 tint = if (showActiveScore) green else yellow
             )
         }

@@ -79,8 +79,9 @@ fun HistoryTopBar(
                     .clip(RoundedCornerShape(16.dp))
                     .clickable {
                         val nextIndex = (currentIndex + 1) % modes.size
-                        onClick(modes[nextIndex]) },
-            ){
+                        onClick(modes[nextIndex])
+                    },
+            ) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(
                     painter = painterResource(modeIconPairs[currentIndex].first),

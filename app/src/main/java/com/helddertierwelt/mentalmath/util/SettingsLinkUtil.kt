@@ -22,6 +22,7 @@ import android.util.Base64
 import android.util.Log
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import java.math.BigInteger
+import java.util.Locale
 
 object SettingsLinkUtil {
     fun serialize(record: GameRecord): String {
@@ -36,8 +37,8 @@ object SettingsLinkUtil {
             record.multiplicationRangeEnd.toString(),
             record.divisionRangeStart.toString(),
             record.divisionRangeEnd.toString(),
-            "%019d".format(record.seed),
-            "%06d".format((record.totalScore * 100).toInt())
+            "%019d".format(Locale.ENGLISH, record.seed),
+            "%06d".format(Locale.ENGLISH, (record.totalScore * 100).toInt())
         ).joinToString("").toBigInteger().toByteArray()
 
         val encoded = Base64.encodeToString(settingsStringByteArray, Base64.URL_SAFE or Base64.NO_WRAP)

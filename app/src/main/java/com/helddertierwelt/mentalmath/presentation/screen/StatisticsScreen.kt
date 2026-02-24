@@ -79,6 +79,7 @@ import com.helddertierwelt.mentalmath.util.SettingsLinkUtil
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
+import java.util.Locale
 
 @Composable
 fun StatisticsScreen(
@@ -165,7 +166,7 @@ fun StatisticsScreen(
 
     fun createLink(): String {
         val settingsString = SettingsLinkUtil.serialize(statisticsGameRecord)
-        return "https://mental-math.codeberg.page/app?s=%s".format(settingsString)
+        return "https://mental-math.codeberg.page/app?s=%s".format(Locale.ENGLISH, settingsString)
     }
 
     Scaffold(
@@ -181,6 +182,7 @@ fun StatisticsScreen(
                         if (bitmap != null) {
                             val shareText =
                                 "Try to beat my score of %.2f in Mental Math.\nReplay my game with seed %d:\n\n%s".format(
+                                    Locale.ENGLISH,
                                     statisticsGameRecord.totalScore,
                                     statisticsGameRecord.seed,
                                     createLink()
@@ -266,7 +268,7 @@ fun StatisticsScreen(
     val currentScore = statisticsViewModel.lastGameRecord.collectAsState().value.totalScore
     if (showLinkGamePopUp) {
         val gamePopUpInfo = getGamePopUpInfo(currentScore, linkScore, seed)
-        val shareMessage = "Me: %.2f | You: %.2f\nSeed: %d".format(currentScore, seed)
+        val shareMessage = "Me: %.2f | You: %.2f\nSeed: %d".format(Locale.ENGLISH, currentScore, seed)
         PopUp(
             titleSize = titleFontSize,
             descriptionSize = (0.018f * screenHeight.value).sp,

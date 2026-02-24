@@ -36,6 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
+import java.util.Locale
 
 @Composable
 fun HistoryEntriesCard(
@@ -89,9 +90,11 @@ fun HistoryEntriesCard(
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             if (gameRecords.isEmpty()) {
-                Row(Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 8.dp)) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                ) {
                     Text(
                         text = "There are no games with a score",
                         fontSize = fontSize,
@@ -101,14 +104,18 @@ fun HistoryEntriesCard(
                 }
             } else {
                 gameRecordsForHistory.forEachIndexed { index, game ->
-                    val limit = if (game.isModeEnabled) "%d0".format(game.modeLimit) else "%d:00".format(game.modeLimit)
+                    val limit = if (game.isModeEnabled) "%d0".format(
+                        Locale.ENGLISH,
+                        game.modeLimit
+                    ) else "%d:00".format(Locale.ENGLISH, game.modeLimit)
                     val rangeStrings = listOf(
                         formatRange(game.additionRangeStart, game.additionRangeEnd),
                         formatRange(game.subtractionRangeStart, game.subtractionRangeEnd),
                         formatRange(game.multiplicationRangeStart, game.multiplicationRangeEnd),
                         formatRange(game.divisionRangeStart, game.divisionRangeEnd)
                     )
-                    val scoreString = "%.2f".format(if (showActiveScore) game.activeScore else game.totalScore)
+                    val scoreString =
+                        "%.2f".format(Locale.ENGLISH, if (showActiveScore) game.activeScore else game.totalScore)
                     val allStrings = listOf(limit) + rangeStrings + scoreString
 
                     if (index > 0) {

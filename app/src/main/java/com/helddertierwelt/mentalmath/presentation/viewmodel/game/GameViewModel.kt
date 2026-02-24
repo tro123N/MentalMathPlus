@@ -106,14 +106,37 @@ class GameViewModel @Inject constructor(
                 val enabledOperators = _gameState.value.enabledOperators
                 val operationSetting = enabledOperators.entries.elementAt(random.nextInt(enabledOperators.size))
                 val operation = operationSetting.key
-                val difficulty = random.nextInt(operationSetting.value.first.toInt(), operationSetting.value.second.toInt() + 1)
-                val lastOperands = max(_gameState.value.operand1, _gameState.value.operand2) to min(_gameState.value.operand1, _gameState.value.operand2)
+                val difficulty =
+                    random.nextInt(operationSetting.value.first.toInt(), operationSetting.value.second.toInt() + 1)
+                val lastOperands = max(_gameState.value.operand1, _gameState.value.operand2) to min(
+                    _gameState.value.operand1,
+                    _gameState.value.operand2
+                )
 
                 val mathTask: MathTask = when (operation) {
-                    Operation.ADDITION -> mathTaskRepository.getRandomAdditionTaskByDifficulty(difficulty, random, lastOperands)
-                    Operation.SUBTRACTION -> mathTaskRepository.getRandomSubtractionTaskByDifficulty(difficulty, random, lastOperands)
-                    Operation.MULTIPLICATION -> mathTaskRepository.getRandomMultiplicationTaskByDifficulty(difficulty, random, lastOperands)
-                    Operation.DIVISION -> mathTaskRepository.getRandomDivisionTaskByDifficulty(difficulty, random, lastOperands)
+                    Operation.ADDITION -> mathTaskRepository.getRandomAdditionTaskByDifficulty(
+                        difficulty,
+                        random,
+                        lastOperands
+                    )
+
+                    Operation.SUBTRACTION -> mathTaskRepository.getRandomSubtractionTaskByDifficulty(
+                        difficulty,
+                        random,
+                        lastOperands
+                    )
+
+                    Operation.MULTIPLICATION -> mathTaskRepository.getRandomMultiplicationTaskByDifficulty(
+                        difficulty,
+                        random,
+                        lastOperands
+                    )
+
+                    Operation.DIVISION -> mathTaskRepository.getRandomDivisionTaskByDifficulty(
+                        difficulty,
+                        random,
+                        lastOperands
+                    )
                 }
 
                 val operands = when (operation) {

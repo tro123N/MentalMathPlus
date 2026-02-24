@@ -36,6 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -237,7 +238,7 @@ class SettingsViewModel @Inject constructor(
         _showResetPopUp.value = false
         _bestActiveGames.value = emptyList()
         _bestTotalGames.value = emptyList()
-        _isScoreClicked.value =  false
+        _isScoreClicked.value = false
         _isStartButtonClicked.value = false
         _isRandomGameButtonClicked.value = false
         _isSliderActive.value = false
@@ -371,10 +372,10 @@ class SettingsViewModel @Inject constructor(
             if (state.isMultiplicationEnabled) state.multiplicationRange.second.toInt().toString() else "0",
             if (state.isDivisionEnabled) state.divisionRange.first.toInt().toString() else "0",
             if (state.isDivisionEnabled) state.divisionRange.second.toInt().toString() else "0",
-            "%019d".format(seed)
+            "%019d".format(Locale.ENGLISH, seed)
         ).joinToString("").toBigInteger().toByteArray()
 
         val encoded = Base64.encodeToString(settingsStringByteArray, Base64.URL_SAFE or Base64.NO_WRAP)
-        return "https://mental-math.codeberg.page/app?s=%s".format(encoded)
+        return "https://mental-math.codeberg.page/app?s=%s".format(Locale.ENGLISH, encoded)
     }
 }
