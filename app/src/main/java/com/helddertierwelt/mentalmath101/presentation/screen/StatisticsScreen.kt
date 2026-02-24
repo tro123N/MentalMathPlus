@@ -18,6 +18,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath101.presentation.screen
 
+import android.R.attr.description
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -79,6 +80,7 @@ import com.helddertierwelt.mentalmath101.util.SettingsLinkUtil
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
+import java.util.Locale
 
 @Composable
 fun StatisticsScreen(
@@ -165,7 +167,7 @@ fun StatisticsScreen(
 
     fun createLink(): String {
         val settingsString = SettingsLinkUtil.serialize(statisticsGameRecord)
-        return "https://mental-math.codeberg.page/101?s=%s".format(settingsString)
+        return "https://mental-math.codeberg.page/101?s=%s".format(Locale.ENGLISH,settingsString)
     }
 
     Scaffold(
@@ -180,7 +182,7 @@ fun StatisticsScreen(
                         val bitmap = captureSettingsCardBitmap()
                         if (bitmap != null) {
                             val shareText =
-                                "Try to beat my score of %.2f in Mental Math.\nReplay my game with seed %d:\n\n%s".format(
+                                "Try to beat my score of %.2f in Mental Math.\nReplay my game with seed %d:\n\n%s".format(Locale.ENGLISH,
                                     statisticsGameRecord.totalScore,
                                     statisticsGameRecord.seed,
                                     createLink()
@@ -266,7 +268,11 @@ fun StatisticsScreen(
     val currentScore = statisticsViewModel.lastGameRecord.collectAsState().value.totalScore
     if (showLinkGamePopUp) {
         val gamePopUpInfo = getGamePopUpInfo(currentScore, linkScore, seed)
-        val shareMessage = "Me: %.2f | You: %.2f\nSeed: %d".format(currentScore, seed)
+        val shareMessage = if (linkScore < 0f) {
+            "Me: %.2f | You: ??\nSeed: %d".format(Locale.ENGLISH, currentScore, seed)
+        } else {
+            "Me: %.2f | You: %.2f\nSeed: %d".format(Locale.ENGLISH, currentScore, linkScore, seed)
+        }
         PopUp(
             titleSize = titleFontSize,
             descriptionSize = (0.018f * screenHeight.value).sp,

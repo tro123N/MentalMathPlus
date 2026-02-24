@@ -36,6 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath101.data.entity.GameRecord
+import java.util.Locale
 
 @Composable
 fun HistoryEntriesCard(
@@ -89,14 +90,14 @@ fun HistoryEntriesCard(
                 }
             } else {
                 gameRecordsForHistory.forEachIndexed { index, game ->
-                    val limit = if (game.isModeEnabled) "%d0".format(game.modeLimit) else "%d:00".format(game.modeLimit)
+                    val limit = if (game.isModeEnabled) "%d0".format(Locale.ENGLISH,game.modeLimit) else "%d:00".format(Locale.ENGLISH,game.modeLimit)
                     val operatorStrings = listOf(
                         if (game.isAdditionEnabled) "+" else "",
                         if (game.isSubtractionEnabled) "−" else "",
                         if (game.isMultiplicationEnabled) "×" else "",
                         if (game.isDivisionEnabled) "÷" else ""
                     )
-                    val scoreString = "%.2f".format(if (showActiveScore) game.activeScore else game.totalScore)
+                    val scoreString = "%.2f".format(Locale.ENGLISH,if (showActiveScore) game.activeScore else game.totalScore)
                     val allStrings = listOf(limit) + operatorStrings + scoreString
 
                     if (index > 0) {

@@ -36,6 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -301,10 +302,10 @@ class SettingsViewModel @Inject constructor(
             if (state.isSubtractionEnabled) "1" else "0",
             if (state.isMultiplicationEnabled) "1" else "0",
             if (state.isDivisionEnabled) "1" else "0",
-            "%019d".format(seed)
+            "%019d".format(Locale.ENGLISH,seed)
         ).joinToString("").toBigInteger().toByteArray()
 
         val encoded = Base64.encodeToString(settingsStringByteArray, Base64.URL_SAFE or Base64.NO_WRAP)
-        return "https://mental-math.codeberg.page/101?s=%s".format(encoded)
+        return "https://mental-math.codeberg.page/101?s=%s".format(Locale.ENGLISH,encoded)
     }
 }
