@@ -1,0 +1,3 @@
+- Fixed a crash that occurred after completing a game launched via an app link.
+- RTL (right-to-left) support has been temporarily disabled to improve layout stability.
+- Standardized number formatting to Western Arabic numerals.
