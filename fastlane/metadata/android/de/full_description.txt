@@ -30,5 +30,5 @@ Erhalte regelmäßige Erinnerungen für dein Kopfrechentraining. Die Benachricht
 Übersichtliches Design
 Die App besitzt ein einfaches und minimalistisches Design ohne unnötige Elemente, damit du dich voll und ganz auf das Kopfrechentraining konzentrieren kannst. Es wird sowohl ein Light- als auch ein Dark-Mode unterstützt.
 
-Open Source, privat, kostenlos & werbefrei,
+Open Source, privat, kostenlos & werbefrei
 „Mental Math“ ist vollständig quelloffen, kostenlos nutzbar und enthält keine Werbung. Es werden weder personenbezogene Daten erfasst, gespeichert oder verarbeitet, noch werden Tracker oder Dienste von Drittanbietern verwendet.

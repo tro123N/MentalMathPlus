@@ -225,11 +225,11 @@ fun MenuSideSheet(
                     LogoRow(
                         size = logoSize,
                         imageId = R.drawable.mental_math,
-                        text = " v${BuildConfig.VERSION_NAME}",
+                        text = " 101v${BuildConfig.VERSION_NAME}",
                         intentProvider = {
                             Intent(
                                 Intent.ACTION_VIEW,
-                                "https://codeberg.org/Mental-Math/MentalMath/releases/tag/v${BuildConfig.VERSION_NAME}".toUri()
+                                "https://codeberg.org/Mental-Math/MentalMath/releases/tag/101v${BuildConfig.VERSION_NAME}".toUri()
                             )
                         }
                     )
