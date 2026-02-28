@@ -26,13 +26,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.presentation.theme.green
@@ -53,44 +56,48 @@ fun MathTaskDisplay(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(
-            text = "$operand1 $operatorString $operand2",
-            fontSize = fontSize,
-            textAlign = TextAlign.Center,
-            lineHeight = fontSize
-        )
-        Spacer(modifier = Modifier.height((0.5 * fontSize.value).dp))
-        Box(
-            modifier = Modifier.width(width + (1.2 * fontSize.value).dp),
-            contentAlignment = Alignment.CenterStart
+        CompositionLocalProvider(
+            LocalLayoutDirection provides LayoutDirection.Ltr
         ) {
             Text(
-                text = "=",
+                text = "$operand1 $operatorString $operand2",
                 fontSize = fontSize,
+                textAlign = TextAlign.Center,
+                lineHeight = fontSize
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            val color = MaterialTheme.colorScheme.onSurface
+            Spacer(modifier = Modifier.height((0.5 * fontSize.value).dp))
             Box(
-                contentAlignment = Alignment.CenterStart,
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .width(width)
-                    .height((fontSize * 1.5f).value.dp)
-                    .drawBehind {
-                        drawLine(
-                            color = color,
-                            start = Offset(0f, size.height),
-                            end = Offset(size.width, size.height),
-                            strokeWidth = 2.dp.toPx()
-                        )
-                    }
+                modifier = Modifier.width(width + (1.2 * fontSize.value).dp),
+                contentAlignment = Alignment.CenterStart
             ) {
                 Text(
-                    text = input,
+                    text = "=",
                     fontSize = fontSize,
-                    modifier = Modifier.align(Alignment.Center),
-                    color = if (isCorrect == true) green else if (isCorrect == false) red else MaterialTheme.colorScheme.onPrimary
                 )
+                Spacer(modifier = Modifier.width(8.dp))
+                val color = MaterialTheme.colorScheme.onSurface
+                Box(
+                    contentAlignment = Alignment.CenterStart,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .width(width)
+                        .height((fontSize * 1.5f).value.dp)
+                        .drawBehind {
+                            drawLine(
+                                color = color,
+                                start = Offset(0f, size.height),
+                                end = Offset(size.width, size.height),
+                                strokeWidth = 2.dp.toPx()
+                            )
+                        }
+                ) {
+                    Text(
+                        text = input,
+                        fontSize = fontSize,
+                        modifier = Modifier.align(Alignment.Center),
+                        color = if (isCorrect == true) green else if (isCorrect == false) red else MaterialTheme.colorScheme.onPrimary
+                    )
+                }
             }
         }
     }

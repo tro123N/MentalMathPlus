@@ -56,6 +56,7 @@ import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.component.game.BackspaceButton
 import com.helddertierwelt.mentalmath.presentation.component.game.EnterButton
 import com.helddertierwelt.mentalmath.presentation.component.game.GameTopBar
+import com.helddertierwelt.mentalmath.presentation.component.game.LtrRow
 import com.helddertierwelt.mentalmath.presentation.component.game.MathTaskDisplay
 import com.helddertierwelt.mentalmath.presentation.component.game.NumberButton
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
@@ -162,7 +163,7 @@ fun GameScreen(
                             isCorrect = gameState.isCorrect
                         )
                     }
-                    Row(
+                    LtrRow(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -182,7 +183,7 @@ fun GameScreen(
                         }
                     }
 
-                    Row(
+                    LtrRow(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -202,7 +203,7 @@ fun GameScreen(
                         }
                     }
 
-                    Row(
+                    LtrRow(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {

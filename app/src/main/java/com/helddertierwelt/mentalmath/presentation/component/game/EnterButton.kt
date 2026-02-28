@@ -27,8 +27,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
@@ -65,7 +68,10 @@ fun EnterButton(
         Icon(
             painter = painterResource(icon),
             contentDescription = "Enter",
-            modifier = Modifier.size(iconSize),
+            modifier = Modifier.size(iconSize).scale(
+                scaleX = if (LocalLayoutDirection.current == LayoutDirection.Rtl) -1f else 1f,
+                scaleY = 1f
+            )
         )
     }
 }

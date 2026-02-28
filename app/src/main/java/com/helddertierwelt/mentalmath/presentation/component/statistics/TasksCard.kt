@@ -36,14 +36,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.presentation.component.game.LtrRow
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
@@ -99,7 +103,7 @@ fun TasksCard(
                         task.operand2,
                         task.correctResult
                     )
-                    Row {
+                    LtrRow {
                         Text(
                             text = exercise,
                             fontSize = resultFontSize,
@@ -146,8 +150,12 @@ fun TasksCard(
                                 painter = painterResource(R.drawable.skipped_24dp),
                                 contentDescription = "Skipped",
                                 modifier = Modifier
+                                    .align(Alignment.CenterVertically)
                                     .size(iconSize)
-                                    .align(Alignment.CenterVertically),
+                                    .scale(
+                                        scaleX = if (LocalLayoutDirection.current == LayoutDirection.Rtl) -1f else 1f,
+                                        scaleY = 1f
+                                    ),
                                 tint = yellow
                             )
                         }
