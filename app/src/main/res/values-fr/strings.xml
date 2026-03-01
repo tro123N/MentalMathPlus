@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Mental Math</string>
+    <string name="game_result">"Résultat"</string>
+    <string name="history">"Historique"</string>
+    <string name="start">Démarrer</string>
+    <string name="add">"&#43;"</string>
+    <string name="subtract">"&#8722;"</string>
+    <string name="multiply">"&#215;"</string>
+    <string name="divide">"&#247;"</string>
+    <string name="mode_instruction">"Mode de jeu et limites"</string>
+    <string name="operator_instruction">"Opérations et difficultés"</string>
+    <string name="done">OK</string>
+    <string name="solution">"Solution"</string>
+    <string name="input">"Input"</string>
+    <string name="active_score">"Active"</string>
+    <string name="total_score">"Total"</string>
+    <string name="share_score">Share Score</string>
+    <string name="share_link_game_result">Share Result</string>
+</resources>
