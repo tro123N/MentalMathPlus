@@ -18,6 +18,11 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.screen
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
@@ -109,6 +114,21 @@ fun SettingsScreen(
     val bestGamesEmpty = bestTotalGames.isEmpty() && bestActiveGames.isEmpty()
     val isSliderActive = settingsViewModel.isSliderActive.collectAsState().value
     val isStartButtonClicked = settingsViewModel.isStartButtonClicked.collectAsState().value
+
+    fun openNotificationSettings(context: Context) {
+        val intent =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                    putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                }
+            } else {
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = Uri.fromParts("package", context.packageName, null)
+                }
+            }
+
+        context.startActivity(intent)
+    }
 
     LaunchedEffect(isLoaded) {
         if (isLoaded) {
@@ -369,6 +389,25 @@ fun SettingsScreen(
         }
     )
 
+    if (settingsViewModel.showNotificationPermissionPopUp.collectAsState().value) {
+        PopUp(
+            onDismissRequest = { settingsViewModel.setShowNotificationPermissionPopUp(false) },
+            onConfirm = {
+                openNotificationSettings(context)
+                settingsViewModel.setShowNotificationPermissionPopUp(false)
+            },
+            onCancel = { settingsViewModel.setShowNotificationPermissionPopUp(false) },
+            titleSize = titleFontSize,
+            descriptionSize = popUpDescriptionFontSize,
+            title = stringResource(R.string.notification_popup_title),
+            description = stringResource(R.string.notification_popup_description),
+            confirmationText = stringResource(R.string.notification_popup_confirmation_text),
+            cancelText = stringResource(R.string.cancel),
+            dismissColor = red,
+            confirmColor = green
+        )
+    }
+
     if (settingsViewModel.showResetPopUp.collectAsState().value) {
         PopUp(
             onDismissRequest = { settingsViewModel.setShowResetPopUp(false) },
@@ -383,10 +422,10 @@ fun SettingsScreen(
             onCancel = { settingsViewModel.setShowResetPopUp(false) },
             titleSize = titleFontSize,
             descriptionSize = popUpDescriptionFontSize,
-            title = "Reset app?",
-            description = "Deletes all scores and settings.",
-            confirmationText = "Reset",
-            cancelText = "Cancel",
+            title = stringResource(R.string.reset_app_popup_title),
+            description = stringResource(R.string.reset_app_popup_description),
+            confirmationText = stringResource(R.string.reset_app_popup_confirmation_text),
+            cancelText = stringResource(R.string.cancel),
             dismissColor = green,
             confirmColor = red
         )

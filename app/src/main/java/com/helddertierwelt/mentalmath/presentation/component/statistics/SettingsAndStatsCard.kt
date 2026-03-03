@@ -240,7 +240,7 @@ fun SettingsAndStatsCard(
 
             val activeScore = "%-6s  %.2f".format(
                 Locale.ENGLISH,
-                stringResource(R.string.active_score) + ":",
+                stringResource(R.string.active) + ":",
                 statisticsGameRecord.activeScore
             )
             Row(
@@ -265,7 +265,7 @@ fun SettingsAndStatsCard(
 
             val totalScore = "%-8s  %.2f".format(
                 Locale.ENGLISH,
-                stringResource(R.string.total_score) + ":",
+                stringResource(R.string.total) + ":",
                 statisticsGameRecord.totalScore
             )
             Row(

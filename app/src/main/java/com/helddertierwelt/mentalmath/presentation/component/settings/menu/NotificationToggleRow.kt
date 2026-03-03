@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -53,10 +54,10 @@ fun NotificationToggleRow(
         R.drawable.notifications_active_24dp,
     )
     val texts = listOf(
-        "Reminder Off",
-        "Daily Reminder",
-        "Every 3 Days",
-        "Weekly Reminder"
+        R.string.reminder_off,
+        R.string.daily_reminder,
+        R.string.every_three_days,
+        R.string.weekly_reminder,
     )
     val modes = listOf(NotificationMode.OFF, NotificationMode.DAILY, NotificationMode.THREEDAILY, NotificationMode.WEEKLY)
     val currentIndex = modes.indexOf(currentMode).coerceAtLeast(0)
@@ -74,12 +75,12 @@ fun NotificationToggleRow(
         Spacer(modifier = Modifier.width(16.dp))
         Icon(
             painter = painterResource(icons[currentIndex]),
-            contentDescription = texts[currentIndex],
+            contentDescription = stringResource(texts[currentIndex]),
             modifier = Modifier.size(iconSize)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = texts[currentIndex],
+            text = stringResource(texts[currentIndex]),
             fontSize = fontSize,
             lineHeight = fontSize
         )

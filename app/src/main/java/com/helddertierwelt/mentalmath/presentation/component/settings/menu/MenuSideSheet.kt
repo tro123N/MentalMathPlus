@@ -18,11 +18,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.settings.menu
 
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.LocalActivity
@@ -61,6 +57,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -71,8 +68,6 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.BuildConfig
 import com.helddertierwelt.mentalmath.R
-import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
-import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.game.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.history.HistoryViewModel
@@ -106,8 +101,6 @@ fun MenuSideSheet(
     val overlayAlpha = 0.38f * (offsetX.value - minOffset) / (maxOffset - minOffset)
 
     val fontSize = (0.020f * screenHeight.value).sp
-    val titleFontSize = (0.031f * screenHeight.value).sp
-    val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
     val iconSize = (0.032f * screenHeight.value).dp
     val logoSize = (0.11f * screenHeight.value).dp
 
@@ -116,21 +109,7 @@ fun MenuSideSheet(
     var isInteractionEnabled by remember { mutableStateOf(true) }
     var isFirstRender by remember { mutableStateOf(true) }
     val isRandomGameButtonClicked = settingsViewModel.isRandomGameButtonClicked.collectAsState().value
-
-    fun openNotificationSettings(context: Context) {
-        val intent =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                    putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-                }
-            } else {
-                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = Uri.fromParts("package", context.packageName, null)
-                }
-            }
-
-        context.startActivity(intent)
-    }
+    val notificationToastText = stringResource(R.string.notification_toast_text)
 
     LaunchedEffect(Unit) {
         settingsViewModel.settingsState.collect { settingsState ->
@@ -238,7 +217,7 @@ fun MenuSideSheet(
                     IntentRow(
                         iconResId = R.drawable.swords_24dp,
                         contentDescription = "Share Game",
-                        text = "Share Game",
+                        text = stringResource(R.string.share_game),
                         fontSize = fontSize,
                         iconSize = iconSize,
                         isEnabled = settingsViewModel.isAnyOperationEnabled(),
@@ -269,7 +248,7 @@ fun MenuSideSheet(
                     ButtonRow(
                         iconResId = R.drawable.casino_24dp,
                         contentDescription = "Random Game",
-                        text = "Random Game",
+                        text = stringResource(R.string.random_game),
                         fontSize = fontSize,
                         iconSize = iconSize,
                         onClick = {
@@ -295,7 +274,7 @@ fun MenuSideSheet(
                     ButtonRow(
                         iconResId = R.drawable.history_24dp,
                         contentDescription = "History",
-                        text = "History",
+                        text = stringResource(R.string.history),
                         fontSize = fontSize,
                         iconSize = iconSize,
                         onClick = {
@@ -334,7 +313,7 @@ fun MenuSideSheet(
                                 if (it == NotificationMode.DAILY) {
                                     Toast.makeText(
                                         context,
-                                        "Reminders start in the evening after the interval",
+                                        notificationToastText,
                                         Toast.LENGTH_LONG
                                     ).show()
                                 }
@@ -356,7 +335,7 @@ fun MenuSideSheet(
                     IntentRow(
                         iconResId = R.drawable.info_24dp,
                         contentDescription = "About",
-                        text = "About",
+                        text = stringResource(R.string.about),
                         fontSize = fontSize,
                         iconSize = iconSize,
                         intentProvider = {
@@ -371,7 +350,7 @@ fun MenuSideSheet(
                     IntentRow(
                         iconResId = R.drawable.feedback_24dp,
                         contentDescription = "Feedback",
-                        text = "Feed\u200Bback",
+                        text = stringResource(R.string.feedback),
                         fontSize = fontSize,
                         iconSize = iconSize,
                         intentProvider = {
@@ -391,7 +370,7 @@ fun MenuSideSheet(
                     IntentRow(
                         iconResId = R.drawable.thumb_up_24dp,
                         contentDescription = "Recommend",
-                        text = "Recom\u200Bmend",
+                        text = stringResource(R.string.recommend),
                         fontSize = fontSize,
                         iconSize = iconSize,
                         intentProvider = {
@@ -406,7 +385,7 @@ fun MenuSideSheet(
                     IntentRow(
                         iconResId = R.drawable.volunteer_activism_24dp,
                         contentDescription = "Donate",
-                        text = "Donate",
+                        text = stringResource(R.string.donate),
                         fontSize = fontSize,
                         iconSize = iconSize,
                         intentProvider = {
@@ -422,7 +401,7 @@ fun MenuSideSheet(
                 ButtonRow(
                     iconResId = R.drawable.delete_24dp,
                     contentDescription = "Reset",
-                    text = "Reset App",
+                    text = stringResource(R.string.reset_app),
                     fontSize = fontSize,
                     iconSize = iconSize,
                     onClick = { settingsViewModel.setShowResetPopUp(true) },
@@ -431,23 +410,5 @@ fun MenuSideSheet(
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
-    }
-    if (settingsViewModel.showNotificationPermissionPopUp.collectAsState().value) {
-        PopUp(
-            onDismissRequest = { settingsViewModel.setShowNotificationPermissionPopUp(false) },
-            onConfirm = {
-                openNotificationSettings(context)
-                settingsViewModel.setShowNotificationPermissionPopUp(false)
-            },
-            onCancel = { settingsViewModel.setShowNotificationPermissionPopUp(false) },
-            titleSize = titleFontSize,
-            descriptionSize = popUpDescriptionFontSize,
-            title = "Notifications are disabled",
-            description = "Please enable notifications in your system settings to set reminders.\n\nNote: Battery optimization settings may still block notifications.",
-            confirmationText = "Open settings",
-            cancelText = "Cancel",
-            dismissColor = red,
-            confirmColor = green
-        )
     }
 }

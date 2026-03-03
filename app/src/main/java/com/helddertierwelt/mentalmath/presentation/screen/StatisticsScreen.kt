@@ -58,6 +58,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
@@ -106,6 +107,7 @@ fun StatisticsScreen(
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
 
     // variables
+    val shareChallengeText = stringResource(R.string.share_challenge)
     var statsCardCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
     var hasCapturedCoordinates by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
@@ -157,7 +159,7 @@ fun StatisticsScreen(
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
             context.startActivity(
-                Intent.createChooser(shareIntent, context.getString(R.string.share_score))
+                Intent.createChooser(shareIntent, "Share Score")
             )
         } catch (e: Exception) {
             Log.e("StatisticsScreen", "Error when sharing result of link-game", e)
@@ -172,7 +174,7 @@ fun StatisticsScreen(
     Scaffold(
         topBar = {
             StatisticsTopBar(
-                R.string.game_result,
+                R.string.result,
                 titleFontSize = titleFontSize,
                 iconSize = shareIconSize,
                 onShareClick = {
@@ -180,14 +182,14 @@ fun StatisticsScreen(
                         scrollState.animateScrollTo(0)
                         val bitmap = captureSettingsCardBitmap()
                         if (bitmap != null) {
-                            val shareText =
-                                "Try to beat my score of %.2f in Mental Math.\nReplay my game with seed %d:\n\n%s".format(
+                            shareResult(
+                                context, bitmap, shareChallengeText.format(
                                     Locale.ENGLISH,
                                     statisticsGameRecord.totalScore,
                                     statisticsGameRecord.seed,
                                     createLink()
                                 )
-                            shareResult(context, bitmap, shareText)
+                            )
                         } else {
                             Log.e("StatisticsScreen", "Bitmap could not be captured")
                         }
@@ -269,17 +271,17 @@ fun StatisticsScreen(
     if (showLinkGamePopUp) {
         val gamePopUpInfo = getGamePopUpInfo(currentScore, linkScore, seed)
         val shareMessage = if (linkScore < 0f) {
-            "Me: %.2f | You: ??\nSeed: %d".format(Locale.ENGLISH, currentScore, seed)
+            stringResource(R.string.result_share_message_waiting).format(Locale.ENGLISH, currentScore, seed)
         } else {
-            "Me: %.2f | You: %.2f\nSeed: %d".format(Locale.ENGLISH, currentScore, linkScore, seed)
+            stringResource(R.string.result_share_message).format(Locale.ENGLISH, currentScore, linkScore, seed)
         }
         PopUp(
             titleSize = titleFontSize,
             descriptionSize = (0.018f * screenHeight.value).sp,
             title = gamePopUpInfo.title,
             description = gamePopUpInfo.description,
-            confirmationText = "Share",
-            cancelText = "Ok",
+            confirmationText = stringResource(R.string.result_popup_confirmation_text),
+            cancelText = stringResource(R.string.ok),
             icon = {
                 Icon(
                     painter = painterResource(gamePopUpInfo.icon),

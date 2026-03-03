@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -52,9 +53,9 @@ fun DarkModeToggleRow(
         R.drawable.dark_light_mode_24dp
     )
     val texts = listOf(
-        "Dark Mode",
-        "Light Mode",
-        "System Mode"
+        R.string.dark_mode,
+        R.string.light_mode,
+        R.string.system_mode,
     )
     val modes = listOf(ThemeMode.DARK, ThemeMode.LIGHT, ThemeMode.SYSTEM)
     val currentIndex = modes.indexOf(currentMode).coerceAtLeast(0)
@@ -72,12 +73,12 @@ fun DarkModeToggleRow(
         Spacer(modifier = Modifier.width(16.dp))
         Icon(
             painter = painterResource(icons[currentIndex]),
-            contentDescription = texts[currentIndex],
+            contentDescription = stringResource(texts[currentIndex]),
             modifier = Modifier.size(iconSize)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = texts[currentIndex],
+            text = stringResource(texts[currentIndex]),
             fontSize = fontSize,
             lineHeight = fontSize
         )

@@ -47,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -156,7 +157,7 @@ fun GameScreen(
                         MathTaskDisplay(
                             operand1 = gameState.operand1,
                             operand2 = gameState.operand2,
-                            operator = gameState.operator.stringId,
+                            operator = gameState.operator.symbol,
                             input = gameState.input,
                             fontSize = taskFontSize,
                             width = resultLineWidth,
@@ -315,10 +316,10 @@ fun GameScreen(
             onCancel = { showDialog = false },
             titleSize = titleFontSize,
             descriptionSize = popUpDescriptionFontSize,
-            title = "Quit game?",
-            description = "Your current progress will be lost.",
-            confirmationText = "Quit",
-            cancelText = "Continue",
+            title = stringResource(R.string.quit_game_popup_title),
+            description = stringResource(R.string.quit_game_popup_description),
+            confirmationText = stringResource(R.string.quit_game_popup_confirmation_text),
+            cancelText = stringResource(R.string.quit_game_popup_cancel_text),
             dismissColor = green,
             confirmColor = red
         )

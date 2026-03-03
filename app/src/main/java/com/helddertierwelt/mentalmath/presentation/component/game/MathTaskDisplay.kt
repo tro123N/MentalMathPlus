@@ -32,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
@@ -45,14 +44,13 @@ import com.helddertierwelt.mentalmath.presentation.theme.red
 fun MathTaskDisplay(
     operand1: Int,
     operand2: Int,
-    operator: Int,
+    operator: String,
     input: String,
     fontSize: TextUnit,
     width: Dp,
     isCorrect: Boolean?
 ) {
 
-    val operatorString = stringResource(operator)
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -60,7 +58,7 @@ fun MathTaskDisplay(
             LocalLayoutDirection provides LayoutDirection.Ltr
         ) {
             Text(
-                text = "$operand1 $operatorString $operand2",
+                text = "$operand1 $operator $operand2",
                 fontSize = fontSize,
                 textAlign = TextAlign.Center,
                 lineHeight = fontSize

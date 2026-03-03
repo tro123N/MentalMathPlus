@@ -18,8 +18,12 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.util
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+
 object GameResultInfoGenerator {
 
+    @Composable
     fun getGamePopUpInfo(
         currentScore: Float,
         linkScore: Float,
@@ -39,7 +43,7 @@ object GameResultInfoGenerator {
         return GameResultInfo(
             icon = type.icon,
             color = type.color,
-            title = type.title,
+            title = stringResource(type.title),
             description = type.getRandomDescription(currentScore, linkScore, seed)
         )
     }

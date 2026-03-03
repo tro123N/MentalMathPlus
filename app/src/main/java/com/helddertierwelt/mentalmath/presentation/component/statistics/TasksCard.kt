@@ -99,7 +99,7 @@ fun TasksCard(
                     val exercise = "%d %s %d = %d".format(
                         Locale.ENGLISH,
                         task.operand1,
-                        stringResource(task.operator.stringId),
+                        task.operator.symbol,
                         task.operand2,
                         task.correctResult
                     )

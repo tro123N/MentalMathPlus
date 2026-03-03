@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
@@ -141,14 +142,14 @@ class MainActivity : ComponentActivity() {
                         onCancel = { mainActivityViewModel.setShowDeepLinkPopUp(false) },
                         titleSize = titleFontSize,
                         descriptionSize = popUpDescriptionFontSize,
-                        title = "Start game from link?",
+                        title = stringResource(R.string.app_link_game_popup_title),
                         description = if (gameRecordFromAppLink.value.totalScore < 0f) {
-                            "Play a new game with predefined settings and a random seed.\n\nAny current game progress will be lost."
+                            stringResource(R.string.app_link_popup_description_new_game)
                         } else {
-                            "Try to beat your friend's score by replaying the same game.\n\nAny current game progress will be lost."
+                            stringResource(R.string.app_link_popup_description_challenge)
                         },
-                        confirmationText = "Start",
-                        cancelText = "Cancel",
+                        confirmationText = stringResource(R.string.app_link_popup_confirmation_text),
+                        cancelText = stringResource(R.string.cancel),
                         dismissColor = red,
                         confirmColor = green
                     )
@@ -162,9 +163,9 @@ class MainActivity : ComponentActivity() {
                         onCancel = { mainActivityViewModel.setShowAlreadyPlayedPopUp(false) },
                         titleSize = titleFontSize,
                         descriptionSize = popUpDescriptionFontSize,
-                        title = "Game already played",
-                        description = "You’ve already played a game with the same settings and seed.\n\nPlease try a different link or start a new game.",
-                        confirmationText = "Ok",
+                        title = stringResource(R.string.already_played_popup_title),
+                        description = stringResource(R.string.already_played_popup_description),
+                        confirmationText = stringResource(R.string.ok),
                         confirmColor = green
                     )
                 }

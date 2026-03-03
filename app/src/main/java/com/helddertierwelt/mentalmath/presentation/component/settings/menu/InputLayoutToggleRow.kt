@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -64,7 +65,7 @@ fun InputLayoutToggleRow(
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = if (isNumpad) "Number Pad" else "Phone Pad",
+            text =  stringResource(if (isNumpad) R.string.number_pad else R.string.phone_pad),
             fontSize = fontSize,
             lineHeight = fontSize
         )
