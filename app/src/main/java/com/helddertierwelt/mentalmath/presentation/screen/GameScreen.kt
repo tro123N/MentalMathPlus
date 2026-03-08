@@ -34,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -46,8 +47,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -57,7 +60,6 @@ import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.component.game.BackspaceButton
 import com.helddertierwelt.mentalmath.presentation.component.game.EnterButton
 import com.helddertierwelt.mentalmath.presentation.component.game.GameTopBar
-import com.helddertierwelt.mentalmath.presentation.component.game.LtrRow
 import com.helddertierwelt.mentalmath.presentation.component.game.MathTaskDisplay
 import com.helddertierwelt.mentalmath.presentation.component.game.NumberButton
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
@@ -148,79 +150,83 @@ fun GameScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        contentAlignment = Alignment.Center
+                    CompositionLocalProvider(
+                        LocalLayoutDirection provides LayoutDirection.Ltr
                     ) {
-                        MathTaskDisplay(
-                            operand1 = gameState.operand1,
-                            operand2 = gameState.operand2,
-                            operator = gameState.operator.symbol,
-                            input = gameState.input,
-                            fontSize = taskFontSize,
-                            width = resultLineWidth,
-                            isCorrect = gameState.isCorrect
-                        )
-                    }
-                    LtrRow(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        upperNumberRow.forEach { number ->
-                            NumberButton(
-                                number = number,
-                                onClick = {
-                                    if (isRightToLeft) {
-                                        gameViewModel.addFirstDigit(number)
-                                    } else {
-                                        gameViewModel.addLastDigit(number)
-                                    }
-                                },
-                                size = roundButtonSize,
-                                fontSize = numberFontSize
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            MathTaskDisplay(
+                                operand1 = gameState.operand1,
+                                operand2 = gameState.operand2,
+                                operator = gameState.operator.symbol,
+                                input = gameState.input,
+                                fontSize = taskFontSize,
+                                width = resultLineWidth,
+                                isCorrect = gameState.isCorrect
                             )
                         }
-                    }
-
-                    LtrRow(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        (4..6).forEach { number ->
-                            NumberButton(
-                                number = number,
-                                onClick = {
-                                    if (isRightToLeft) {
-                                        gameViewModel.addFirstDigit(number)
-                                    } else {
-                                        gameViewModel.addLastDigit(number)
-                                    }
-                                },
-                                size = roundButtonSize,
-                                fontSize = numberFontSize
-                            )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            upperNumberRow.forEach { number ->
+                                NumberButton(
+                                    number = number,
+                                    onClick = {
+                                        if (isRightToLeft) {
+                                            gameViewModel.addFirstDigit(number)
+                                        } else {
+                                            gameViewModel.addLastDigit(number)
+                                        }
+                                    },
+                                    size = roundButtonSize,
+                                    fontSize = numberFontSize
+                                )
+                            }
                         }
-                    }
 
-                    LtrRow(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        (lowerNumberRow).forEach { number ->
-                            NumberButton(
-                                number = number,
-                                onClick = {
-                                    if (isRightToLeft) {
-                                        gameViewModel.addFirstDigit(number)
-                                    } else {
-                                        gameViewModel.addLastDigit(number)
-                                    }
-                                },
-                                size = roundButtonSize,
-                                fontSize = numberFontSize
-                            )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            (4..6).forEach { number ->
+                                NumberButton(
+                                    number = number,
+                                    onClick = {
+                                        if (isRightToLeft) {
+                                            gameViewModel.addFirstDigit(number)
+                                        } else {
+                                            gameViewModel.addLastDigit(number)
+                                        }
+                                    },
+                                    size = roundButtonSize,
+                                    fontSize = numberFontSize
+                                )
+                            }
+                        }
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            (lowerNumberRow).forEach { number ->
+                                NumberButton(
+                                    number = number,
+                                    onClick = {
+                                        if (isRightToLeft) {
+                                            gameViewModel.addFirstDigit(number)
+                                        } else {
+                                            gameViewModel.addLastDigit(number)
+                                        }
+                                    },
+                                    size = roundButtonSize,
+                                    fontSize = numberFontSize
+                                )
+                            }
                         }
                     }
 

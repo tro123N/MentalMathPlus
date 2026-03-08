@@ -376,6 +376,6 @@ class SettingsViewModel @Inject constructor(
         ).joinToString("").toBigInteger().toByteArray()
 
         val encoded = Base64.encodeToString(settingsStringByteArray, Base64.URL_SAFE or Base64.NO_WRAP)
-        return "https://mental-math.codeberg.page/app?s=%s".format(Locale.ENGLISH, encoded)
+        return "https://mental-math.codeberg.page/app?s=${encoded}"
     }
 }

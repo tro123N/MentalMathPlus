@@ -33,6 +33,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,12 +48,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.R
-import com.helddertierwelt.mentalmath.presentation.component.game.LtrRow
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
-import java.util.Locale
 
 @Composable
 fun TasksCard(
@@ -96,24 +95,19 @@ fun TasksCard(
                     modifier = Modifier
                         .padding(16.dp, 4.dp),
                 ) {
-                    val exercise = "%d %s %d = %d".format(
-                        Locale.ENGLISH,
-                        task.operand1,
-                        task.operator.symbol,
-                        task.operand2,
-                        task.correctResult
-                    )
-                    LtrRow {
-                        Text(
-                            text = exercise,
-                            fontSize = resultFontSize,
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                        )
+                    CompositionLocalProvider(
+                        LocalLayoutDirection provides LayoutDirection.Ltr
+                    ) {
+                        Row {
+                            Text(
+                                text = "${task.operand1} ${task.operator.symbol} ${task.operand2} = ${task.correctResult}",
+                                fontSize = resultFontSize,
+                                modifier = Modifier.align(Alignment.CenterVertically)
+                            )
+                        }
                     }
 
-                    val isCorrect =
-                        if (!task.userInput.isEmpty()) task.correctResult == task.userInput.toInt() else null
-
+                    val isCorrect = if (!task.userInput.isEmpty()) task.correctResult == task.userInput.toInt() else null
                     when (isCorrect) {
 
                         true -> Row {

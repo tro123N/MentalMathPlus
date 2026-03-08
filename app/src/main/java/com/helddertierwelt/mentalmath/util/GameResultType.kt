@@ -28,7 +28,6 @@ import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
-import java.util.Locale
 
 enum class GameResultType(
     val icon: Int,
@@ -97,20 +96,9 @@ enum class GameResultType(
         val template = templates.random()
 
         return if (linkScore < 0f) {
-            String.format(
-                Locale.ENGLISH,
-                template,
-                currentScore,
-                seed
-            )
+            AppLocale.format(template, currentScore, seed)
         } else {
-            String.format(
-                Locale.ENGLISH,
-                template,
-                currentScore,
-                linkScore,
-                seed
-            )
+            AppLocale.format(template, currentScore, linkScore, seed)
         }
     }
 }

@@ -25,10 +25,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 
 @Composable
@@ -49,24 +46,16 @@ fun PopUp(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
-            CompositionLocalProvider(
-                LocalLayoutDirection provides LayoutDirection.Ltr
-            ) {
-                Text(
-                    text = title,
-                    fontSize = titleSize
-                )
-            }
+            Text(
+                text = title,
+                fontSize = titleSize
+            )
         },
         text = {
-            CompositionLocalProvider(
-                LocalLayoutDirection provides LayoutDirection.Ltr
-            ) {
-                Text(
-                    text = description,
-                    fontSize = descriptionSize
-                )
-            }
+            Text(
+                text = description,
+                fontSize = descriptionSize
+            )
         },
         confirmButton = {
             Button(

@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
-import java.util.Locale
 
 @Composable
 fun SettingsModeColumn(
@@ -49,21 +48,15 @@ fun SettingsModeColumn(
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var iconId = R.drawable.tag_24dp
-        var limitText = "%d".format(Locale.ENGLISH, limit * 10)
-        if (!modeEnabled) {
-            iconId = R.drawable.hourglass_bottom_24dp
-            limitText = "%s:00".format(Locale.ENGLISH, limit)
-        }
         Spacer(modifier = Modifier.height(8.dp))
         Icon(
-            painter = painterResource(iconId),
+            painter = painterResource(if (modeEnabled) R.drawable.tag_24dp else R.drawable.hourglass_bottom_24dp),
             contentDescription = "modeIcon",
             modifier = Modifier.size(iconSize)
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = limitText,
+            text = if (modeEnabled) "${limit * 10}" else "${limit}:00",
             fontSize = fontSize,
         )
         Spacer(modifier = Modifier.height(8.dp))

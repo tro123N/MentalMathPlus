@@ -37,17 +37,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -140,7 +137,6 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             SettingsTopBar(
-                titleId = R.string.app_name,
                 titleFontSize = titleFontSize,
                 onMenuClick = { settingsViewModel.toggleMenuOpen() },
                 onScoreClick = { settingsViewModel.toggleScoreOpen() },
@@ -163,16 +159,12 @@ fun SettingsScreen(
                     verticalArrangement = Arrangement.SpaceBetween,
                     horizontalAlignment = Alignment.Start
                 ) {
-                    CompositionLocalProvider(
-                        LocalLayoutDirection provides LayoutDirection.Ltr
-                    ) {
-                        Text(
-                            text = stringResource(R.string.mode_instruction),
-                            fontSize = textLabelFontSize,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            lineHeight = textLabelFontSize
-                        )
-                    }
+                    Text(
+                        text = stringResource(R.string.mode_instruction),
+                        fontSize = textLabelFontSize,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        lineHeight = textLabelFontSize
+                    )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
@@ -206,16 +198,12 @@ fun SettingsScreen(
                             thumbnailFontSize = thumbnailFontSize
                         )
                     }
-                    CompositionLocalProvider(
-                        LocalLayoutDirection provides LayoutDirection.Ltr
-                    ) {
-                        Text(
-                            text = stringResource(R.string.operator_instruction),
-                            fontSize = textLabelFontSize,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            lineHeight = textLabelFontSize
-                        )
-                    }
+                    Text(
+                        text = stringResource(R.string.operator_instruction),
+                        fontSize = textLabelFontSize,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        lineHeight = textLabelFontSize
+                    )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,

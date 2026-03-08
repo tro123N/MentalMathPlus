@@ -55,7 +55,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
-import java.util.Locale
+import com.helddertierwelt.mentalmath.util.AppLocale
 import kotlin.math.max
 
 @Composable
@@ -97,9 +97,14 @@ fun SettingsAndStatsCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Seed: %d".format(Locale.ENGLISH, statisticsGameRecord.seed),
+                    text = "Seed: ",
                     fontSize = fontSize / 1.6f,
-                    modifier = modifier.padding(horizontal = 16.dp)
+                    modifier = modifier.padding(start = 16.dp)
+                )
+                Text(
+                    text = "${statisticsGameRecord.seed}",
+                    fontSize = fontSize / 1.6f,
+                    modifier = modifier.padding(end = 16.dp)
                 )
             }
             HorizontalDivider(
@@ -201,7 +206,7 @@ fun SettingsAndStatsCard(
                 )
 
                 val percentage = statisticsGameRecord.correctAnswers.toFloat() / statisticsGameRecord.totalAnswers.toFloat() * 100f
-                val percentageString = if (percentage.isNaN()) "-" else "%.1f".format(Locale.ENGLISH, percentage)
+                val percentageString = if (percentage.isNaN()) "-" else AppLocale.format("%.1f", percentage)
                 StatsColumn(
                     fontSize = fontSize,
                     statsText = percentageString,
@@ -211,7 +216,7 @@ fun SettingsAndStatsCard(
                 )
 
                 val activeMinutes = max(1, (statisticsGameRecord.activeTime / 1000)) / 60.0f
-                val correctPerMinute = "%.1f".format(Locale.ENGLISH, statisticsGameRecord.correctAnswers.toFloat() / activeMinutes)
+                val correctPerMinute = AppLocale.format("%.1f", statisticsGameRecord.correctAnswers.toFloat() / activeMinutes)
                 val darkTheme = when (themeMode) {
                     ThemeMode.DARK -> true
                     ThemeMode.LIGHT -> false
@@ -238,11 +243,7 @@ fun SettingsAndStatsCard(
             )
             Spacer(modifier = modifier.height(8.dp))
 
-            val activeScore = "%-6s  %.2f".format(
-                Locale.ENGLISH,
-                stringResource(R.string.active) + ":",
-                statisticsGameRecord.activeScore
-            )
+            val activeScore = AppLocale.format("%.2f", statisticsGameRecord.activeScore)
             Row(
                 modifier = modifier
                     .fillMaxWidth()
@@ -251,9 +252,14 @@ fun SettingsAndStatsCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = activeScore,
+                    text = stringResource(R.string.active),
                     fontSize = fontSize,
                     modifier = modifier.padding(horizontal = 16.dp)
+                )
+                Text(
+                    text = activeScore,
+                    fontSize = fontSize,
+                    modifier = modifier.padding(end = 16.dp)
                 )
                 Icon(
                     painter = painterResource(R.drawable.star_24dp),
@@ -263,11 +269,7 @@ fun SettingsAndStatsCard(
                 )
             }
 
-            val totalScore = "%-8s  %.2f".format(
-                Locale.ENGLISH,
-                stringResource(R.string.total) + ":",
-                statisticsGameRecord.totalScore
-            )
+            val totalScore = AppLocale.format("%.2f", statisticsGameRecord.totalScore)
             Row(
                 modifier = modifier
                     .fillMaxWidth()
@@ -276,9 +278,14 @@ fun SettingsAndStatsCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = totalScore,
+                    text = stringResource(R.string.total),
                     fontSize = fontSize,
                     modifier = modifier.padding(horizontal = 16.dp)
+                )
+                Text(
+                    text = totalScore,
+                    fontSize = fontSize,
+                    modifier = modifier.padding(end = 16.dp)
                 )
                 Icon(
                     painter = painterResource(R.drawable.star_24dp),

@@ -61,6 +61,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -184,11 +185,10 @@ fun ScoreSideSheet(
                 // determine which score type is active
                 val activeScoreDefault =
                     settingsViewModel.settingsState.collectAsState().value.isActiveScoreDefault
-                val scoreTitle = if (activeScoreDefault) "Active\nScore" else "Total  \nScore"
+                val scoreTitle = stringResource(if (activeScoreDefault) R.string.active_score else R.string.total_score)
                 val iconColor = if (activeScoreDefault) green else yellow
                 val bestGames = if (activeScoreDefault) bestActiveGames else bestTotalGames
-                val scoreSelector =
-                    if (activeScoreDefault) { gameRecord: GameRecord -> gameRecord.activeScore } else { gameRecord: GameRecord -> gameRecord.totalScore }
+                val scoreSelector = if (activeScoreDefault) { gameRecord: GameRecord -> gameRecord.activeScore } else { gameRecord: GameRecord -> gameRecord.totalScore }
 
                 Spacer(modifier = Modifier.height(16.dp))
                 if (!bestActiveGames.isEmpty() || !bestTotalGames.isEmpty()) {

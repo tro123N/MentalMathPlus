@@ -75,12 +75,12 @@ import com.helddertierwelt.mentalmath.presentation.component.statistics.TasksCar
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
+import com.helddertierwelt.mentalmath.util.AppLocale
 import com.helddertierwelt.mentalmath.util.GameResultInfoGenerator.getGamePopUpInfo
 import com.helddertierwelt.mentalmath.util.SettingsLinkUtil
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
-import java.util.Locale
 
 @Composable
 fun StatisticsScreen(
@@ -168,7 +168,7 @@ fun StatisticsScreen(
 
     fun createLink(): String {
         val settingsString = SettingsLinkUtil.serialize(statisticsGameRecord)
-        return "https://mental-math.codeberg.page/app?s=%s".format(Locale.ENGLISH, settingsString)
+        return "https://mental-math.codeberg.page/app?s=${settingsString}"
     }
 
     Scaffold(
@@ -183,8 +183,10 @@ fun StatisticsScreen(
                         val bitmap = captureSettingsCardBitmap()
                         if (bitmap != null) {
                             shareResult(
-                                context, bitmap, shareChallengeText.format(
-                                    Locale.ENGLISH,
+                                context,
+                                bitmap,
+                                AppLocale.format(
+                                    shareChallengeText,
                                     statisticsGameRecord.totalScore,
                                     statisticsGameRecord.seed,
                                     createLink()
@@ -271,9 +273,9 @@ fun StatisticsScreen(
     if (showLinkGamePopUp) {
         val gamePopUpInfo = getGamePopUpInfo(currentScore, linkScore, seed)
         val shareMessage = if (linkScore < 0f) {
-            stringResource(R.string.result_share_message_waiting).format(Locale.ENGLISH, currentScore, seed)
+            AppLocale.format(stringResource(R.string.result_share_message_waiting), currentScore, seed)
         } else {
-            stringResource(R.string.result_share_message).format(Locale.ENGLISH, currentScore, linkScore, seed)
+            AppLocale.format(stringResource(R.string.result_share_message), currentScore, linkScore, seed)
         }
         PopUp(
             titleSize = titleFontSize,

@@ -36,7 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
-import java.util.Locale
+import com.helddertierwelt.mentalmath.util.AppLocale
 
 @Composable
 fun HistoryEntriesCard(
@@ -69,7 +69,7 @@ fun HistoryEntriesCard(
     fun formatRange(rangeStart: Int, rangeEnd: Int): String {
         return when {
             rangeStart <= 0 || rangeEnd <= 0 -> "-"
-            rangeStart == rangeEnd -> rangeStart.toString()
+            rangeStart == rangeEnd -> "$rangeStart"
             else -> "$rangeStart-$rangeEnd"
         }
     }
@@ -104,18 +104,14 @@ fun HistoryEntriesCard(
                 }
             } else {
                 gameRecordsForHistory.forEachIndexed { index, game ->
-                    val limit = if (game.isModeEnabled) "%d0".format(
-                        Locale.ENGLISH,
-                        game.modeLimit
-                    ) else "%d:00".format(Locale.ENGLISH, game.modeLimit)
+                    val limit = if (game.isModeEnabled) "${game.modeLimit}0" else "${game.modeLimit}:00"
                     val rangeStrings = listOf(
                         formatRange(game.additionRangeStart, game.additionRangeEnd),
                         formatRange(game.subtractionRangeStart, game.subtractionRangeEnd),
                         formatRange(game.multiplicationRangeStart, game.multiplicationRangeEnd),
                         formatRange(game.divisionRangeStart, game.divisionRangeEnd)
                     )
-                    val scoreString =
-                        "%.2f".format(Locale.ENGLISH, if (showActiveScore) game.activeScore else game.totalScore)
+                    val scoreString = AppLocale.format("%.2f", if (showActiveScore) game.activeScore else game.totalScore)
                     val allStrings = listOf(limit) + rangeStrings + scoreString
 
                     if (index > 0) {

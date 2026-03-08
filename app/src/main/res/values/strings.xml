@@ -1,8 +1,8 @@
 <resources>
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
-    <string name="mode_instruction">"Select mode and limit!"</string>
-    <string name="operator_instruction">"Select operations and difficulty!"</string>
+    <string name="mode_instruction">"Select mode and limit"</string>
+    <string name="operator_instruction">"Select operations and difficulty"</string>
     <string name="start">Start</string>
 
     <!-- Settings Screen: Menu -->
@@ -26,10 +26,15 @@
     <string name="donate">"Donate"</string>
     <string name="reset_app">"Reset App"</string>
 
+    <!-- Settings Screen: Leaderboard -->
+    <string name="active_score">Active\nScore</string>
+    <string name="total_score">Total  \nScore</string>
+
     <!-- Statistics Screen -->
+    <string name="seed">"Seed: %d"</string>
     <string name="result">"Result"</string>
-    <string name="active">"Active"</string>
-    <string name="total">"Total"</string>
+    <string name="active">"Active:"</string>
+    <string name="total">"Total  :"</string>
     <string name="solution">"Solution"</string>
     <string name="input">"Input"</string>
     <string name="done">Done</string>
@@ -177,5 +182,6 @@
     <string name="result_share_message_waiting">"Me: %1$.2f | You: ??\nSeed: %2$d"</string>
     <string name="result_share_message">"Me: %1$.2f | You: %2$.2f\nSeed: %3$d"</string>
     <string name="share_challenge">Try to beat my score of %1$.2f in Mental Math.\nReplay my game with seed %2$d:\n\n%3$s</string>
+    <string name="share_new_game">Let’s play a round Mental Math!\nClick the link below to start a fresh game with my settings and seed:\n%1$d\n\n%2$s</string>
 
 </resources>

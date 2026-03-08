@@ -39,7 +39,6 @@ import com.helddertierwelt.mentalmath.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsTopBar(
-    titleId: Int,
     titleFontSize: TextUnit,
     onMenuClick: () -> Unit,
     onScoreClick: () -> Unit,
@@ -49,7 +48,7 @@ fun SettingsTopBar(
 ) {
     TopAppBar(
         title = {
-            Text(text = stringResource(id = titleId), fontSize = titleFontSize)
+            Text(text = stringResource(R.string.app_name), fontSize = titleFontSize)
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
@@ -77,9 +76,7 @@ fun SettingsTopBar(
                 Icon(
                     painterResource(R.drawable.leaderboard_24dp),
                     contentDescription = "share",
-                    tint = if (!isGreyedOut) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(
-                        alpha = 0.38f
-                    ),
+                    tint = if (!isGreyedOut) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
                     modifier = Modifier.size(iconSize),
                 )
             }

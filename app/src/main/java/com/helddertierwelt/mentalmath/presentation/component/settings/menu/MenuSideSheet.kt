@@ -73,11 +73,11 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.game.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.history.HistoryViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
+import com.helddertierwelt.mentalmath.util.AppLocale
 import com.helddertierwelt.mentalmath.util.NotificationScheduler
 import com.helddertierwelt.mentalmath.util.NotificationScheduler.calculateAnchorTime
 import kotlinx.coroutines.launch
 import java.security.SecureRandom
-import java.util.Locale
 
 @Composable
 fun MenuSideSheet(
@@ -160,6 +160,7 @@ fun MenuSideSheet(
             )
         }
 
+        val shareNewGameMessage = stringResource(R.string.share_new_game)
         Card(
             shape = RoundedCornerShape(0.dp),
             modifier = Modifier
@@ -230,12 +231,7 @@ fun MenuSideSheet(
                                         seed = SecureRandom().nextLong()
                                     } while (seed < 0)
                                     val seedLink = settingsViewModel.generateSeedLink(seed)
-                                    val shareText =
-                                        "Let’s play a round Mental Math!\nClick the link below to start a fresh game with my settings and seed:\n%d\n\n%s".format(
-                                            Locale.ENGLISH,
-                                            seed,
-                                            seedLink
-                                        )
+                                    val shareText = AppLocale.format(shareNewGameMessage, seed, seedLink)
                                     Log.d("SettingsScreen", "Sharing seed game: $shareText")
                                     putExtra(Intent.EXTRA_TEXT, shareText)
                                 },

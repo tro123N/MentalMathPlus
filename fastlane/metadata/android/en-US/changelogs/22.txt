@@ -1,1 +1,1 @@
-- Added full RTL (Right-to-Left) layout support for languages like Arabic and Hebrew. All text, icons, and layouts now adapt automatically, while the app language remains in English.
+- Added full RTL (Right-to-Left) layout support for languages such as Arabic and Hebrew. The UI is still in English until translations are added.
