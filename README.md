@@ -112,16 +112,28 @@ For successful signing, configure the keys in your gradle.properties file (compa
 }
 ```
 
-## License Information
-Mental Math © 2026 HeldDerTierwelt  
-This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html). The full license text can also be found in the [LICENSE.md]("https://codeberg.org/HeldDerTierwelt/MentalMath/src/branch/main/LICENSE.md") file.  
-
 ## Privacy Policy
 Your privacy is important. Here are the key facts:
 
 - "Mental Math" does not collect, store, or process any personal data and does not use trackers, ads, or third-party services.
 - By default, no permissions are required. Only if you choose to set reminders will it request permission to send notifications.
 - Android may require a brief internet connection once to verify the domain used for the app’s game links. Apart from that, no internet connection is required.
+
+## License Information
+  Mental Math © 2026 HeldDerTierwelt  
+  This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html). The full license text can also be found in the [LICENSE.md]("https://codeberg.org/HeldDerTierwelt/MentalMath/src/branch/main/LICENSE.md") file.  
+
+## Contributing
+Contributions are welcome and appreciated. There are several ways to improve "Mental Math":
+
+- Help make the app accessible to more people by adding your translations as follows:
+  1. Fork the repository: [https://codeberg.org/Mental-Math/MentalMath/fork](https://codeberg.org/Mental-Math/MentalMath/fork)
+  2. Create a folder `app/src/main/res/values-<languageCode>` for your language and copy the file `app/src/main/res/values/strings.xml` into it.
+  3. Translate the text values in the copied `strings.xml` and open a Pull Request.
+
+- If you find a bug, have an idea for a new feature, or want to suggest an improvement, please [open an issue](https://codeberg.org/Mental-Math/MentalMath/issues/new).
+- General feedback of any kind is appreciated and can be sent via email (see "Contact" section below).
+- A positive review on [Google Play](https://play.google.com/store/apps/details?id=com.helddertierwelt.mentalmath) is a simple but effective way to support the project.
 
 ## Donation
 If you enjoy this app, you can support me via [Ko-fi](https://ko-fi.com/mental_math). It means a lot to me ❤️.
