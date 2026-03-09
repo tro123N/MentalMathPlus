@@ -126,11 +126,10 @@ Your privacy is important. Here are the key facts:
 ## Contributing
 Contributions are welcome and appreciated. There are several ways to improve "Mental Math":
 
-- Help make the app accessible to more people by adding your translations as follows:
-
-    1. Fork the repository: [https://codeberg.org/Mental-Math/MentalMath/fork](https://codeberg.org/Mental-Math/MentalMath/fork)
-    2. Create a folder `app/src/main/res/values-<languageCode>` for your language and copy the file `app/src/main/res/values/strings.xml` into it.
-    3. Translate the text values in the copied `strings.xml` and open a Pull Request.
+- Help make the app accessible to more people by adding your translations as follows:  
+    **1.** Fork the repository: [https://codeberg.org/Mental-Math/MentalMath/fork](https://codeberg.org/Mental-Math/MentalMath/fork)  
+    **2.** Create a folder `app/src/main/res/values-<languageCode>` for your language and copy the file `app/src/main/res/values/strings.xml` into it.  
+    **3.** Translate the text values in the copied `strings.xml` and open a Pull Request.  
 
 - If you find a bug, have an idea for a new feature, or want to suggest an improvement, please [open an issue](https://codeberg.org/Mental-Math/MentalMath/issues/new).
 - General feedback of any kind is appreciated and can be sent via email (see "Contact" section below).
