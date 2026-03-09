@@ -66,6 +66,23 @@
     <string name="cancel">"Cancel"</string>
     <string name="ok">"OK"</string>
 
+
+    <!--
+        Note for translators:
+
+        The following string arrays contain short flavor texts shown after matches
+        for the different result types (win, defeat, draw, ...).
+
+        These messages do not need to be literal translations. Feel free to adapt
+        them to something natural, fun, or culturally appropriate in the target
+        language. Variety and tone are more important than exact wording.
+
+        Important:
+        - Do not modify or remove any placeholders (%1$.2f, %3$d, ...).
+        - Keep line breaks (\n) where they appear.
+        - Try to keep the overall length roughly similar to the original text, so it fits well in the UI.
+        - The number of items per string-array does not need to be kept.
+    -->
     <!-- Result PopUp -->
     <string name="waiting_title">"Waiting for your opponent…"</string>
     <string-array name="waiting_descriptions">
