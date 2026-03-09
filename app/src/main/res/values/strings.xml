@@ -28,7 +28,8 @@
 
     <!-- Settings Screen: Leaderboard -->
     <string name="active_score">Active\nScore</string>
-    <string name="total_score">Total  \nScore</string>
+    <string name="total_score">Total\u0020\u0020\nScore</string>
+    <string name="new_score">new</string>
 
     <!-- Statistics Screen -->
     <string name="seed">"Seed: %d"</string>
