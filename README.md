@@ -124,9 +124,9 @@ Your privacy is important. Here are the key facts:
   This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html). The full license text can also be found in the [LICENSE.md]("https://codeberg.org/HeldDerTierwelt/MentalMath/src/branch/main/LICENSE.md") file.  
 
 ## Contributing
-Contributions are welcome and appreciated. There are several ways to improve "Mental Math":
+Contributions are welcome. There are several ways to support "Mental Math":
 
-- Help make the app accessible by contributing translations. See [`app/src/main/res/values/strings.xml`](https://codeberg.org/Mental-Math/MentalMath/src/branch/main/app/src/main/res/values/strings.xml) for instructions.
+- Help make the app accessible to more people by contributing translations. See [strings.xml](https://codeberg.org/Mental-Math/MentalMath/src/branch/main/app/src/main/res/values/strings.xml) for instructions.
 - If you find a bug, have an idea for a new feature, or want to suggest an improvement, please [open an issue](https://codeberg.org/Mental-Math/MentalMath/issues/new).
 - General feedback of any kind is appreciated and can be sent via email (see "Contact" section below).
 - A positive review on [Google Play](https://play.google.com/store/apps/details?id=com.helddertierwelt.mentalmath) is a simple but effective way to support the project.
