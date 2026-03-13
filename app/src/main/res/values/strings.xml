@@ -1,3 +1,49 @@
+<!--
+Thank you for helping translate Mental Math!
+Here is how to add a translation:
+
+Option 1 – via Pull Request
+1. Fork the repository:
+   https://codeberg.org/Mental-Math/MentalMath/fork
+
+2. Create a folder for your language:
+   app/src/main/res/values-<languageCode>  (use ISO 639-1 code)
+
+   Examples:
+   values-de  → German
+   values-es  → Spanish
+   values-ja  → Japanese
+   values-ar  → Arabic
+   values-sw  → Swahili
+   values-xx  → Your language
+   ...
+
+3. Copy this file (strings.xml) into that folder.
+
+4. Translate the text values and open a Pull Request.
+
+Option 2 – via Email (no fork required)
+1. Download this file.
+2. Translate the text values.
+3. Send the translated strings.xml file to mental_math_app@pm.me
+
+Important translation notes:
+- Only translate the text between the tags.
+- Do not change string names.
+- Do not translate placeholders like %s, %d, %1$s, %2$d.
+- Keep escape characters like \n.
+- Keep the length roughly similar so it fits the UI.
+- The number of items in the string-array does not need to match the original.
+- Translations do not need to be literal and can be adapted naturally.
+
+Example:
+<string name="share_challenge">Try to beat my score of %1$.2f in Mental Math.\nReplay my game with seed %2$d:\n\n%3$s</string>
+
+German translation:
+<string name="share_challenge">Kannst du meinen Score %1$.2f in Mental Math überbieten?\nSpiele meine Runde mit dem Seed %2$d nach:\n\n%3$s</string>
+
+Thank you for contributing!
+-->
 <resources>
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
@@ -66,23 +112,6 @@
     <string name="cancel">"Cancel"</string>
     <string name="ok">"OK"</string>
 
-
-    <!--
-        Note for translators:
-
-        The following string arrays contain short flavor texts shown after matches
-        for the different result types (win, defeat, draw, ...).
-
-        These messages do not need to be literal translations. Feel free to adapt
-        them to something natural, fun, or culturally appropriate in the target
-        language. Variety and tone are more important than exact wording.
-
-        Important:
-        - Do not modify or remove any placeholders (%1$.2f, %3$d, ...).
-        - Keep line breaks (\n) where they appear.
-        - Try to keep the overall length roughly similar to the original text, so it fits well in the UI.
-        - The number of items per string-array does not need to be kept.
-    -->
     <!-- Result PopUp -->
     <string name="waiting_title">"Waiting for your opponent…"</string>
     <string-array name="waiting_descriptions">
