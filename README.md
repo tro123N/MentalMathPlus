@@ -120,8 +120,8 @@ Your privacy is important. Here are the key facts:
 - Android may require a brief internet connection once to verify the domain used for the app’s game links. Apart from that, no internet connection is required.
 
 ## License Information
-  Mental Math © 2026 HeldDerTierwelt  
-  This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html). The full license text can also be found in the [LICENSE.md]("https://codeberg.org/HeldDerTierwelt/MentalMath/src/branch/main/LICENSE.md") file.  
+Mental Math © 2026 HeldDerTierwelt  
+This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html). The full license text can also be found in the [LICENSE.md]("https://codeberg.org/Mental-Math/MentalMath/src/branch/main/LICENSE.md") file.  
 
 ## Contributing
 Contributions are welcome. There are several ways to support "Mental Math":
