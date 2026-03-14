@@ -1,3 +1,3 @@
 - Prepared the app to support translations in the future. Please consider contributing! See the "Contributing" section on the website (via the About button in the app).
-- Added full RTL (Right-to-Left) layout support for languages such as Arabic and Hebrew. The UI is still in English until translations are added.
+- Added full RTL (Right-to-Left) layout support for languages such as Arabic and Hebrew. The UI is currently still English-only, even when an RTL language is selected, which may cause some parts of the interface to look slightly unusual until translations are added.
 - Removed some unnecessary permissions.
