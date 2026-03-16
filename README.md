@@ -93,7 +93,7 @@ Make sure you have the required Android SDK and JDK (Java 17) installed. The pro
 ./gradlew assemblePlayRelease
 ```
 
-For successful signing, configure the keys in your gradle.properties file (compare signingConfigs in build.gradle.kts). If no keys are provided, the build will be unsigned. Since the original signing keys are private, using your own keys will break the [app links](https://developer.android.com/training/app-links/about?hl=de) for sharing a game. To make them work, follow these steps:
+For successful signing, configure the keys in your `gradle.properties` file (compare signingConfigs in `build.gradle.kts`). If no keys are provided, the build will be unsigned. Since the original signing keys are private, using your own keys will break the [app links](https://developer.android.com/training/app-links/about?hl=de) for sharing a game. To make them work, follow these steps:
 
 - Replace all instances of `mental-math.codeberg.page` relating to app links with your own domain.
 - On your website, create an `assetlinks.json` file and place it at `https://<your-domain>/.well-known/assetlinks.json`
@@ -116,12 +116,13 @@ For successful signing, configure the keys in your gradle.properties file (compa
 Your privacy is important. Here are the key facts:
 
 - "Mental Math" does not collect, store, or process any personal data and does not use trackers, ads, or third-party services.
-- By default, no permissions are required. Only if you choose to set reminders will it request permission to send notifications.
+- By default, no permissions are required. When reminders are enabled, the app requests notification permission and uses system features to ensure reminders survive device restarts and trigger reliably.
 - Android may require a brief internet connection once to verify the domain used for the app’s game links. Apart from that, no internet connection is required.
+
 
 ## License Information
 Mental Math © 2026 HeldDerTierwelt  
-This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html). The full license text can also be found in the [LICENSE.md]("https://codeberg.org/Mental-Math/MentalMath/src/branch/main/LICENSE.md") file.  
+This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html). The full license text can also be found in the [`LICENSE.md`]("https://codeberg.org/Mental-Math/MentalMath/src/branch/main/LICENSE.md") file.  
 
 ## Contributing
 Contributions are welcome. There are several ways to support "Mental Math":
