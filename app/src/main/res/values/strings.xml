@@ -2,7 +2,12 @@
 Thank you for helping translate Mental Math!
 Here is how to add a translation:
 
-Option 1 – via Pull Request
+Option 1 – via Email (no fork required)
+1. Download this file.
+2. Translate the text values.
+3. Send the translated strings.xml file to mental_math_app@pm.me
+
+Option 2 – via Pull Request
 1. Fork the repository:
    https://codeberg.org/Mental-Math/MentalMath/fork
 
@@ -21,11 +26,6 @@ Option 1 – via Pull Request
 3. Copy this file (strings.xml) into that folder.
 
 4. Translate the text values and open a Pull Request.
-
-Option 2 – via Email (no fork required)
-1. Download this file.
-2. Translate the text values.
-3. Send the translated strings.xml file to mental_math_app@pm.me
 
 Important translation notes:
 - Only translate the text between the tags.
