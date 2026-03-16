@@ -116,13 +116,8 @@ For successful signing, configure the keys in your `gradle.properties` file (com
 Your privacy is important. Here are the key facts:
 
 - "Mental Math" does not collect, store, or process any personal data and does not use trackers, ads, or third-party services.
-- By default, no permissions are required. When reminders are enabled, the app requests notification permission and uses system features to ensure reminders survive device restarts and trigger reliably.
 - Android may require a brief internet connection once to verify the domain used for the app’s game links. Apart from that, no internet connection is required.
-
-
-## License Information
-Mental Math © 2026 HeldDerTierwelt  
-This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html). The full license text can also be found in the [`LICENSE.md`]("https://codeberg.org/Mental-Math/MentalMath/src/branch/main/LICENSE.md") file.  
+- By default, no permissions are required. When reminders are enabled, the app requests notification permission and uses system features to ensure reminders survive device restarts and trigger reliably.
 
 ## Contributing
 Contributions are welcome. There are several ways to support "Mental Math":
@@ -141,6 +136,10 @@ Feel free to contact me for questions, feedback, issues or any other reason:
 Alexander Goy  
 aka HeldDerTierwelt  
 mental_math_app@pm.me
+
+## License Information
+Mental Math © 2026 HeldDerTierwelt  
+This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html).
 
 <p align="center">
   <br>
