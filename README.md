@@ -117,12 +117,12 @@ Your privacy is important. Here are the key facts:
 
 - "Mental Math" does not collect, store, or process any personal data and does not use trackers, ads, or third-party services.
 - Android may require a brief internet connection once to verify the domain used for the app’s game links. Apart from that, no internet connection is required.
-- By default, no permissions are required. When reminders are enabled, the app requests notification permission and uses system features to ensure reminders survive device restarts and trigger reliably.
+- By default, no permissions are required. Only if you choose to set reminders will it request the app requests notification permission and uses system features to ensure reminders survive device restarts and trigger reliably.
 
 ## Contributing
 Contributions are welcome. There are several ways to support "Mental Math":
 
-- Help make the app accessible to more people by contributing translations. See [strings.xml](https://codeberg.org/Mental-Math/MentalMath/src/branch/main/app/src/main/res/values/strings.xml) for instructions.
+- Help make the app accessible to more people by contributing translations. See [`strings.xml`](https://codeberg.org/Mental-Math/MentalMath/src/branch/main/app/src/main/res/values/strings.xml) for instructions.
 - If you find a bug, have an idea for a new feature, or want to suggest an improvement, please [open an issue](https://codeberg.org/Mental-Math/MentalMath/issues/new).
 - General feedback of any kind is appreciated and can be sent via email (see "Contact" section below).
 - A positive review on [Google Play](https://play.google.com/store/apps/details?id=com.helddertierwelt.mentalmath) is a simple but effective way to support the project.
