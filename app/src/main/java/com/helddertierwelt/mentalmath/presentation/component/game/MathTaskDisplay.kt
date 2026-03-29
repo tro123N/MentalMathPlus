@@ -55,7 +55,6 @@ fun MathTaskDisplay(
     onClick: () -> Unit
 ) {
 
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -101,20 +100,17 @@ fun MathTaskDisplay(
 
                         val arrowPath = Path().apply {
                             if (isRightToLeft) {
-                                // Pfeil nach links
-                                moveTo(start, y) // Spitze links
-                                lineTo(start + arrowSize, y - arrowSize / 2) // obere Ecke Basis
-                                lineTo(start + arrowSize, y + arrowSize / 2) // untere Ecke Basis
+                                moveTo(start, y)
+                                lineTo(start + arrowSize, y - arrowSize / 2)
+                                lineTo(start + arrowSize, y + arrowSize / 2)
                                 close()
                             } else {
-                                // Pfeil nach rechts
-                                moveTo(end, y) // Spitze rechts
-                                lineTo(end - arrowSize, y - arrowSize / 2) // obere Ecke Basis
-                                lineTo(end - arrowSize, y + arrowSize / 2) // untere Ecke Basis
+                                moveTo(end, y)
+                                lineTo(end - arrowSize, y - arrowSize / 2)
+                                lineTo(end - arrowSize, y + arrowSize / 2)
                                 close()
                             }
                         }
-
                         drawPath(path = arrowPath, color = color)
                     }
             ) {
