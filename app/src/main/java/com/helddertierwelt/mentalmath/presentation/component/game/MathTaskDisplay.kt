@@ -86,7 +86,7 @@ fun MathTaskDisplay(
                     .clip(RoundedCornerShape(16.dp))
                     .clickable { onClick() }
                     .drawBehind {
-                        val arrowSize = 10.dp.toPx()
+                        val arrowSize = 12.dp.toPx()
                         val y = size.height - 0.75f * arrowSize
                         val start = arrowSize / 2
                         val end = size.width - arrowSize / 2
