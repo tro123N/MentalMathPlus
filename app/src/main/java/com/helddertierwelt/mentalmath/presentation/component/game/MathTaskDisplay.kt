@@ -18,18 +18,23 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.game
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -45,54 +50,82 @@ fun MathTaskDisplay(
     input: String,
     fontSize: TextUnit,
     width: Dp,
-    isCorrect: Boolean?
+    isCorrect: Boolean?,
+    isRightToLeft: Boolean,
+    onClick: () -> Unit
 ) {
 
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
 
+        Text(
+            text = "$operand1 $operator $operand2",
+            fontSize = fontSize,
+            textAlign = TextAlign.Center,
+            lineHeight = fontSize
+        )
+        Spacer(modifier = Modifier.height((0.5 * fontSize.value).dp))
+        Box(
+            modifier = Modifier.width(width + (1.2 * fontSize.value).dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
             Text(
-                text = "$operand1 $operator $operand2",
+                text = "=",
                 fontSize = fontSize,
-                textAlign = TextAlign.Center,
-                lineHeight = fontSize
             )
-            Spacer(modifier = Modifier.height((0.5 * fontSize.value).dp))
+            Spacer(modifier = Modifier.width(8.dp))
+            val color = MaterialTheme.colorScheme.onSurface
             Box(
-                modifier = Modifier.width(width + (1.2 * fontSize.value).dp),
-                contentAlignment = Alignment.CenterStart
+                contentAlignment = Alignment.CenterStart,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .width(width)
+                    .height((fontSize * 1.5f).value.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .clickable { onClick() }
+                    .drawBehind {
+                        val arrowSize = 10.dp.toPx()
+                        val y = size.height - 0.75f * arrowSize
+                        val start = arrowSize / 2
+                        val end = size.width - arrowSize / 2
+
+                        drawLine(
+                            color = color,
+                            start = Offset(start + arrowSize / 2, y),
+                            end = Offset(end - arrowSize / 2, y),
+                            strokeWidth = 3.dp.toPx(),
+                            cap = StrokeCap.Round
+                        )
+
+                        val arrowPath = Path().apply {
+                            if (isRightToLeft) {
+                                // Pfeil nach links
+                                moveTo(start, y) // Spitze links
+                                lineTo(start + arrowSize, y - arrowSize / 2) // obere Ecke Basis
+                                lineTo(start + arrowSize, y + arrowSize / 2) // untere Ecke Basis
+                                close()
+                            } else {
+                                // Pfeil nach rechts
+                                moveTo(end, y) // Spitze rechts
+                                lineTo(end - arrowSize, y - arrowSize / 2) // obere Ecke Basis
+                                lineTo(end - arrowSize, y + arrowSize / 2) // untere Ecke Basis
+                                close()
+                            }
+                        }
+
+                        drawPath(path = arrowPath, color = color)
+                    }
             ) {
                 Text(
-                    text = "=",
+                    text = input,
                     fontSize = fontSize,
+                    modifier = Modifier.align(Alignment.Center),
+                    color = if (isCorrect == true) green else if (isCorrect == false) red else MaterialTheme.colorScheme.onPrimary
                 )
-                Spacer(modifier = Modifier.width(8.dp))
-                val color = MaterialTheme.colorScheme.onSurface
-                Box(
-                    contentAlignment = Alignment.CenterStart,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .width(width)
-                        .height((fontSize * 1.5f).value.dp)
-                        .drawBehind {
-                            drawLine(
-                                color = color,
-                                start = Offset(0f, size.height),
-                                end = Offset(size.width, size.height),
-                                strokeWidth = 2.dp.toPx()
-                            )
-                        }
-                ) {
-                    Text(
-                        text = input,
-                        fontSize = fontSize,
-                        modifier = Modifier.align(Alignment.Center),
-                        color = if (isCorrect == true) green else if (isCorrect == false) red else MaterialTheme.colorScheme.onPrimary
-                    )
-                }
             }
         }
+    }
 
 }

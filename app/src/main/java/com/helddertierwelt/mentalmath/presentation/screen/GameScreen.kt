@@ -166,7 +166,9 @@ fun GameScreen(
                                 input = gameState.input,
                                 fontSize = taskFontSize,
                                 width = resultLineWidth,
-                                isCorrect = gameState.isCorrect
+                                isCorrect = gameState.isCorrect,
+                                isRightToLeft = isRightToLeft,
+                                onClick = { settingsViewModel.toggleInputMethod() }
                             )
                         }
                         Row(
