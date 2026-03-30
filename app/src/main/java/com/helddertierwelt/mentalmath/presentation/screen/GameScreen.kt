@@ -168,6 +168,22 @@ fun GameScreen(
                                 modifier = Modifier.matchParentSize(),
                                 contentAlignment = Alignment.Center
                             ) {
+                                Box(
+                                    modifier = Modifier
+                                        .offset(y = (taskFontSize * 2f).value.dp + 8.dp)
+                                        .width(resultLineWidth),
+                                    contentAlignment = Alignment.TopCenter
+                                ) {
+                                    QuickToastHost(
+                                        event = toastEvent,
+                                        durationMs = 1000
+                                    )
+                                }
+                            }
+                            Box(
+                                modifier = Modifier.matchParentSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
                                 MathTaskDisplay(
                                     operand1 = gameState.operand1,
                                     operand2 = gameState.operand2,
@@ -183,22 +199,6 @@ fun GameScreen(
                                         toastEvent = ToastEvent(message)
                                     }
                                 )
-                            }
-                            Box(
-                                modifier = Modifier.matchParentSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .offset(y = (taskFontSize * 2f).value.dp + 8.dp)
-                                        .width(resultLineWidth),
-                                    contentAlignment = Alignment.TopCenter
-                                ) {
-                                    QuickToastHost(
-                                        event = toastEvent,
-                                        durationMs = 1000
-                                    )
-                                }
                             }
                         }
                         Row(
