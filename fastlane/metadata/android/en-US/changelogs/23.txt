@@ -1,0 +1,4 @@
+- Input field is now clickable to switch input direction while in game
+- Added a popup notification when switching input direction in game
+- Improved a few colors
+- Dependency updates
