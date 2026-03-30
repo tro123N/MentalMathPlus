@@ -78,6 +78,10 @@ Thank you for contributing!
     <string name="total_score">Total\u0020\u0020\nScore</string>
     <string name="new_score">new</string>
 
+    <!-- Game Screen -->
+    <string name="rtl_toast">"Right-To-Left Input"</string>
+    <string name="ltr_toast">"Left-To-Right Input"</string>
+
     <!-- Statistics Screen -->
     <string name="seed">"Seed: %d"</string>
     <string name="result">"Result"</string>

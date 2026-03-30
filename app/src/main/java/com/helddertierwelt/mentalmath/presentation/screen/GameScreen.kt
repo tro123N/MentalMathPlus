@@ -108,6 +108,8 @@ fun GameScreen(
     val gameState = gameViewModel.gameState.collectAsState().value
     val isGeneratingTask by gameViewModel.isGeneratingTask.collectAsState()
     var toastEvent by remember { mutableStateOf<ToastEvent?>(null) }
+    val rtlMessage = stringResource(R.string.rtl_toast)
+    val ltrMessage = stringResource(R.string.ltr_toast)
 
 
     LaunchedEffect(Unit) {
@@ -177,7 +179,7 @@ fun GameScreen(
                                     isRightToLeft = isRightToLeft,
                                     onClick = {
                                         val isRightToLeftUpdated = settingsViewModel.toggleInputMethod()
-                                        val message = if (isRightToLeftUpdated) "Right-To-Left" else "Left-To-Right"
+                                        val message = if (isRightToLeftUpdated) rtlMessage else ltrMessage
                                         toastEvent = ToastEvent(message)
                                     }
                                 )
