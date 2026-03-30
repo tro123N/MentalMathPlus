@@ -56,7 +56,11 @@ fun StatisticsTopBar(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(start = 16.dp)
             ) {
-                Text(text = stringResource(id = titleId), fontSize = titleFontSize)
+                Text(
+                    text = stringResource(id = titleId),
+                    fontSize = titleFontSize,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(

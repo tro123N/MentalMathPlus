@@ -87,7 +87,7 @@ fun CustomSlider(
                 )
                 .padding(horizontal = 6.dp),
             text = if (isToggled) "${value.toInt() * 10}" else "${value.toInt()}min",
-            color = MaterialTheme.colorScheme.onSecondary,
+            color = MaterialTheme.colorScheme.surface,
             fontSize = thumbnailFontSize
         )
 

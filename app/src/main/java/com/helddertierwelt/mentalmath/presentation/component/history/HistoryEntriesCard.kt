@@ -99,7 +99,8 @@ fun HistoryEntriesCard(
                         text = "There are no games with a score",
                         fontSize = fontSize,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             } else {
@@ -132,7 +133,8 @@ fun HistoryEntriesCard(
                                 text = textContent,
                                 modifier = Modifier.weight(1f),
                                 fontSize = fontSize,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.onPrimary
                             )
                         }
                     }

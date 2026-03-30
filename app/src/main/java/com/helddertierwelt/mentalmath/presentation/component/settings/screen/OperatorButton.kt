@@ -51,7 +51,7 @@ fun OperatorButton(
             painter = painterResource(icon),
             contentDescription = "Mode",
             modifier = Modifier.size(iconSize),
-            tint = if (isSelected) textColor else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+            tint = if (isSelected) textColor else MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f)
         )
     }
 }

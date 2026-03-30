@@ -65,6 +65,7 @@ fun HistoryHeadCard(
                 painter = painterResource(R.drawable.tune_24dp),
                 contentDescription = "modeIcon",
                 modifier = Modifier.size(iconSize),
+                tint = MaterialTheme.colorScheme.onPrimary
             )
             Icon(
                 painter = painterResource(R.drawable.addition_24dp),

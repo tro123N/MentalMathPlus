@@ -193,7 +193,7 @@ fun SettingsScreen(
                                 settingsViewModel.loadBestGames()
                             },
                             isToggled = settingsState.isModeEnabled,
-                            activeTrackColor = MaterialTheme.colorScheme.onSurface,
+                            activeTrackColor = MaterialTheme.colorScheme.onPrimary,
                             size = sliderSize,
                             thumbnailFontSize = thumbnailFontSize
                         )

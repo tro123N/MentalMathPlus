@@ -174,8 +174,7 @@ fun ScoreSideSheet(
             )
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
+                modifier = Modifier.fillMaxSize()
             ) {
                 // load game records based on current settings
                 val bestActiveGames by settingsViewModel.bestActiveGames.collectAsState()

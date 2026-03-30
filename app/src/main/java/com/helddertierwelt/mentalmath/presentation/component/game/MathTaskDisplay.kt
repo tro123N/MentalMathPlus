@@ -55,6 +55,7 @@ fun MathTaskDisplay(
     onClick: () -> Unit
 ) {
 
+    val color = MaterialTheme.colorScheme.onPrimary
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -63,7 +64,8 @@ fun MathTaskDisplay(
             text = "$operand1 $operator $operand2",
             fontSize = fontSize,
             textAlign = TextAlign.Center,
-            lineHeight = fontSize
+            lineHeight = fontSize,
+            color = color
         )
         Spacer(modifier = Modifier.height((0.5 * fontSize.value).dp))
         Box(
@@ -73,9 +75,9 @@ fun MathTaskDisplay(
             Text(
                 text = "=",
                 fontSize = fontSize,
+                color = color
             )
             Spacer(modifier = Modifier.width(8.dp))
-            val color = MaterialTheme.colorScheme.onSurface
             Box(
                 contentAlignment = Alignment.CenterStart,
                 modifier = Modifier
@@ -118,10 +120,9 @@ fun MathTaskDisplay(
                     text = input,
                     fontSize = fontSize,
                     modifier = Modifier.align(Alignment.Center),
-                    color = if (isCorrect == true) green else if (isCorrect == false) red else MaterialTheme.colorScheme.onPrimary
+                    color = if (isCorrect == true) green else if (isCorrect == false) red else color
                 )
             }
         }
     }
-
 }

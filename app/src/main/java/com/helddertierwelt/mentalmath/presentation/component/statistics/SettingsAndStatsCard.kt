@@ -99,12 +99,14 @@ fun SettingsAndStatsCard(
                 Text(
                     text = "Seed: ",
                     fontSize = fontSize / 1.6f,
-                    modifier = modifier.padding(start = 16.dp)
+                    modifier = modifier.padding(start = 16.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Text(
                     text = "${statisticsGameRecord.seed}",
                     fontSize = fontSize / 1.6f,
-                    modifier = modifier.padding(end = 16.dp)
+                    modifier = modifier.padding(end = 16.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
             HorizontalDivider(
@@ -226,7 +228,7 @@ fun SettingsAndStatsCard(
                     fontSize = fontSize,
                     statsText = correctPerMinute,
                     iconId = if (darkTheme) R.drawable.check_min_dark_24dp else R.drawable.check_min_light_24dp,
-                    iconSize = iconSize,
+                    iconSize = iconSize
                 )
 
                 StatsColumn(
@@ -254,12 +256,14 @@ fun SettingsAndStatsCard(
                 Text(
                     text = stringResource(R.string.active),
                     fontSize = fontSize,
-                    modifier = modifier.padding(horizontal = 16.dp)
+                    modifier = modifier.padding(horizontal = 16.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Text(
                     text = activeScore,
                     fontSize = fontSize,
-                    modifier = modifier.padding(end = 16.dp)
+                    modifier = modifier.padding(end = 16.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Icon(
                     painter = painterResource(R.drawable.star_24dp),
@@ -280,12 +284,14 @@ fun SettingsAndStatsCard(
                 Text(
                     text = stringResource(R.string.total),
                     fontSize = fontSize,
-                    modifier = modifier.padding(horizontal = 16.dp)
+                    modifier = modifier.padding(horizontal = 16.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Text(
                     text = totalScore,
                     fontSize = fontSize,
-                    modifier = modifier.padding(end = 16.dp)
+                    modifier = modifier.padding(end = 16.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Icon(
                     painter = painterResource(R.drawable.star_24dp),

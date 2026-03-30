@@ -86,9 +86,9 @@ fun GameTopBar(
                 val answeredTasks = gameViewModel.gameState.collectAsState().value.totalAnswers
                 Text(
                     text = "$answeredTasks/$totalTasks",
-                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = fontSize,
-                    modifier = Modifier.padding(end = 24.dp)
+                    modifier = Modifier.padding(end = 24.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             } else {
                 CountdownTimer(

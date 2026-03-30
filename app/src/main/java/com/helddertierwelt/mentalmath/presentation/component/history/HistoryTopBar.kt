@@ -68,7 +68,8 @@ fun HistoryTopBar(
             ) {
                 Text(
                     text = stringResource(id = titleId),
-                    fontSize = titleFontSize
+                    fontSize = titleFontSize,
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
         },

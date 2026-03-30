@@ -78,6 +78,7 @@ fun StartButton(
                 text = stringResource(R.string.start),
                 fontSize = fontSize,
                 modifier = Modifier.align(Alignment.Center),
+                color = MaterialTheme.colorScheme.onPrimary
             )
         }
     }

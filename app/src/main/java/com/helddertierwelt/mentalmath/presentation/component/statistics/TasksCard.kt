@@ -77,10 +77,12 @@ fun TasksCard(
             Text(
                 text = stringResource(R.string.solution),
                 fontSize = resultFontSize,
+                color = MaterialTheme.colorScheme.onPrimary
             )
             Text(
                 text = stringResource(R.string.input),
                 fontSize = resultFontSize,
+                color = MaterialTheme.colorScheme.onPrimary
             )
         }
         val statisticsGameRecord =
@@ -102,7 +104,8 @@ fun TasksCard(
                             Text(
                                 text = "${task.operand1} ${task.operator.symbol} ${task.operand2} = ${task.correctResult}",
                                 fontSize = resultFontSize,
-                                modifier = Modifier.align(Alignment.CenterVertically)
+                                modifier = Modifier.align(Alignment.CenterVertically),
+                                color = MaterialTheme.colorScheme.onPrimary
                             )
                         }
                     }

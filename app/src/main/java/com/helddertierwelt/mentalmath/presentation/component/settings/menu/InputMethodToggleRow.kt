@@ -27,11 +27,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -44,6 +46,7 @@ fun InputMethodToggleRow(
     fontSize: TextUnit,
     iconSize: Dp,
     rightToLeft: Boolean,
+    color: Color = MaterialTheme.colorScheme.onPrimary,
     onClick: () -> Unit,
 ) {
 
@@ -61,13 +64,15 @@ fun InputMethodToggleRow(
         Icon(
             painter = painterResource(id = if (rightToLeft) R.drawable.right_to_left_24dp else R.drawable.left_to_right_24dp),
             contentDescription = "input layout",
-            modifier = Modifier.size(iconSize)
+            modifier = Modifier.size(iconSize),
+            tint = color
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = stringResource(if (rightToLeft) R.string.right_to_left else R.string.left_to_right),
             fontSize = fontSize,
-            lineHeight = fontSize
+            lineHeight = fontSize,
+            color = color
         )
     }
 }

@@ -224,10 +224,11 @@ class SettingsViewModel @Inject constructor(
         saveState()
     }
 
-    fun toggleInputMethod() {
-        _settingsState.value =
-            _settingsState.value.copy(isRightToLeft = !_settingsState.value.isRightToLeft)
+    fun toggleInputMethod(): Boolean {
+        val newValue = !_settingsState.value.isRightToLeft
+        _settingsState.value = _settingsState.value.copy(isRightToLeft = newValue)
         saveState()
+        return newValue
     }
 
     fun resetSettings() {

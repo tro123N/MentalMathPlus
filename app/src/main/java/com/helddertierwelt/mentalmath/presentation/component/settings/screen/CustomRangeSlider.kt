@@ -98,7 +98,7 @@ fun CustomRangeSlider(
                 )
                 .padding(horizontal = 6.dp),
             text = "${value.start.toInt()}",
-            color = MaterialTheme.colorScheme.onSecondary,
+            color = MaterialTheme.colorScheme.surface,
             fontSize = thumbnailFontSize
         )
 
@@ -117,7 +117,7 @@ fun CustomRangeSlider(
                 )
                 .padding(horizontal = 6.dp),
             text = "${value.endInclusive.toInt()}",
-            color = MaterialTheme.colorScheme.onSecondary,
+            color = MaterialTheme.colorScheme.surface,
             fontSize = thumbnailFontSize
         )
 
@@ -132,11 +132,11 @@ fun CustomRangeSlider(
             )
         } else {
             sliderColors = SliderDefaults.colors(
-                thumbColor = MaterialTheme.colorScheme.onSurface,
-                activeTrackColor = MaterialTheme.colorScheme.onSurface,
+                thumbColor = MaterialTheme.colorScheme.onPrimary,
+                activeTrackColor = MaterialTheme.colorScheme.onPrimary,
                 inactiveTrackColor = MaterialTheme.colorScheme.surface,
                 activeTickColor = MaterialTheme.colorScheme.background,
-                inactiveTickColor = MaterialTheme.colorScheme.onSurface
+                inactiveTickColor = MaterialTheme.colorScheme.onPrimary
             )
         }
 

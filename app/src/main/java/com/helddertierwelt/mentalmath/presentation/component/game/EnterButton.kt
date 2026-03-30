@@ -71,7 +71,8 @@ fun EnterButton(
             modifier = Modifier.size(iconSize).scale(
                 scaleX = if (LocalLayoutDirection.current == LayoutDirection.Rtl) -1f else 1f,
                 scaleY = 1f
-            )
+            ),
+            tint = MaterialTheme.colorScheme.onSurface
         )
     }
 }

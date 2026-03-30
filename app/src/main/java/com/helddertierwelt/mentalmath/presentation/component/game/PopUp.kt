@@ -48,20 +48,22 @@ fun PopUp(
         title = {
             Text(
                 text = title,
-                fontSize = titleSize
+                fontSize = titleSize,
+                color = MaterialTheme.colorScheme.onPrimary
             )
         },
         text = {
             Text(
                 text = description,
-                fontSize = descriptionSize
+                fontSize = descriptionSize,
+                color = MaterialTheme.colorScheme.onPrimary
             )
         },
         confirmButton = {
             Button(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = confirmColor,
-                    contentColor = MaterialTheme.colorScheme.onSecondary
+                    contentColor = MaterialTheme.colorScheme.onSurface
                 ),
                 onClick = { onConfirm() }
             ) {
@@ -76,7 +78,7 @@ fun PopUp(
                 Button(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = dismissColor,
-                        contentColor = MaterialTheme.colorScheme.onSecondary
+                        contentColor = MaterialTheme.colorScheme.onSurface
                     ),
                     onClick = { onCancel() }
                 ) {

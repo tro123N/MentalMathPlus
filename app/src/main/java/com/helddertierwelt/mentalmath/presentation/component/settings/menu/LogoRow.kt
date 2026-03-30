@@ -64,7 +64,7 @@ fun LogoRow(
             Image(
                 painter = painterResource(id = imageId),
                 contentDescription = "App Logo",
-                modifier = Modifier.size(size)
+                modifier = Modifier.size(size),
             )
             Text(
                 text = text,

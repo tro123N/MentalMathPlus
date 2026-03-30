@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -66,6 +67,7 @@ fun HistoryDoneButton(
                 text = stringResource(buttonTextId),
                 fontSize = fontSize,
                 modifier = Modifier.align(Alignment.Center),
+                color = MaterialTheme.colorScheme.onPrimary
             )
         }
     }

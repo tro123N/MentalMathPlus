@@ -28,7 +28,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -41,7 +43,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,6 +64,8 @@ import com.helddertierwelt.mentalmath.presentation.component.game.GameTopBar
 import com.helddertierwelt.mentalmath.presentation.component.game.MathTaskDisplay
 import com.helddertierwelt.mentalmath.presentation.component.game.NumberButton
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
+import com.helddertierwelt.mentalmath.presentation.component.game.QuickToastHost
+import com.helddertierwelt.mentalmath.presentation.component.game.ToastEvent
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
@@ -78,7 +81,6 @@ fun GameScreen(
 ) {
     val screenHeight =
         with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
-    rememberCoroutineScope()
 
     // font and icon sizes
     val roundButtonSize = (0.10f * screenHeight.value).dp
@@ -105,6 +107,8 @@ fun GameScreen(
     val lowerNumberRow = if (settingsState.isNumpadDefault) 1..3 else 7..9
     val gameState = gameViewModel.gameState.collectAsState().value
     val isGeneratingTask by gameViewModel.isGeneratingTask.collectAsState()
+    var toastEvent by remember { mutableStateOf<ToastEvent?>(null) }
+
 
     LaunchedEffect(Unit) {
         gameViewModel.startTimerIfNeeded()
@@ -156,20 +160,44 @@ fun GameScreen(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .weight(1f),
-                            contentAlignment = Alignment.Center
+                                .weight(1f)
                         ) {
-                            MathTaskDisplay(
-                                operand1 = gameState.operand1,
-                                operand2 = gameState.operand2,
-                                operator = gameState.operator.symbol,
-                                input = gameState.input,
-                                fontSize = taskFontSize,
-                                width = resultLineWidth,
-                                isCorrect = gameState.isCorrect,
-                                isRightToLeft = isRightToLeft,
-                                onClick = { settingsViewModel.toggleInputMethod() }
-                            )
+                            Box(
+                                modifier = Modifier.matchParentSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                MathTaskDisplay(
+                                    operand1 = gameState.operand1,
+                                    operand2 = gameState.operand2,
+                                    operator = gameState.operator.symbol,
+                                    input = gameState.input,
+                                    fontSize = taskFontSize,
+                                    width = resultLineWidth,
+                                    isCorrect = gameState.isCorrect,
+                                    isRightToLeft = isRightToLeft,
+                                    onClick = {
+                                        val isRightToLeftUpdated = settingsViewModel.toggleInputMethod()
+                                        val message = if (isRightToLeftUpdated) "Right-To-Left" else "Left-To-Right"
+                                        toastEvent = ToastEvent(message)
+                                    }
+                                )
+                            }
+                            Box(
+                                modifier = Modifier.matchParentSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .offset(y = (taskFontSize * 2f).value.dp + 8.dp)
+                                        .width(resultLineWidth),
+                                    contentAlignment = Alignment.TopCenter
+                                ) {
+                                    QuickToastHost(
+                                        event = toastEvent,
+                                        durationMs = 1000
+                                    )
+                                }
+                            }
                         }
                         Row(
                             verticalAlignment = Alignment.CenterVertically,

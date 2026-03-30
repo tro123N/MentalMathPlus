@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -52,12 +53,14 @@ fun SettingsModeColumn(
         Icon(
             painter = painterResource(if (modeEnabled) R.drawable.tag_24dp else R.drawable.hourglass_bottom_24dp),
             contentDescription = "modeIcon",
-            modifier = Modifier.size(iconSize)
+            modifier = Modifier.size(iconSize),
+            tint = MaterialTheme.colorScheme.onPrimary
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = if (modeEnabled) "${limit * 10}" else "${limit}:00",
             fontSize = fontSize,
+            color = MaterialTheme.colorScheme.onPrimary
         )
         Spacer(modifier = Modifier.height(8.dp))
     }

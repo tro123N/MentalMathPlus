@@ -27,11 +27,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -44,6 +46,7 @@ fun NotificationToggleRow(
     fontSize: TextUnit,
     iconSize: Dp,
     currentMode: NotificationMode,
+    color: Color = MaterialTheme.colorScheme.onPrimary,
     onModeChange: (NotificationMode) -> Unit
 ) {
 
@@ -76,13 +79,15 @@ fun NotificationToggleRow(
         Icon(
             painter = painterResource(icons[currentIndex]),
             contentDescription = stringResource(texts[currentIndex]),
-            modifier = Modifier.size(iconSize)
+            modifier = Modifier.size(iconSize),
+            tint = color
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = stringResource(texts[currentIndex]),
             fontSize = fontSize,
-            lineHeight = fontSize
+            lineHeight = fontSize,
+            color = color
         )
     }
 }

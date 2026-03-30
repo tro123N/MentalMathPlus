@@ -48,13 +48,14 @@ fun BackspaceButton(
         contentPadding = PaddingValues(0.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = red,
-            contentColor = MaterialTheme.colorScheme.primary
+            contentColor = MaterialTheme.colorScheme.surface
         )
     ) {
         Icon(
             painter = painterResource(if (isRightToLeft) R.drawable.backspace_reverse_24dp else R.drawable.backspace_24dp),
             contentDescription = "Backspace",
             modifier = Modifier.size(iconSize),
+            tint = MaterialTheme.colorScheme.onSurface
         )
     }
 }
