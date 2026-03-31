@@ -28,9 +28,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -166,19 +164,12 @@ fun GameScreen(
                         ) {
                             Box(
                                 modifier = Modifier.matchParentSize(),
-                                contentAlignment = Alignment.Center
+                                contentAlignment = Alignment.TopCenter
                             ) {
-                                Box(
-                                    modifier = Modifier
-                                        .offset(y = (taskFontSize * 2f).value.dp + 8.dp)
-                                        .width(resultLineWidth),
-                                    contentAlignment = Alignment.TopCenter
-                                ) {
                                     QuickToastHost(
                                         event = toastEvent,
                                         durationMs = 1000
                                     )
-                                }
                             }
                             Box(
                                 modifier = Modifier.matchParentSize(),
