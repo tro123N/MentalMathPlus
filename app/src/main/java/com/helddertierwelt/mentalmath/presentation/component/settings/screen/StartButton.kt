@@ -78,7 +78,7 @@ fun StartButton(
                 text = stringResource(R.string.start),
                 fontSize = fontSize,
                 modifier = Modifier.align(Alignment.Center),
-                color = MaterialTheme.colorScheme.onPrimary
+                color = if (!isEnabled) MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f) else MaterialTheme.colorScheme.onPrimary
             )
         }
     }

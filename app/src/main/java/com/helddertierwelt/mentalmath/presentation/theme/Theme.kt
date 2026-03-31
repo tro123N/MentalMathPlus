@@ -26,31 +26,35 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFF3C3F41), // buttons
-    onPrimary = Color(0xFFEDEDED), // on buttons
-    background = Color(0xFF1E1E1E), // background
-    surface = Color(0xFF2A2A2A), // slider color
-    onSurface = Color(0xFF2A2A2A), // inverted onPrimary
+    primary = Color(0xFF3C3F41),
+    secondary = Color(0xFF9B9B9B),
+    tertiary = Color(0xFF5A5A5A),
 
-    secondary = Color(0xFF9B9B9B), // not used
-    onSecondary = Color(0xFF2A2A2A), // not used
-    tertiary = Color(0xFF5A5A5A), // not used
-    onTertiary = Color(0xFFEDEDED),  // not used
-    onBackground = Color(0xFFEDEDED) // not used
+    background = Color(0xFF1E1E1E),
+    surface = Color(0xFF2A2A2A),
+
+    onPrimary = Color(0xFFEDEDED),
+    onSecondary = Color(0xFF2A2A2A),
+    onTertiary = Color(0xFFEDEDED),
+
+    onBackground = Color(0xFFEDEDED),
+    onSurface = Color(0xFFEDEDED)
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Color(0xFFFFFFFF),
-    onPrimary = Color(0xFF3C3F41),
-    background = Color(0xFFEEEEEE),
-    surface = Color(0xFFFAFAFA),
-    onSurface = Color(0xFFFFFFFF),
-
     secondary = Color(0xFF9B9B9B),
-    onSecondary = Color(0xFFFAFAFA),
     tertiary = Color(0xFF5A5A5A),
+
+    background = Color(0xFFEEEEEE),
+    surface = Color(0xFFFFFFFF),
+
+    onPrimary = Color(0xFF3C3F41),
+    onSecondary = Color(0xFFFFFFFF),
     onTertiary = Color(0xFF3C3F41),
+
     onBackground = Color(0xFF3C3F41),
+    onSurface = Color(0xFF3C3F41),
 )
 
 val green = Color(0xFF39A241)

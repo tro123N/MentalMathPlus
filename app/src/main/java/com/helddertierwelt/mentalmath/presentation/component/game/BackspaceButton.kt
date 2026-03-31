@@ -55,7 +55,7 @@ fun BackspaceButton(
             painter = painterResource(if (isRightToLeft) R.drawable.backspace_reverse_24dp else R.drawable.backspace_24dp),
             contentDescription = "Backspace",
             modifier = Modifier.size(iconSize),
-            tint = MaterialTheme.colorScheme.onSurface
+            tint = MaterialTheme.colorScheme.onSecondary
         )
     }
 }

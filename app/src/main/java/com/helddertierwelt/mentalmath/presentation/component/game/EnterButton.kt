@@ -72,7 +72,7 @@ fun EnterButton(
                 scaleX = if (LocalLayoutDirection.current == LayoutDirection.Rtl) -1f else 1f,
                 scaleY = 1f
             ),
-            tint = MaterialTheme.colorScheme.onSurface
+            tint = MaterialTheme.colorScheme.onSecondary
         )
     }
 }

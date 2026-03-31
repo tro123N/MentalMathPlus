@@ -63,7 +63,7 @@ fun PopUp(
             Button(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = confirmColor,
-                    contentColor = MaterialTheme.colorScheme.onSurface
+                    contentColor = MaterialTheme.colorScheme.onSecondary
                 ),
                 onClick = { onConfirm() }
             ) {
@@ -78,7 +78,7 @@ fun PopUp(
                 Button(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = dismissColor,
-                        contentColor = MaterialTheme.colorScheme.onSurface
+                        contentColor = MaterialTheme.colorScheme.onSecondary
                     ),
                     onClick = { onCancel() }
                 ) {

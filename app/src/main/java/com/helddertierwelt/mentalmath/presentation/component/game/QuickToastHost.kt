@@ -57,7 +57,7 @@ fun QuickToastHost(
                     RoundedCornerShape(16.dp)
                 )
                 .padding(horizontal = 8.dp, vertical = 4.dp),
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSecondary
         )
     }
 }
