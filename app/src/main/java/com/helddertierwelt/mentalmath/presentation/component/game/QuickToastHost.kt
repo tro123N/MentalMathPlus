@@ -18,6 +18,10 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.game
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,7 +40,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun QuickToastHost(
     event: ToastEvent?,
-    durationMs: Long = 600,
+    durationMs: Long = 400,
 ) {
     var visible by remember { mutableStateOf(false) }
 
@@ -48,9 +52,13 @@ fun QuickToastHost(
         }
     }
 
-    if (visible && event != null) {
+    AnimatedVisibility(
+        visible = visible && event != null,
+        enter = fadeIn(animationSpec = tween(durationMillis = 200)),
+        exit = fadeOut(animationSpec = tween(durationMillis = 400))
+    ) {
         Text(
-            text = event.message,
+            text = event?.message.orEmpty(),
             modifier = Modifier
                 .background(
                     MaterialTheme.colorScheme.onPrimary,

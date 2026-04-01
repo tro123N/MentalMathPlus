@@ -34,7 +34,7 @@ private val DarkColorScheme = darkColorScheme(
     surface = Color(0xFF2A2A2A),
 
     onPrimary = Color(0xFFEDEDED),
-    onSecondary = Color(0xFF2A2A2A),
+    onSecondary = Color(0xFF1E1E1E),
     onTertiary = Color(0xFFEDEDED),
 
     onBackground = Color(0xFFEDEDED),
