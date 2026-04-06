@@ -45,33 +45,33 @@ German translation:
 
 Thank you for contributing!
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
-    <string name="mode_instruction">"Select mode and limit"</string>
-    <string name="operator_instruction">"Select operations and difficulty"</string>
+    <string name="mode_instruction">Select mode and limit</string>
+    <string name="operator_instruction">Select operations and difficulty</string>
     <string name="start">Start</string>
 
     <!-- Settings Screen: Menu -->
     <string name="share_game">Share Game</string>
     <string name="random_game">Random Game</string>
-    <string name="history">"History"</string>
-    <string name="phone_pad">"Phone Pad"</string>
-    <string name="number_pad">"Number Pad"</string>
-    <string name="right_to_left">"Right-To-\u200BLeft"</string>
-    <string name="left_to_right">"Left-To-\u200BRight"</string>
-    <string name="reminder_off">"Reminder Off"</string>
-    <string name="daily_reminder">"Daily Reminder"</string>
-    <string name="every_three_days">"Every 3 Days"</string>
-    <string name="weekly_reminder">"Weekly Reminder"</string>
-    <string name="light_mode">"Light Mode"</string>
-    <string name="dark_mode">"Dark Mode"</string>
-    <string name="system_mode">"System Mode"</string>
-    <string name="about">"About"</string>
-    <string name="feedback">"Feed\u200Bback"</string>
-    <string name="recommend">"Recom\u200Bmend"</string>
-    <string name="donate">"Donate"</string>
-    <string name="reset_app">"Reset App"</string>
+    <string name="history">History</string>
+    <string name="phone_pad">Phone Pad</string>
+    <string name="number_pad">Number Pad</string>
+    <string name="right_to_left">Right-To-\u200BLeft</string>
+    <string name="left_to_right">Left-To-\u200BRight</string>
+    <string name="reminder_off">Reminder Off</string>
+    <string name="daily_reminder">Daily Reminder</string>
+    <string name="every_three_days">Every 3 Days</string>
+    <string name="weekly_reminder">Weekly Reminder</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="system_mode">System Mode</string>
+    <string name="about">About</string>
+    <string name="feedback">Feed\u200Bback</string>
+    <string name="recommend">Recom\u200Bmend</string>
+    <string name="donate">Donate</string>
+    <string name="reset_app">Reset App</string>
 
     <!-- Settings Screen: Leaderboard -->
     <string name="active_score">Active\nScore</string>
@@ -79,43 +79,46 @@ Thank you for contributing!
     <string name="new_score">new</string>
 
     <!-- Game Screen -->
-    <string name="rtl_toast">"Right-To-Left Input"</string>
-    <string name="ltr_toast">"Left-To-Right Input"</string>
+    <string name="rtl_toast">Right-To-Left Input</string>
+    <string name="ltr_toast">Left-To-Right Input</string>
 
     <!-- Statistics Screen -->
-    <string name="seed">"Seed: %d"</string>
-    <string name="result">"Result"</string>
-    <string name="active">"Active:"</string>
-    <string name="total">"Total  :"</string>
-    <string name="solution">"Solution"</string>
-    <string name="input">"Input"</string>
+    <string name="seed">Seed: %d</string>
+    <string name="result">Result</string>
+    <string name="active">Active:</string>
+    <string name="total">Total:</string>
+    <string name="solution">Solution</string>
+    <string name="input">Input</string>
     <string name="done">Done</string>
 
+    <!-- History Screen -->
+    <string name="no_games">There are no games with a score</string>
+
     <!-- PopUps -->
-    <string name="notification_popup_title">"Notifications are disabled"</string>
-    <string name="notification_popup_description">"Please enable notifications in your system settings to set reminders.\n\nNote: Battery optimization settings may still block notifications."</string>
-    <string name="notification_popup_confirmation_text">"Open settings"</string>
-    <string name="notification_toast_text">"Reminders start in the evening after the interval"</string>
+    <string name="notification_popup_title">Notifications are disabled</string>
+    <string name="notification_popup_description">Please enable notifications in your system settings to set reminders.\n\nNote: Battery optimization settings may still block notifications.</string>
+    <string name="notification_popup_confirmation_text">Open settings</string>
+    <string name="notification_toast_text">Reminders start in the evening after the interval</string>
 
-    <string name="reset_app_popup_title">"Reset app?"</string>
-    <string name="reset_app_popup_description">"Deletes all scores and settings."</string>
-    <string name="reset_app_popup_confirmation_text">"Reset"</string>
+    <string name="reset_app_popup_title">Reset app?</string>
+    <string name="reset_app_popup_description">Deletes all scores and settings.</string>
+    <string name="reset_app_popup_confirmation_text">Reset</string>
 
-    <string name="quit_game_popup_title">"Quit game?"</string>
-    <string name="quit_game_popup_description">"Your current progress will be lost."</string>
-    <string name="quit_game_popup_confirmation_text">"Quit"</string>
-    <string name="quit_game_popup_cancel_text">"Continue"</string>
+    <string name="quit_game_popup_title">Quit game?</string>
+    <string name="quit_game_popup_description">Your current progress will be lost.</string>
+    <string name="quit_game_popup_confirmation_text">Quit</string>
+    <string name="quit_game_popup_cancel_text">Continue</string>
 
-    <string name="app_link_game_popup_title">"Start game from link?"</string>
-    <string name="app_link_popup_description_new_game">"Play a new game with predefined settings and a random seed.\n\nAny current game progress will be lost."</string>
-    <string name="app_link_popup_description_challenge">"Try to beat your friend's score by replaying the same game.\n\nAny current game progress will be lost."</string>
-    <string name="app_link_popup_confirmation_text">"Start"</string>
+    <string name="app_link_game_popup_title">Start game from link?</string>
+    <string name="app_link_popup_description_new_game">Play a new game with predefined settings and a random seed.\n\nAny current game progress will be lost.</string>
+    <string name="app_link_popup_description_challenge">Try to beat your friend\'s score by replaying the same game.\n\nAny current game progress will be lost.</string>
+    <string name="app_link_popup_confirmation_text">Start</string>
 
-    <string name="already_played_popup_title">"Game already played"</string>
-    <string name="already_played_popup_description">"You’ve already played a game with the same settings and seed.\n\nPlease try a different link or start a new game."</string>
+    <string name="already_played_popup_title">Game already played</string>
+    <string name="already_played_popup_description">You’ve already played a game with the same settings and seed.\n\nPlease try a different link or start a new game.</string>
 
-    <string name="cancel">"Cancel"</string>
-    <string name="ok">"OK"</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 
     <!--
     Special translation notes for string arrays:
@@ -125,8 +128,8 @@ Thank you for contributing!
     -->
 
     <!-- Result PopUp -->
-    <string name="waiting_title">"Waiting for your opponent…"</string>
-    <string-array name="waiting_descriptions">
+    <string name="waiting_title">Waiting for your opponent…</string>
+    <string-array name="waiting_descriptions" tools:ignore="InconsistentArrays">
         <item>You: %1$.2f | Opponent: ??\nSeed: %2$d\n\nYou’ve set the bar! Let’s see if your opponent can catch up!</item>
         <item>You: %1$.2f | Opponent: ??\nSeed: %2$d\n\nYour score is locked in - time for your rival to respond!</item>
         <item>You: %1$.2f | Opponent: ??\nSeed: %2$d\n\nYour turn is done - the suspense begins!</item>
@@ -139,8 +142,8 @@ Thank you for contributing!
         <item>You: %1$.2f | Opponent: ??\nSeed: %2$d\n\nThey saw your score… and vanished into the void.</item>
     </string-array>
 
-    <string name="easy_win_title">"Easy win"</string>
-    <string-array name="easy_win_descriptions">
+    <string name="easy_win_title">Easy win</string>
+    <string-array name="easy_win_descriptions" tools:ignore="InconsistentArrays">
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nA win, but without real competition!</item>
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nMaybe next time you’ll get a real challenge.</item>
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nThat was over before it even started.</item>
@@ -153,8 +156,8 @@ Thank you for contributing!
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nYou won while your opponent was still figuring out the rules.</item>
     </string-array>
 
-    <string name="anyone_here_title">"Anyone here?"</string>
-    <string-array name="anyone_here_descriptions">
+    <string name="anyone_here_title">Anyone here?</string>
+    <string-array name="anyone_here_descriptions" tools:ignore="InconsistentArrays">
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nNo points, no fun…</item>
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nIt’s quiet… too quiet.</item>
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nA point-less game!</item>
@@ -167,8 +170,8 @@ Thank you for contributing!
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nBreaking news: Nothing ever happened!</item>
     </string-array>
 
-    <string name="win_title">"You won"</string>
-    <string-array name="win_descriptions">
+    <string name="win_title">You won</string>
+    <string-array name="win_descriptions" tools:ignore="InconsistentArrays">
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nThat was some serious mental math!</item>
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nVictory looks good on you!</item>
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nPerfect execution - impressive!</item>
@@ -181,8 +184,8 @@ Thank you for contributing!
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nFacts over feelings: You crushed it!</item>
     </string-array>
 
-    <string name="close_win_title">"Close call"</string>
-    <string-array name="close_win_descriptions">
+    <string name="close_win_title">Close call</string>
+    <string-array name="close_win_descriptions" tools:ignore="InconsistentArrays">
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nA tight win, but it counts!</item>
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nPhew… that was close!</item>
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nNarrow win! Heart still racing?</item>
@@ -195,8 +198,8 @@ Thank you for contributing!
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nProps to your rival, but you prevailed.</item>
     </string-array>
 
-    <string name="draw_title">"Draw"</string>
-    <string-array name="draw_descriptions">
+    <string name="draw_title">Draw</string>
+    <string-array name="draw_descriptions" tools:ignore="InconsistentArrays">
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nA perfect tie - time for a decider!</item>
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nNo winner, no loser - just champions.</item>
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nEqual forces! Time for a thrilling decider.</item>
@@ -209,8 +212,8 @@ Thank you for contributing!
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nIt’s a tie! Let’s see who can handle the pressure next round.</item>
     </string-array>
 
-    <string name="close_defeat_title">"Close call"</string>
-    <string-array name="close_defeat_descriptions">
+    <string name="close_defeat_title">Close call</string>
+    <string-array name="close_defeat_descriptions" tools:ignore="InconsistentArrays">
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nSo close! You almost had it!</item>
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nA narrow loss - but still a strong effort!</item>
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nYour opponent just got lucky this time.</item>
@@ -223,7 +226,7 @@ Thank you for contributing!
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nClose, but not over - the next round is yours to take!</item>
     </string-array>
 
-    <string name="defeat_title">"Defeat"</string>
+    <string name="defeat_title">Defeat</string>
     <string-array name="defeat_descriptions">
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nShake it off and give it another try!</item>
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nIt happens! Learn, adapt, and come back stronger.</item>
@@ -237,9 +240,9 @@ Thank you for contributing!
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nLet your opponent enjoy these fifteen seconds of fame.</item>
     </string-array>
 
-    <string name="result_popup_confirmation_text">"Share"</string>
-    <string name="result_share_message_waiting">"Me: %1$.2f | You: ??\nSeed: %2$d"</string>
-    <string name="result_share_message">"Me: %1$.2f | You: %2$.2f\nSeed: %3$d"</string>
+    <string name="result_popup_confirmation_text">Share</string>
+    <string name="result_share_message_waiting">Me: %1$.2f | You: ??\nSeed: %2$d</string>
+    <string name="result_share_message">Me: %1$.2f | You: %2$.2f\nSeed: %3$d</string>
     <string name="share_challenge">Try to beat my score of %1$.2f in Mental Math.\nReplay my game with seed %2$d:\n\n%3$s</string>
     <string name="share_new_game">Let’s play a round Mental Math!\nClick the link below to start a fresh game with my settings and seed:\n%1$d\n\n%2$s</string>
 

@@ -1,4 +1,7 @@
 - Input field is now clickable to switch input direction while in game
-- Added a popup notification when switching input direction in game
+- Also added a popup notification when switching input direction in game
+- Added german translation
+- Added french translation
+- Made it possible to switch app language in the system settings
 - Improved a few colors
 - Dependency updates

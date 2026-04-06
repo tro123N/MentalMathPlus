@@ -83,7 +83,7 @@ fun MathTaskDisplay(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .width(width)
-                    .height((fontSize * 1.5f).value.dp)
+                    .height((fontSize * 1.6f).value.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .clickable { onClick() }
                     .drawBehind {
