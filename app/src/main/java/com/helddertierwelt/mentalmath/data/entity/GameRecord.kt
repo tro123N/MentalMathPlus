@@ -21,7 +21,7 @@ package com.helddertierwelt.mentalmath.data.entity
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.helddertierwelt.mentalmath.presentation.viewmodel.game.TaskResult
+import com.helddertierwelt.mentalmath.presentation.viewmodel.game.SolvedProblem
 
 @Entity(
     tableName = "game_records",
@@ -63,5 +63,5 @@ data class GameRecord(
 
     val seed: Long = 0L,
 
-    val taskResults: List<TaskResult> = emptyList()
+    val solvedProblems: List<SolvedProblem> = emptyList()
 )

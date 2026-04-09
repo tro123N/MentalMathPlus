@@ -18,94 +18,94 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.data.repository
 
-import com.helddertierwelt.mentalmath.data.dao.AdditionTaskDao
-import com.helddertierwelt.mentalmath.data.dao.DivisionTaskDao
-import com.helddertierwelt.mentalmath.data.dao.MultiplicationTaskDao
-import com.helddertierwelt.mentalmath.data.dao.SubtractionTaskDao
-import com.helddertierwelt.mentalmath.data.entity.MathTask
-import com.helddertierwelt.mentalmath.data.entity.toMathTask
+import com.helddertierwelt.mentalmath.data.dao.AdditionProblemDao
+import com.helddertierwelt.mentalmath.data.dao.DivisionProblemDao
+import com.helddertierwelt.mentalmath.data.dao.MultiplicationProblemDao
+import com.helddertierwelt.mentalmath.data.dao.SubtractionProblemDao
+import com.helddertierwelt.mentalmath.data.entity.MathProblem
+import com.helddertierwelt.mentalmath.data.entity.toMathProblem
 import javax.inject.Inject
 import kotlin.random.Random
 
-class MathTaskRepository @Inject constructor(
-    private val additionDao: AdditionTaskDao,
-    private val subtractionDao: SubtractionTaskDao,
-    private val multiplicationDao: MultiplicationTaskDao,
-    private val divisionDao: DivisionTaskDao,
+class MathProblemRepository @Inject constructor(
+    private val additionDao: AdditionProblemDao,
+    private val subtractionDao: SubtractionProblemDao,
+    private val multiplicationDao: MultiplicationProblemDao,
+    private val divisionDao: DivisionProblemDao,
 ) {
-    suspend fun getRandomAdditionTaskByDifficulty(
+    suspend fun getRandomAdditionProblemByDifficulty(
         difficulty: Int,
         random: Random,
         lastOperands: Pair<Int, Int>
-    ): MathTask {
-        val count = additionDao.countAdditionTasksByDifficulty(
+    ): MathProblem {
+        val count = additionDao.countAdditionProblemsByDifficulty(
             difficulty,
             lastOperands.first,
             lastOperands.second
         )
         val offset = random.nextInt(count)
-        return additionDao.getAdditionTaskByDifficultyWithOffset(
+        return additionDao.getAdditionProblemsByDifficultyWithOffset(
             difficulty,
             offset,
             lastOperands.first,
             lastOperands.second
-        ).toMathTask()
+        ).toMathProblem()
     }
 
-    suspend fun getRandomSubtractionTaskByDifficulty(
+    suspend fun getRandomSubtractionProblemByDifficulty(
         difficulty: Int,
         random: Random,
         lastOperands: Pair<Int, Int>
-    ): MathTask {
-        val count = subtractionDao.countSubtractionTasksByDifficulty(
+    ): MathProblem {
+        val count = subtractionDao.countSubtractionProblemsByDifficulty(
             difficulty,
             lastOperands.first,
             lastOperands.second
         )
         val offset = random.nextInt(count)
-        return subtractionDao.getSubtractionTaskByDifficultyWithOffset(
+        return subtractionDao.getSubtractionProblemsByDifficultyWithOffset(
             difficulty,
             offset,
             lastOperands.first,
             lastOperands.second
-        ).toMathTask()
+        ).toMathProblem()
     }
 
-    suspend fun getRandomMultiplicationTaskByDifficulty(
+    suspend fun getRandomMultiplicationProblemByDifficulty(
         difficulty: Int,
         random: Random,
         lastOperands: Pair<Int, Int>
-    ): MathTask {
-        val count = multiplicationDao.countMultiplicationTasksByDifficulty(
+    ): MathProblem {
+        val count = multiplicationDao.countMultiplicationProblemsByDifficulty(
             difficulty,
             lastOperands.first,
             lastOperands.second
         )
         val offset = random.nextInt(count)
-        return multiplicationDao.getMultiplicationTaskByDifficultyWithOffset(
+        return multiplicationDao.getMultiplicationProblemsByDifficultyWithOffset(
             difficulty,
             offset,
             lastOperands.first,
             lastOperands.second
-        ).toMathTask()
+        ).toMathProblem()
     }
 
-    suspend fun getRandomDivisionTaskByDifficulty(
+    suspend fun getRandomDivisionProblemByDifficulty(
         difficulty: Int,
         random: Random,
         lastOperands: Pair<Int, Int>
-    ): MathTask {
-        val count = divisionDao.countDivisionTasksByDifficulty(
+    ): MathProblem {
+        val count = divisionDao.countDivisionProblemsByDifficulty(
             difficulty,
             lastOperands.first,
             lastOperands.second
         )
         val offset = random.nextInt(count)
-        return divisionDao.getDivisionTaskByDifficultyWithOffset(
+        return divisionDao.getDivisionProblemsByDifficultyWithOffset(
             difficulty,
             offset,
             lastOperands.first,
             lastOperands.second
-        ).toMathTask()
+        ).toMathProblem()
     }
 }

@@ -69,9 +69,9 @@ import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.component.statistics.DoneButton
+import com.helddertierwelt.mentalmath.presentation.component.statistics.ProblemsCard
 import com.helddertierwelt.mentalmath.presentation.component.statistics.SettingsAndStatsCard
 import com.helddertierwelt.mentalmath.presentation.component.statistics.StatisticsTopBar
-import com.helddertierwelt.mentalmath.presentation.component.statistics.TasksCard
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
@@ -96,7 +96,7 @@ fun StatisticsScreen(
     val doneIconSize = (0.057f * screenHeight.value).dp
     val modeIconSize = (0.046f * screenHeight.value).dp
     val shareIconSize = (0.038f * screenHeight.value).dp
-    val taskIconSize = (0.032f * screenHeight.value).dp
+    val resultIconSize = (0.032f * screenHeight.value).dp
     val fontSize = (0.038f * screenHeight.value).sp
     val titleFontSize = (0.032f * screenHeight.value).sp
     val resultFontSize = (0.024f * screenHeight.value).sp
@@ -233,9 +233,10 @@ fun StatisticsScreen(
                             }
                         )
                         Spacer(modifier = Modifier.height(24.dp))
-                        TasksCard(
+                        ProblemsCard(
                             resultFontSize = resultFontSize,
-                            iconSize = taskIconSize
+                            resultIconSize = resultIconSize,
+                            iconSize = shareIconSize
                         )
                     }
                     Spacer(modifier = Modifier.height(24.dp))

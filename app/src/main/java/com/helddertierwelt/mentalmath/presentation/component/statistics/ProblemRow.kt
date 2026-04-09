@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 
 @Composable
-fun TaskCardRow(
+fun ProblemRow(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
@@ -33,7 +33,7 @@ fun TaskCardRow(
     ) { measurables, constraints ->
 
         require(measurables.size == 2) {
-            "TaskCardRow expects exactly 2 children"
+            "ProblemRow expects exactly 2 children"
         }
 
         val maxWidth = constraints.maxWidth

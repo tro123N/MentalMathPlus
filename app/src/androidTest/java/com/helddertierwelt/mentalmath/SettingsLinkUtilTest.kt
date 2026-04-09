@@ -44,7 +44,7 @@ class SettingsLinkUtilTest {
             activeScore = 12.34f,
             totalScore = 5622.10f,
             seed = 1234567890123456789L,
-            taskResults = listOf()
+            solvedProblems = listOf()
         )
         val serialized = SettingsLinkUtil.serialize(original)
         val deserialized = SettingsLinkUtil.deserialize(serialized)
@@ -68,6 +68,6 @@ class SettingsLinkUtilTest {
         assertEquals(0L, deserialized.activeTime)
         assertEquals(0L, deserialized.totalTime)
         assertEquals(0f, deserialized.activeScore, 0.0f)
-        assertTrue(deserialized.taskResults.isEmpty())
+        assertTrue(deserialized.solvedProblems.isEmpty())
     }
 }

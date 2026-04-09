@@ -1,3 +1,3 @@
-- disable enter-button until the new task was loaded to prevent same tasks in a row caused by too fast clicking
+- disable enter-button until the new problem was loaded to prevent same problems in a row caused by too fast clicking
 - disable start-button after clicking to prevent two game starts
-- lock coroutine with mutex to protect the random object and keep the tasks deterministic
+- lock coroutine with mutex to protect the random object and keep the problems deterministic

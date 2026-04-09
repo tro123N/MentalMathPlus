@@ -75,7 +75,7 @@ object SettingsLinkUtil {
             activeScore = 0f,
             seed = bigIntString.substring(10, 29).toLong(),
             totalScore = if (hasTotalScore) bigIntString.substring(29, 35).toInt() / 100f else -1f,
-            taskResults = emptyList()
+            solvedProblems = emptyList()
         )
     }
 

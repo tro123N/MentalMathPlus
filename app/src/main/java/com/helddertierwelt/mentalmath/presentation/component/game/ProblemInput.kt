@@ -43,7 +43,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 
 @Composable
-fun MathTaskDisplay(
+fun ProblemInput(
     operand1: Int,
     operand2: Int,
     operator: String,

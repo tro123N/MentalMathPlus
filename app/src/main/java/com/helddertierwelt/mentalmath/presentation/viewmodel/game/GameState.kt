@@ -28,7 +28,7 @@ data class GameState(
     val operand2: Int = 1,
     val operator: Operation = Operation.ADDITION,
     val input: String = "",
-    val tasks: List<TaskResult> = emptyList(),
+    val solvedProblems: List<SolvedProblem> = emptyList(),
     val enabledOperators: Map<Operation, Pair<Float, Float>> = mutableMapOf(),
     val isCorrect: Boolean? = null,
 
@@ -57,7 +57,7 @@ data class GameState(
             val operand2 = parts[3].toInt()
             val operator = Operation.valueOf(parts[4])
             val input = parts[5]
-            val tasks = TaskResultConverter().toTaskResultList(parts[6])
+            val problems = SolvedProblemConverter().toSolvedProblemList(parts[6])
             val enabledOperators = mutableMapOf<Operation, Pair<Float, Float>>()
             val isCorrect = parts[8].toBooleanStrictOrNull()
             val correctAnswers = parts[9].toInt()
@@ -80,7 +80,7 @@ data class GameState(
                 operand2 = operand2,
                 operator = operator,
                 input = input,
-                tasks = tasks,
+                solvedProblems = problems,
                 enabledOperators = enabledOperators,
                 isCorrect = isCorrect,
                 correctAnswers = correctAnswers,

@@ -59,9 +59,9 @@ import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.component.game.BackspaceButton
 import com.helddertierwelt.mentalmath.presentation.component.game.EnterButton
 import com.helddertierwelt.mentalmath.presentation.component.game.GameTopBar
-import com.helddertierwelt.mentalmath.presentation.component.game.MathTaskDisplay
 import com.helddertierwelt.mentalmath.presentation.component.game.NumberButton
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
+import com.helddertierwelt.mentalmath.presentation.component.game.ProblemInput
 import com.helddertierwelt.mentalmath.presentation.component.game.QuickToastHost
 import com.helddertierwelt.mentalmath.presentation.component.game.ToastEvent
 import com.helddertierwelt.mentalmath.presentation.theme.blue
@@ -90,7 +90,7 @@ fun GameScreen(
     val titleFontSize = (0.031f * screenHeight.value).sp
     val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
     val numberFontSize = (0.040f * screenHeight.value).sp
-    val taskFontSize = (0.057f * screenHeight.value).sp
+    val problemFontSize = (0.057f * screenHeight.value).sp
 
     // viewModels
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
@@ -104,7 +104,7 @@ fun GameScreen(
     val upperNumberRow = if (settingsState.isNumpadDefault) 7..9 else 1..3
     val lowerNumberRow = if (settingsState.isNumpadDefault) 1..3 else 7..9
     val gameState = gameViewModel.gameState.collectAsState().value
-    val isGeneratingTask by gameViewModel.isGeneratingTask.collectAsState()
+    val isGeneratingProblem by gameViewModel.isGeneratingProblem.collectAsState()
     var toastEvent by remember { mutableStateOf<ToastEvent?>(null) }
     val rtlMessage = stringResource(R.string.rtl_toast)
     val ltrMessage = stringResource(R.string.ltr_toast)
@@ -175,12 +175,12 @@ fun GameScreen(
                                 modifier = Modifier.matchParentSize(),
                                 contentAlignment = Alignment.Center
                             ) {
-                                MathTaskDisplay(
+                                ProblemInput(
                                     operand1 = gameState.operand1,
                                     operand2 = gameState.operand2,
                                     operator = gameState.operator.symbol,
                                     input = gameState.input,
-                                    fontSize = taskFontSize,
+                                    fontSize = problemFontSize,
                                     width = resultLineWidth,
                                     isCorrect = gameState.isCorrect,
                                     isRightToLeft = isRightToLeft,
@@ -283,12 +283,12 @@ fun GameScreen(
                         )
                         EnterButton(
                             onClick = {
-                                gameViewModel.addTaskResultToList()
+                                gameViewModel.addProblemToList()
                                 gameViewModel.checkAnswerAndCount()
                                 val totalAnswers = gameViewModel.gameState.value.totalAnswers
-                                val totalTasks = (settingsState.limit * 10).roundToInt()
+                                val totalProblems = (settingsState.limit * 10).roundToInt()
                                 val isLinkGame = gameViewModel.gameState.value.isLinkGame
-                                if (settingsState.isModeEnabled && totalAnswers == totalTasks) {
+                                if (settingsState.isModeEnabled && totalAnswers == totalProblems) {
                                     gameViewModel.endGame()
                                     if (isLinkGame) {
                                         statisticsViewModel.setShowLinkGamePopUp(true)
@@ -299,10 +299,10 @@ fun GameScreen(
                                         launchSingleTop = true
                                     }
                                 } else {
-                                    gameViewModel.generateNewTask()
+                                    gameViewModel.generateNewProblem()
                                 }
                             },
-                            enabled = !isGeneratingTask,
+                            enabled = !isGeneratingProblem,
                             isToggled = gameState.input.isEmpty(),
                             size = roundButtonSize,
                             iconId1 = R.drawable.keyboard_double_arrow_right_24dp,

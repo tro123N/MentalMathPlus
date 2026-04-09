@@ -20,24 +20,24 @@ package com.helddertierwelt.mentalmath.data.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.helddertierwelt.mentalmath.data.entity.DivisionTask
+import com.helddertierwelt.mentalmath.data.entity.AdditionProblem
 
 @Dao
-interface DivisionTaskDao {
+interface AdditionProblemDao {
 
-    @Query("SELECT COUNT(*) FROM tasks_division WHERE difficulty = :difficulty AND (operand1 <> :lastOperand1 OR operand2 <> :lastOperand2)")
-    suspend fun countDivisionTasksByDifficulty(
+    @Query("SELECT COUNT(*) FROM problems_addition WHERE difficulty = :difficulty AND (operand1 <> :lastOperand1 OR operand2 <> :lastOperand2)")
+    suspend fun countAdditionProblemsByDifficulty(
         difficulty: Int,
         lastOperand1: Int,
         lastOperand2: Int
     ): Int
 
-    @Query("SELECT * FROM tasks_division WHERE difficulty = :difficulty AND (operand1 <> :lastOperand1 OR operand2 <> :lastOperand2) LIMIT 1 OFFSET :offset")
-    suspend fun getDivisionTaskByDifficultyWithOffset(
+    @Query("SELECT * FROM problems_addition WHERE difficulty = :difficulty AND (operand1 <> :lastOperand1 OR operand2 <> :lastOperand2) LIMIT 1 OFFSET :offset")
+    suspend fun getAdditionProblemsByDifficultyWithOffset(
         difficulty: Int,
         offset: Int,
         lastOperand1: Int,
         lastOperand2: Int
-    ): DivisionTask
+    ): AdditionProblem
 }
 

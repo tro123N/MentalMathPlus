@@ -134,7 +134,7 @@ interface GameRecordDao {
         totalTime = 0,
         activeScore = 0,
         totalScore = 0,
-        taskResults = '[]'
+        solvedProblems = '[]'
         """
     )
     suspend fun resetAllRecords()

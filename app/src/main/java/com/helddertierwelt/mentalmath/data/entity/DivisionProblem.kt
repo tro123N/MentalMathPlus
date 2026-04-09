@@ -22,11 +22,11 @@ import androidx.room.Entity
 import androidx.room.Index
 
 @Entity(
-    tableName = "tasks_division",
+    tableName = "problems_division",
     primaryKeys = ["operand1", "operand2"],
     indices = [Index(value = ["difficulty"], name = "idx_difficulty_division")]
 )
-data class DivisionTask(
+data class DivisionProblem(
     val difficulty: Int,
     val operand1: Int,
     val operand2: Int

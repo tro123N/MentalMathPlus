@@ -4,19 +4,19 @@ Customizable Training
 Select which arithmetic operations to include (+, −, ×, ÷). For each operation, choose from nine difficulty levels to customize your training precisely to your skill level.
 
 Two Game Modes
-• Task Mode lets you complete a fixed number of tasks (10, 20, 30, 40, or 50).
-• Timed Mode challenges you to solve as many tasks as possible within a time limit (1, 2, 3, 4, or 5 minutes).
+• Practice Mode lets you complete a fixed number of problems (10, 20, 30, 40, or 50).
+• Timed Mode challenges you to solve as many problems as possible within a time limit (1, 2, 3, 4, or 5 minutes).
 
 Challenge your Friends
 You can share a game link to:
-1. Replay a completed game with the exact same tasks to compare scores with friends.
+1. Replay a completed game with the exact same problems to compare scores with friends.
 2. Start a new game with preset settings for a fair and fresh challenge for everyone.
 
 Difficulty Calculation
-Task difficulty is determined using algorithms based on column addition, column subtraction, long multiplication, and long division, creating realistic and well-balanced exercises.
+Problem difficulty is determined using algorithms based on column addition, column subtraction, long multiplication, and long division, creating realistic and well-balanced exercises.
 
 Detailed Results
-After each game, view a detailed summary that includes your selected settings, your performance (accuracy, speed, and score), and a complete list of all your tasks and answers for review.
+After each game, view a detailed summary that includes your selected settings, your performance (accuracy, speed, and score), and a complete list of all your problems and answers for review.
 
 Personal Leaderboard
 Your top 10 results are displayed separately for each combination of settings, allowing you to easily track your progress. You can also review detailed summaries of your top games at any time.

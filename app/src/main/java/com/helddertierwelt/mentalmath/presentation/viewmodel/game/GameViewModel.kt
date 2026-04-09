@@ -24,9 +24,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
-import com.helddertierwelt.mentalmath.data.entity.MathTask
+import com.helddertierwelt.mentalmath.data.entity.MathProblem
 import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
-import com.helddertierwelt.mentalmath.data.repository.MathTaskRepository
+import com.helddertierwelt.mentalmath.data.repository.MathProblemRepository
 import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +47,7 @@ import kotlin.random.Random
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
-    private val mathTaskRepository: MathTaskRepository,
+    private val mathProblemRepository: MathProblemRepository,
     private val gameRecordRepository: GameRecordRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel(), DefaultLifecycleObserver {
@@ -61,8 +61,8 @@ class GameViewModel @Inject constructor(
     private var random: Random = Random(System.currentTimeMillis())
     private val randomMutex = Mutex()
 
-    private val _isGeneratingTask = MutableStateFlow(false)
-    val isGeneratingTask = _isGeneratingTask.asStateFlow()
+    private val _isGeneratingProblem = MutableStateFlow(false)
+    val isGeneratingProblem = _isGeneratingProblem.asStateFlow()
 
 
     fun addLastDigit(number: Int) {
@@ -96,12 +96,12 @@ class GameViewModel @Inject constructor(
         saveState(_gameState.value.copy(input = ""))
     }
 
-    fun generateNewTask() {
+    fun generateNewProblem() {
 
         viewModelScope.launch(Dispatchers.IO) {
-            _isGeneratingTask.value = true
+            _isGeneratingProblem.value = true
 
-            // lock all calls with the random-object to keep the order of tasks deterministic
+            // lock all calls with the random-object to keep the order of problems deterministic
             val (operation, operands) = randomMutex.withLock {
                 val enabledOperators = _gameState.value.enabledOperators
                 val operationSetting = enabledOperators.entries.elementAt(random.nextInt(enabledOperators.size))
@@ -113,26 +113,26 @@ class GameViewModel @Inject constructor(
                     _gameState.value.operand2
                 )
 
-                val mathTask: MathTask = when (operation) {
-                    Operation.ADDITION -> mathTaskRepository.getRandomAdditionTaskByDifficulty(
+                val mathProblem: MathProblem = when (operation) {
+                    Operation.ADDITION -> mathProblemRepository.getRandomAdditionProblemByDifficulty(
                         difficulty,
                         random,
                         lastOperands
                     )
 
-                    Operation.SUBTRACTION -> mathTaskRepository.getRandomSubtractionTaskByDifficulty(
+                    Operation.SUBTRACTION -> mathProblemRepository.getRandomSubtractionProblemByDifficulty(
                         difficulty,
                         random,
                         lastOperands
                     )
 
-                    Operation.MULTIPLICATION -> mathTaskRepository.getRandomMultiplicationTaskByDifficulty(
+                    Operation.MULTIPLICATION -> mathProblemRepository.getRandomMultiplicationProblemByDifficulty(
                         difficulty,
                         random,
                         lastOperands
                     )
 
-                    Operation.DIVISION -> mathTaskRepository.getRandomDivisionTaskByDifficulty(
+                    Operation.DIVISION -> mathProblemRepository.getRandomDivisionProblemByDifficulty(
                         difficulty,
                         random,
                         lastOperands
@@ -140,14 +140,14 @@ class GameViewModel @Inject constructor(
                 }
 
                 val operands = when (operation) {
-                    Operation.SUBTRACTION -> mathTask.operand1 to mathTask.operand2
-                    Operation.DIVISION -> mathTask.operand1 to mathTask.operand2
+                    Operation.SUBTRACTION -> mathProblem.operand1 to mathProblem.operand2
+                    Operation.DIVISION -> mathProblem.operand1 to mathProblem.operand2
                     Operation.ADDITION,
                     Operation.MULTIPLICATION -> {
                         if (random.nextBoolean())
-                            mathTask.operand1 to mathTask.operand2
+                            mathProblem.operand1 to mathProblem.operand2
                         else
-                            mathTask.operand2 to mathTask.operand1
+                            mathProblem.operand2 to mathProblem.operand1
                     }
                 }
                 operation to operands
@@ -165,7 +165,7 @@ class GameViewModel @Inject constructor(
                         isCorrect = null
                     )
                 )
-                _isGeneratingTask.value = false
+                _isGeneratingProblem.value = false
             }
         }
     }
@@ -211,8 +211,8 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun addTaskResultToList() {
-        val taskResult = TaskResult(
+    fun addProblemToList() {
+        val solvedProblem = SolvedProblem(
             operand1 = _gameState.value.operand1,
             operand2 = _gameState.value.operand2,
             operator = _gameState.value.operator,
@@ -225,7 +225,7 @@ class GameViewModel @Inject constructor(
         )
         saveState(
             _gameState.value.copy(
-                tasks = _gameState.value.tasks + taskResult
+                solvedProblems = _gameState.value.solvedProblems + solvedProblem
             )
         )
     }
@@ -268,7 +268,7 @@ class GameViewModel @Inject constructor(
 
     fun startGame(seed: Long) {
         random = Random(seed)
-        generateNewTask()
+        generateNewProblem()
         setStartTimestamp()
         saveState(
             _gameState.value.copy(
@@ -314,7 +314,7 @@ class GameViewModel @Inject constructor(
             activeTime = _gameState.value.activeTime,
             activeScore = activeScore,
             totalScore = totalScore,
-            taskResults = _gameState.value.tasks,
+            solvedProblems = _gameState.value.solvedProblems,
             seed = _gameState.value.seed
         )
 

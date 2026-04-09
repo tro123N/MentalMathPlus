@@ -48,7 +48,7 @@ class GameRecordRepository @Inject constructor(
             totalTime = 0L,
             activeScore = 0f,
             totalScore = 0f,
-            taskResults = emptyList(),
+            solvedProblems = emptyList(),
             seed = 0
         )
     )
@@ -73,7 +73,7 @@ class GameRecordRepository @Inject constructor(
             totalTime = 0L,
             activeScore = 0f,
             totalScore = 0f,
-            taskResults = emptyList(),
+            solvedProblems = emptyList(),
             seed = 0
         )
     )
@@ -191,7 +191,7 @@ class GameRecordRepository @Inject constructor(
             totalTime = 0L,
             activeScore = 0f,
             totalScore = 0f,
-            taskResults = emptyList(),
+            solvedProblems = emptyList(),
             seed = 0
         )
     }
@@ -215,7 +215,7 @@ class GameRecordRepository @Inject constructor(
             totalTime = 0L,
             activeScore = 0f,
             totalScore = 0f,
-            taskResults = emptyList(),
+            solvedProblems = emptyList(),
             seed = 0
         )
     }

@@ -1,1 +1,1 @@
-- trying to fix a bug where the same task appears twice in a row, by eliminating unnecessary async operations
+- trying to fix a bug where the same problem appears twice in a row, by eliminating unnecessary async operations

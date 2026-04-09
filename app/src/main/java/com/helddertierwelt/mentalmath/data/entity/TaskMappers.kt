@@ -18,25 +18,25 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.data.entity
 
-fun AdditionTask.toMathTask() = MathTask(
+fun AdditionProblem.toMathProblem() = MathProblem(
     operand1 = operand1,
     operand2 = operand2,
     difficulty = difficulty
 )
 
-fun SubtractionTask.toMathTask() = MathTask(
+fun SubtractionProblem.toMathProblem() = MathProblem(
     operand1 = operand1,
     operand2 = operand2,
     difficulty = difficulty
 )
 
-fun MultiplicationTask.toMathTask() = MathTask(
+fun MultiplicationProblem.toMathProblem() = MathProblem(
     operand1 = operand1,
     operand2 = operand2,
     difficulty = difficulty
 )
 
-fun DivisionTask.toMathTask() = MathTask(
+fun DivisionProblem.toMathProblem() = MathProblem(
     operand1 = operand1,
     operand2 = operand2,
     difficulty = difficulty

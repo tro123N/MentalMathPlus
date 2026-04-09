@@ -1,0 +1,159 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "c35ad54eff959fea6da12c5e0b850a4c",
+    "entities": [
+      {
+        "tableName": "game_records",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `isModeEnabled` INTEGER NOT NULL, `modeLimit` INTEGER NOT NULL, `additionRangeStart` INTEGER NOT NULL, `additionRangeEnd` INTEGER NOT NULL, `subtractionRangeStart` INTEGER NOT NULL, `subtractionRangeEnd` INTEGER NOT NULL, `multiplicationRangeStart` INTEGER NOT NULL, `multiplicationRangeEnd` INTEGER NOT NULL, `divisionRangeStart` INTEGER NOT NULL, `divisionRangeEnd` INTEGER NOT NULL, `totalAnswers` INTEGER NOT NULL, `correctAnswers` INTEGER NOT NULL, `activeTime` INTEGER NOT NULL, `totalTime` INTEGER NOT NULL, `activeScore` REAL NOT NULL, `totalScore` REAL NOT NULL, `seed` INTEGER NOT NULL, `solvedProblems` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isModeEnabled",
+            "columnName": "isModeEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "modeLimit",
+            "columnName": "modeLimit",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "additionRangeStart",
+            "columnName": "additionRangeStart",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "additionRangeEnd",
+            "columnName": "additionRangeEnd",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subtractionRangeStart",
+            "columnName": "subtractionRangeStart",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subtractionRangeEnd",
+            "columnName": "subtractionRangeEnd",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "multiplicationRangeStart",
+            "columnName": "multiplicationRangeStart",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "multiplicationRangeEnd",
+            "columnName": "multiplicationRangeEnd",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "divisionRangeStart",
+            "columnName": "divisionRangeStart",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "divisionRangeEnd",
+            "columnName": "divisionRangeEnd",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalAnswers",
+            "columnName": "totalAnswers",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "correctAnswers",
+            "columnName": "correctAnswers",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "activeTime",
+            "columnName": "activeTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalTime",
+            "columnName": "totalTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "activeScore",
+            "columnName": "activeScore",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalScore",
+            "columnName": "totalScore",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "seed",
+            "columnName": "seed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "solvedProblems",
+            "columnName": "solvedProblems",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_game_records_isModeEnabled_modeLimit_additionRangeStart_additionRangeEnd_subtractionRangeStart_subtractionRangeEnd_multiplicationRangeStart_multiplicationRangeEnd_divisionRangeStart_divisionRangeEnd",
+            "unique": false,
+            "columnNames": [
+              "isModeEnabled",
+              "modeLimit",
+              "additionRangeStart",
+              "additionRangeEnd",
+              "subtractionRangeStart",
+              "subtractionRangeEnd",
+              "multiplicationRangeStart",
+              "multiplicationRangeEnd",
+              "divisionRangeStart",
+              "divisionRangeEnd"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_game_records_isModeEnabled_modeLimit_additionRangeStart_additionRangeEnd_subtractionRangeStart_subtractionRangeEnd_multiplicationRangeStart_multiplicationRangeEnd_divisionRangeStart_divisionRangeEnd` ON `${TABLE_NAME}` (`isModeEnabled`, `modeLimit`, `additionRangeStart`, `additionRangeEnd`, `subtractionRangeStart`, `subtractionRangeEnd`, `multiplicationRangeStart`, `multiplicationRangeEnd`, `divisionRangeStart`, `divisionRangeEnd`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c35ad54eff959fea6da12c5e0b850a4c')"
+    ]
+  }
+}

@@ -67,8 +67,9 @@ fun SettingsAndStatsCard(
     val activity = LocalActivity.current as ViewModelStoreOwner
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
     val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
-
+    val lineHeight = fontSize / 1.6f
     val themeMode = settingsViewModel.settingsState.collectAsState().value.themeMode
+
     val statisticsGameRecord =
         if (statisticsViewModel.showLoadedGameRecord.collectAsState().value) {
             statisticsViewModel.loadedGameRecord.collectAsState().value
@@ -98,15 +99,15 @@ fun SettingsAndStatsCard(
             ) {
                 Text(
                     text = "Seed: ",
-                    fontSize = fontSize / 1.6f,
-                    modifier = modifier.padding(start = 16.dp),
-                    color = MaterialTheme.colorScheme.onPrimary
+                    fontSize = lineHeight,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    lineHeight = lineHeight
                 )
                 Text(
                     text = "${statisticsGameRecord.seed}",
-                    fontSize = fontSize / 1.6f,
-                    modifier = modifier.padding(end = 16.dp),
-                    color = MaterialTheme.colorScheme.onPrimary
+                    fontSize = lineHeight,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    lineHeight = lineHeight
                 )
             }
             HorizontalDivider(
