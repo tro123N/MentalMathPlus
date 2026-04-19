@@ -79,7 +79,6 @@ Thank you for contributing!
 
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10\nScores</string>
-    <string name="total_score">Total\u0020\u0020\nScore</string>
     <string name="new_score">new</string>
 
     <!-- Game Screen -->

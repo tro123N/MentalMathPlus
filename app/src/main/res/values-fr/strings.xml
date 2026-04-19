@@ -1,73 +1,95 @@
 <resources>
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
-    <string name="mode_instruction">"Mode de jeu et limite"</string>
-    <string name="operator_instruction">"Operations et difficulté"</string>
+    <string name="mode_instruction">Mode de jeu et limite</string>
+    <string name="operator_instruction">Operations et difficulté</string>
     <string name="start">Commencer</string>
 
     <!-- Settings Screen: Menu -->
     <string name="share_game">Duel</string>
     <string name="random_game">Partie aléatoire</string>
-    <string name="history">"Historique"</string>
-    <string name="phone_pad">"Clavier téléphonique"</string>
-    <string name="number_pad">"Pavé numérique"</string>
-    <string name="right_to_left">"Droite à gauche"</string>
-    <string name="left_to_right">"Gauche à droite"</string>
-    <string name="reminder_off">"Pas de rappels"</string>
-    <string name="daily_reminder">"Rappels journaliers"</string>
-    <string name="every_three_days">"Tous les 3 jours"</string>
-    <string name="weekly_reminder">"Rappels hebdomadaires"</string>
-    <string name="light_mode">"Thème clair"</string>
-    <string name="dark_mode">"Thème sombre"</string>
-    <string name="system_mode">"Thème du système"</string>
-    <string name="about">"À propos"</string>
-    <string name="feedback">"Commenter"</string>
-    <string name="recommend">"Recommander"</string>
-    <string name="donate">"Don"</string>
-    <string name="reset_app">"Réinitialiser l’app"</string>
+    <string name="history">Historique</string>
+    <string name="phone_pad">Clavier téléphonique</string>
+    <string name="number_pad">Pavé numérique</string>
+    <string name="right_to_left">Droite à gauche</string>
+    <string name="left_to_right">Gauche à droite</string>
+    <string name="reminder_off">Pas de rappels</string>
+    <string name="daily_reminder">Rappels journaliers</string>
+    <string name="every_three_days">Tous les 3 jours</string>
+    <string name="weekly_reminder">Rappels hebdomadaires</string>
+    <string name="light_mode">Thème clair</string>
+    <string name="dark_mode">Thème sombre</string>
+    <string name="system_mode">Thème du système</string>
+    <string name="about">À propos</string>
+    <string name="feedback">Commenter</string>
+    <string name="recommend">Recommander</string>
+    <string name="donate">Don</string>
+    <string name="reset_app">Réinitialiser</string>
+    <string name="no_browser">Aucune application disponible pour ouvrir ce lien.</string>
+    <string name="no_share">Aucune application disponible pour partager ce contenu.</string>
+    <string name="no_app_store">Aucune boutique d’applications disponible pour ouvrir cette page.</string>
+    <string name="no_mail">Aucune application disponible pour envoyer des e-mails.</string>
 
     <!-- Settings Screen: Leaderboard -->
-    <string name="active_score">Score\nActif</string>
-    <string name="total_score">Score\nTotal</string>
+    <string name="top_ten_scores">Top 10\nscores</string>
     <string name="new_score">actuel</string>
 
+    <!-- Game Screen -->
+    <string name="rtl_toast">Saisie de droite à gauche</string>
+    <string name="ltr_toast">Saisie de gauche à droite</string>
+
     <!-- Statistics Screen -->
-    <string name="seed">"Graine : %d"</string>
-    <string name="result">"Résultat"</string>
-    <string name="active">"Actif :"</string>
-    <string name="total">"Total :"</string>
-    <string name="solution">"Solution"</string>
-    <string name="input">"Saisie"</string>
+    <string name="result">Résultat</string>
+    <string name="seed">Seed : %d</string>
+    <string name="problem_limit">Limite de problèmes</string>
+    <string name="time_limit">Limite de temps</string>
+    <string name="difficulty_addition">Difficulté (addition)</string>
+    <string name="difficulty_subtraction">Difficulté (soustraction)</string>
+    <string name="difficulty_multiplication">Difficulté (multiplication)</string>
+    <string name="difficulty_division">Difficulté (division)</string>
+    <string name="time_spent">Temps écoulé</string>
+    <string name="problems_completed">Problèmes résolus</string>
+    <string name="correct_answers">Réponses correctes</string>
+    <string name="incorrect_answers">Réponses incorrectes</string>
+    <string name="accuracy">Précision</string>
+    <string name="avg_time_per_correct_answer">Temps moyen par réponse correcte</string>
+    <string name="score">Score</string>
+    <string name="solution">Solution</string>
+    <string name="input">Saisie</string>
+    <string name="no_problems">Aucun problème résolu</string>
     <string name="done">Retour</string>
 
+    <!-- History Screen -->
+    <string name="no_games">Aucune partie avec un score</string>
+
     <!-- PopUps -->
-    <string name="notification_popup_title">"Notifications désactivées"</string>
-    <string name="notification_popup_description">"Les rappels utilisent des notifications : vous devez autoriser les notifications dans les paramètres avant d’activer les rappels.\n\nNote: Les paramètres d’optimisation de la batterie pourraient bloquer les notifications."</string>
-    <string name="notification_popup_confirmation_text">"Ouvrir les paramètres"</string>
-    <string name="notification_toast_text">"Les rappels se font en fin d’après-midi."</string>
+    <string name="notification_popup_title">Notifications désactivées</string>
+    <string name="notification_popup_description">Les rappels utilisent des notifications : vous devez autoriser les notifications dans les paramètres avant d’activer les rappels.\n\nNote: Les paramètres d’optimisation de la batterie pourraient bloquer les notifications.</string>
+    <string name="notification_popup_confirmation_text">Ouvrir les paramètres</string>
+    <string name="notification_toast_text">Les rappels se font en fin d’après-midi.</string>
 
-    <string name="reset_app_popup_title">"Réinitialiser l’app ?"</string>
-    <string name="reset_app_popup_description">"Supprime tous les scores et tous les paramètres."</string>
-    <string name="reset_app_popup_confirmation_text">"Réinitialiser"</string>
+    <string name="reset_app_popup_title">Réinitialiser l’app?</string>
+    <string name="reset_app_popup_description">Supprime tous les scores et tous les paramètres.</string>
+    <string name="reset_app_popup_confirmation_text">Réinitialiser</string>
 
-    <string name="quit_game_popup_title">"Quitter ?"</string>
-    <string name="quit_game_popup_description">"Votre progression sera perdue."</string>
-    <string name="quit_game_popup_confirmation_text">"Quitter"</string>
-    <string name="quit_game_popup_cancel_text">"Continuer"</string>
+    <string name="quit_game_popup_title">Quitter?</string>
+    <string name="quit_game_popup_description">Votre progression sera perdue.</string>
+    <string name="quit_game_popup_confirmation_text">Quitter</string>
+    <string name="quit_game_popup_cancel_text">Continuer</string>
 
-    <string name="app_link_game_popup_title">"Jouer la partie donnée par le lien ?"</string>
-    <string name="app_link_popup_description_new_game">"Lance une partie dont les réglages sont prédéfinis, avec une graine aléatoire.\n\nSi une partie est en cours, sa progression sera perdue."</string>
-    <string name="app_link_popup_description_challenge">"Essaye de battre son score en rejouant la même partie.\n\nSi une partie est en cours, sa progression sera perdue."</string>
-    <string name="app_link_popup_confirmation_text">"Démarrer"</string>
+    <string name="app_link_game_popup_title">Jouer la partie donnée par le lien ?</string>
+    <string name="app_link_popup_description_new_game">Lance une partie dont les réglages sont prédéfinis, avec une graine aléatoire.\n\nSi une partie est en cours, sa progression sera perdue.</string>
+    <string name="app_link_popup_description_challenge">Essaye de battre son score en rejouant la même partie.\n\nSi une partie est en cours, sa progression sera perdue.</string>
+    <string name="app_link_popup_confirmation_text">Démarrer</string>
 
-    <string name="already_played_popup_title">"Partie déjà joué"</string>
-    <string name="already_played_popup_description">"Tu as déjà joué une partie avec la même graine et les mêmes paramètres.\n\nEssaye un autre lien, ou démarre une nouvelle partie."</string>
+    <string name="already_played_popup_title">Partie déjà jouée</string>
+    <string name="already_played_popup_description">Tu as déjà joué une partie avec la même graine et les mêmes paramètres.\n\nEssaye un autre lien, ou démarre une nouvelle partie.</string>
 
-    <string name="cancel">"Abandonner"</string>
-    <string name="ok">"OK"</string>
+    <string name="cancel">Abandonner</string>
+    <string name="ok">OK</string>
 
     <!-- Result PopUp -->
-    <string name="waiting_title">"En attente de votre adversaire…"</string>
+    <string name="waiting_title">En attente de votre adversaire…</string>
     <string-array name="waiting_descriptions">
         <item>Toi : %1$.2f | Adversaire : ??\nGraine : %2$d\n\nBoom, joli score, voyons si iel peut faire mieux !</item>
         <item>Toi : %1$.2f | Adversaire : ??\nGraine : %2$d\n\nTon score est enregistré, c’est à son tour !</item>
@@ -76,7 +98,7 @@
         <item>Toi : %1$.2f | Adversaire : ??\nGraine : %2$d\n\nÇa c’est fait, plus qu’à lui mettre la pression maintenant !</item>
     </string-array>
 
-    <string name="easy_win_title">"Easy win"</string>
+    <string name="easy_win_title">Easy win</string>
     <string-array name="easy_win_descriptions">
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nFacile, s’iel ne joue pas…</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nReste à trouver un adversaire qui accepte le challenge.</item>
@@ -87,7 +109,7 @@
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nTu aurais pu gagner les yeux fermés…</item>
     </string-array>
 
-    <string name="anyone_here_title">"Anyone here?"</string>
+    <string name="anyone_here_title">Anyone here?</string>
     <string-array name="anyone_here_descriptions">
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nZéro points ?</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nY’a quelqu’un ?</item>
@@ -97,7 +119,7 @@
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nD’un certain point de vue, personne n’a perdu.</item>
     </string-array>
 
-    <string name="win_title">"You won"</string>
+    <string name="win_title">You won</string>
     <string-array name="win_descriptions">
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nVoilà qui fait chauffer le cerveau !</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nOhhh, la belle concentration !</item>
@@ -109,7 +131,7 @@
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nTu pourrais donner des cours à ton adversaire ?</item>
     </string-array>
 
-    <string name="close_win_title">"Close call"</string>
+    <string name="close_win_title">Close call</string>
     <string-array name="close_win_descriptions">
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nC’était serré, mais c’est passé !</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nOuf, c’était serré !</item>
@@ -120,7 +142,7 @@
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nTu as trouvé un adversaire à ton niveau, mais ça reste toi le boss.</item>
     </string-array>
 
-    <string name="draw_title">"Draw"</string>
+    <string name="draw_title">Draw</string>
     <string-array name="draw_descriptions">
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nÉgalité ! Il faut jouer la belle !</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nPas de gagnant : pas de perdant. Pas de perdant : pas de problème. Pas de problème : pas de problème.</item>
@@ -130,7 +152,7 @@
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nIl faut en refaire une !</item>
     </string-array>
 
-    <string name="close_defeat_title">"Close call"</string>
+    <string name="close_defeat_title">Close call</string>
     <string-array name="close_defeat_descriptions">
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nOhh non ! C’était si proche !</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nTrop triste de perdre si près de la victoire…</item>
@@ -143,7 +165,7 @@
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nLa chance, ça tourne ! La prochaine je parie sur toi !</item>
     </string-array>
 
-    <string name="defeat_title">"Defeat"</string>
+    <string name="defeat_title">Defeat</string>
     <string-array name="defeat_descriptions">
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nT’étais pas réveillé, c’est pas grave.</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nJ’avais parié sur toi !!!</item>
@@ -157,9 +179,9 @@
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nOn lui laisse ses 15 secondes de célébrité ?</item>
     </string-array>
 
-    <string name="result_popup_confirmation_text">"Partager"</string>
-    <string name="result_share_message_waiting">"Moi : %1$.2f | Toi : ??\nGraine : %2$d"</string>
-    <string name="result_share_message">"Moi : %1$.2f | Toi : %2$.2f\nGraine : %3$d"</string>
+    <string name="result_popup_confirmation_text">Partager</string>
+    <string name="result_share_message_waiting">Moi : %1$.2f | Toi : ??\nGraine : %2$d</string>
+    <string name="result_share_message">Moi : %1$.2f | Toi : %2$.2f\nGraine : %3$d</string>
     <string name="share_challenge">%1$.2f points sur Mental Math, essaye de me battre !\nRejoue ma partie avec la graine %2$d:\n\n%3$s</string>
     <string name="share_new_game">Une partie sur Mental Math ?\nSuit le lien pour démarrer une partie avec ma configuration et ma graine :\n%1$d\n\n%2$s</string>
 
