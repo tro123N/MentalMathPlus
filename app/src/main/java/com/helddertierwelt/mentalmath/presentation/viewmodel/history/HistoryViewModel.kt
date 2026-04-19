@@ -38,9 +38,6 @@ class HistoryViewModel @Inject constructor(
     private val _allGames = MutableStateFlow<List<GameRecord>>(emptyList())
     val allGames = _allGames.asStateFlow()
 
-    private val _showActiveScore = MutableStateFlow(false)
-    val showActiveScore = _showActiveScore.asStateFlow()
-
     private val _isEntryClicked = MutableStateFlow(false)
     val isEntryClicked = _isEntryClicked.asStateFlow()
 
@@ -54,14 +51,6 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
-    fun toggleShowActiveScore() {
-        _showActiveScore.value = !_showActiveScore.value
-    }
-
-    fun setShowActiveScore(showActiveScore: Boolean) {
-        _showActiveScore.value = showActiveScore
-    }
-
     fun setSortMode(sortMode: SortMode) {
         _sortMode.value = sortMode
     }
@@ -71,7 +60,6 @@ class HistoryViewModel @Inject constructor(
     }
 
     fun resetHistory() {
-        setShowActiveScore(false)
         setSortMode(SortMode.TIME_DESCENDING)
         setIsEntryClicked(false)
         loadAllGames()

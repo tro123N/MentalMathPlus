@@ -18,7 +18,10 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.settings.menu
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -48,6 +51,7 @@ fun LogoRow(
     imageId: Int,
     intentProvider: () -> Intent,
     text: String,
+    errorMessage: String,
 ) {
     val context = LocalContext.current
     Row(
@@ -55,7 +59,18 @@ fun LogoRow(
             .fillMaxWidth()
             .padding(horizontal = 12.dp)
             .clip(RoundedCornerShape(16.dp))
-            .clickable { context.startActivity(intentProvider()) },
+            .clickable {
+                try {
+                    context.startActivity(intentProvider())
+                } catch (e: ActivityNotFoundException) {
+                    Log.e("IntentRow", "No app found to start activity: ${e.message}")
+                    Toast.makeText(
+                        context,
+                        errorMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Spacer(modifier = Modifier.width(16.dp))

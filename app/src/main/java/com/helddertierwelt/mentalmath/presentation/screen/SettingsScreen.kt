@@ -106,9 +106,8 @@ fun SettingsScreen(
     // variables
     val settingsState = settingsViewModel.settingsState.collectAsState().value
     val isLoaded = settingsViewModel.isLoaded.collectAsState().value
-    val bestTotalGames = settingsViewModel.bestTotalGames.collectAsState().value
-    val bestActiveGames = settingsViewModel.bestActiveGames.collectAsState().value
-    val bestGamesEmpty = bestTotalGames.isEmpty() && bestActiveGames.isEmpty()
+    val bestGames = settingsViewModel.bestGames.collectAsState().value
+    val bestGamesEmpty = bestGames.isEmpty()
     val isSliderActive = settingsViewModel.isSliderActive.collectAsState().value
     val isStartButtonClicked = settingsViewModel.isStartButtonClicked.collectAsState().value
 

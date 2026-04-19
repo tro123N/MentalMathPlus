@@ -23,9 +23,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,12 +42,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatsColumn(
     fontSize: TextUnit,
     statsText: String,
     iconId: Int,
     iconSize: Dp,
+    tooltipText: String? = null,
     iconColor: Color? = null,
 ) {
 
@@ -49,12 +58,34 @@ fun StatsColumn(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(8.dp))
-        Icon(
-            painter = painterResource(iconId),
-            contentDescription = "modeIcon",
-            modifier = Modifier.size(iconSize),
-            tint = iconColor ?: Color.Unspecified
-        )
+        val iconContent: @Composable () -> Unit = {
+            Icon(
+                painter = painterResource(iconId),
+                contentDescription = tooltipText ?: "icon",
+                modifier = Modifier.size(iconSize),
+                tint = iconColor ?: Color.Unspecified
+            )
+        }
+        if (tooltipText != null) {
+            val tooltipState = rememberTooltipState()
+            TooltipBox(
+                state = tooltipState,
+                positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above, 8.dp),
+                tooltip = {
+                    PlainTooltip(
+                        shape = RoundedCornerShape(16.dp),
+                        containerColor = MaterialTheme.colorScheme.onPrimary,
+                        contentColor = MaterialTheme.colorScheme.onSecondary,
+                    ) {
+                        Text(tooltipText)
+                    }
+                }
+            ) {
+                iconContent()
+            }
+        } else {
+            iconContent()
+        }
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = statsText,

@@ -24,18 +24,27 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatsProgressColumn(
     modeEnabled: Boolean,
@@ -44,46 +53,44 @@ fun StatsProgressColumn(
     totalAnswers: Int,
     activeTime: Long,
 ) {
-
+    val tooltipText = if (modeEnabled) {
+        stringResource(R.string.time_spent)
+    } else {
+        stringResource(R.string.problems_completed)
+    }
+    val tooltipState = rememberTooltipState()
     Column(
         modifier = Modifier.fillMaxHeight(),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(8.dp))
-        Icon(
-            painter = painterResource(if (modeEnabled) R.drawable.timer_24dp else R.drawable.tag_24dp),
-            contentDescription = "progressIcon",
-            modifier = Modifier.size(iconSize),
-            tint = MaterialTheme.colorScheme.onPrimary
-        )
+        TooltipBox(
+            state = tooltipState,
+            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above, 8.dp),
+            tooltip = {
+                PlainTooltip(
+                    shape = RoundedCornerShape(16.dp),
+                    containerColor = MaterialTheme.colorScheme.onPrimary,
+                    contentColor = MaterialTheme.colorScheme.onSecondary,
+                ) {
+                    Text(tooltipText)
+                }
+            }
+        ) {
+            Icon(
+                painter = painterResource(if (modeEnabled) R.drawable.timer_24dp else R.drawable.tag_24dp),
+                contentDescription = tooltipText,
+                modifier = Modifier.size(iconSize),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = if (modeEnabled) formatTime(activeTime) else "$totalAnswers",
+            text = if (modeEnabled) formatTimeWithDecimalSeconds(activeTime) else "$totalAnswers",
             fontSize = fontSize,
             color = MaterialTheme.colorScheme.onPrimary
         )
         Spacer(modifier = Modifier.height(8.dp))
-    }
-}
-
-fun formatTime(ms: Long): String {
-    val seconds = ms / 1000
-    val hours = seconds / 3600
-    val minutes = (seconds % 3600) / 60
-    val remainingSeconds = seconds % 60
-
-    return buildString {
-        if (hours > 0) {
-            append("$hours:")
-            append(minutes.toString().padStart(2, '0'))
-            append(":")
-            append(remainingSeconds.toString().padStart(2, '0'))
-        } else if (minutes > 0) {
-            append("$minutes:")
-            append(remainingSeconds.toString().padStart(2, '0'))
-        } else {
-            append("${remainingSeconds}s")
-        }
     }
 }

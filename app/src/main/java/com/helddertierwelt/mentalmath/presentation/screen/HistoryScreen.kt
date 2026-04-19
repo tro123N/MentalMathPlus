@@ -72,7 +72,6 @@ fun HistoryScreen(
 
     // variables
     val allGames = historyViewModel.allGames.collectAsState().value
-    val showActiveScore = historyViewModel.showActiveScore.collectAsState().value
     val currentSortMode = historyViewModel.sortMode.collectAsState().value
     val isEntryClicked = historyViewModel.isEntryClicked.collectAsState().value
 
@@ -103,9 +102,7 @@ fun HistoryScreen(
                         .padding(24.dp),
                 ) {
                     HistoryHeadCard(
-                        iconSize = iconSize,
-                        showActiveScore = showActiveScore,
-                        onClick = { historyViewModel.toggleShowActiveScore() }
+                        iconSize = iconSize
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Column(
@@ -118,7 +115,6 @@ fun HistoryScreen(
                     ) {
                         HistoryEntriesCard(
                             gameRecords = allGames,
-                            showActiveScore = showActiveScore,
                             currentSortMode = currentSortMode,
                             fontSize = 12.sp,
                             isEnabled = !isEntryClicked,

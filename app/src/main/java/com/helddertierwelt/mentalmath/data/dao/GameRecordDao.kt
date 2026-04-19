@@ -43,41 +43,11 @@ interface GameRecordDao {
         divisionRangeStart = :divisionRangeStart AND
         divisionRangeEnd = :divisionRangeEnd AND
         activeScore > 0.00
-        ORDER BY activeScore DESC
+        ORDER BY activeScore DESC, id DESC
         LIMIT 10
         """
     )
     suspend fun findBestActiveGameRecords(
-        isModeEnabled: Boolean,
-        modeLimit: Int,
-        additionRangeStart: Int,
-        additionRangeEnd: Int,
-        subtractionRangeStart: Int,
-        subtractionRangeEnd: Int,
-        multiplicationRangeStart: Int,
-        multiplicationRangeEnd: Int,
-        divisionRangeStart: Int,
-        divisionRangeEnd: Int
-    ): List<GameRecord>
-
-    @Query(
-        """SELECT * FROM game_records WHERE
-        isModeEnabled = :isModeEnabled AND
-        modeLimit = :modeLimit AND
-        additionRangeStart = :additionRangeStart AND
-        additionRangeEnd = :additionRangeEnd AND
-        subtractionRangeStart = :subtractionRangeStart AND
-        subtractionRangeEnd = :subtractionRangeEnd AND
-        multiplicationRangeStart = :multiplicationRangeStart AND
-        multiplicationRangeEnd = :multiplicationRangeEnd AND
-        divisionRangeStart = :divisionRangeStart AND
-        divisionRangeEnd = :divisionRangeEnd AND
-        totalScore > 0.00
-        ORDER BY totalScore DESC
-        LIMIT 10
-        """
-    )
-    suspend fun findBestTotalGameRecords(
         isModeEnabled: Boolean,
         modeLimit: Int,
         additionRangeStart: Int,
@@ -123,7 +93,7 @@ interface GameRecordDao {
     @Query("DELETE FROM game_records")
     suspend fun deleteAll()
 
-    @Query("SELECT * FROM game_records WHERE totalScore > 0 OR activeScore > 0 ORDER BY id DESC")
+    @Query("SELECT * FROM game_records WHERE activeScore > 0 ORDER BY id DESC")
     suspend fun findAll(): List<GameRecord>
 
     @Query(

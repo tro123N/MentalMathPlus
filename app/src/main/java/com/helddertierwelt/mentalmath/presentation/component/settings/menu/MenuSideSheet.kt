@@ -205,13 +205,14 @@ fun MenuSideSheet(
                     LogoRow(
                         size = logoSize,
                         imageId = R.drawable.mental_math,
-                        text = " v${BuildConfig.VERSION_NAME}",
                         intentProvider = {
                             Intent(
                                 Intent.ACTION_VIEW,
                                 "https://codeberg.org/Mental-Math/MentalMath/releases/tag/v${BuildConfig.VERSION_NAME}".toUri()
                             )
-                        }
+                        },
+                        text = " v${BuildConfig.VERSION_NAME}",
+                        errorMessage = stringResource(R.string.no_browser)
                     )
 
                     // Share Game Link
@@ -237,7 +238,8 @@ fun MenuSideSheet(
                                 },
                                 "Share Game"
                             )
-                        }
+                        },
+                        errorMessage = stringResource(R.string.no_share)
                     )
 
                     // Random Game
@@ -339,7 +341,8 @@ fun MenuSideSheet(
                                 Intent.ACTION_VIEW,
                                 "https://mental-math.codeberg.page".toUri()
                             )
-                        }
+                        },
+                        errorMessage = stringResource(R.string.no_browser)
                     )
 
                     // Feedback Link
@@ -359,7 +362,8 @@ fun MenuSideSheet(
                                     )
                                     putExtra(Intent.EXTRA_SUBJECT, "Mental Math: Feedback")
                                 }
-                        }
+                        },
+                        errorMessage = stringResource(R.string.no_mail)
                     )
 
                     // Recommendation Link
@@ -374,7 +378,8 @@ fun MenuSideSheet(
                                 Intent.ACTION_VIEW,
                                 "market://details?id=com.helddertierwelt.mentalmath".toUri()
                             )
-                        }
+                        },
+                        errorMessage = stringResource(R.string.no_app_store)
                     )
 
                     // Donation Link
@@ -389,7 +394,8 @@ fun MenuSideSheet(
                                 Intent.ACTION_VIEW,
                                 "https://ko-fi.com/mental_math".toUri()
                             )
-                        }
+                        },
+                        errorMessage = stringResource(R.string.no_browser)
                     )
                 }
 

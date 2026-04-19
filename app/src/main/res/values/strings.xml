@@ -72,9 +72,13 @@ Thank you for contributing!
     <string name="recommend">Recom\u200Bmend</string>
     <string name="donate">Donate</string>
     <string name="reset_app">Reset App</string>
+    <string name="no_browser">No app available to open this link.</string>
+    <string name="no_share">No app available to share this content.</string>
+    <string name="no_app_store">No app store available to open this page.</string>
+    <string name="no_mail">No app available to send emails.</string>
 
     <!-- Settings Screen: Leaderboard -->
-    <string name="active_score">Active\nScore</string>
+    <string name="top_ten_scores">Top 10\nScores</string>
     <string name="total_score">Total\u0020\u0020\nScore</string>
     <string name="new_score">new</string>
 
@@ -83,10 +87,21 @@ Thank you for contributing!
     <string name="ltr_toast">Left-To-Right Input</string>
 
     <!-- Statistics Screen -->
-    <string name="seed">Seed: %d</string>
     <string name="result">Result</string>
-    <string name="active">Active:</string>
-    <string name="total">Total:</string>
+    <string name="seed">Seed: %d</string>
+    <string name="problem_limit">Problem Limit</string>
+    <string name="time_limit">Time Limit</string>
+    <string name="difficulty_addition">Addition Difficulty</string>
+    <string name="difficulty_subtraction">Subtraction Difficulty</string>
+    <string name="difficulty_multiplication">Multiplication Difficulty</string>
+    <string name="difficulty_division">Division Difficulty</string>
+    <string name="time_spent">Time Spent</string>
+    <string name="problems_completed">Problems Completed</string>
+    <string name="correct_answers">Correct Answers</string>
+    <string name="incorrect_answers">Incorrect Answers</string>
+    <string name="accuracy">Accuracy</string>
+    <string name="avg_time_per_correct_answer">Time Spent/Correct Answers</string>
+    <string name="score">Score</string>
     <string name="solution">Solution</string>
     <string name="input">Input</string>
     <string name="no_problems">No problems solved</string>

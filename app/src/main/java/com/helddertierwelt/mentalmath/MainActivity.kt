@@ -143,7 +143,7 @@ class MainActivity : ComponentActivity() {
                         titleSize = titleFontSize,
                         descriptionSize = popUpDescriptionFontSize,
                         title = stringResource(R.string.app_link_game_popup_title),
-                        description = if (gameRecordFromAppLink.value.totalScore < 0f) {
+                        description = if (gameRecordFromAppLink.value.activeScore < 0f) {
                             stringResource(R.string.app_link_popup_description_new_game)
                         } else {
                             stringResource(R.string.app_link_popup_description_challenge)

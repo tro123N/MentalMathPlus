@@ -48,7 +48,6 @@ fun ScoreList(
     gameRecords: List<GameRecord>,
     fontSizeScore: TextUnit,
     lastGameId: Int,
-    scoreSelector: (GameRecord) -> Float,
     onClick: (GameRecord) -> Unit,
     isEnabled: Boolean = true
 ) {
@@ -84,7 +83,7 @@ fun ScoreList(
                     fontWeight = Bold
                 )
                 Text(
-                    text = AppLocale.format("%.2f", scoreSelector(game)),
+                    text = AppLocale.format("%.2f", game.activeScore),
                     color = color,
                     fontSize = fontSizeScore,
                     textAlign = TextAlign.End,

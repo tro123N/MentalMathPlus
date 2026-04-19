@@ -187,7 +187,7 @@ fun StatisticsScreen(
                                 bitmap,
                                 AppLocale.format(
                                     shareChallengeText,
-                                    statisticsGameRecord.totalScore,
+                                    statisticsGameRecord.activeScore,
                                     statisticsGameRecord.seed,
                                     createLink()
                                 )
@@ -220,8 +220,10 @@ fun StatisticsScreen(
                         horizontalAlignment = Alignment.Start
                     ) {
                         SettingsAndStatsCard(
-                            fontSize = resultFontSize,
-                            iconSize = modeIconSize,
+                            scoreFontSize = titleFontSize,
+                            statsFontSize = resultFontSize,
+                            scoreIconSize = doneIconSize,
+                            statsIconSize = modeIconSize,
                             modifier = Modifier.onGloballyPositioned { coordinates ->
                                 if (!hasCapturedCoordinates) {
                                     val size = coordinates.size
@@ -270,7 +272,7 @@ fun StatisticsScreen(
     val showLinkGamePopUp by statisticsViewModel.showLinkGamePopUp.collectAsState()
     val seed by statisticsViewModel.seedFromLink.collectAsState()
     val linkScore by statisticsViewModel.scoreFromLink.collectAsState()
-    val currentScore = statisticsViewModel.lastGameRecord.collectAsState().value.totalScore
+    val currentScore = statisticsViewModel.lastGameRecord.collectAsState().value.activeScore
     if (showLinkGamePopUp) {
         val gamePopUpInfo = getGamePopUpInfo(currentScore, linkScore, seed)
         val shareMessage = if (linkScore < 0f) {

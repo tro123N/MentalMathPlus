@@ -38,7 +38,7 @@ object SettingsLinkUtil {
             record.divisionRangeStart.toString(),
             record.divisionRangeEnd.toString(),
             "%019d".format(Locale.ENGLISH, record.seed),
-            "%06d".format(Locale.ENGLISH, (record.totalScore * 100).toInt())
+            "%06d".format(Locale.ENGLISH, (record.activeScore * 100).toInt())
         ).joinToString("").toBigInteger().toByteArray()
 
         val encoded = Base64.encodeToString(settingsStringByteArray, Base64.URL_SAFE or Base64.NO_WRAP)
@@ -49,12 +49,12 @@ object SettingsLinkUtil {
         val byteArray = Base64.decode(encoded, Base64.URL_SAFE or Base64.NO_WRAP)
         val rawString = BigInteger(byteArray).toString()
         val bigIntString = when (rawString.length) {
-            in 28..29 -> rawString.padStart(29, '0') // without totalScore
-            in 34..35 -> rawString.padStart(35, '0') // with totalScore
+            in 28..29 -> rawString.padStart(29, '0') // without score
+            in 34..35 -> rawString.padStart(35, '0') // with score
             else -> rawString
         }
 
-        val hasTotalScore = bigIntString.length == 35
+        val hasScore = bigIntString.length == 35
 
         return GameRecord(
             id = 0,
@@ -72,9 +72,9 @@ object SettingsLinkUtil {
             correctAnswers = 0,
             activeTime = 0L,
             totalTime = 0L,
-            activeScore = 0f,
+            activeScore = if (hasScore) bigIntString.substring(29, 35).toInt() / 100f else -1f,
             seed = bigIntString.substring(10, 29).toLong(),
-            totalScore = if (hasTotalScore) bigIntString.substring(29, 35).toInt() / 100f else -1f,
+            totalScore = 0f,
             solvedProblems = emptyList()
         )
     }
@@ -126,10 +126,10 @@ object SettingsLinkUtil {
             if (seed.toLongOrNull() == null) return false
 
             if (bigIntString.length == 35) {
-                val totalScoreRaw = bigIntString.substring(29, 35).toInt()
-                val totalScore = totalScoreRaw / 100f
-                Log.d("SettingsLinkUtil", "totalScoreRaw: $totalScoreRaw, totalScore: $totalScore")
-                if (totalScore !in 0f..9999.99f) return false
+                val activeScoreRaw = bigIntString.substring(29, 35).toInt()
+                val activeScore = activeScoreRaw / 100f
+                Log.d("SettingsLinkUtil", "activeScoreRaw: $activeScoreRaw, activeScore: $activeScore")
+                if (activeScore !in 0f..9999.99f) return false
             }
 
             return true

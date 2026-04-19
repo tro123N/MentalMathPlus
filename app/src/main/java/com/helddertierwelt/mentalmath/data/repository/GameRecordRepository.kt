@@ -118,32 +118,6 @@ class GameRecordRepository @Inject constructor(
         )
     }
 
-    suspend fun findBestTotalGameRecords(
-        isModeEnabled: Boolean,
-        modeLimit: Int,
-        additionRangeStart: Int,
-        additionRangeEnd: Int,
-        subtractionRangeStart: Int,
-        subtractionRangeEnd: Int,
-        multiplicationRangeStart: Int,
-        multiplicationRangeEnd: Int,
-        divisionRangeStart: Int,
-        divisionRangeEnd: Int
-    ): List<GameRecord> {
-        return gameRecordDao.findBestTotalGameRecords(
-            isModeEnabled,
-            modeLimit,
-            additionRangeStart,
-            additionRangeEnd,
-            subtractionRangeStart,
-            subtractionRangeEnd,
-            multiplicationRangeStart,
-            multiplicationRangeEnd,
-            divisionRangeStart,
-            divisionRangeEnd
-        )
-    }
-
     suspend fun wasAlreadyPlayed(gameRecord: GameRecord): Boolean {
         return gameRecordDao.wasAlreadyPlayed(
             gameRecord.isModeEnabled,

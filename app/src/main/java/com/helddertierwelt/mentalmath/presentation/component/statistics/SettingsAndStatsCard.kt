@@ -28,19 +28,16 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -56,18 +53,19 @@ import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
 import com.helddertierwelt.mentalmath.util.AppLocale
-import kotlin.math.max
 
 @Composable
 fun SettingsAndStatsCard(
-    fontSize: TextUnit,
-    iconSize: Dp,
+    scoreFontSize: TextUnit,
+    statsFontSize: TextUnit,
+    scoreIconSize: Dp,
+    statsIconSize: Dp,
     modifier: Modifier
 ) {
     val activity = LocalActivity.current as ViewModelStoreOwner
     val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
     val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
-    val lineHeight = fontSize / 1.6f
+    val lineHeight = statsFontSize / 1.6f
     val themeMode = settingsViewModel.settingsState.collectAsState().value.themeMode
 
     val statisticsGameRecord =
@@ -76,6 +74,7 @@ fun SettingsAndStatsCard(
         } else {
             statisticsViewModel.lastGameRecord.collectAsState().value
         }
+    val correctAnswers = statisticsGameRecord.correctAnswers
 
     Card(
         shape = RoundedCornerShape(32.dp),
@@ -122,8 +121,8 @@ fun SettingsAndStatsCard(
             ) {
                 SettingsModeColumn(
                     modeEnabled = statisticsGameRecord.isModeEnabled,
-                    fontSize = fontSize,
-                    iconSize = iconSize,
+                    fontSize = statsFontSize,
+                    iconSize = statsIconSize,
                     limit = statisticsGameRecord.modeLimit
                 )
 
@@ -134,11 +133,12 @@ fun SettingsAndStatsCard(
                     else -> "${additionRange.first}-${additionRange.second}"
                 }
                 StatsColumn(
-                    fontSize = fontSize,
+                    fontSize = statsFontSize,
                     statsText = additionRangeString,
                     iconId = R.drawable.addition_24dp,
-                    iconSize = iconSize,
-                    iconColor = green
+                    iconSize = statsIconSize,
+                    iconColor = green,
+                    tooltipText = stringResource(R.string.difficulty_addition)
                 )
 
                 val subtractionRange = statisticsGameRecord.subtractionRangeStart to statisticsGameRecord.subtractionRangeEnd
@@ -148,11 +148,12 @@ fun SettingsAndStatsCard(
                     else -> "${subtractionRange.first}-${subtractionRange.second}"
                 }
                 StatsColumn(
-                    fontSize = fontSize,
+                    fontSize = statsFontSize,
                     statsText = subtractionRangeString,
                     iconId = R.drawable.subtraction_24dp,
-                    iconSize = iconSize,
-                    iconColor = red
+                    iconSize = statsIconSize,
+                    iconColor = red,
+                    tooltipText = stringResource(R.string.difficulty_subtraction)
                 )
 
                 val multiplicationRange = statisticsGameRecord.multiplicationRangeStart to statisticsGameRecord.multiplicationRangeEnd
@@ -162,11 +163,12 @@ fun SettingsAndStatsCard(
                     else -> "${multiplicationRange.first}-${multiplicationRange.second}"
                 }
                 StatsColumn(
-                    fontSize = fontSize,
+                    fontSize = statsFontSize,
                     statsText = multiplicationRangeString,
                     iconId = R.drawable.multiplication_24dp,
-                    iconSize = iconSize,
-                    iconColor = yellow
+                    iconSize = statsIconSize,
+                    iconColor = yellow,
+                    tooltipText = stringResource(R.string.difficulty_multiplication)
                 )
 
                 val divisionRange = statisticsGameRecord.divisionRangeStart to statisticsGameRecord.divisionRangeEnd
@@ -176,11 +178,12 @@ fun SettingsAndStatsCard(
                     else -> "${divisionRange.first}-${divisionRange.second}"
                 }
                 StatsColumn(
-                    fontSize = fontSize,
+                    fontSize = statsFontSize,
                     statsText = divisionRangeString,
                     iconId = R.drawable.division_24dp,
-                    iconSize = iconSize,
-                    iconColor = blue
+                    iconSize = statsIconSize,
+                    iconColor = blue,
+                    tooltipText = stringResource(R.string.difficulty_division)
                 )
             }
             HorizontalDivider(
@@ -195,49 +198,51 @@ fun SettingsAndStatsCard(
             ) {
                 StatsProgressColumn(
                     modeEnabled = statisticsGameRecord.isModeEnabled,
-                    fontSize = fontSize,
-                    iconSize = iconSize,
+                    fontSize = statsFontSize,
+                    iconSize = statsIconSize,
                     totalAnswers = statisticsGameRecord.totalAnswers,
                     activeTime = statisticsGameRecord.activeTime
                 )
                 StatsColumn(
-                    fontSize = fontSize,
-                    statsText = statisticsGameRecord.correctAnswers.toString(),
+                    fontSize = statsFontSize,
+                    statsText = correctAnswers.toString(),
                     iconId = R.drawable.check_24dp,
-                    iconSize = iconSize,
-                    iconColor = green
+                    iconSize = statsIconSize,
+                    iconColor = green,
+                    tooltipText = stringResource(R.string.correct_answers)
+                )
+                StatsColumn(
+                    fontSize = statsFontSize,
+                    statsText = (statisticsGameRecord.totalAnswers - correctAnswers).toString(),
+                    iconId = R.drawable.close_24dp,
+                    iconSize = statsIconSize,
+                    iconColor = red,
+                    tooltipText = stringResource(R.string.incorrect_answers)
                 )
 
-                val percentage = statisticsGameRecord.correctAnswers.toFloat() / statisticsGameRecord.totalAnswers.toFloat() * 100f
+                val percentage = correctAnswers.toFloat() / statisticsGameRecord.totalAnswers.toFloat() * 100f
                 val percentageString = if (percentage.isNaN()) "-" else AppLocale.format("%.1f", percentage)
                 StatsColumn(
-                    fontSize = fontSize,
+                    fontSize = statsFontSize,
                     statsText = percentageString,
                     iconId = R.drawable.percent_24dp,
-                    iconSize = iconSize,
-                    iconColor = green
+                    iconSize = statsIconSize,
+                    iconColor = green,
+                    tooltipText = stringResource(R.string.accuracy)
                 )
 
-                val activeMinutes = max(1, (statisticsGameRecord.activeTime / 1000)) / 60.0f
-                val correctPerMinute = AppLocale.format("%.1f", statisticsGameRecord.correctAnswers.toFloat() / activeMinutes)
+                val timePerCorrectAnswer = if (correctAnswers==0) "-" else formatTimeWithDecimalSeconds(statisticsGameRecord.activeTime / correctAnswers)
                 val darkTheme = when (themeMode) {
                     ThemeMode.DARK -> true
                     ThemeMode.LIGHT -> false
                     ThemeMode.SYSTEM -> isSystemInDarkTheme()
                 }
                 StatsColumn(
-                    fontSize = fontSize,
-                    statsText = correctPerMinute,
-                    iconId = if (darkTheme) R.drawable.check_min_dark_24dp else R.drawable.check_min_light_24dp,
-                    iconSize = iconSize
-                )
-
-                StatsColumn(
-                    fontSize = fontSize,
-                    statsText = formatTime(statisticsGameRecord.totalTime),
-                    iconId = R.drawable.access_time_24dp,
-                    iconSize = iconSize,
-                    iconColor = MaterialTheme.colorScheme.onPrimary
+                    fontSize = statsFontSize,
+                    statsText = timePerCorrectAnswer,
+                    iconId = if (darkTheme) R.drawable.timer_dark_24dp else R.drawable.timer_light_24dp,
+                    iconSize = statsIconSize,
+                    tooltipText = stringResource(R.string.avg_time_per_correct_answer)
                 )
             }
             HorizontalDivider(
@@ -245,61 +250,39 @@ fun SettingsAndStatsCard(
                 color = MaterialTheme.colorScheme.background
             )
             Spacer(modifier = modifier.height(8.dp))
-
             val activeScore = AppLocale.format("%.2f", statisticsGameRecord.activeScore)
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(16.dp, 8.dp, 16.dp, 3.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.active),
-                    fontSize = fontSize,
-                    modifier = modifier.padding(horizontal = 16.dp),
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                Text(
-                    text = activeScore,
-                    fontSize = fontSize,
-                    modifier = modifier.padding(end = 16.dp),
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                Icon(
-                    painter = painterResource(R.drawable.star_24dp),
-                    contentDescription = "activeScoreIcon",
-                    modifier = modifier.size(iconSize),
-                    tint = green
-                )
-            }
+            ScoreRow(
+                score = activeScore,
+                scoreFontSize = scoreFontSize,
+                scoreIconSize = scoreIconSize,
+                iconColor = yellow,
+                tooltipText = "Score"
+            )
+        }
+    }
+}
 
-            val totalScore = AppLocale.format("%.2f", statisticsGameRecord.totalScore)
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(16.dp, 3.dp, 16.dp, 10.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.total),
-                    fontSize = fontSize,
-                    modifier = modifier.padding(horizontal = 16.dp),
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                Text(
-                    text = totalScore,
-                    fontSize = fontSize,
-                    modifier = modifier.padding(end = 16.dp),
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                Icon(
-                    painter = painterResource(R.drawable.star_24dp),
-                    contentDescription = "totalScoreIcon",
-                    modifier = modifier.size(iconSize),
-                    tint = yellow
-                )
+fun formatTimeWithDecimalSeconds(ms: Long): String {
+    val seconds = ms / 1000
+    val hours = seconds / 3600
+    val minutes = (seconds % 3600) / 60
+    val remainingSeconds = seconds % 60
+
+    return buildString {
+        if (hours > 0) {
+            append("$hours:")
+            append(minutes.toString().padStart(2, '0'))
+            append(":")
+            append(remainingSeconds.toString().padStart(2, '0'))
+        } else if (minutes > 0) {
+            append("$minutes:")
+            append(remainingSeconds.toString().padStart(2, '0'))
+        } else {
+            val secondsWithDecimal = ms / 1000.0
+            if (secondsWithDecimal % 1.0 == 0.0) {
+                append("${secondsWithDecimal.toInt()}s")
+            } else {
+                append(AppLocale.format("%.1fs", secondsWithDecimal))
             }
         }
     }

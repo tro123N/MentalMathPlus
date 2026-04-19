@@ -67,7 +67,7 @@ class StatisticsViewModel @Inject constructor(
     fun prepareGameFromLink(gameRecord: GameRecord) {
         setNavigatedFromHistory(false)
         setShowLinkGamePopUp(false)
-        setScoreFromLink(gameRecord.totalScore)
+        setScoreFromLink(gameRecord.activeScore)
         setSeedFromLink(gameRecord.seed)
     }
 }

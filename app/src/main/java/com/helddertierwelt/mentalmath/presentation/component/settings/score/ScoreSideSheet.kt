@@ -57,7 +57,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -71,8 +70,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
-import com.helddertierwelt.mentalmath.data.entity.GameRecord
-import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
@@ -176,42 +173,29 @@ fun ScoreSideSheet(
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                // load game records based on current settings
-                val bestActiveGames by settingsViewModel.bestActiveGames.collectAsState()
-                val bestTotalGames by settingsViewModel.bestTotalGames.collectAsState()
+                val bestGames by settingsViewModel.bestGames.collectAsState()
                 val lastGameId = statisticsViewModel.lastGameRecord.collectAsState().value.id
-
-                // determine which score type is active
-                val activeScoreDefault =
-                    settingsViewModel.settingsState.collectAsState().value.isActiveScoreDefault
-                val scoreTitle = stringResource(if (activeScoreDefault) R.string.active_score else R.string.total_score)
-                val iconColor = if (activeScoreDefault) green else yellow
-                val bestGames = if (activeScoreDefault) bestActiveGames else bestTotalGames
-                val scoreSelector = if (activeScoreDefault) { gameRecord: GameRecord -> gameRecord.activeScore } else { gameRecord: GameRecord -> gameRecord.totalScore }
-
                 Spacer(modifier = Modifier.height(16.dp))
-                if (!bestActiveGames.isEmpty() || !bestTotalGames.isEmpty()) {
+                if (!bestGames.isEmpty()) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 8.dp)
-                            .clip(RoundedCornerShape(16.dp))
-                            .clickable { settingsViewModel.toggleDefaultScoreOption() },
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.End
                     ) {
-                        Spacer(Modifier.width(16.dp))
                         Text(
-                            text = scoreTitle,
+                            text = stringResource(R.string.top_ten_scores),
                             color = MaterialTheme.colorScheme.onPrimary,
                             fontSize = fontSizeTitle,
                             textAlign = TextAlign.Start,
+                            modifier = Modifier.padding(start = 16.dp)
                         )
                         Icon(
                             painter = painterResource(R.drawable.star_24dp),
-                            contentDescription = "activeScore",
+                            contentDescription = "score",
                             modifier = Modifier.size(100.dp),
-                            tint = iconColor
+                            tint = yellow
                         )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
@@ -221,7 +205,6 @@ fun ScoreSideSheet(
                         gameRecords = bestGames,
                         fontSizeScore = fontSizeScore,
                         lastGameId = lastGameId,
-                        scoreSelector = scoreSelector,
                         isEnabled = !isScoreClicked,
                         onClick = { gameRecord ->
                             settingsViewModel.setIsScoreClicked(true)

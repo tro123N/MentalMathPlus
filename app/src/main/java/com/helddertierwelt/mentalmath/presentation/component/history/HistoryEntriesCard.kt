@@ -47,7 +47,6 @@ fun HistoryEntriesCard(
     onClick: (GameRecord) -> Unit,
     isEnabled: Boolean = true,
     currentSortMode: SortMode,
-    showActiveScore: Boolean
 ) {
     fun sortGameRecords(records: List<GameRecord>, ascending: Boolean): List<GameRecord> {
         return records.sortedWith { record1, record2 ->
@@ -63,7 +62,7 @@ fun HistoryEntriesCard(
                 GameRecord::multiplicationRangeEnd,
                 GameRecord::divisionRangeStart,
                 GameRecord::divisionRangeEnd,
-                GameRecord::totalScore
+                GameRecord::activeScore
             )
         }.let { if (ascending) it else it.asReversed() }
     }
@@ -114,7 +113,7 @@ fun HistoryEntriesCard(
                         formatRange(game.multiplicationRangeStart, game.multiplicationRangeEnd),
                         formatRange(game.divisionRangeStart, game.divisionRangeEnd)
                     )
-                    val scoreString = AppLocale.format("%.2f", if (showActiveScore) game.activeScore else game.totalScore)
+                    val scoreString = AppLocale.format("%.2f", game.activeScore)
                     val allStrings = listOf(limit) + rangeStrings + scoreString
 
                     if (index > 0) {

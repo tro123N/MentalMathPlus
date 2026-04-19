@@ -42,5 +42,4 @@ data class SettingsState(
     val notificationMode: NotificationMode = NotificationMode.OFF,
     val isNumpadDefault: Boolean = false,
     val isRightToLeft: Boolean = false,
-    val isActiveScoreDefault: Boolean = false,
 ) : Parcelable

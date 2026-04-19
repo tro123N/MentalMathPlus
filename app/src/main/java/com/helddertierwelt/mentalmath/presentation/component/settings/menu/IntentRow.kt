@@ -18,7 +18,10 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.settings.menu
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -50,6 +53,7 @@ fun IntentRow(
     fontSize: TextUnit,
     iconSize: Dp,
     intentProvider: () -> Intent,
+    errorMessage: String,
     color: Color = MaterialTheme.colorScheme.onPrimary,
     isEnabled: Boolean = true
 ) {
@@ -61,7 +65,18 @@ fun IntentRow(
             .clip(RoundedCornerShape(16.dp))
             .clickable(
                 enabled = isEnabled,
-                onClick = { context.startActivity(intentProvider()) }
+                onClick = {
+                    try {
+                        context.startActivity(intentProvider())
+                    } catch (e: ActivityNotFoundException) {
+                        Log.e("IntentRow", "No app found to start activity: ${e.message}")
+                        Toast.makeText(
+                            context,
+                            errorMessage,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
             )
             .alpha(if (isEnabled) 1f else 0.38f),
         verticalAlignment = Alignment.CenterVertically,

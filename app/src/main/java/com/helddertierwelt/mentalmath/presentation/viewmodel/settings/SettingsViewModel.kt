@@ -63,11 +63,8 @@ class SettingsViewModel @Inject constructor(
     private val _showNotificationPermissionPopUp = MutableStateFlow(false)
     val showNotificationPermissionPopUp = _showNotificationPermissionPopUp.asStateFlow()
 
-    private val _bestActiveGames = MutableStateFlow<List<GameRecord>>(emptyList())
-    val bestActiveGames = _bestActiveGames.asStateFlow()
-
-    private val _bestTotalGames = MutableStateFlow<List<GameRecord>>(emptyList())
-    val bestTotalGames = _bestTotalGames.asStateFlow()
+    private val _bestGames = MutableStateFlow<List<GameRecord>>(emptyList())
+    val bestGames = _bestGames.asStateFlow()
 
     private val _isStartButtonClicked = MutableStateFlow(false)
     val isStartButtonClicked = _isStartButtonClicked.asStateFlow()
@@ -212,12 +209,6 @@ class SettingsViewModel @Inject constructor(
         _isScoreOpen.value = !_isScoreOpen.value
     }
 
-    fun toggleDefaultScoreOption() {
-        _settingsState.value =
-            _settingsState.value.copy(isActiveScoreDefault = !_settingsState.value.isActiveScoreDefault)
-        saveState()
-    }
-
     fun toggleInputLayout() {
         _settingsState.value =
             _settingsState.value.copy(isNumpadDefault = !_settingsState.value.isNumpadDefault)
@@ -237,8 +228,7 @@ class SettingsViewModel @Inject constructor(
         _isMenuOpen.value = false
         _isScoreOpen.value = false
         _showResetPopUp.value = false
-        _bestActiveGames.value = emptyList()
-        _bestTotalGames.value = emptyList()
+        _bestGames.value = emptyList()
         _isScoreClicked.value = false
         _isStartButtonClicked.value = false
         _isRandomGameButtonClicked.value = false
@@ -263,7 +253,7 @@ class SettingsViewModel @Inject constructor(
         val divisionRangeStart = if (settingsState.value.isDivisionEnabled) settingsState.value.divisionRange.first.toInt() else 0
         val divisionRangeEnd = if (settingsState.value.isDivisionEnabled) settingsState.value.divisionRange.second.toInt() else 0
         viewModelScope.launch(Dispatchers.IO) {
-            val resultBestTotalGames = gameRecordRepository.findBestTotalGameRecords(
+            val resultBestGames = gameRecordRepository.findBestActiveGameRecords(
                 settingsState.value.isModeEnabled,
                 settingsState.value.limit.toInt(),
                 additionRangeStart,
@@ -275,20 +265,7 @@ class SettingsViewModel @Inject constructor(
                 divisionRangeStart,
                 divisionRangeEnd
             )
-            val resultBestActiveGames = gameRecordRepository.findBestActiveGameRecords(
-                settingsState.value.isModeEnabled,
-                settingsState.value.limit.toInt(),
-                additionRangeStart,
-                additionRangeEnd,
-                subtractionRangeStart,
-                subtractionRangeEnd,
-                multiplicationRangeStart,
-                multiplicationRangeEnd,
-                divisionRangeStart,
-                divisionRangeEnd
-            )
-            _bestTotalGames.value = resultBestTotalGames
-            _bestActiveGames.value = resultBestActiveGames
+            _bestGames.value = resultBestGames
         }
     }
 

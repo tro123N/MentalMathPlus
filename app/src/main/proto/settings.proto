@@ -50,9 +50,8 @@ message SettingsStateProto {
   }
 
   ThemeMode theme_mode = 16;
-  bool is_active_score_default = 17;
-  bool is_numpad_default = 18;
-  bool is_right_to_left = 19;
+  bool is_numpad_default = 17;
+  bool is_right_to_left = 18;
 
   enum NotificationMode {
     OFF = 0;
@@ -61,5 +60,5 @@ message SettingsStateProto {
     WEEKLY = 3;
   }
 
-  NotificationMode notification_mode = 20;
+  NotificationMode notification_mode = 19;
 }

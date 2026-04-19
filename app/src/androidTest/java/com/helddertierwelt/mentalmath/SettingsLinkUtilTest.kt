@@ -59,7 +59,7 @@ class SettingsLinkUtilTest {
         assertEquals(original.multiplicationRangeEnd, deserialized.multiplicationRangeEnd)
         assertEquals(original.divisionRangeStart, deserialized.divisionRangeStart)
         assertEquals(original.divisionRangeEnd, deserialized.divisionRangeEnd)
-        assertEquals(original.totalScore, deserialized.totalScore)
+        assertEquals(original.activeScore, deserialized.activeScore)
         assertEquals(original.seed, deserialized.seed)
 
         assertEquals(0, deserialized.id)
@@ -67,7 +67,7 @@ class SettingsLinkUtilTest {
         assertEquals(0, deserialized.correctAnswers)
         assertEquals(0L, deserialized.activeTime)
         assertEquals(0L, deserialized.totalTime)
-        assertEquals(0f, deserialized.activeScore, 0.0f)
+        assertEquals(0f, deserialized.totalScore, 0.0f)
         assertTrue(deserialized.solvedProblems.isEmpty())
     }
 }

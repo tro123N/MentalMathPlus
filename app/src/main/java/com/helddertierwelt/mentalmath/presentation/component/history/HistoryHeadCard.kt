@@ -18,7 +18,6 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.history
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,7 +30,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -43,9 +41,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.yellow
 
 @Composable
 fun HistoryHeadCard(
-    iconSize: Dp,
-    showActiveScore: Boolean,
-    onClick: () -> Unit
+    iconSize: Dp
 ) {
     Card(
         shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
@@ -94,11 +90,8 @@ fun HistoryHeadCard(
             Icon(
                 painter = painterResource(R.drawable.star_24dp),
                 contentDescription = "modeIcon",
-                modifier = Modifier
-                    .size(iconSize)
-                    .clip(RoundedCornerShape(16.dp))
-                    .clickable { onClick() },
-                tint = if (showActiveScore) green else yellow
+                modifier = Modifier.size(iconSize),
+                tint = yellow
             )
         }
     }
