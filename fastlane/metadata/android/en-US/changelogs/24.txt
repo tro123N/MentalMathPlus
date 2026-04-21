@@ -1,4 +1,5 @@
 - Added French translation contributed by @mdk. Thank you! :)
+- Enable per-app language selection via Android system settings (requires Android 13 or higher)
 - Removed “Total Score” and renamed “Active Score” to simply “Score” to reduce confusion
 - Added tooltips to the game overview for improved clarity
 - Reworked the speed statistic: now displayed as time per correct answer instead of correct answers per minute
