@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.ksp)
@@ -15,6 +14,11 @@ plugins {
 }
 hilt {
     enableAggregatingTask = false
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+    arg("room.incremental", "true")
 }
 
 android {
@@ -29,11 +33,6 @@ android {
         versionName = "23"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
-        arg("room.incremental", "true")
     }
 
     signingConfigs {
@@ -91,30 +90,31 @@ android {
             isShrinkResources = false
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     buildFeatures {
         compose = true
         buildConfig = true
     }
+
     packaging {
         jniLibs.keepDebugSymbols += "**/*.so"
-    }
-    packaging {
         resources {
             excludes += "assets/dexopt/baseline.prof"
             excludes += "assets/dexopt/baseline.profm"
         }
     }
+
     dependenciesInfo {
         // Disables dependency metadata when building APKs.
         includeInApk = false
         // Disables dependency metadata when building Android App Bundles.
         includeInBundle = false
     }
-
 }
 
 tasks.matching { it.name.contains("Profile", ignoreCase = true) }.configureEach {
