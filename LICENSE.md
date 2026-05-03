@@ -1,6 +1,6 @@
 # License Information
 
-Mental Math (C) 2025 HeldDerTierwelt
+Mental Math (C) 2025-2026 HeldDerTierwelt
 This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html).
 
 # GNU GENERAL PUBLIC LICENSE

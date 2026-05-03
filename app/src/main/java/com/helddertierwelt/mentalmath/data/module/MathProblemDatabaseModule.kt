@@ -1,6 +1,6 @@
 /*
 Mental Math - Android app for practicing mental arithmetic
-Copyright (C) 2025 HeldDerTierwelt
+Copyright (C) 2025-2026 HeldDerTierwelt
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
