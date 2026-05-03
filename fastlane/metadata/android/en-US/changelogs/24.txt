@@ -4,5 +4,6 @@
 - Added tooltips to the game overview for improved clarity
 - Reworked the speed statistic: now displayed as time per correct answer instead of correct answers per minute
 - Fixed a crash when using the “About” or “Feedback” options on systems without a default browser or mail client
-- Renamed “task” to “problem” across the codebase for consistency
 - Added a message to the problem overview when no problems have been solved.
+- Renamed “task” to “problem” across the codebase for consistency
+- updated dependencies
