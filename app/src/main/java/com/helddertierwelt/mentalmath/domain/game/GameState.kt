@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.presentation.viewmodel.game
+package com.helddertierwelt.mentalmath.domain.game
 
+import com.helddertierwelt.mentalmath.data.mapper.SolvedProblemConverter
 import java.io.Serializable
 
 data class GameState(

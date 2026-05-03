@@ -64,12 +64,12 @@ import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
-import com.helddertierwelt.mentalmath.presentation.viewmodel.game.GameViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.history.HistoryViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.mainactivity.MainActivityViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
-import com.helddertierwelt.mentalmath.util.NotificationScheduler
+import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.HistoryViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.MainActivityViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler
 import java.security.SecureRandom
 
 @Composable

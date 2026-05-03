@@ -1,12 +1,13 @@
-package com.helddertierwelt.mentalmath.presentation.viewmodel.game
+package com.helddertierwelt.mentalmath.data.mapper
 
 import androidx.room.TypeConverter
+import com.helddertierwelt.mentalmath.domain.game.SolvedProblem
 import kotlinx.serialization.json.Json
 
 class SolvedProblemConverter {
     @TypeConverter
     fun fromSolvedProblemList(value: List<SolvedProblem>): String {
-        return Json.encodeToString(value)
+        return Json.Default.encodeToString(value)
     }
 
     @TypeConverter

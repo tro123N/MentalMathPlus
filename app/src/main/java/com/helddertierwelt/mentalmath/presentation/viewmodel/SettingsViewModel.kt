@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.presentation.viewmodel.settings
+package com.helddertierwelt.mentalmath.presentation.viewmodel
 
 import android.Manifest
 import android.content.Context
@@ -29,6 +29,7 @@ import androidx.lifecycle.viewModelScope
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
 import com.helddertierwelt.mentalmath.data.repository.SettingsRepository
+import com.helddertierwelt.mentalmath.domain.settings.SettingsState
 import com.helddertierwelt.mentalmath.presentation.component.settings.menu.NotificationMode
 import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -237,12 +238,6 @@ class SettingsViewModel @Inject constructor(
         saveState()
     }
 
-    private fun saveState() {
-        viewModelScope.launch {
-            repository.saveSettings(_settingsState.value)
-        }
-    }
-
     fun loadBestGames() {
         val additionRangeStart = if (settingsState.value.isAdditionEnabled) settingsState.value.additionRange.first.toInt() else 0
         val additionRangeEnd = if (settingsState.value.isAdditionEnabled) settingsState.value.additionRange.second.toInt() else 0
@@ -355,5 +350,11 @@ class SettingsViewModel @Inject constructor(
 
         val encoded = Base64.encodeToString(settingsStringByteArray, Base64.URL_SAFE or Base64.NO_WRAP)
         return "https://mental-math.codeberg.page/app?s=${encoded}"
+    }
+
+    private fun saveState() {
+        viewModelScope.launch {
+            repository.saveSettings(_settingsState.value)
+        }
     }
 }

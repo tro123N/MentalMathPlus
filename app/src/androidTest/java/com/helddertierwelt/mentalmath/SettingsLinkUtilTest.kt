@@ -3,7 +3,7 @@ package com.helddertierwelt.mentalmath
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
-import com.helddertierwelt.mentalmath.util.SettingsLinkUtil
+import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test

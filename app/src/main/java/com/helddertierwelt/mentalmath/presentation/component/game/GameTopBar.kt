@@ -40,8 +40,8 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.red
-import com.helddertierwelt.mentalmath.presentation.viewmodel.game.GameViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)

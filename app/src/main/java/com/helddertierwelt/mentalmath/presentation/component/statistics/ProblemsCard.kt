@@ -53,7 +53,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
-import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 
 @Composable
 fun ProblemsCard(

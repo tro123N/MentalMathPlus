@@ -73,11 +73,11 @@ import com.helddertierwelt.mentalmath.presentation.component.statistics.Problems
 import com.helddertierwelt.mentalmath.presentation.component.statistics.SettingsAndStatsCard
 import com.helddertierwelt.mentalmath.presentation.component.statistics.StatisticsTopBar
 import com.helddertierwelt.mentalmath.presentation.theme.green
-import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
-import com.helddertierwelt.mentalmath.util.AppLocale
-import com.helddertierwelt.mentalmath.util.GameResultInfoGenerator.getGamePopUpInfo
-import com.helddertierwelt.mentalmath.util.SettingsLinkUtil
+import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.domain.settings.AppLocale
+import com.helddertierwelt.mentalmath.domain.statistics.GameResultInfoGenerator.getGamePopUpInfo
+import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream

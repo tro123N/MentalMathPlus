@@ -67,9 +67,9 @@ import com.helddertierwelt.mentalmath.presentation.component.game.ToastEvent
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
-import com.helddertierwelt.mentalmath.presentation.viewmodel.game.GameViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import kotlin.math.roundToInt
 
 @Composable

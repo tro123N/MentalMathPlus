@@ -16,14 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.util
+package com.helddertierwelt.mentalmath.domain.game
 
-import java.util.Locale
+import kotlinx.serialization.Serializable
 
-object AppLocale {
-    val westernDigits: Locale
-        get() = Locale.forLanguageTag("${Locale.getDefault().toLanguageTag()}-u-nu-latn")
-
-    fun format(format: String, vararg args: Any?): String =
-        format.format(westernDigits, *args)
+@Serializable
+enum class Operation(val symbol: String) : java.io.Serializable {
+    ADDITION("+"),
+    SUBTRACTION("−"),
+    MULTIPLICATION("×"),
+    DIVISION("÷")
 }

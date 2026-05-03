@@ -34,7 +34,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 
 @Composable
 fun Navigation(

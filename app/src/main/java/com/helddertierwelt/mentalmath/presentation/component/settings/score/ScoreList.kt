@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.presentation.theme.green
-import com.helddertierwelt.mentalmath.util.AppLocale
+import com.helddertierwelt.mentalmath.domain.settings.AppLocale
 
 @Composable
 fun ScoreList(

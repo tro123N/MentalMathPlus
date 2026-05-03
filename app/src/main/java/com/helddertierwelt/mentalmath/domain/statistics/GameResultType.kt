@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.util
+package com.helddertierwelt.mentalmath.domain.statistics
 
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
@@ -28,6 +28,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
+import com.helddertierwelt.mentalmath.domain.settings.AppLocale
 
 enum class GameResultType(
     val icon: Int,

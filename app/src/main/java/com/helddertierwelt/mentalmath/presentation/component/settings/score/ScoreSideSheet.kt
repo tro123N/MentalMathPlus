@@ -71,8 +71,8 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
-import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import kotlinx.coroutines.launch
 
 @Composable

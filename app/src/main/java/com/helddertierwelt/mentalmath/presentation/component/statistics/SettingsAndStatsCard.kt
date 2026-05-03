@@ -50,9 +50,9 @@ import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
-import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
-import com.helddertierwelt.mentalmath.util.AppLocale
+import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.domain.settings.AppLocale
 
 @Composable
 fun SettingsAndStatsCard(

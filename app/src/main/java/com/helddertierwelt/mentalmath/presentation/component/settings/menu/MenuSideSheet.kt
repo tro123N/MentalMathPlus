@@ -69,13 +69,13 @@ import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.BuildConfig
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.red
-import com.helddertierwelt.mentalmath.presentation.viewmodel.game.GameViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.history.HistoryViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.settings.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
-import com.helddertierwelt.mentalmath.util.AppLocale
-import com.helddertierwelt.mentalmath.util.NotificationScheduler
-import com.helddertierwelt.mentalmath.util.NotificationScheduler.calculateAnchorTime
+import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.HistoryViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.domain.settings.AppLocale
+import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler
+import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler.calculateAnchorTime
 import kotlinx.coroutines.launch
 import java.security.SecureRandom
 

@@ -49,8 +49,8 @@ import com.helddertierwelt.mentalmath.presentation.component.history.HistoryDone
 import com.helddertierwelt.mentalmath.presentation.component.history.HistoryEntriesCard
 import com.helddertierwelt.mentalmath.presentation.component.history.HistoryHeadCard
 import com.helddertierwelt.mentalmath.presentation.component.history.HistoryTopBar
-import com.helddertierwelt.mentalmath.presentation.viewmodel.history.HistoryViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.statistics.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.HistoryViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 
 @Composable
 fun HistoryScreen(

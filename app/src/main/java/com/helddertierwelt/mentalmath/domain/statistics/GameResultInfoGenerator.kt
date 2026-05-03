@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.util
+package com.helddertierwelt.mentalmath.domain.statistics
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
