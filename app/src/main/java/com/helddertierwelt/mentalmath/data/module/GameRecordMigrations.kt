@@ -79,6 +79,21 @@ object GameRecordMigrations {
 
             db.execSQL("DROP TABLE game_records")
             db.execSQL("ALTER TABLE game_records_new RENAME TO game_records")
+
+            db.execSQL("""
+                CREATE INDEX index_game_records_isModeEnabled_modeLimit_additionRangeStart_additionRangeEnd_subtractionRangeStart_subtractionRangeEnd_multiplicationRangeStart_multiplicationRangeEnd_divisionRangeStart_divisionRangeEnd ON game_records (
+                    isModeEnabled,
+                    modeLimit,
+                    additionRangeStart,
+                    additionRangeEnd,
+                    subtractionRangeStart,
+                    subtractionRangeEnd,
+                    multiplicationRangeStart,
+                    multiplicationRangeEnd,
+                    divisionRangeStart,
+                    divisionRangeEnd
+                )
+            """)
         }
     }
 }
