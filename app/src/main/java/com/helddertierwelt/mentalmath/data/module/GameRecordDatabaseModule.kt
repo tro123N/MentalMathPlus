@@ -20,10 +20,9 @@ package com.helddertierwelt.mentalmath.data.module
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.helddertierwelt.mentalmath.data.dao.GameRecordDao
 import com.helddertierwelt.mentalmath.data.db.GameRecordDatabase
+import com.helddertierwelt.mentalmath.data.module.GameRecordMigrations.MIGRATION_1_2
 import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
 import dagger.Module
 import dagger.Provides
@@ -36,12 +35,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object GameRecordDatabaseModule {
 
-    val migration1to2 = object : Migration(1, 2) {
-        override fun migrate(db: SupportSQLiteDatabase) {
-            db.execSQL("ALTER TABLE game_records RENAME COLUMN taskResults TO solvedProblems")
-        }
-    }
-
     @Provides
     @Singleton
     fun provideGameRecordDatabase(
@@ -51,7 +44,7 @@ object GameRecordDatabaseModule {
             context,
             GameRecordDatabase::class.java,
             "game_record.db"
-        ).addMigrations(migration1to2).build()
+        ).addMigrations(MIGRATION_1_2).build()
     }
 
     @Provides
