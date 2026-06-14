@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Mode de jeu et limite</string>
@@ -20,6 +20,8 @@
     <string name="light_mode">Thème clair</string>
     <string name="dark_mode">Thème sombre</string>
     <string name="system_mode">Thème du système</string>
+    <string name="sound_on">Son activé</string>
+    <string name="sound_off">Son désactivé</string>
     <string name="about">À propos</string>
     <string name="feedback">Commenter</string>
     <string name="recommend">Recommander</string>
@@ -90,7 +92,7 @@
 
     <!-- Result PopUp -->
     <string name="waiting_title">En attente de votre adversaire…</string>
-    <string-array name="waiting_descriptions">
+    <string-array name="waiting_descriptions" tools:ignore="InconsistentArrays">
         <item>Toi : %1$.2f | Adversaire : ??\nGraine : %2$d\n\nBoom, joli score, voyons si iel peut faire mieux !</item>
         <item>Toi : %1$.2f | Adversaire : ??\nGraine : %2$d\n\nTon score est enregistré, c’est à son tour !</item>
         <item>Toi : %1$.2f | Adversaire : ??\nGraine : %2$d\n\nJoli score, mais peut-être pas suffisant ?</item>
@@ -99,7 +101,7 @@
     </string-array>
 
     <string name="easy_win_title">Easy win</string>
-    <string-array name="easy_win_descriptions">
+    <string-array name="easy_win_descriptions" tools:ignore="InconsistentArrays">
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nFacile, s’iel ne joue pas…</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nReste à trouver un adversaire qui accepte le challenge.</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nIel ne s’est pas montré·e : tu gagne par défaut.</item>
@@ -110,7 +112,7 @@
     </string-array>
 
     <string name="anyone_here_title">Anyone here?</string>
-    <string-array name="anyone_here_descriptions">
+    <string-array name="anyone_here_descriptions" tools:ignore="InconsistentArrays">
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nZéro points ?</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nY’a quelqu’un ?</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nAllô ? ALLÔ !?</item>
@@ -120,7 +122,7 @@
     </string-array>
 
     <string name="win_title">You won</string>
-    <string-array name="win_descriptions">
+    <string-array name="win_descriptions" tools:ignore="InconsistentArrays">
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nVoilà qui fait chauffer le cerveau !</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nOhhh, la belle concentration !</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nImpressionnant !</item>
@@ -132,7 +134,7 @@
     </string-array>
 
     <string name="close_win_title">Close call</string>
-    <string-array name="close_win_descriptions">
+    <string-array name="close_win_descriptions" tools:ignore="InconsistentArrays">
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nC’était serré, mais c’est passé !</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nOuf, c’était serré !</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nCourte victoire, le cerveau doit être encore chaud j’imagine ?</item>
@@ -143,7 +145,7 @@
     </string-array>
 
     <string name="draw_title">Draw</string>
-    <string-array name="draw_descriptions">
+    <string-array name="draw_descriptions" tools:ignore="InconsistentArrays">
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nÉgalité ! Il faut jouer la belle !</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nPas de gagnant : pas de perdant. Pas de perdant : pas de problème. Pas de problème : pas de problème.</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nTu joue contre ton clone ?</item>
@@ -153,7 +155,7 @@
     </string-array>
 
     <string name="close_defeat_title">Close call</string>
-    <string-array name="close_defeat_descriptions">
+    <string-array name="close_defeat_descriptions" tools:ignore="InconsistentArrays">
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nOhh non ! C’était si proche !</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nTrop triste de perdre si près de la victoire…</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nOn va dire qu’iel a juste eu de la chance cette fois.</item>
@@ -166,7 +168,7 @@
     </string-array>
 
     <string name="defeat_title">Defeat</string>
-    <string-array name="defeat_descriptions">
+    <string-array name="defeat_descriptions" tools:ignore="InconsistentArrays">
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nT’étais pas réveillé, c’est pas grave.</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nJ’avais parié sur toi !!!</item>
         <item>Toi : %1$.2f | Adversaire : %2$.2f\nGraine : %3$d\n\nOK, une semaine d’entraînement intensif, et ça passera !</item>

@@ -1,0 +1,5 @@
+- Added Italian translation contributed by zini.simons. Thank you! :)
+- Added Greek translation contributed by Nick Batzakis. Thank you! :)
+- Enable per-app language selection via Android system settings (requires Android 13 or higher)
+- Prepared for sound effects for correct and incorrect answers in the future.
+- updated dependencies

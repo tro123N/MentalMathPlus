@@ -10,3 +10,4 @@ local.properties
 /.kotlin/
 /.idea/
 app-release.dm
+app/src/main/assets/adi-registration.properties

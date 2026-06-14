@@ -23,14 +23,14 @@ ksp {
 
 android {
     namespace = "com.helddertierwelt.mentalmath"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.helddertierwelt.mentalmath"
         minSdk = 24
         targetSdk = 36
-        versionCode = 24
-        versionName = "24"
+        versionCode = 25
+        versionName = "25"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

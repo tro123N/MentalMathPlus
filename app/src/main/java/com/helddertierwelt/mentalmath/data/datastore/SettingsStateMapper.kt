@@ -26,9 +26,9 @@ import com.helddertierwelt.mentalmath.SettingsStateProto.NotificationMode.WEEKLY
 import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.DARK
 import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.LIGHT
 import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.SYSTEM
+import com.helddertierwelt.mentalmath.domain.settings.SettingsState
 import com.helddertierwelt.mentalmath.presentation.component.settings.menu.NotificationMode
 import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
-import com.helddertierwelt.mentalmath.domain.settings.SettingsState
 
 fun SettingsState.toProto(): SettingsStateProto {
     return SettingsStateProto.newBuilder()
@@ -48,6 +48,7 @@ fun SettingsState.toProto(): SettingsStateProto {
         .setIsDivideEnabled(isDivisionEnabled)
         .setIsNumpadDefault(isNumpadDefault)
         .setIsRightToLeft(isRightToLeft)
+        .setIsSoundEnabled(isSoundEnabled)
         .setThemeMode(
             when (themeMode) {
                 ThemeMode.SYSTEM -> SYSTEM
@@ -80,6 +81,7 @@ fun SettingsStateProto.toSettingsState(): SettingsState {
         isDivisionEnabled = isDivideEnabled,
         isNumpadDefault = isNumpadDefault,
         isRightToLeft = isRightToLeft,
+        isSoundEnabled = isSoundEnabled,
         themeMode = when (themeMode) {
             LIGHT -> ThemeMode.LIGHT
             DARK -> ThemeMode.DARK

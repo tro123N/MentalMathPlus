@@ -20,6 +20,9 @@ package com.helddertierwelt.mentalmath.domain.sound
 
 import com.helddertierwelt.mentalmath.data.repository.SettingsRepository
 import com.helddertierwelt.mentalmath.data.sound.SoundManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,15 +32,15 @@ class SoundController @Inject constructor(
     settingsRepository: SettingsRepository
 ) {
 
-    private var soundEnabled = true
+    private var soundEnabled = false
 
-    /*init {
+    init {
         CoroutineScope(Dispatchers.IO).launch {
             settingsRepository.settingsFlow.collect {
-                soundEnabled = it.soundEnabled
+                soundEnabled = it.isSoundEnabled
             }
         }
-    }*/
+    }
 
     fun play(sound: SoundType) {
         if (soundEnabled) {

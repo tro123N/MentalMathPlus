@@ -68,14 +68,14 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.BuildConfig
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler
+import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler.calculateAnchorTime
+import com.helddertierwelt.mentalmath.domain.settings.AppLocale
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.HistoryViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
-import com.helddertierwelt.mentalmath.domain.settings.AppLocale
-import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler
-import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler.calculateAnchorTime
 import kotlinx.coroutines.launch
 import java.security.SecureRandom
 
@@ -300,6 +300,22 @@ fun MenuSideSheet(
                         onClick = { settingsViewModel.toggleInputMethod() }
                     )
 
+                    // Dark Mode Toggle
+                    DarkModeToggleRow(
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        currentMode = settingsViewModel.settingsState.collectAsState().value.themeMode,
+                        onModeChange = { settingsViewModel.setThemeMode(it) }
+                    )
+
+                    // Sound Toggle
+                    /*SoundToggleRow(
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        isSoundEnabled = settingsViewModel.settingsState.collectAsState().value.isSoundEnabled,
+                        onClick = { settingsViewModel.toggleSound() }
+                    )*/
+
                     NotificationToggleRow(
                         fontSize = fontSize,
                         iconSize = iconSize,
@@ -319,14 +335,6 @@ fun MenuSideSheet(
                                 settingsViewModel.setShowNotificationPermissionPopUp(true)
                             }
                         }
-                    )
-
-                    // Dark Mode Toggle
-                    DarkModeToggleRow(
-                        fontSize = fontSize,
-                        iconSize = iconSize,
-                        currentMode = settingsViewModel.settingsState.collectAsState().value.themeMode,
-                        onModeChange = { settingsViewModel.setThemeMode(it) }
                     )
 
                     // Website Link

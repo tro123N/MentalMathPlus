@@ -61,4 +61,6 @@ message SettingsStateProto {
   }
 
   NotificationMode notification_mode = 19;
+
+  bool is_sound_enabled = 20;
 }

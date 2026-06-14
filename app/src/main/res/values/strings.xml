@@ -67,6 +67,8 @@ Thank you for contributing!
     <string name="light_mode">Light Mode</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="system_mode">System Mode</string>
+    <string name="sound_on">Sound On</string>
+    <string name="sound_off">Sound Off</string>
     <string name="about">About</string>
     <string name="feedback">Feed\u200Bback</string>
     <string name="recommend">Recom\u200Bmend</string>
@@ -242,7 +244,7 @@ Thank you for contributing!
     </string-array>
 
     <string name="defeat_title">Defeat</string>
-    <string-array name="defeat_descriptions">
+    <string-array name="defeat_descriptions" tools:ignore="InconsistentArrays">
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nShake it off and give it another try!</item>
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nIt happens! Learn, adapt, and come back stronger.</item>
         <item>You: %1$.2f | Opponent: %2$.2f\nSeed: %3$d\n\nEvery champion has been here. Now it’s your turn to rise.</item>

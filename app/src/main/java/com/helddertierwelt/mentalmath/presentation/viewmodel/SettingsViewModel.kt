@@ -223,6 +223,12 @@ class SettingsViewModel @Inject constructor(
         return newValue
     }
 
+    fun toggleSound() {
+        _settingsState.value =
+            _settingsState.value.copy(isSoundEnabled = !_settingsState.value.isSoundEnabled)
+        saveState()
+    }
+
     fun resetSettings() {
         _settingsState.value = SettingsState()
         _isLoaded.value = false
