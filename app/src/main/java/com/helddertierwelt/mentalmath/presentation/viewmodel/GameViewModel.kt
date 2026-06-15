@@ -48,6 +48,7 @@ import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.round
 import kotlin.random.Random
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
@@ -159,7 +160,7 @@ class GameViewModel @Inject constructor(
             }
 
             // delay to let the ui show if the answer was correct
-            delay(80)
+            delay(80.milliseconds)
             withContext(Dispatchers.Main) {
                 saveState(
                     _gameState.value.copy(
@@ -299,22 +300,14 @@ class GameViewModel @Inject constructor(
         val lastGame = GameRecord(
             isModeEnabled = _gameState.value.isModeEnabled,
             modeLimit = _gameState.value.modeLimit,
-            additionRangeStart = _gameState.value.enabledOperators[Operation.ADDITION]?.first?.toInt()
-                ?: 0,
-            additionRangeEnd = _gameState.value.enabledOperators[Operation.ADDITION]?.second?.toInt()
-                ?: 0,
-            subtractionRangeStart = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.first?.toInt()
-                ?: 0,
-            subtractionRangeEnd = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.second?.toInt()
-                ?: 0,
-            multiplicationRangeStart = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.first?.toInt()
-                ?: 0,
-            multiplicationRangeEnd = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.second?.toInt()
-                ?: 0,
-            divisionRangeStart = _gameState.value.enabledOperators[Operation.DIVISION]?.first?.toInt()
-                ?: 0,
-            divisionRangeEnd = _gameState.value.enabledOperators[Operation.DIVISION]?.second?.toInt()
-                ?: 0,
+            additionRangeStart = _gameState.value.enabledOperators[Operation.ADDITION]?.first?.toInt() ?: 0,
+            additionRangeEnd = _gameState.value.enabledOperators[Operation.ADDITION]?.second?.toInt() ?: 0,
+            subtractionRangeStart = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.first?.toInt() ?: 0,
+            subtractionRangeEnd = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.second?.toInt() ?: 0,
+            multiplicationRangeStart = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.first?.toInt() ?: 0,
+            multiplicationRangeEnd = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.second?.toInt() ?: 0,
+            divisionRangeStart = _gameState.value.enabledOperators[Operation.DIVISION]?.first?.toInt() ?: 0,
+            divisionRangeEnd = _gameState.value.enabledOperators[Operation.DIVISION]?.second?.toInt() ?: 0,
             totalAnswers = _gameState.value.totalAnswers,
             correctAnswers = _gameState.value.correctAnswers,
             totalTime = _gameState.value.totalTime,
@@ -335,22 +328,14 @@ class GameViewModel @Inject constructor(
         val cancelledGame = GameRecord(
             isModeEnabled = _gameState.value.isModeEnabled,
             modeLimit = _gameState.value.modeLimit,
-            additionRangeStart = _gameState.value.enabledOperators[Operation.ADDITION]?.first?.toInt()
-                ?: 0,
-            additionRangeEnd = _gameState.value.enabledOperators[Operation.ADDITION]?.second?.toInt()
-                ?: 0,
-            subtractionRangeStart = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.first?.toInt()
-                ?: 0,
-            subtractionRangeEnd = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.second?.toInt()
-                ?: 0,
-            multiplicationRangeStart = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.first?.toInt()
-                ?: 0,
-            multiplicationRangeEnd = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.second?.toInt()
-                ?: 0,
-            divisionRangeStart = _gameState.value.enabledOperators[Operation.DIVISION]?.first?.toInt()
-                ?: 0,
-            divisionRangeEnd = _gameState.value.enabledOperators[Operation.DIVISION]?.second?.toInt()
-                ?: 0,
+            additionRangeStart = _gameState.value.enabledOperators[Operation.ADDITION]?.first?.toInt() ?: 0,
+            additionRangeEnd = _gameState.value.enabledOperators[Operation.ADDITION]?.second?.toInt() ?: 0,
+            subtractionRangeStart = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.first?.toInt() ?: 0,
+            subtractionRangeEnd = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.second?.toInt() ?: 0,
+            multiplicationRangeStart = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.first?.toInt() ?: 0,
+            multiplicationRangeEnd = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.second?.toInt() ?: 0,
+            divisionRangeStart = _gameState.value.enabledOperators[Operation.DIVISION]?.first?.toInt() ?: 0,
+            divisionRangeEnd = _gameState.value.enabledOperators[Operation.DIVISION]?.second?.toInt() ?: 0,
             seed = _gameState.value.seed
         )
 
@@ -386,7 +371,7 @@ class GameViewModel @Inject constructor(
                         totalTime = elapsedTime
                     )
                 )
-                delay(100)
+                delay(100.milliseconds)
             }
         }
     }
