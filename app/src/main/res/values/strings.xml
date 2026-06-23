@@ -60,6 +60,8 @@ Thank you for contributing!
     <string name="number_pad">Number Pad</string>
     <string name="right_to_left">Right-To-\u200BLeft</string>
     <string name="left_to_right">Left-To-\u200BRight</string>
+    <string name="horizontal">Horizontal</string>
+    <string name="vertical">Vertical</string>
     <string name="reminder_off">Reminder Off</string>
     <string name="daily_reminder">Daily Reminder</string>
     <string name="every_three_days">Every 3 Days</string>
@@ -86,6 +88,8 @@ Thank you for contributing!
     <!-- Game Screen -->
     <string name="rtl_toast">Right-To-Left Input</string>
     <string name="ltr_toast">Left-To-Right Input</string>
+    <string name="horizontal_toast">Horizontal Layout</string>
+    <string name="vertical_toast">Vertical Layout</string>
 
     <!-- Statistics Screen -->
     <string name="result">Result</string>
@@ -101,7 +105,7 @@ Thank you for contributing!
     <string name="correct_answers">Correct Answers</string>
     <string name="incorrect_answers">Incorrect Answers</string>
     <string name="accuracy">Accuracy</string>
-    <string name="avg_time_per_correct_answer">Time Spent/Correct Answers</string>
+    <string name="avg_time_per_correct_answer">Time Spent Per Correct Answer</string>
     <string name="score">Score</string>
     <string name="solution">Solution</string>
     <string name="input">Input</string>

@@ -42,18 +42,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
+import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil.deserialize
+import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil.isValidQueryParameter
+import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.screen.Navigation
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
-import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.MainActivityViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
-import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil.deserialize
-import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil.isValidQueryParameter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -129,7 +129,7 @@ class MainActivity : ComponentActivity() {
                             gameViewModel.reset()
                             gameViewModel.setIsLinkGame(true)
                             settingsViewModel.applySettingsFromLink(gameRecordFromAppLink.value)
-                            gameViewModel.setSettings(settingsViewModel)
+                            gameViewModel.setSettings(settingsViewModel.settingsState.value)
                             statisticsViewModel.prepareGameFromLink(gameRecordFromAppLink.value)
                             navController.navigate("game") {
                                 popUpTo(0) { inclusive = true }

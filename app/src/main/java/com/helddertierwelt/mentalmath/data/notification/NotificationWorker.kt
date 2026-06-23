@@ -32,7 +32,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.helddertierwelt.mentalmath.MainActivity
 import com.helddertierwelt.mentalmath.R
-import com.helddertierwelt.mentalmath.presentation.component.settings.menu.NotificationMode
+import com.helddertierwelt.mentalmath.domain.settings.NotificationMode
 
 private const val CHANNEL_ID = "mental_math"
 private const val CHANNEL_NAME = "Mental Math Reminders"

@@ -30,15 +30,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 
@@ -52,7 +57,9 @@ fun ProblemInput(
     width: Dp,
     isCorrect: Boolean?,
     isRightToLeft: Boolean,
-    onClick: () -> Unit
+    isVerticalForm: Boolean,
+    onInputClick: () -> Unit,
+    onProblemClick: () -> Unit
 ) {
 
     val color = MaterialTheme.colorScheme.onPrimary
@@ -60,14 +67,44 @@ fun ProblemInput(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-        Text(
-            text = "$operand1 $operator $operand2",
-            fontSize = fontSize,
-            textAlign = TextAlign.Center,
-            lineHeight = fontSize,
-            color = color
-        )
-        Spacer(modifier = Modifier.height((0.5 * fontSize.value).dp))
+        val top = operand1.toString()
+        val bottom = operand2.toString()
+        val length = maxOf(top.length, bottom.length)
+
+        val verticalText = buildString {
+            appendLine(top.padStart(length + 1))
+            append(operator)
+            append(bottom.padStart(length))
+        }
+        val horizontalText = "$operand1 $operator $operand2"
+        val robotoMono = FontFamily(Font(R.font.roboto_mono_regular_mental_math, FontWeight.Normal))
+
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .height(fontSize.value.dp * 2.5f)
+                .clip(RoundedCornerShape(16.dp))
+                .clickable { onProblemClick() }
+        ) {
+            Text(
+                text = horizontalText,
+                fontSize = fontSize,
+                lineHeight = fontSize,
+                textAlign = TextAlign.Center,
+                color = color,
+                modifier = Modifier.alpha(if (isVerticalForm) 0f else 1f)
+            )
+
+            Text(
+                text = verticalText,
+                fontFamily = robotoMono,
+                fontSize = fontSize,
+                lineHeight = fontSize,
+                textAlign = TextAlign.Center,
+                color = color,
+                modifier = Modifier.alpha(if (isVerticalForm) 1f else 0f)
+            )
+        }
         Box(
             modifier = Modifier.width(width + (1.2 * fontSize.value).dp),
             contentAlignment = Alignment.CenterStart
@@ -85,7 +122,7 @@ fun ProblemInput(
                     .width(width)
                     .height((fontSize * 1.6f).value.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .clickable { onClick() }
+                    .clickable { onInputClick() }
                     .drawBehind {
                         val arrowSize = 12.dp.toPx()
                         val y = size.height - 0.75f * arrowSize

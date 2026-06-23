@@ -19,8 +19,6 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.domain.settings
 
 import android.os.Parcelable
-import com.helddertierwelt.mentalmath.presentation.component.settings.menu.NotificationMode
-import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -41,7 +39,8 @@ data class SettingsState(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val notificationMode: NotificationMode = NotificationMode.OFF,
     val isNumpadDefault: Boolean = false,
-    val isRightToLeft: Boolean = false,
-    val isSoundEnabled: Boolean = false
+    val isRightToLeftDefault: Boolean = false,
+    val isSoundEnabled: Boolean = false,
+    val isVerticalFormDefault: Boolean = false
 
 ) : Parcelable

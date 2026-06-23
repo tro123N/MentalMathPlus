@@ -20,34 +20,18 @@ package com.helddertierwelt.mentalmath.presentation.component.settings.menu
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
+import androidx.annotation.DrawableRes
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun IntentRow(
-    iconResId: Int,
+    @DrawableRes iconResId: Int,
     contentDescription: String,
     text: String,
     fontSize: TextUnit,
@@ -58,42 +42,24 @@ fun IntentRow(
     isEnabled: Boolean = true
 ) {
     val context = LocalContext.current
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 8.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .clickable(
-                enabled = isEnabled,
-                onClick = {
-                    try {
-                        context.startActivity(intentProvider())
-                    } catch (e: ActivityNotFoundException) {
-                        Log.e("IntentRow", "No app found to start activity: ${e.message}")
-                        Toast.makeText(
-                            context,
-                            errorMessage,
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-            )
-            .alpha(if (isEnabled) 1f else 0.38f),
-        verticalAlignment = Alignment.CenterVertically,
+
+    ActionRow(
+        iconResId = iconResId,
+        contentDescription = contentDescription,
+        text = text,
+        fontSize = fontSize,
+        iconSize = iconSize,
+        color = color,
+        isEnabled = isEnabled
     ) {
-        Spacer(modifier = Modifier.width(16.dp))
-        Icon(
-            painter = painterResource(iconResId),
-            contentDescription = contentDescription,
-            modifier = Modifier.size(iconSize),
-            tint = color
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = text,
-            fontSize = fontSize,
-            lineHeight = fontSize,
-            color = color
-        )
+        try {
+            context.startActivity(intentProvider())
+        } catch (_: ActivityNotFoundException) {
+            Toast.makeText(
+                context,
+                errorMessage,
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 }

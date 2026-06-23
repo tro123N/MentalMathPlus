@@ -18,6 +18,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.settings.menu
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,59 +33,50 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import com.helddertierwelt.mentalmath.R
 
 @Composable
-fun NotificationToggleRow(
+fun ActionRow(
+    @DrawableRes iconResId: Int,
+    contentDescription: String,
+    text: String,
     fontSize: TextUnit,
     iconSize: Dp,
-    currentMode: NotificationMode,
     color: Color = MaterialTheme.colorScheme.onPrimary,
-    onModeChange: (NotificationMode) -> Unit
+    isEnabled: Boolean = true,
+    onClick: () -> Unit
 ) {
-
-    val icons = listOf(
-        R.drawable.notifications_off_24dp,
-        R.drawable.notifications_active_24dp,
-        R.drawable.notifications_active_24dp,
-        R.drawable.notifications_active_24dp,
-    )
-    val texts = listOf(
-        R.string.reminder_off,
-        R.string.daily_reminder,
-        R.string.every_three_days,
-        R.string.weekly_reminder,
-    )
-    val modes = listOf(NotificationMode.OFF, NotificationMode.DAILY, NotificationMode.THREEDAILY, NotificationMode.WEEKLY)
-    val currentIndex = modes.indexOf(currentMode).coerceAtLeast(0)
     Row(
-        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 8.dp)
             .clip(RoundedCornerShape(16.dp))
-            .clickable {
-                val nextIndex = (currentIndex + 1) % modes.size
-                onModeChange(modes[nextIndex])
-            }
+            .clickable(
+                enabled = isEnabled,
+                onClick = onClick
+            )
+            .alpha(if (isEnabled) 1f else 0.38f),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Spacer(modifier = Modifier.width(16.dp))
+
         Icon(
-            painter = painterResource(icons[currentIndex]),
-            contentDescription = stringResource(texts[currentIndex]),
+            painter = painterResource(iconResId),
+            contentDescription = contentDescription,
             modifier = Modifier.size(iconSize),
             tint = color
         )
+
         Spacer(modifier = Modifier.width(8.dp))
+
         Text(
-            text = stringResource(texts[currentIndex]),
+            text = text,
             fontSize = fontSize,
             lineHeight = fontSize,
             color = color

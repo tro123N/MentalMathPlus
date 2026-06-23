@@ -13,6 +13,8 @@
     <string name="number_pad">Tastierino numerico</string>
     <string name="right_to_left">Da destra a\u200B sinistra</string>
     <string name="left_to_right">Da sinistra a\u200B destra</string>
+    <string name="horizontal">Orizzontale</string>
+    <string name="vertical">Verticale</string>
     <string name="reminder_off">Promemoria disattivato</string>
     <string name="daily_reminder">Promemoria giornaliero</string>
     <string name="every_three_days">Ogni 3 giorni</string>
@@ -39,6 +41,8 @@
     <!-- Game Screen -->
     <string name="rtl_toast">Input da destra a sinistra</string>
     <string name="ltr_toast">Input da sinistra a destra</string>
+    <string name="horizontal_toast">Disposizione orizzontale</string>
+    <string name="vertical_toast">Disposizione verticale</string>
 
     <!-- Statistics Screen -->
     <string name="result">Risultato</string>

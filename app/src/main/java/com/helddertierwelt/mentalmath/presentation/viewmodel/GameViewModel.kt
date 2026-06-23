@@ -30,6 +30,7 @@ import com.helddertierwelt.mentalmath.data.repository.MathProblemRepository
 import com.helddertierwelt.mentalmath.domain.game.GameState
 import com.helddertierwelt.mentalmath.domain.game.Operation
 import com.helddertierwelt.mentalmath.domain.game.SolvedProblem
+import com.helddertierwelt.mentalmath.domain.settings.SettingsState
 import com.helddertierwelt.mentalmath.domain.sound.SoundController
 import com.helddertierwelt.mentalmath.domain.sound.SoundType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -100,6 +101,18 @@ class GameViewModel @Inject constructor(
 
     fun clearInput() {
         saveState(_gameState.value.copy(input = ""))
+    }
+
+    fun toggleIsRightToLeft(): Boolean {
+        val newValue = !_gameState.value.isRightToLeft
+        saveState(_gameState.value.copy(isRightToLeft = newValue))
+        return newValue
+    }
+
+    fun toggleIsVerticalForm(): Boolean {
+        val newValue = !_gameState.value.isVerticalForm
+        saveState(_gameState.value.copy(isVerticalForm = newValue))
+        return newValue
     }
 
     fun generateNewProblem() {
@@ -238,30 +251,27 @@ class GameViewModel @Inject constructor(
         )
     }
 
-    fun setSettings(settingsViewModel: SettingsViewModel) {
-        val settingsState = settingsViewModel.settingsState.value
+    fun setSettings(settingsState: SettingsState) {
         val enabledOperators: MutableMap<Operation, Pair<Float, Float>> = mutableMapOf()
         if (settingsState.isAdditionEnabled) {
-            enabledOperators[Operation.ADDITION] =
-                settingsViewModel.settingsState.value.additionRange
+            enabledOperators[Operation.ADDITION] = settingsState.additionRange
         }
         if (settingsState.isSubtractionEnabled) {
-            enabledOperators[Operation.SUBTRACTION] =
-                settingsViewModel.settingsState.value.subtractionRange
+            enabledOperators[Operation.SUBTRACTION] = settingsState.subtractionRange
         }
         if (settingsState.isMultiplicationEnabled) {
-            enabledOperators[Operation.MULTIPLICATION] =
-                settingsViewModel.settingsState.value.multiplicationRange
+            enabledOperators[Operation.MULTIPLICATION] = settingsState.multiplicationRange
         }
         if (settingsState.isDivisionEnabled) {
-            enabledOperators[Operation.DIVISION] =
-                settingsViewModel.settingsState.value.divisionRange
+            enabledOperators[Operation.DIVISION] = settingsState.divisionRange
         }
         saveState(
             _gameState.value.copy(
                 enabledOperators = enabledOperators,
                 isModeEnabled = settingsState.isModeEnabled,
-                modeLimit = settingsState.limit.toInt()
+                modeLimit = settingsState.limit.toInt(),
+                isRightToLeft = settingsState.isRightToLeftDefault,
+                isVerticalForm = settingsState.isVerticalFormDefault
             )
         )
     }

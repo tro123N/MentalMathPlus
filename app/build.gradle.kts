@@ -29,8 +29,8 @@ android {
         applicationId = "com.helddertierwelt.mentalmath"
         minSdk = 24
         targetSdk = 36
-        versionCode = 25
-        versionName = "25"
+        versionCode = 26
+        versionName = "26"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -171,6 +171,14 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.add(
+            "-Xannotation-default-target=param-property"
+        )
+    }
 }
 
 protobuf {

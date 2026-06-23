@@ -13,6 +13,8 @@
     <string name="number_pad">Pavé numérique</string>
     <string name="right_to_left">Droite à gauche</string>
     <string name="left_to_right">Gauche à droite</string>
+    <string name="horizontal">Horizontal</string>
+    <string name="vertical">Vertical</string>
     <string name="reminder_off">Pas de rappels</string>
     <string name="daily_reminder">Rappels journaliers</string>
     <string name="every_three_days">Tous les 3 jours</string>
@@ -39,6 +41,8 @@
     <!-- Game Screen -->
     <string name="rtl_toast">Saisie de droite à gauche</string>
     <string name="ltr_toast">Saisie de gauche à droite</string>
+    <string name="horizontal_toast">Disposition horizontale</string>
+    <string name="vertical_toast">Disposition verticale</string>
 
     <!-- Statistics Screen -->
     <string name="result">Résultat</string>

@@ -18,6 +18,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.settings.menu
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,41 +36,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import com.helddertierwelt.mentalmath.R
 
 @Composable
-fun InputLayoutToggleRow(
+fun SettingsRow(
     fontSize: TextUnit,
     iconSize: Dp,
-    isNumpad: Boolean,
+    @DrawableRes iconRes: Int,
+    text: String,
     color: Color = MaterialTheme.colorScheme.onPrimary,
     onClick: () -> Unit,
 ) {
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 8.dp)
             .clip(RoundedCornerShape(16.dp))
-            .clickable {
-                onClick()
-            }
+            .clickable(onClick = onClick)
     ) {
         Spacer(modifier = Modifier.width(16.dp))
+
         Icon(
-            painter = painterResource(id = R.drawable.dialpad_24dp),
-            contentDescription = "input layout",
+            painter = painterResource(iconRes),
+            contentDescription = text,
             modifier = Modifier.size(iconSize),
             tint = color
         )
+
         Spacer(modifier = Modifier.width(8.dp))
+
         Text(
-            text =  stringResource(if (isNumpad) R.string.number_pad else R.string.phone_pad),
+            text = text,
             fontSize = fontSize,
             lineHeight = fontSize,
             color = color

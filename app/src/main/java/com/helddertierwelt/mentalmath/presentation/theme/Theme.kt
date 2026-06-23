@@ -24,6 +24,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
 
 private val DarkColorScheme = darkColorScheme(
     primary = Color(0xFF3C3F41),

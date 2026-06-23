@@ -100,14 +100,17 @@ fun GameScreen(
 
     // variables
     val settingsState = settingsViewModel.settingsState.collectAsState().value
-    val isRightToLeft = settingsState.isRightToLeft
     val upperNumberRow = if (settingsState.isNumpadDefault) 7..9 else 1..3
     val lowerNumberRow = if (settingsState.isNumpadDefault) 1..3 else 7..9
     val gameState = gameViewModel.gameState.collectAsState().value
+    val isRightToLeft = gameState.isRightToLeft
+    val isVerticalForm = gameState.isVerticalForm
     val isGeneratingProblem by gameViewModel.isGeneratingProblem.collectAsState()
     var toastEvent by remember { mutableStateOf<ToastEvent?>(null) }
     val rtlMessage = stringResource(R.string.rtl_toast)
     val ltrMessage = stringResource(R.string.ltr_toast)
+    val horizontalLayoutMessage = stringResource(R.string.horizontal_toast)
+    val verticalLayoutMessage = stringResource(R.string.vertical_toast)
 
 
     LaunchedEffect(Unit) {
@@ -184,9 +187,15 @@ fun GameScreen(
                                     width = resultLineWidth,
                                     isCorrect = gameState.isCorrect,
                                     isRightToLeft = isRightToLeft,
-                                    onClick = {
-                                        val isRightToLeftUpdated = settingsViewModel.toggleInputMethod()
+                                    isVerticalForm = isVerticalForm,
+                                    onInputClick = {
+                                        val isRightToLeftUpdated = gameViewModel.toggleIsRightToLeft()
                                         val message = if (isRightToLeftUpdated) rtlMessage else ltrMessage
+                                        toastEvent = ToastEvent(message)
+                                    },
+                                    onProblemClick = {
+                                        val isVerticalFormUpdated = gameViewModel.toggleIsVerticalForm()
+                                        val message = if (isVerticalFormUpdated) verticalLayoutMessage else horizontalLayoutMessage
                                         toastEvent = ToastEvent(message)
                                     }
                                 )

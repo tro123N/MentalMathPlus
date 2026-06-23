@@ -47,8 +47,10 @@ data class GameState(
     val totalPauseDuration: Long = 0L,
     val seed: Long = 0L,
     val isLinkGame: Boolean = false,
+    val isRightToLeft: Boolean = false,
+    val isVerticalForm: Boolean = false
 
-    ) : Serializable {
+) : Serializable {
     companion object {
         fun deserialize(serialized: String): GameState {
             val parts = serialized.split(",")
@@ -74,6 +76,8 @@ data class GameState(
             val totalPauseDuration = parts[19].toLong()
             val seed = parts[20].toLong()
             val isLinkGame = parts[21].toBoolean()
+            val isRightToLeft = parts[21].toBoolean()
+            val isVerticalForm = parts[21].toBoolean()
             return GameState(
                 isModeEnabled = isModeEnabled,
                 modeLimit = modeLimit,
@@ -96,7 +100,9 @@ data class GameState(
                 pausedAt = pausedAt,
                 totalPauseDuration = totalPauseDuration,
                 seed = seed,
-                isLinkGame = isLinkGame
+                isLinkGame = isLinkGame,
+                isRightToLeft = isRightToLeft,
+                isVerticalForm = isVerticalForm
             )
         }
     }

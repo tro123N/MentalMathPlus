@@ -16,11 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.presentation.component.settings.menu
+package com.helddertierwelt.mentalmath.domain.settings
 
-enum class NotificationMode(val intervalDays: Int) {
-    OFF(0),
-    DAILY(1),
-    THREEDAILY(3),
-    WEEKLY(7)
-}
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+
+data class ToggleOption<T>(
+    val value: T,
+    @DrawableRes val iconRes: Int,
+    @StringRes val textRes: Int
+)

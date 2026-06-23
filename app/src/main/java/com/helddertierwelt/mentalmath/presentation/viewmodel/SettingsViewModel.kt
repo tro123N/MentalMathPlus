@@ -29,9 +29,9 @@ import androidx.lifecycle.viewModelScope
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
 import com.helddertierwelt.mentalmath.data.repository.SettingsRepository
+import com.helddertierwelt.mentalmath.domain.settings.NotificationMode
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
-import com.helddertierwelt.mentalmath.presentation.component.settings.menu.NotificationMode
-import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
+import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -217,8 +217,15 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun toggleInputMethod(): Boolean {
-        val newValue = !_settingsState.value.isRightToLeft
-        _settingsState.value = _settingsState.value.copy(isRightToLeft = newValue)
+        val newValue = !_settingsState.value.isRightToLeftDefault
+        _settingsState.value = _settingsState.value.copy(isRightToLeftDefault = newValue)
+        saveState()
+        return newValue
+    }
+
+    fun toggleForm(): Boolean {
+        val newValue = !_settingsState.value.isVerticalFormDefault
+        _settingsState.value = _settingsState.value.copy(isVerticalFormDefault = newValue)
         saveState()
         return newValue
     }

@@ -51,6 +51,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.component.settings.menu.MenuSideSheet
 import com.helddertierwelt.mentalmath.presentation.component.settings.score.ScoreSideSheet
@@ -69,7 +70,6 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.HistoryViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.MainActivityViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
-import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler
 import java.security.SecureRandom
 
 @Composable
@@ -340,7 +340,7 @@ fun SettingsScreen(
                             settingsViewModel.setIsStartButtonClicked(true)
                             statisticsViewModel.setShowLinkGamePopUp(false)
                             gameViewModel.reset()
-                            gameViewModel.setSettings(settingsViewModel)
+                            gameViewModel.setSettings(settingsViewModel.settingsState.value)
                             navController.navigate("game") {
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true

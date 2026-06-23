@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.R
-import com.helddertierwelt.mentalmath.presentation.theme.ThemeMode
+import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red

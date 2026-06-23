@@ -13,6 +13,8 @@
     <string name="number_pad">Ziffernblock</string>
     <string name="right_to_left">Rechts-Nach-\u200BLinks</string>
     <string name="left_to_right">Links-Nach-\u200BRechts</string>
+    <string name="horizontal">Horizontal</string>
+    <string name="vertical">Vertikal</string>
     <string name="reminder_off">Erinnerung aus</string>
     <string name="daily_reminder">Täglich</string>
     <string name="every_three_days">Alle 3 Tage</string>
@@ -39,6 +41,8 @@
     <!-- Game Screen -->
     <string name="rtl_toast">Rechts-Nach-Links Eingabe</string>
     <string name="ltr_toast">Links-Nach-Rechts Eingabe</string>
+    <string name="vertical_toast">Vertikale Anordnung</string>
+    <string name="horizontal_toast">Horizontale Anordnung</string>
 
     <!-- Statistics Screen -->
     <string name="result">Ergebnis</string>
@@ -54,7 +58,7 @@
     <string name="correct_answers">Korrekte Antworten</string>
     <string name="incorrect_answers">Inkorrekte Antworten</string>
     <string name="accuracy">Genauigkeit</string>
-    <string name="avg_time_per_correct_answer">Zeit pro richtiger Antwort</string>
+    <string name="avg_time_per_correct_answer">Zeit pro korrekter Antwort</string>
     <string name="score">Score</string>
     <string name="solution">Lösung</string>
     <string name="input">Eingabe</string>

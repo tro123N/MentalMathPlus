@@ -13,6 +13,8 @@
     <string name="number_pad">Αριθμητικό Πληκτρολόγιο</string>
     <string name="right_to_left">Δεξιά-Προς-\u200BΑριστερά</string>
     <string name="left_to_right">Αριστερά-Προς-\u200BΔεξιά</string>
+    <string name="horizontal">Οριζόντια</string>
+    <string name="vertical">Κάθετα</string>
     <string name="reminder_off">Χωρίς Υπενθύμιση</string>
     <string name="daily_reminder">Ημερήσια Υπενθύμιση</string>
     <string name="every_three_days">Κάθε 3 Ημέρες</string>
@@ -39,6 +41,8 @@
     <!-- Game Screen -->
     <string name="rtl_toast">Εισαγωγή από δεξιά προς τα αριστερά</string>
     <string name="ltr_toast">Εισαγωγή από αριστερά προς τα δεξιά</string>
+    <string name="horizontal_toast">Οριζόντια διάταξη</string>
+    <string name="vertical_toast">Κατακόρυφη διάταξη</string>
 
     <!-- Statistics Screen -->
     <string name="result">Αποτέλεσμα</string>
