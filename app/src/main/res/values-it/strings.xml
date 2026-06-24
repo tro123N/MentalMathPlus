@@ -24,11 +24,13 @@
     <string name="system_mode">Tema di sistema</string>
     <string name="sound_on">Audio attivo</string>
     <string name="sound_off">Audio disattivato</string>
+    <string name="language">Lingua</string>
     <string name="about">Info</string>
     <string name="feedback">Feed\u200Bback</string>
     <string name="recommend">Consi\u200Bglia</string>
     <string name="donate">Donazioni</string>
     <string name="reset_app">Ripristina app</string>
+    <string name="unknown_error">Si è verificato un errore sconosciuto.</string>
     <string name="no_browser">Nessuna app disponibile per aprire questo link.</string>
     <string name="no_share">Nessuna app disponibile per condividere questo contenuto.</string>
     <string name="no_app_store">Nessun app store disponibile per aprire questa pagina.</string>

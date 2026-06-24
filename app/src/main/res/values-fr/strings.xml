@@ -24,11 +24,13 @@
     <string name="system_mode">Thème du système</string>
     <string name="sound_on">Son activé</string>
     <string name="sound_off">Son désactivé</string>
+    <string name="language">Langue</string>
     <string name="about">À propos</string>
     <string name="feedback">Commenter</string>
     <string name="recommend">Recommander</string>
     <string name="donate">Don</string>
     <string name="reset_app">Réinitialiser</string>
+    <string name="unknown_error">Une erreur inconnue s\'est produite.</string>
     <string name="no_browser">Aucune application disponible pour ouvrir ce lien.</string>
     <string name="no_share">Aucune application disponible pour partager ce contenu.</string>
     <string name="no_app_store">Aucune boutique d’applications disponible pour ouvrir cette page.</string>

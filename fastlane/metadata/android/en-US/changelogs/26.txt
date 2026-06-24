@@ -1,5 +1,6 @@
 - Added sound effects for correct and incorrect answers.
 - Added an option to mute all sound effects.
+- Added a menu option to open the app language settings.
 - Added an option to display math problems vertically instead of horizontally.
 - The layout can also be changed during gameplay by tapping the math problem.
 - The layout selected in the menu is used as the default for each new game, regardless of changes made during gameplay.

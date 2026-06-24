@@ -24,11 +24,13 @@
     <string name="system_mode">Επιλογή Συστήματος</string>
     <string name="sound_on">Ήχος ενεργός</string>
     <string name="sound_off">Ήχος ανενεργός</string>
+    <string name="language">Γλώσσα</string>
     <string name="about">Σχετικά</string>
     <string name="feedback">Ανατροφο\u200Bδότηση</string>
     <string name="recommend">Σύστ\u200Bαση</string>
     <string name="donate">Δωρεά</string>
     <string name="reset_app">Επαναφορά Εφαρμογής</string>
+    <string name="unknown_error">Παρουσιάστηκε άγνωστο σφάλμα.</string>
     <string name="no_browser">Δεν υπάρχει διαθέσιμη εφαρμογή για το άνοιγμα αυτού του συνδέσμου.</string>
     <string name="no_share">Δεν υπάρχει διαθέσιμη εφαρμογή για την κοινοποίηση αυτού του περιεχομένου.</string>
     <string name="no_app_store">Δεν υπάρχει διαθέσιμο κατάστημα εφαρμογών για το άνοιγμα αυτής της σελίδας.</string>

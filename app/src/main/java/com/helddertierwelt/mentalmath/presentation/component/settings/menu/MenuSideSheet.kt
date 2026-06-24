@@ -19,6 +19,9 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.presentation.component.settings.menu
 
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.LocalActivity
@@ -438,6 +441,23 @@ fun MenuSideSheet(
                         )
                     )
 
+                    // Language
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        IntentRow(
+                            iconResId = R.drawable.translate_24dp,
+                            contentDescription = "Language",
+                            text = stringResource(R.string.language),
+                            fontSize = fontSize,
+                            iconSize = iconSize,
+                            intentProvider = {
+                                Intent(Settings.ACTION_APP_LOCALE_SETTINGS).apply {
+                                    data = Uri.fromParts("package", context.packageName, null)
+                                }
+                            },
+                            errorMessage = stringResource(R.string.unknown_error)
+                        )
+                    }
+
                     // Website Link
                     IntentRow(
                         iconResId = R.drawable.info_24dp,
@@ -539,7 +559,7 @@ fun MenuSideSheet(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
-                        .height(32.dp)
+                        .height(64.dp)
                 )
             }
             }

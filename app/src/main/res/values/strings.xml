@@ -71,11 +71,13 @@ Thank you for contributing!
     <string name="system_mode">System Mode</string>
     <string name="sound_on">Sound On</string>
     <string name="sound_off">Sound Off</string>
+    <string name="language">Language</string>
     <string name="about">About</string>
     <string name="feedback">Feed\u200Bback</string>
     <string name="recommend">Recom\u200Bmend</string>
     <string name="donate">Donate</string>
     <string name="reset_app">Reset App</string>
+    <string name="unknown_error">An unknown error occurred.</string>
     <string name="no_browser">No app available to open this link.</string>
     <string name="no_share">No app available to share this content.</string>
     <string name="no_app_store">No app store available to open this page.</string>
