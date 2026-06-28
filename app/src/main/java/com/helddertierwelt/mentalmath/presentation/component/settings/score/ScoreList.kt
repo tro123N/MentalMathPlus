@@ -39,16 +39,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
-import com.helddertierwelt.mentalmath.data.entity.GameRecord
+import com.helddertierwelt.mentalmath.data.entity.GameScore
+import com.helddertierwelt.mentalmath.presentation.component.statistics.formatScore
 import com.helddertierwelt.mentalmath.presentation.theme.green
-import com.helddertierwelt.mentalmath.domain.settings.AppLocale
 
 @Composable
 fun ScoreList(
-    gameRecords: List<GameRecord>,
+    gameScores: List<GameScore>,
     fontSizeScore: TextUnit,
     lastGameId: Int,
-    onClick: (GameRecord) -> Unit,
+    onClick: (GameScore) -> Unit,
     isEnabled: Boolean = true
 ) {
 
@@ -58,10 +58,10 @@ fun ScoreList(
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.End
     ) {
-        gameRecords.forEachIndexed { index, game ->
+        gameScores.forEachIndexed { index, gameScore ->
             var color = MaterialTheme.colorScheme.onPrimary
             var indexValue = "${index + 1}"
-            if (game.id == lastGameId) {
+            if (gameScore.id == lastGameId) {
                 color = green
                 indexValue = stringResource(R.string.new_score)
             }
@@ -70,7 +70,7 @@ fun ScoreList(
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp, vertical = 8.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .clickable(enabled = isEnabled) { onClick(game) },
+                    .clickable(enabled = isEnabled) { onClick(gameScore) },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
@@ -83,7 +83,7 @@ fun ScoreList(
                     fontWeight = Bold
                 )
                 Text(
-                    text = AppLocale.format("%.2f", game.activeScore),
+                    text = formatScore(gameScore.activeScore),
                     color = color,
                     fontSize = fontSizeScore,
                     textAlign = TextAlign.End,

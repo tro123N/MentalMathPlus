@@ -173,10 +173,10 @@ fun ScoreSideSheet(
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                val bestGames by settingsViewModel.bestGames.collectAsState()
+                val hasGamesWithScore by settingsViewModel.hasGamesWithScore.collectAsState()
                 val lastGameId = statisticsViewModel.lastGameRecord.collectAsState().value.id
                 Spacer(modifier = Modifier.height(16.dp))
-                if (!bestGames.isEmpty()) {
+                if (hasGamesWithScore) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -201,14 +201,15 @@ fun ScoreSideSheet(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     val isScoreClicked = settingsViewModel.isScoreClicked.collectAsState().value
+                    val bestGameScores by settingsViewModel.bestGameScores.collectAsState()
                     ScoreList(
-                        gameRecords = bestGames,
+                        gameScores = bestGameScores,
                         fontSizeScore = fontSizeScore,
                         lastGameId = lastGameId,
                         isEnabled = !isScoreClicked,
                         onClick = { gameRecord ->
                             settingsViewModel.setIsScoreClicked(true)
-                            statisticsViewModel.setLoadedGameRecord(gameRecord)
+                            statisticsViewModel.setLoadedGameRecord(gameRecord.id)
                             statisticsViewModel.setShowLoadedGameRecord(true)
                             statisticsViewModel.setShowLinkGamePopUp(false)
                             navController.navigate("statistics") {

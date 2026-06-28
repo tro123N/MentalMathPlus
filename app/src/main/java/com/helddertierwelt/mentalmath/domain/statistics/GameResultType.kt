@@ -24,11 +24,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.settings.AppLocale
+import com.helddertierwelt.mentalmath.presentation.component.statistics.formatScore
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
-import com.helddertierwelt.mentalmath.domain.settings.AppLocale
 
 enum class GameResultType(
     val icon: Int,
@@ -97,9 +98,9 @@ enum class GameResultType(
         val template = templates.random()
 
         return if (linkScore < 0f) {
-            AppLocale.format(template, currentScore, seed)
+            AppLocale.format(template, formatScore(currentScore), seed)
         } else {
-            AppLocale.format(template, currentScore, linkScore, seed)
+            AppLocale.format(template, formatScore(currentScore), formatScore(linkScore), seed)
         }
     }
 }

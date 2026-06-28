@@ -118,10 +118,10 @@ fun HistoryScreen(
                             currentSortMode = currentSortMode,
                             fontSize = 12.sp,
                             isEnabled = !isEntryClicked,
-                            onClick = { gameRecord ->
+                            onClick = { gameRecordId ->
                                 historyViewModel.setIsEntryClicked(true)
                                 statisticsViewModel.setNavigatedFromHistory(true)
-                                statisticsViewModel.setLoadedGameRecord(gameRecord)
+                                statisticsViewModel.setLoadedGameRecord(gameRecordId)
                                 statisticsViewModel.setShowLoadedGameRecord(true)
                                 statisticsViewModel.setShowLinkGamePopUp(false)
                                 navController.navigate("statistics")

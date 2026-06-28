@@ -106,8 +106,7 @@ fun SettingsScreen(
     // variables
     val settingsState = settingsViewModel.settingsState.collectAsState().value
     val isLoaded = settingsViewModel.isLoaded.collectAsState().value
-    val bestGames = settingsViewModel.bestGames.collectAsState().value
-    val bestGamesEmpty = bestGames.isEmpty()
+    val hasGamesWithScore = settingsViewModel.hasGamesWithScore.collectAsState().value
     val isSliderActive = settingsViewModel.isSliderActive.collectAsState().value
     val isStartButtonClicked = settingsViewModel.isStartButtonClicked.collectAsState().value
 
@@ -128,7 +127,7 @@ fun SettingsScreen(
 
     LaunchedEffect(isLoaded) {
         if (isLoaded) {
-            settingsViewModel.loadBestGames()
+            settingsViewModel.checkForGamesWithScore()
             settingsViewModel.setIsStartButtonClicked(false)
         }
     }
@@ -138,10 +137,13 @@ fun SettingsScreen(
             SettingsTopBar(
                 titleFontSize = titleFontSize,
                 onMenuClick = { settingsViewModel.toggleMenuOpen() },
-                onScoreClick = { settingsViewModel.toggleScoreOpen() },
+                onScoreClick = {
+                    settingsViewModel.loadBestGameScores()
+                    settingsViewModel.toggleScoreOpen()
+                },
                 iconSize = topBarIconSize,
-                scoreEnabled = !bestGamesEmpty && !isSliderActive,
-                isGreyedOut = bestGamesEmpty
+                scoreEnabled = hasGamesWithScore && !isSliderActive,
+                isGreyedOut = !hasGamesWithScore
             )
         },
         content = { padding ->
@@ -174,7 +176,7 @@ fun SettingsScreen(
                             isToggled = settingsState.isModeEnabled,
                             onClick = {
                                 settingsViewModel.toggleMode()
-                                settingsViewModel.loadBestGames()
+                                settingsViewModel.checkForGamesWithScore()
                             },
                             iconSize = modeIconSize,
                             size = roundButtonSize
@@ -189,7 +191,7 @@ fun SettingsScreen(
                             },
                             onValueChangeFinished = {
                                 settingsViewModel.setIsSliderActive(false)
-                                settingsViewModel.loadBestGames()
+                                settingsViewModel.checkForGamesWithScore()
                             },
                             isToggled = settingsState.isModeEnabled,
                             activeTrackColor = MaterialTheme.colorScheme.onPrimary,
@@ -213,7 +215,7 @@ fun SettingsScreen(
                             isSelected = settingsState.isAdditionEnabled,
                             onClick = {
                                 settingsViewModel.toggleAddition()
-                                settingsViewModel.loadBestGames()
+                                settingsViewModel.checkForGamesWithScore()
                             },
                             size = roundButtonSize,
                             iconSize = operationIconSize,
@@ -228,7 +230,7 @@ fun SettingsScreen(
                             },
                             onValueChangeFinished = {
                                 settingsViewModel.setIsSliderActive(false)
-                                settingsViewModel.loadBestGames()
+                                settingsViewModel.checkForGamesWithScore()
                             },
                             isEnabled = settingsState.isAdditionEnabled,
                             activeTrackColor = green,
@@ -246,7 +248,7 @@ fun SettingsScreen(
                             isSelected = settingsState.isSubtractionEnabled,
                             onClick = {
                                 settingsViewModel.toggleSubtraction()
-                                settingsViewModel.loadBestGames()
+                                settingsViewModel.checkForGamesWithScore()
                             },
                             size = roundButtonSize,
                             iconSize = operationIconSize
@@ -261,7 +263,7 @@ fun SettingsScreen(
                             },
                             onValueChangeFinished = {
                                 settingsViewModel.setIsSliderActive(false)
-                                settingsViewModel.loadBestGames()
+                                settingsViewModel.checkForGamesWithScore()
                             },
                             isEnabled = settingsState.isSubtractionEnabled,
                             activeTrackColor = red,
@@ -279,7 +281,7 @@ fun SettingsScreen(
                             isSelected = settingsState.isMultiplicationEnabled,
                             onClick = {
                                 settingsViewModel.toggleMultiplication()
-                                settingsViewModel.loadBestGames()
+                                settingsViewModel.checkForGamesWithScore()
                             },
                             size = roundButtonSize,
                             iconSize = operationIconSize
@@ -294,7 +296,7 @@ fun SettingsScreen(
                             },
                             onValueChangeFinished = {
                                 settingsViewModel.setIsSliderActive(false)
-                                settingsViewModel.loadBestGames()
+                                settingsViewModel.checkForGamesWithScore()
                             },
                             isEnabled = settingsState.isMultiplicationEnabled,
                             activeTrackColor = yellow,
@@ -312,7 +314,7 @@ fun SettingsScreen(
                             isSelected = settingsState.isDivisionEnabled,
                             onClick = {
                                 settingsViewModel.toggleDivide()
-                                settingsViewModel.loadBestGames()
+                                settingsViewModel.checkForGamesWithScore()
                             },
                             size = roundButtonSize,
                             iconSize = operationIconSize
@@ -327,7 +329,7 @@ fun SettingsScreen(
                             },
                             onValueChangeFinished = {
                                 settingsViewModel.setIsSliderActive(false)
-                                settingsViewModel.loadBestGames()
+                                settingsViewModel.checkForGamesWithScore()
                             },
                             isEnabled = settingsState.isDivisionEnabled,
                             activeTrackColor = blue,
@@ -340,17 +342,19 @@ fun SettingsScreen(
                             settingsViewModel.setIsStartButtonClicked(true)
                             statisticsViewModel.setShowLinkGamePopUp(false)
                             gameViewModel.reset()
-                            gameViewModel.setSettings(settingsViewModel.settingsState.value)
-                            navController.navigate("game") {
-                                popUpTo(0) { inclusive = true }
-                                launchSingleTop = true
-                            }
+                            val validSettings = gameViewModel.setSettings(settingsViewModel.settingsState.value)
+                            if (validSettings) {
+                                navController.navigate("game") {
+                                    popUpTo(0) { inclusive = true }
+                                    launchSingleTop = true
+                                }
 
-                            var seed: Long
-                            do {
-                                seed = SecureRandom().nextLong()
-                            } while (seed < 0)
-                            gameViewModel.startGame(seed)
+                                var seed: Long
+                                do {
+                                    seed = SecureRandom().nextLong()
+                                } while (seed < 0)
+                                gameViewModel.startGame(seed)
+                            }
                         },
                         size = roundButtonSize,
                         fontSize = startButtonFontSize,

@@ -67,17 +67,18 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.settings.AppLocale
+import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil
+import com.helddertierwelt.mentalmath.domain.statistics.GameResultInfoGenerator.getGamePopUpInfo
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.component.statistics.DoneButton
 import com.helddertierwelt.mentalmath.presentation.component.statistics.ProblemsCard
 import com.helddertierwelt.mentalmath.presentation.component.statistics.SettingsAndStatsCard
 import com.helddertierwelt.mentalmath.presentation.component.statistics.StatisticsTopBar
+import com.helddertierwelt.mentalmath.presentation.component.statistics.formatScore
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
-import com.helddertierwelt.mentalmath.domain.settings.AppLocale
-import com.helddertierwelt.mentalmath.domain.statistics.GameResultInfoGenerator.getGamePopUpInfo
-import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -171,6 +172,21 @@ fun StatisticsScreen(
         return "https://mental-math.codeberg.page/app?s=${settingsString}"
     }
 
+    fun navigateBack() {
+        if (navigatedFromHistory) {
+            statisticsViewModel.setNavigatedFromHistory(false)
+            navController.navigate("history") {
+                popUpTo(0) { inclusive = true }
+                launchSingleTop = true
+            }
+        } else {
+            navController.navigate("settings") {
+                popUpTo(0) { inclusive = true }
+                launchSingleTop = true
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             StatisticsTopBar(
@@ -187,7 +203,7 @@ fun StatisticsScreen(
                                 bitmap,
                                 AppLocale.format(
                                     shareChallengeText,
-                                    statisticsGameRecord.activeScore,
+                                    formatScore(statisticsGameRecord.activeScore),
                                     statisticsGameRecord.seed,
                                     createLink()
                                 )
@@ -248,21 +264,7 @@ fun StatisticsScreen(
                         fontSize = fontSize,
                         iconSize = doneIconSize,
                         modifier = Modifier,
-                        onClick = {
-                            if (!navigatedFromHistory) {
-                                settingsViewModel.loadBestGames()
-                                navController.navigate("settings") {
-                                    popUpTo(0) { inclusive = true }
-                                    launchSingleTop = true
-                                }
-                            } else {
-                                statisticsViewModel.setNavigatedFromHistory(false)
-                                navController.navigate("history") {
-                                    popUpTo(0) { inclusive = true }
-                                    launchSingleTop = true
-                                }
-                            }
-                        }
+                        onClick = { navigateBack() }
                     )
                 }
             }
@@ -276,9 +278,9 @@ fun StatisticsScreen(
     if (showLinkGamePopUp) {
         val gamePopUpInfo = getGamePopUpInfo(currentScore, linkScore, seed)
         val shareMessage = if (linkScore < 0f) {
-            AppLocale.format(stringResource(R.string.result_share_message_waiting), currentScore, seed)
+            AppLocale.format(stringResource(R.string.result_share_message_waiting), formatScore(currentScore), seed)
         } else {
-            AppLocale.format(stringResource(R.string.result_share_message), currentScore, linkScore, seed)
+            AppLocale.format(stringResource(R.string.result_share_message), formatScore(currentScore), formatScore(linkScore), seed)
         }
         PopUp(
             titleSize = titleFontSize,
@@ -316,25 +318,9 @@ fun StatisticsScreen(
     val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     DisposableEffect(Unit) {
         val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (!navigatedFromHistory) {
-                    settingsViewModel.loadBestGames()
-                    navController.navigate("settings") {
-                        popUpTo(0) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                } else {
-                    statisticsViewModel.setNavigatedFromHistory(false)
-                    navController.navigate("history") {
-                        popUpTo(0) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                }
-            }
+            override fun handleOnBackPressed() { navigateBack() }
         }
         backPressedDispatcher?.addCallback(callback)
-        onDispose {
-            callback.remove()
-        }
+        onDispose { callback.remove() }
     }
 }

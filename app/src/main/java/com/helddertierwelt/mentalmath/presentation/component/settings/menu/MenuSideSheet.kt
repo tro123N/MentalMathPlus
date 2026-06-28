@@ -484,7 +484,7 @@ fun MenuSideSheet(
                         intentProvider = {
                             Intent(Intent.ACTION_SEND).apply {
                                 selector = Intent(Intent.ACTION_SENDTO, "mailto:".toUri())
-                                putExtra(Intent.EXTRA_EMAIL, arrayOf("mental_math_feedback@pm.me"))
+                                putExtra(Intent.EXTRA_EMAIL, arrayOf("mental_math_app@pm.me"))
                                 putExtra(Intent.EXTRA_SUBJECT, "Mental Math: Feedback")
                             }
                         },

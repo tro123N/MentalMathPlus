@@ -19,12 +19,16 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
+import com.helddertierwelt.mentalmath.data.entity.GameScore
 import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,19 +37,22 @@ class StatisticsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _showLoadedGameRecord = MutableStateFlow(false)
-    val showLoadedGameRecord: StateFlow<Boolean> = _showLoadedGameRecord.asStateFlow()
+    val showLoadedGameRecord = _showLoadedGameRecord.asStateFlow()
 
     private val _showLinkGamePopUp = MutableStateFlow(false)
-    val showLinkGamePopUp: StateFlow<Boolean> = _showLinkGamePopUp.asStateFlow()
+    val showLinkGamePopUp = _showLinkGamePopUp.asStateFlow()
 
     private val _scoreFromLink = MutableStateFlow(0.00f)
-    val scoreFromLink: StateFlow<Float> = _scoreFromLink.asStateFlow()
+    val scoreFromLink = _scoreFromLink.asStateFlow()
 
     private val _navigatedFromHistory = MutableStateFlow(false)
-    val navigatedFromHistory: StateFlow<Boolean> = _navigatedFromHistory.asStateFlow()
+    val navigatedFromHistory = _navigatedFromHistory.asStateFlow()
 
     private val _seedFromLink = MutableStateFlow(0L)
-    val seedFromLink: StateFlow<Long> = _seedFromLink.asStateFlow()
+    val seedFromLink = _seedFromLink.asStateFlow()
+
+    private val _bestGameScores = MutableStateFlow<List<GameScore>>(emptyList())
+    val bestGameScore = _bestGameScores.asStateFlow()
 
     val loadedGameRecord: StateFlow<GameRecord> = gameRecordRepository.loadedGameRecord
     val lastGameRecord: StateFlow<GameRecord> = gameRecordRepository.lastGameRecord
@@ -70,8 +77,10 @@ class StatisticsViewModel @Inject constructor(
         _seedFromLink.value = value
     }
 
-    fun setLoadedGameRecord(gameRecord: GameRecord) {
-        gameRecordRepository.setLoadedGameRecord(gameRecord)
+    fun setLoadedGameRecord(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            gameRecordRepository.setLoadedGameRecord(id)
+        }
     }
 
     fun resetStatistics() {
@@ -87,5 +96,24 @@ class StatisticsViewModel @Inject constructor(
         setShowLinkGamePopUp(false)
         setScoreFromLink(gameRecord.activeScore)
         setSeedFromLink(gameRecord.seed)
+    }
+
+    fun loadBestGameScores() {
+        val gameRecord = if (_showLoadedGameRecord.value) loadedGameRecord.value else lastGameRecord.value
+        viewModelScope.launch(Dispatchers.IO) {
+            val resultBestGameScores = gameRecordRepository.findBestGameScores(
+                gameRecord.isModeEnabled,
+                gameRecord.modeLimit,
+                gameRecord.additionRangeStart,
+                gameRecord.additionRangeEnd,
+                gameRecord.subtractionRangeStart,
+                gameRecord.subtractionRangeEnd,
+                gameRecord.multiplicationRangeStart,
+                gameRecord.multiplicationRangeEnd,
+                gameRecord.divisionRangeStart,
+                gameRecord.divisionRangeEnd
+            )
+            _bestGameScores.value = resultBestGameScores
+        }
     }
 }

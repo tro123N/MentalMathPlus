@@ -47,7 +47,6 @@ import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
-import kotlin.math.round
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -251,20 +250,23 @@ class GameViewModel @Inject constructor(
         )
     }
 
-    fun setSettings(settingsState: SettingsState) {
-        val enabledOperators: MutableMap<Operation, Pair<Float, Float>> = mutableMapOf()
-        if (settingsState.isAdditionEnabled) {
-            enabledOperators[Operation.ADDITION] = settingsState.additionRange
+    fun setSettings(settingsState: SettingsState) : Boolean {
+        val enabledOperators = buildMap {
+            if (settingsState.isAdditionEnabled) {
+                put(Operation.ADDITION, settingsState.additionRange)
+            }
+            if (settingsState.isSubtractionEnabled) {
+                put(Operation.SUBTRACTION, settingsState.subtractionRange)
+            }
+            if (settingsState.isMultiplicationEnabled) {
+                put(Operation.MULTIPLICATION, settingsState.multiplicationRange)
+            }
+            if (settingsState.isDivisionEnabled) {
+                put(Operation.DIVISION, settingsState.divisionRange)
+            }
         }
-        if (settingsState.isSubtractionEnabled) {
-            enabledOperators[Operation.SUBTRACTION] = settingsState.subtractionRange
-        }
-        if (settingsState.isMultiplicationEnabled) {
-            enabledOperators[Operation.MULTIPLICATION] = settingsState.multiplicationRange
-        }
-        if (settingsState.isDivisionEnabled) {
-            enabledOperators[Operation.DIVISION] = settingsState.divisionRange
-        }
+        if (enabledOperators.isEmpty()) return false
+
         saveState(
             _gameState.value.copy(
                 enabledOperators = enabledOperators,
@@ -274,6 +276,7 @@ class GameViewModel @Inject constructor(
                 isVerticalForm = settingsState.isVerticalFormDefault
             )
         )
+        return true
     }
 
     fun setIsLinkGame(isLinkGame: Boolean) {
@@ -298,14 +301,12 @@ class GameViewModel @Inject constructor(
     }
 
     fun saveGameRecord() {
-        val activeMinutes = max(1, (_gameState.value.activeTime / 1000)) / 60.0f
-        val totalMinutes = max(1, (_gameState.value.totalTime / 1000)) / 60.0f
+        val activeMinutes = max(1f / 60f, _gameState.value.activeTime / 60000f)
+        val totalMinutes = max(1f / 60f, _gameState.value.totalTime / 60000f)
         val correctAnswers = _gameState.value.correctAnswers.toFloat()
         val totalAnswers = max(1, _gameState.value.totalAnswers).toFloat()
-        val activeScoreValue = 10f * correctAnswers.pow(2f) / (activeMinutes * totalAnswers)
-        val activeScore = round(activeScoreValue * 100) / 100f
-        val totalScoreValue = 10f * correctAnswers.pow(2f) / (totalMinutes * totalAnswers)
-        val totalScore = round(totalScoreValue * 100) / 100f
+        val activeScore = 10f * correctAnswers.pow(2f) / (activeMinutes * totalAnswers)
+        val totalScore = 10f * correctAnswers.pow(2f) / (totalMinutes * totalAnswers)
 
         val lastGame = GameRecord(
             isModeEnabled = _gameState.value.isModeEnabled,

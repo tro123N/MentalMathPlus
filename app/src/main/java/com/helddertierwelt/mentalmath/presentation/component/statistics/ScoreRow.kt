@@ -47,6 +47,7 @@ import com.helddertierwelt.mentalmath.R
 @Composable
 fun ScoreRow(
     score: String,
+    rank: Int?,
     scoreFontSize: TextUnit,
     scoreIconSize: Dp,
     modifier: Modifier = Modifier,
@@ -54,10 +55,11 @@ fun ScoreRow(
     tooltipText: String = "Score"
 ) {
     val tooltipState = rememberTooltipState()
+    val isTop10 = rank != null
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp, 8.dp, 16.dp, 16.dp),
+            .padding( top = 8.dp, bottom = 16.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -85,8 +87,17 @@ fun ScoreRow(
         Text(
             text = score,
             fontSize = scoreFontSize,
-            modifier = Modifier.padding(start = 8.dp, end = 16.dp),
+            modifier = Modifier.padding(start = 8.dp, end = 8.dp),
             color = MaterialTheme.colorScheme.onPrimary
         )
+        if (isTop10) {
+
+            Text(
+                text = "#$rank",
+                fontSize = scoreFontSize * 0.7f,
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f),
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
     }
 }

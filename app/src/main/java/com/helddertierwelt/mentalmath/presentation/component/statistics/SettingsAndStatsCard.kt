@@ -35,6 +35,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.settings.AppLocale
 import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
@@ -52,7 +54,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
-import com.helddertierwelt.mentalmath.domain.settings.AppLocale
+import kotlin.math.roundToInt
 
 @Composable
 fun SettingsAndStatsCard(
@@ -75,6 +77,10 @@ fun SettingsAndStatsCard(
             statisticsViewModel.lastGameRecord.collectAsState().value
         }
     val correctAnswers = statisticsGameRecord.correctAnswers
+
+    LaunchedEffect(Unit) {
+        statisticsViewModel.loadBestGameScores()
+    }
 
     Card(
         shape = RoundedCornerShape(32.dp),
@@ -250,13 +256,18 @@ fun SettingsAndStatsCard(
                 color = MaterialTheme.colorScheme.background
             )
             Spacer(modifier = modifier.height(8.dp))
-            val activeScore = AppLocale.format("%.2f", statisticsGameRecord.activeScore)
+
+            val top10 = statisticsViewModel.bestGameScore.collectAsState().value
+            val rank = top10.indexOfFirst { it.id == statisticsGameRecord.id }
+            val top10Rank = if (rank >= 0) rank + 1 else null
+            val activeScore = formatScore(statisticsGameRecord.activeScore)
             ScoreRow(
                 score = activeScore,
+                rank = top10Rank,
                 scoreFontSize = scoreFontSize,
                 scoreIconSize = scoreIconSize,
                 iconColor = yellow,
-                tooltipText = "Score"
+                tooltipText = stringResource(R.string.score)
             )
         }
     }
@@ -287,3 +298,8 @@ fun formatTimeWithDecimalSeconds(ms: Long): String {
         }
     }
 }
+
+fun formatScore(score: Float): String {
+    return AppLocale.format("%,d", (score * 100).roundToInt())
+}
+

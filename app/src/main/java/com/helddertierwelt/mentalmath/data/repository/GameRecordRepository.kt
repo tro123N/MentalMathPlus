@@ -20,6 +20,7 @@ package com.helddertierwelt.mentalmath.data.repository
 
 import com.helddertierwelt.mentalmath.data.dao.GameRecordDao
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
+import com.helddertierwelt.mentalmath.data.entity.GameScore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -83,7 +84,8 @@ class GameRecordRepository @Inject constructor(
         _lastGameRecord.value = gameRecord
     }
 
-    fun setLoadedGameRecord(gameRecord: GameRecord) {
+    suspend fun setLoadedGameRecord(id: Int) {
+        val gameRecord = gameRecordDao.findById(id) ?: return
         _loadedGameRecord.value = gameRecord
     }
 
@@ -92,7 +94,7 @@ class GameRecordRepository @Inject constructor(
         return newId
     }
 
-    suspend fun findBestActiveGameRecords(
+    suspend fun findBestGameScores(
         isModeEnabled: Boolean,
         modeLimit: Int,
         additionRangeStart: Int,
@@ -103,8 +105,34 @@ class GameRecordRepository @Inject constructor(
         multiplicationRangeEnd: Int,
         divisionRangeStart: Int,
         divisionRangeEnd: Int
-    ): List<GameRecord> {
-        return gameRecordDao.findBestActiveGameRecords(
+    ): List<GameScore> {
+        return gameRecordDao.findBestGameScores(
+            isModeEnabled,
+            modeLimit,
+            additionRangeStart,
+            additionRangeEnd,
+            subtractionRangeStart,
+            subtractionRangeEnd,
+            multiplicationRangeStart,
+            multiplicationRangeEnd,
+            divisionRangeStart,
+            divisionRangeEnd
+        )
+    }
+
+    suspend fun hasGamesWithScore(
+        isModeEnabled: Boolean,
+        modeLimit: Int,
+        additionRangeStart: Int,
+        additionRangeEnd: Int,
+        subtractionRangeStart: Int,
+        subtractionRangeEnd: Int,
+        multiplicationRangeStart: Int,
+        multiplicationRangeEnd: Int,
+        divisionRangeStart: Int,
+        divisionRangeEnd: Int
+    ): Boolean {
+        return gameRecordDao.hasGamesWithScore(
             isModeEnabled,
             modeLimit,
             additionRangeStart,

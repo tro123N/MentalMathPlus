@@ -23,6 +23,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
+import com.helddertierwelt.mentalmath.data.entity.GameScore
 
 @Dao
 interface GameRecordDao {
@@ -30,35 +31,8 @@ interface GameRecordDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(gameScore: GameRecord): Long
 
-    @Query(
-        """SELECT * FROM game_records WHERE
-        isModeEnabled = :isModeEnabled AND
-        modeLimit = :modeLimit AND
-        additionRangeStart = :additionRangeStart AND
-        additionRangeEnd = :additionRangeEnd AND
-        subtractionRangeStart = :subtractionRangeStart AND
-        subtractionRangeEnd = :subtractionRangeEnd AND
-        multiplicationRangeStart = :multiplicationRangeStart AND
-        multiplicationRangeEnd = :multiplicationRangeEnd AND
-        divisionRangeStart = :divisionRangeStart AND
-        divisionRangeEnd = :divisionRangeEnd AND
-        activeScore > 0.00
-        ORDER BY activeScore DESC, id DESC
-        LIMIT 10
-        """
-    )
-    suspend fun findBestActiveGameRecords(
-        isModeEnabled: Boolean,
-        modeLimit: Int,
-        additionRangeStart: Int,
-        additionRangeEnd: Int,
-        subtractionRangeStart: Int,
-        subtractionRangeEnd: Int,
-        multiplicationRangeStart: Int,
-        multiplicationRangeEnd: Int,
-        divisionRangeStart: Int,
-        divisionRangeEnd: Int
-    ): List<GameRecord>
+    @Query("SELECT * FROM game_records WHERE id = :id")
+    suspend fun findById(id: Int): GameRecord?
 
     @Query(
         """SELECT EXISTS(SELECT 1 FROM game_records WHERE
@@ -89,6 +63,69 @@ interface GameRecordDao {
         seed: Long
     ): Boolean
 
+    @Query(
+        """SELECT EXISTS(
+        SELECT 1
+        FROM game_records
+        WHERE
+            isModeEnabled = :isModeEnabled AND
+            modeLimit = :modeLimit AND
+            additionRangeStart = :additionRangeStart AND
+            additionRangeEnd = :additionRangeEnd AND
+            subtractionRangeStart = :subtractionRangeStart AND
+            subtractionRangeEnd = :subtractionRangeEnd AND
+            multiplicationRangeStart = :multiplicationRangeStart AND
+            multiplicationRangeEnd = :multiplicationRangeEnd AND
+            divisionRangeStart = :divisionRangeStart AND
+            divisionRangeEnd = :divisionRangeEnd AND
+            activeScore > 0
+        )"""
+    )
+    suspend fun hasGamesWithScore(
+        isModeEnabled: Boolean,
+        modeLimit: Int,
+        additionRangeStart: Int,
+        additionRangeEnd: Int,
+        subtractionRangeStart: Int,
+        subtractionRangeEnd: Int,
+        multiplicationRangeStart: Int,
+        multiplicationRangeEnd: Int,
+        divisionRangeStart: Int,
+        divisionRangeEnd: Int
+    ): Boolean
+
+    @Query(
+        """
+    SELECT id, activeScore
+    FROM game_records
+    WHERE
+        isModeEnabled = :isModeEnabled AND
+        modeLimit = :modeLimit AND
+        additionRangeStart = :additionRangeStart AND
+        additionRangeEnd = :additionRangeEnd AND
+        subtractionRangeStart = :subtractionRangeStart AND
+        subtractionRangeEnd = :subtractionRangeEnd AND
+        multiplicationRangeStart = :multiplicationRangeStart AND
+        multiplicationRangeEnd = :multiplicationRangeEnd AND
+        divisionRangeStart = :divisionRangeStart AND
+        divisionRangeEnd = :divisionRangeEnd AND
+        activeScore > 0
+    ORDER BY activeScore DESC, id DESC
+    LIMIT 10
+    """
+    )
+    suspend fun findBestGameScores(
+        isModeEnabled: Boolean,
+        modeLimit: Int,
+        additionRangeStart: Int,
+        additionRangeEnd: Int,
+        subtractionRangeStart: Int,
+        subtractionRangeEnd: Int,
+        multiplicationRangeStart: Int,
+        multiplicationRangeEnd: Int,
+        divisionRangeStart: Int,
+        divisionRangeEnd: Int
+    ): List<GameScore>
 
     @Query("DELETE FROM game_records")
     suspend fun deleteAll()

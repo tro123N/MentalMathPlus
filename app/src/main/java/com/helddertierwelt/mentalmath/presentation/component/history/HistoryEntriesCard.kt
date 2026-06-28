@@ -38,13 +38,13 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
-import com.helddertierwelt.mentalmath.domain.settings.AppLocale
+import com.helddertierwelt.mentalmath.presentation.component.statistics.formatScore
 
 @Composable
 fun HistoryEntriesCard(
     gameRecords: List<GameRecord>,
     fontSize: TextUnit,
-    onClick: (GameRecord) -> Unit,
+    onClick: (Int) -> Unit,
     isEnabled: Boolean = true,
     currentSortMode: SortMode,
 ) {
@@ -113,7 +113,7 @@ fun HistoryEntriesCard(
                         formatRange(game.multiplicationRangeStart, game.multiplicationRangeEnd),
                         formatRange(game.divisionRangeStart, game.divisionRangeEnd)
                     )
-                    val scoreString = AppLocale.format("%.2f", game.activeScore)
+                    val scoreString = formatScore(game.activeScore)
                     val allStrings = listOf(limit) + rangeStrings + scoreString
 
                     if (index > 0) {
@@ -127,7 +127,7 @@ fun HistoryEntriesCard(
                             .fillMaxWidth()
                             .padding(horizontal = 12.dp, vertical = 8.dp)
                             .clip(RoundedCornerShape(16.dp))
-                            .clickable(enabled = isEnabled) { onClick(game) }
+                            .clickable(enabled = isEnabled) { onClick(game.id) }
                     ) {
                         allStrings.forEach { textContent ->
                             Text(
