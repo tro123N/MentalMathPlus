@@ -139,10 +139,10 @@ fun ProblemsCard(
                                 Icon(
                                     painter = painterResource(R.drawable.check_circle_24dp),
                                     contentDescription = "Correct",
+                                    tint = green,
                                     modifier = Modifier
                                         .size(resultIconSize)
-                                        .align(Alignment.CenterVertically),
-                                    tint = green
+                                        .align(Alignment.CenterVertically)
                                 )
                             }
 
@@ -157,10 +157,10 @@ fun ProblemsCard(
                                 Icon(
                                     painter = painterResource(R.drawable.cancel_24dp),
                                     contentDescription = "Incorrect",
+                                    tint = red,
                                     modifier = Modifier
                                         .size(resultIconSize)
-                                        .align(Alignment.CenterVertically),
-                                    tint = red
+                                        .align(Alignment.CenterVertically)
                                 )
                             }
 
@@ -168,14 +168,14 @@ fun ProblemsCard(
                                 Icon(
                                     painter = painterResource(R.drawable.skipped_24dp),
                                     contentDescription = "Skipped",
+                                    tint = yellow,
                                     modifier = Modifier
                                         .align(Alignment.CenterVertically)
                                         .size(resultIconSize)
                                         .scale(
                                             scaleX = if (LocalLayoutDirection.current == LayoutDirection.Rtl) -1f else 1f,
                                             scaleY = 1f
-                                        ),
-                                    tint = yellow
+                                        )
                                 )
                             }
                         }
