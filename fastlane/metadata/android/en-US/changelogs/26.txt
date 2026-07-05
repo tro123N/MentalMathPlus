@@ -4,4 +4,5 @@
 - Added a menu option to open the app language settings.
 - Added rank display next to score in the overview for Top 10 results.
 - Made the score based on milliseconds instead of seconds.
+- Scores are now displayed as whole numbers instead of decimals.
 - Added fade effects at the top and bottom of the scrollable menu to indicate when content is scrollable.
