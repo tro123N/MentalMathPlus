@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -42,6 +41,10 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
@@ -103,12 +106,12 @@ fun ProblemsCard(
                 modifier = Modifier.padding(16.dp, 4.dp),
             ) {
                 Text(
-                    text = stringResource(R.string.solution),
+                    text = stringResource(R.string.problem),
                     fontSize = resultFontSize,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
                 Text(
-                    text = stringResource(R.string.input),
+                    text = stringResource(R.string.status),
                     fontSize = resultFontSize,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
@@ -118,12 +121,44 @@ fun ProblemsCard(
                     ProblemRow(
                         modifier = Modifier.padding(16.dp, 4.dp),
                     ) {
+
+                        val isCorrect = if (!problem.userInput.isEmpty()) problem.correctResult == problem.userInput.toInt() else null
+                        val text = buildAnnotatedString {
+                            append("${problem.operand1} ${problem.operator.symbol} ${problem.operand2} = ")
+                            when (isCorrect) {
+                                true -> {
+                                    append(problem.correctResult.toString())
+                                }
+                                false -> {
+                                    withStyle(
+                                        SpanStyle(textDecoration = TextDecoration.LineThrough)
+                                    ) {
+                                        append(problem.userInput)
+                                    }
+                                    append(" ")
+                                    withStyle(
+                                        SpanStyle(color = red)
+                                    ) {
+                                        append(problem.correctResult.toString())
+                                    }
+                                }
+                                null -> {
+                                    append("? ")
+                                    withStyle(
+                                        SpanStyle(color = red)
+                                    ) {
+                                        append(problem.correctResult.toString())
+                                    }
+
+                                }
+                            }
+                        }
                         CompositionLocalProvider(
                             LocalLayoutDirection provides LayoutDirection.Ltr
                         ) {
                             Row {
                                 Text(
-                                    text = "${problem.operand1} ${problem.operator.symbol} ${problem.operand2} = ${problem.correctResult}",
+                                    text = text,
                                     fontSize = resultFontSize,
                                     modifier = Modifier.align(Alignment.CenterVertically),
                                     color = MaterialTheme.colorScheme.onPrimary
@@ -131,10 +166,7 @@ fun ProblemsCard(
                             }
                         }
 
-                        val isCorrect =
-                            if (!problem.userInput.isEmpty()) problem.correctResult == problem.userInput.toInt() else null
                         when (isCorrect) {
-
                             true -> Row {
                                 Icon(
                                     painter = painterResource(R.drawable.check_circle_24dp),
@@ -147,13 +179,6 @@ fun ProblemsCard(
                             }
 
                             false -> Row {
-                                Text(
-                                    text = problem.userInput,
-                                    color = red,
-                                    fontSize = resultFontSize,
-                                    modifier = Modifier.align(Alignment.CenterVertically)
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
                                 Icon(
                                     painter = painterResource(R.drawable.cancel_24dp),
                                     contentDescription = "Incorrect",
@@ -170,12 +195,10 @@ fun ProblemsCard(
                                     contentDescription = "Skipped",
                                     tint = yellow,
                                     modifier = Modifier
-                                        .align(Alignment.CenterVertically)
                                         .size(resultIconSize)
-                                        .scale(
-                                            scaleX = if (LocalLayoutDirection.current == LayoutDirection.Rtl) -1f else 1f,
-                                            scaleY = 1f
-                                        )
+                                        .scale(scaleX = if (LocalLayoutDirection.current == LayoutDirection.Rtl) -1f else 1f, scaleY = 1f)
+                                        .align(Alignment.CenterVertically)
+
                                 )
                             }
                         }

@@ -62,8 +62,8 @@
     <string name="accuracy">Précision</string>
     <string name="avg_time_per_correct_answer">Temps moyen par réponse correcte</string>
     <string name="score">Score</string>
-    <string name="solution">Solution</string>
-    <string name="input">Saisie</string>
+    <string name="problem">Problème</string>
+    <string name="status">Statut</string>
     <string name="no_problems">Aucun problème résolu</string>
     <string name="done">Retour</string>
 

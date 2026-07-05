@@ -109,8 +109,8 @@ Thank you for contributing!
     <string name="accuracy">Accuracy</string>
     <string name="avg_time_per_correct_answer">Time Spent Per Correct Answer</string>
     <string name="score">Score</string>
-    <string name="solution">Solution</string>
-    <string name="input">Input</string>
+    <string name="problem">Problem</string>
+    <string name="status">Status</string>
     <string name="no_problems">No problems solved</string>
     <string name="done">Done</string>
 

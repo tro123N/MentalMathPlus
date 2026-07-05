@@ -62,8 +62,8 @@
     <string name="accuracy">Genauigkeit</string>
     <string name="avg_time_per_correct_answer">Zeit pro korrekter Antwort</string>
     <string name="score">Score</string>
-    <string name="solution">Lösung</string>
-    <string name="input">Eingabe</string>
+    <string name="problem">Aufgabe</string>
+    <string name="status">Status</string>
     <string name="no_problems">Keine Aufgabe gelöst</string>
     <string name="done">OK</string>
 

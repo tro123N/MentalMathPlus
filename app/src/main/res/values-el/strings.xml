@@ -62,8 +62,8 @@
     <string name="accuracy">Ακρίβεια</string>
     <string name="avg_time_per_correct_answer">Χρόνος που αφιερώθηκε/Σωστές απαντήσεις</string>
     <string name="score">Βαθμολογία</string>
-    <string name="solution">Λύση</string>
-    <string name="input">Εισαγωγή</string>
+    <string name="problem">Πρόβλημα</string>
+    <string name="status">Κατάσταση</string>
     <string name="no_problems">Δε λύθηκαν προβλήματα</string>
     <string name="done">Ολοκλήρωση</string>
 

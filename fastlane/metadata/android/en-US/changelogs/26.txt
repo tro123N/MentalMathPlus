@@ -1,8 +1,7 @@
+- Redesigned the problem overview to reduce confusion.
 - Added an option to display math problems vertically instead of horizontally.
 - The layout can also be changed during gameplay by tapping the math problem.
-- The layout selected in the menu is used as the default for each new game, regardless of changes made during gameplay.
-- The input direction selected in the menu is now used as the default for each new game. Changes made during gameplay only apply to the current session and are no longer carried over to future games.
 - Added a menu option to open the app language settings.
-- Added rank display next to score in the overview for Top 10 results
-- Made the score based on milliseconds instead of seconds
+- Added rank display next to score in the overview for Top 10 results.
+- Made the score based on milliseconds instead of seconds.
 - Added fade effects at the top and bottom of the scrollable menu to indicate when content is scrollable.
