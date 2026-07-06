@@ -1,3 +1,4 @@
+- Added Russian translation contributed by Alexej Melcher. Thank you! :)
 - Redesigned the problem overview to reduce confusion.
 - Added an option to display math problems vertically instead of horizontally.
 - The layout can also be changed during gameplay by tapping the math problem.

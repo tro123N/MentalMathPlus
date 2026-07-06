@@ -1,0 +1,214 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Settings Screen -->
+    <string name="app_name">Mental Math</string>
+    <string name="mode_instruction">Выберите режим и лимит</string>
+    <string name="operator_instruction">Выберите операции и сложность</string>
+    <string name="start">Начать</string>
+
+    <!-- Settings Screen: Menu -->
+    <string name="share_game">Поделиться игрой</string>
+    <string name="random_game">Случайная игра</string>
+    <string name="history">История</string>
+    <string name="phone_pad">Телефонная клавиатура</string>
+    <string name="number_pad">Цифровая клавиатура</string>
+    <string name="right_to_left">Справа-\u200Bналево</string>
+    <string name="left_to_right">Слева-\u200Bнаправо</string>
+    <string name="horizontal">Горизонтально</string>
+    <string name="vertical">Вертикально</string>
+    <string name="reminder_off">Напоминание выключено</string>
+    <string name="daily_reminder">Ежедневно</string>
+    <string name="every_three_days">Каждые 3 дня</string>
+    <string name="weekly_reminder">Еженедельно</string>
+    <string name="light_mode">Светлая тема</string>
+    <string name="dark_mode">Тёмная тема</string>
+    <string name="system_mode">Системная тема</string>
+    <string name="sound_on">Звук включён</string>
+    <string name="sound_off">Звук выключен</string>
+    <string name="language">Язык</string>
+    <string name="about">О приложении</string>
+    <string name="feedback">Обратная связь</string>
+    <string name="recommend">Рекомендовать</string>
+    <string name="donate">Пожертвовать</string>
+    <string name="reset_app">Сбросить</string>
+    <string name="unknown_error">Произошла неизвестная ошибка.</string>
+    <string name="no_browser">Нет приложения для открытия этой ссылки.</string>
+    <string name="no_share">Нет приложения, чтобы поделиться этим контентом.</string>
+    <string name="no_app_store">Нет доступного магазина приложений для открытия этой страницы.</string>
+    <string name="no_mail">Нет приложения для отправки писем.</string>
+
+    <!-- Settings Screen: Leaderboard -->
+    <string name="top_ten_scores">Топ 10\nрезультатов</string>
+    <string name="new_score">новый</string>
+
+    <!-- Game Screen -->
+    <string name="rtl_toast">Ввод справа налево</string>
+    <string name="ltr_toast">Ввод слева направо</string>
+    <string name="vertical_toast">Вертикальное расположение</string>
+    <string name="horizontal_toast">Горизонтальное расположение</string>
+
+    <!-- Statistics Screen -->
+    <string name="result">Результат</string>
+    <string name="seed">Сид: %d</string>
+    <string name="problem_limit">Лимит заданий</string>
+    <string name="time_limit">Лимит времени</string>
+    <string name="difficulty_addition">Сложность сложения</string>
+    <string name="difficulty_subtraction">Сложность вычитания</string>
+    <string name="difficulty_multiplication">Сложность умножения</string>
+    <string name="difficulty_division">Сложность деления</string>
+    <string name="time_spent">Затраченное время</string>
+    <string name="problems_completed">Решено заданий</string>
+    <string name="correct_answers">Правильные ответы</string>
+    <string name="incorrect_answers">Неправильные ответы</string>
+    <string name="accuracy">Точность</string>
+    <string name="avg_time_per_correct_answer">Время на правильный ответ</string>
+    <string name="score">Счёт</string>
+    <string name="problem">Задача</string>
+    <string name="status">Статус</string>
+    <string name="no_problems">Ни одно задание не решено</string>
+    <string name="done">OK</string>
+
+    <!-- History Screen -->
+    <string name="no_games">Пока нет сыгранных игр с результатами</string>
+
+    <!-- PopUps -->
+    <string name="notification_popup_title">Уведомления отключены</string>
+    <string name="notification_popup_description">Пожалуйста, включите уведомления в настройках, чтобы получать напоминания.\n\nПримечание: оптимизация батареи всё равно может блокировать уведомления.</string>
+    <string name="notification_popup_confirmation_text">Настройки</string>
+    <string name="notification_toast_text">Напоминания начинают приходить вечером, согласно выбранному интервалу</string>
+
+    <string name="reset_app_popup_title">Сбросить приложение?</string>
+    <string name="reset_app_popup_description">Удалит все результаты и настройки.</string>
+    <string name="reset_app_popup_confirmation_text">Сбросить</string>
+
+    <string name="quit_game_popup_title">Завершить игру?</string>
+    <string name="quit_game_popup_description">Текущий прогресс будет потерян.</string>
+    <string name="quit_game_popup_confirmation_text">Завершить</string>
+    <string name="quit_game_popup_cancel_text">Продолжить</string>
+
+    <string name="app_link_game_popup_title">Начать игру по ссылке?</string>
+    <string name="app_link_popup_description_new_game">Начните игру с заданными настройками и случайным сидом.\n\nТекущая игра будет при этом завершена.</string>
+    <string name="app_link_popup_description_challenge">Повторите игру своего друга и попробуйте побить его результат!\n\nТекущая игра будет при этом завершена.</string>
+    <string name="app_link_popup_confirmation_text">Начать</string>
+
+    <string name="already_played_popup_title">Игра уже сыграна</string>
+    <string name="already_played_popup_description">Вы уже сыграли игру с такими же настройками и сидом.\n\nПопробуйте другую ссылку или начните новую игру.</string>
+
+    <string name="cancel">Отмена</string>
+    <string name="ok">OK</string>
+
+    <!-- Result PopUp -->
+    <string name="waiting_title">Ожидание соперника …</string>
+    <string-array name="waiting_descriptions" tools:ignore="InconsistentArrays">
+        <item>Ты: %1$s | Соперник: ??\nСид: %2$d\n\nТы задал высокую планку! У соперника уже поджилки трясутся!</item>
+        <item>Ты: %1$s | Соперник: ??\nСид: %2$d\n\nТы уже закончил — сейчас будет интересно!</item>
+        <item>Ты: %1$s | Соперник: ??\nСид: %2$d\n\nМощная заявка! Сможет ли кто-нибудь её превзойти?</item>
+        <item>Ты: %1$s | Соперник: ??\nСид: %2$d\n\nВсе взгляды прикованы к твоему сопернику!</item>
+        <item>Ты: %1$s | Соперник: ??\nСид: %2$d\n\nТы уже отметился! Что предпримет соперник?</item>
+        <item>Ты: %1$s | Соперник: ??\nСид: %2$d\n\nТы вышел вперёд… или нет?</item>
+        <item>Ты: %1$s | Соперник: ??\nСид: %2$d\n\nПохоже, твой соперник в ярости покинул игру.</item>
+        <item>Ты: %1$s | Соперник: ??\nСид: %2$d\n\nОтличный результат! Вдруг все притихли.</item>
+        <item>Ты: %1$s | Соперник: ??\nСид: %2$d\n\nВыглядит неплохо! Твой соперник под давлением.</item>
+    </string-array>
+
+    <string name="easy_win_title">Дармовая победа</string>
+    <string-array name="easy_win_descriptions" tools:ignore="InconsistentArrays">
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПобеда, но не настоящее испытание!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nУ твоего соперника, похоже, душа в пятки ушла!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nВсё закончилось, толком не начавшись.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНе бей лежачего!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЭто можно было выиграть и с завязанными глазами.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПроще пареной репы!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПохоже, твой соперник сдался.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПохоже, твой соперник споткнулся уже на первом задании.</item>
+    </string-array>
+
+    <string name="anyone_here_title">Есть кто-нибудь?</string>
+    <string-array name="anyone_here_descriptions" tools:ignore="InconsistentArrays">
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНет очков — нет веселья!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНи ответа, ни привета.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nМожно было обойтись без этой игры.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nАлло? Есть тут кто-нибудь?</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nВот это потеря времени.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНикто не набрал очков. Но зато никто и не проиграл.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nСкуууучно.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nХоть шаром покати.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nКто ничего не делает, тот не ошибается. А кто не ошибается — тот всё делает правильно.</item>
+    </string-array>
+
+    <string name="win_title">Победа</string>
+    <string-array name="win_descriptions" tools:ignore="InconsistentArrays">
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nВот так выглядят победители!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПередо мной настоящий ас устного счёта!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nБезупречное исполнение — у соперника не было ни шанса.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nУфф… вот это демонстрация силы!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nКажется, это называется разгромной победой!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nВ следующий раз твоему сопернику явно понадобится калькулятор.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nСлушай, ты этим на профессиональном уровне занимаешься?</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nТебе не нужен калькулятор — ты сам калькулятор!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЦифры не врут: ты выиграл абсолютно заслуженно!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПобедителей не судят!</item>
+    </string-array>
+
+    <string name="close_win_title">Победа впритык</string>
+    <string-array name="close_win_descriptions" tools:ignore="InconsistentArrays">
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЭто было на тоненького!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nУф… это было впритык! Победа в последний момент.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nВот это гонка ноздря в ноздрю! В итоге ты оказался впереди.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nУважение сопернику, но победа есть победа!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nТяжело доставшаяся, но заслуженная победа.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЭто было не для слабонервных. Но у тебя нервы стальные.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЭта победа — не подарок, а чистая воля к победе.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЕсть разница между «почти» и «в самый раз» — и это как раз он.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЭто было не «впритык», это была ювелирная работа.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nБольшой отрыв — это скучно. А вот так — по-настоящему держит в напряжении!</item>
+    </string-array>
+
+    <string name="draw_title">Ничья</string>
+    <string-array name="draw_descriptions" tools:ignore="InconsistentArrays">
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНичья! Время для переигровки!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nОба наравне. Следующая игра всё решит.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЭто явно требует решающей игры</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНи нашим, ни вашим!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nВремя для реванша, чтобы расставить все точки над «i».</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nТолько новая игра может расставить всё по местам.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНичья! Кто выдержит давление?</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nОба хороши, признайте оба!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЭта история ещё не закончена.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nДоволен ничьей? Значит, не хватает амбиций.</item>
+    </string-array>
+
+    <string name="close_defeat_title">Поражение впритык</string>
+    <string-array name="close_defeat_descriptions" tools:ignore="InconsistentArrays">
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЧуть-чуть не считается.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nМаленькое поражение, но большое выступление!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nСопернику просто больше повезло.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНе всё коту масленица!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНе дай сопернику слишком долго греться в лучах успеха.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nРеванш — дело чести.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНе сдавайся! Победа уже совсем близко.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nСдаваться всегда рано.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПроиграть с высоко поднятой головой и вернуться ещё сильнее.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nТак держать! Следующая игра — твоя.</item>
+    </string-array>
+
+    <string name="defeat_title">Поражение</string>
+    <string-array name="defeat_descriptions" tools:ignore="InconsistentArrays">
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nОтряхнись и иди дальше!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПоражение, принятое с достоинством, — тоже победа.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nГлавное сейчас — не прятать голову в песок.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПервый блин комом — не беда!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nИногда проигрываешь ты, а иногда — просто выигрывают другие.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nТяжело в учении — легко в бою!</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЕсли ты выложился полностью, тебе не в чем себя упрекнуть.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nТерпение и труд всё перетрут.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nДорогу осилит идущий.</item>
+        <item>Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nКаждому нужны свои 15 секунд славы, и сопернику тоже.</item>
+    </string-array>
+
+    <string name="result_popup_confirmation_text">Поделиться</string>
+    <string name="result_share_message_waiting">Я: %1$s | Ты: ??\nСид: %2$d</string>
+    <string name="result_share_message">Я: %1$s | Ты: %2$s\nСид: %3$d</string>
+    <string name="share_challenge">Сможешь побить мой результат %1$s в Mental Math?\nСыграй мой раунд с сидом %2$d:\n\n%3$s</string>
+    <string name="share_new_game">Сыграй раунд Mental Math со мной!\nОткрой ссылку, чтобы начать новую игру с моими настройками и следующим сидом:\n%1$d\n\n%2$s</string>
+
+</resources>
