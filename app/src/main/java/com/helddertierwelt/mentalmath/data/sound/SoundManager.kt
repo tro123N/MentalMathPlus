@@ -39,6 +39,8 @@ class SoundManager @Inject constructor(
         SoundType.CORRECT to soundPool.load(context, R.raw.correct1, 1),
         SoundType.WRONG to soundPool.load(context, R.raw.wrong1, 1),
         SoundType.SKIPPED to soundPool.load(context, R.raw.skip3, 1),
+        SoundType.CLICK to soundPool.load(context, R.raw.click1_disable, 1),
+        SoundType.CANCEL to soundPool.load(context, R.raw.wrong5, 1),
         )
 
     fun play(sound: SoundType) {

@@ -23,7 +23,6 @@ enum class SoundType {
     CORRECT,
     SKIPPED,
     WRONG,
-    WIN,
-    DEFEAT,
-    TIE
+    CANCEL,
+    TIMEUP
 }

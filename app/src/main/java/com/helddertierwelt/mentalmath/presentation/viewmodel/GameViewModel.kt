@@ -72,6 +72,7 @@ class GameViewModel @Inject constructor(
 
 
     fun addLastDigit(number: Int) {
+        playSound(SoundType.CLICK)
         if (_gameState.value.input.length < 7) {
             if (_gameState.value.input == "0") {
                 clearInput()
@@ -81,18 +82,21 @@ class GameViewModel @Inject constructor(
     }
 
     fun addFirstDigit(number: Int) {
+        playSound(SoundType.CLICK)
         if (_gameState.value.input.length < 7) {
             saveState(_gameState.value.copy(input = number.toString() + _gameState.value.input))
         }
     }
 
     fun removeFirstDigit() {
+        playSound(SoundType.CLICK)
         if (_gameState.value.input.isNotEmpty()) {
             saveState(_gameState.value.copy(input = _gameState.value.input.drop(1)))
         }
     }
 
     fun removeLastDigit() {
+        playSound(SoundType.CLICK)
         if (_gameState.value.input.isNotEmpty()) {
             saveState(_gameState.value.copy(input = _gameState.value.input.dropLast(1)))
         }
@@ -103,12 +107,14 @@ class GameViewModel @Inject constructor(
     }
 
     fun toggleIsRightToLeft(): Boolean {
+        playSound(SoundType.CLICK)
         val newValue = !_gameState.value.isRightToLeft
         saveState(_gameState.value.copy(isRightToLeft = newValue))
         return newValue
     }
 
     fun toggleIsVerticalForm(): Boolean {
+        playSound(SoundType.CLICK)
         val newValue = !_gameState.value.isVerticalForm
         saveState(_gameState.value.copy(isVerticalForm = newValue))
         return newValue
@@ -194,30 +200,30 @@ class GameViewModel @Inject constructor(
         val newState: GameState
         when (userInput) {
             null -> {
+                playSound(SoundType.SKIPPED)
                 newState = _gameState.value.copy(
                     skippedAnswers = _gameState.value.skippedAnswers + 1,
                     totalAnswers = _gameState.value.totalAnswers + 1,
                     isCorrect = null
                 )
-                playSound(SoundType.SKIPPED)
             }
 
             correctResult -> {
+                playSound(SoundType.CORRECT)
                 newState = _gameState.value.copy(
                     correctAnswers = _gameState.value.correctAnswers + 1,
                     totalAnswers = _gameState.value.totalAnswers + 1,
                     isCorrect = true
                 )
-                playSound(SoundType.CORRECT)
             }
 
             else -> {
+                playSound(SoundType.WRONG)
                 newState = _gameState.value.copy(
                     wrongAnswers = _gameState.value.wrongAnswers + 1,
                     totalAnswers = _gameState.value.totalAnswers + 1,
                     isCorrect = false
                 )
-                playSound(SoundType.WRONG)
             }
         }
         saveState(newState)
@@ -422,6 +428,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun cancelGame() {
+        playSound(SoundType.CANCEL)
         pauseTimer()
         saveCancelledGameRecord()
         saveState(_gameState.value.copy(isGameStarted = false))
