@@ -145,7 +145,7 @@ fun ProblemsCard(
                                 null -> {
                                     append("? ")
                                     withStyle(
-                                        SpanStyle(color = red)
+                                        SpanStyle(color = yellow)
                                     ) {
                                         append(problem.correctResult.toString())
                                     }
