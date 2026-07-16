@@ -530,7 +530,7 @@ fun MenuSideSheet(
                         color = red,
                         onClick = { settingsViewModel.setShowResetPopUp(true) }
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                 }
 
                 // ScrollFade for top
