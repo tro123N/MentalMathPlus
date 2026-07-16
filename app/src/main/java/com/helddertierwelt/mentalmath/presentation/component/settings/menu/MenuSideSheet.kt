@@ -422,7 +422,7 @@ fun MenuSideSheet(
                     )
 
                     // Sound
-                    CycleToggleRow(
+                    /*CycleToggleRow(
                         fontSize = fontSize,
                         iconSize = iconSize,
                         currentValue = settingsViewModel.settingsState.collectAsState().value.isSoundEnabled,
@@ -439,7 +439,7 @@ fun MenuSideSheet(
                                 textRes = R.string.sound_off
                             )
                         )
-                    )
+                    )*/
 
                     // Language
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
