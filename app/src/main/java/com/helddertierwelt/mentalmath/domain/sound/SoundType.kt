@@ -21,7 +21,7 @@ package com.helddertierwelt.mentalmath.domain.sound
 enum class SoundType {
     CLICK,
     CORRECT,
-    SKIP,
+    SKIPPED,
     WRONG,
     WIN,
     DEFEAT,

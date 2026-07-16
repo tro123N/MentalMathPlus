@@ -180,28 +180,28 @@ fun ScoreSideSheet(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.End
+                            .padding(end = 12.dp, top= 8.dp, bottom = 8.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
+                        Icon(
+                            painter = painterResource(R.drawable.star_24dp),
+                            contentDescription = null,
+                            tint = yellow,
+                            modifier = Modifier.size(70.dp)
+                        )
                         Text(
                             text = stringResource(R.string.top_ten_scores),
                             color = MaterialTheme.colorScheme.onPrimary,
                             fontSize = fontSizeTitle,
                             textAlign = TextAlign.Start,
-                            modifier = Modifier.padding(start = 16.dp)
-                        )
-                        Icon(
-                            painter = painterResource(R.drawable.star_24dp),
-                            contentDescription = "score",
-                            modifier = Modifier.size(100.dp),
-                            tint = yellow
                         )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
 
                     val isScoreClicked = settingsViewModel.isScoreClicked.collectAsState().value
                     val bestGameScores by settingsViewModel.bestGameScores.collectAsState()
+
                     ScoreList(
                         gameScores = bestGameScores,
                         fontSizeScore = fontSizeScore,
@@ -212,6 +212,7 @@ fun ScoreSideSheet(
                             statisticsViewModel.setLoadedGameRecord(gameRecord.id)
                             statisticsViewModel.setShowLoadedGameRecord(true)
                             statisticsViewModel.setShowLinkGamePopUp(false)
+
                             navController.navigate("statistics") {
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true

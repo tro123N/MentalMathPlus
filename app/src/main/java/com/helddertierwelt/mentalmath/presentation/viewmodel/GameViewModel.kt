@@ -199,6 +199,7 @@ class GameViewModel @Inject constructor(
                     totalAnswers = _gameState.value.totalAnswers + 1,
                     isCorrect = null
                 )
+                playSound(SoundType.SKIPPED)
             }
 
             correctResult -> {

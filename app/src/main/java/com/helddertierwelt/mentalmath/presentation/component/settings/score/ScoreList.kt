@@ -33,12 +33,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.data.entity.GameScore
 import com.helddertierwelt.mentalmath.presentation.component.statistics.formatScore
 import com.helddertierwelt.mentalmath.presentation.theme.green
@@ -60,26 +58,24 @@ fun ScoreList(
     ) {
         gameScores.forEachIndexed { index, gameScore ->
             var color = MaterialTheme.colorScheme.onPrimary
-            var indexValue = "${index + 1}"
             if (gameScore.id == lastGameId) {
                 color = green
-                indexValue = stringResource(R.string.new_score)
             }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                    .padding(end = 12.dp, top= 8.dp, bottom = 8.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .clickable(enabled = isEnabled) { onClick(gameScore) },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    text = indexValue,
+                    text = "${index + 1}",
                     color = color,
                     fontSize = fontSizeScore,
                     textAlign = TextAlign.End,
-                    modifier = Modifier.weight(0.33f),
+                    modifier = Modifier.weight(0.3f),
                     fontWeight = Bold
                 )
                 Text(
@@ -89,7 +85,7 @@ fun ScoreList(
                     textAlign = TextAlign.End,
                     modifier = Modifier
                         .padding(12.dp, 0.dp)
-                        .weight(0.67f)
+                        .weight(0.7f)
                 )
             }
         }

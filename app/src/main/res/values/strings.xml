@@ -84,7 +84,7 @@ Thank you for contributing!
     <string name="no_mail">No app available to send emails.</string>
 
     <!-- Settings Screen: Leaderboard -->
-    <string name="top_ten_scores">Top 10\nScores</string>
+    <string name="top_ten_scores">Top 10</string>
     <string name="new_score">new</string>
 
     <!-- Game Screen -->

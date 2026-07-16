@@ -36,9 +36,9 @@ class SoundManager @Inject constructor(
         .build()
 
     private val sounds = mapOf(
-        SoundType.CORRECT to soundPool.load(context, R.raw.correct, 1),
-        SoundType.WRONG to soundPool.load(context, R.raw.wrong, 1),
-        SoundType.CLICK to soundPool.load(context, R.raw.click, 1),
+        SoundType.CORRECT to soundPool.load(context, R.raw.correct2, 1),
+        SoundType.WRONG to soundPool.load(context, R.raw.wrong1, 1),
+        SoundType.SKIPPED to soundPool.load(context, R.raw.skip3, 1),
         )
 
     fun play(sound: SoundType) {

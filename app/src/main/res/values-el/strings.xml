@@ -37,7 +37,7 @@
     <string name="no_mail">Δεν υπάρχει διαθέσιμη εφαρμογή για την αποστολή emails.</string>
 
     <!-- Settings Screen: Leaderboard -->
-    <string name="top_ten_scores">Οι 10 κορυφαίες\nΒαθμολογίες</string>
+    <string name="top_ten_scores">Top 10</string>
     <string name="new_score">νέα</string>
 
     <!-- Game Screen -->

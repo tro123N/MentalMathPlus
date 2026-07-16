@@ -37,7 +37,7 @@
     <string name="no_mail">Нет приложения для отправки писем.</string>
 
     <!-- Settings Screen: Leaderboard -->
-    <string name="top_ten_scores">Топ 10\nрезультатов</string>
+    <string name="top_ten_scores">Топ-10</string>
     <string name="new_score">новый</string>
 
     <!-- Game Screen -->

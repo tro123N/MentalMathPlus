@@ -37,7 +37,7 @@
     <string name="no_mail">Keine App verfügbar, um E-Mails zu senden.</string>
 
     <!-- Settings Screen: Leaderboard -->
-    <string name="top_ten_scores">Top 10\nScores</string>
+    <string name="top_ten_scores">Top 10</string>
     <string name="new_score">neu</string>
 
     <!-- Game Screen -->
