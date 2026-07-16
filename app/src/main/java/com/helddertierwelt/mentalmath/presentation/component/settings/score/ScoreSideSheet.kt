@@ -181,8 +181,8 @@ fun ScoreSideSheet(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 12.dp, top= 8.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.star_24dp),
