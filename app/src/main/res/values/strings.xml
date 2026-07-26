@@ -144,10 +144,10 @@ Thank you for contributing!
     <string name="ok">OK</string>
 
     <!--
-    Special translation notes for string arrays:
-    - The number of items in a string array does not need to match the original, so entries may be added or removed.
-    - Every string array must contain at least one entry to ensure that the app always has valid content to display.
-    - Items in string arrays do not need to be translations at all and may be freely created, adapted, or rewritten, as long as they remain appropriate.
+    Special translation notes:
+    - You do not need to translate every message.
+    - Untranslated messages will be skipped automatically by the app.
+    - Feel free to adapt or completely rewrite the messages instead of translating them literally, as long as they fit the game.
     -->
 
     <!-- Result PopUp -->
