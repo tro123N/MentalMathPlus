@@ -122,7 +122,7 @@ Your privacy is important. Here are the key facts:
 ## Contributing
 Contributions are welcome. There are several ways to support "Mental Math":
 
-- Help make the app accessible to more people by contributing translations. See [`strings.xml`](https://codeberg.org/Mental-Math/MentalMath/src/branch/main/app/src/main/res/values/strings.xml) for instructions.
+- Help translate the app on [Weblate](https://hosted.weblate.org/projects/mental-math) or follow the instructions in [`strings.xml`](https://codeberg.org/Mental-Math/MentalMath/src/branch/main/app/src/main/res/values/strings.xml) to contribute manually.
 - If you find a bug, have an idea for a new feature, or want to suggest an improvement, please [open an issue](https://codeberg.org/Mental-Math/MentalMath/issues/new).
 - General feedback of any kind is appreciated and can be sent via email (see "Contact" section below).
 - A positive review on [Google Play](https://play.google.com/store/apps/details?id=com.helddertierwelt.mentalmath) is a simple but effective way to support the project.
