@@ -99,7 +99,7 @@
         <item>Εσείς: %1$s | Αντίπαλος: ??\nΦύτρα: %2$d\n\nΤο σκορ σας είναι τόσο δυνατό που μάλλον απεγκαθιστούν το παιχνίδι.</item>
         <item>Εσείς: %1$s | Αντίπαλος: ??\nΦύτρα: %2$d\n\nΕίδαν το σκορ σας, και εξαφανίστηκαν μέσα στο άπειρο.</item>
     </string-array>
-    <string name="easy_win_title">Easy win</string>
+    <string name="easy_win_title">Εύκολη νίκη</string>
     <string-array name="easy_win_descriptions" tools:ignore="InconsistentArrays">
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΜια νίκη, αλλά χωρίς σοβαρό ανταγωνισμό!</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΤην επόμενη φορά ίσως να έχετε μια πραγματική πρόκληση.</item>
@@ -112,7 +112,7 @@
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΜπορούσατε να παίξετε με κλειστά μάτια και πάλι να κερδίσετε.</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΚερδίσατε όσο ο αντίπαλος προσπαθούσε να καταλάβει τους κανόνες.</item>
     </string-array>
-    <string name="anyone_here_title">Anyone here?</string>
+    <string name="anyone_here_title">Είναι κανείς εδώ;</string>
     <string-array name="anyone_here_descriptions" tools:ignore="InconsistentArrays">
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΜηδέν πόντοι, μηδέν διασκέδαση…</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΕχει ησυχία… Πολύ ησυχία.</item>
@@ -125,7 +125,7 @@
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΟ βαθμολογικός πίνακας είχε μια ξεκούραστη μέρα σήμερα.</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΕκτακτα νέα: Δεν έγινε απολύτως τίποτα!</item>
     </string-array>
-    <string name="win_title">You won</string>
+    <string name="win_title">Νίκησες</string>
     <string-array name="win_descriptions" tools:ignore="InconsistentArrays">
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΑυτά ήταν σοβαρά νοητικά μαθηματικά!</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΟ θρίαμβος σάς ταιριάζει πολύ!</item>
@@ -138,7 +138,7 @@
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΤα αποτελέσματα δε λένε ψέμματα - θρίαμβος.</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΓεγονότα πάνω από συναισθήματα: Τον διαλύσατε!</item>
     </string-array>
-    <string name="close_win_title">Close call</string>
+    <string name="close_win_title">Οριακή νίκη</string>
     <string-array name="close_win_descriptions" tools:ignore="InconsistentArrays">
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΜια δύσκολη νίκη, αλλά μετράει!</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΦιου… πάρα τρίχα!</item>
@@ -151,7 +151,7 @@
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΣεβασμός στον αντίπαλό σας, αλλά η νίκη είναι νίκη.</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΣυγχαρητήρια στον αντίπαλό σας, αλλά επικρατήσατε.</item>
     </string-array>
-    <string name="draw_title">Draw</string>
+    <string name="draw_title">Ισοπαλία</string>
     <string-array name="draw_descriptions" tools:ignore="InconsistentArrays">
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΜια τέλεια ισοπαλία - που πρέπει να επιλυθεί!</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΟύτε νικητής, ούτε χαμένος - απλά πρωταθλητές.</item>
@@ -164,7 +164,7 @@
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΜόνο ένα νέο παιχνίδι θα ανακυρρήξει τον τελικό νικητή.</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΙσοπαλία! Να δούμε ποιος θα αντέξει την πίεση ενός νέου γύρου.</item>
     </string-array>
-    <string name="close_defeat_title">Close call</string>
+    <string name="close_defeat_title">Οριακή ήττα</string>
     <string-array name="close_defeat_descriptions" tools:ignore="InconsistentArrays">
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΠολύ κοντά! Σχεδόν το είχατε!</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΜια οριακή ήττα - πάντως άλλη μια δυνατή προσπάθεια!</item>
@@ -177,7 +177,7 @@
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΠαραλίγο! Συνεχίστε, έχετε δυνατότητες.</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΚοντά, αλλά δεν τελειώσαμε - η επόμενη παρτίδα θα είναι δική σας!</item>
     </string-array>
-    <string name="defeat_title">Defeat</string>
+    <string name="defeat_title">Ήττα</string>
     <string-array name="defeat_descriptions" tools:ignore="InconsistentArrays">
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΔοκιμάστε άλλη μια φορά!</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΣυμβαίνει! Διαβάστε, προσαρμοστείτε, επιστρέψτε δυνατοί.</item>
