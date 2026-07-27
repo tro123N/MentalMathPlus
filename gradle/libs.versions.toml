@@ -1,6 +1,6 @@
 [versions]
 accompanistSystemuicontroller = "0.36.0"
-agp = "9.2.1"
+agp = "9.3.1"
 hiltAndroidVersion = "2.60.1"
 hiltCompilerVersion = "2.60.1"
 hiltLifecycleViewmodel = "1.4.0"
