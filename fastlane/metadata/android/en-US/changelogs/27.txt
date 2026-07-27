@@ -1,0 +1,2 @@
+- Added Bengali translation contributed by Mahir Daiyan. Thank you! :)
+- Reorganized strings.xml files to enable translations via Weblate (https://hosted.weblate.org/projects/mental-math/)

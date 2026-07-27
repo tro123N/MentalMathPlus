@@ -29,8 +29,8 @@ android {
         applicationId = "com.helddertierwelt.mentalmath"
         minSdk = 24
         targetSdk = 36
-        versionCode = 26
-        versionName = "26"
+        versionCode = 27
+        versionName = "27"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
