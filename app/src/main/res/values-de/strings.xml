@@ -1,18 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Modus und Limit auswählen</string>
     <string name="operator_instruction">Operationen und Schwierigkeit auswählen</string>
     <string name="start">Starten</string>
-
     <!-- Settings Screen: Menu -->
     <string name="share_game">Spiel teilen</string>
     <string name="random_game">Zufälliges Spiel</string>
     <string name="history">Verlauf</string>
     <string name="phone_pad">Telefon-Tastatur</string>
     <string name="number_pad">Ziffernblock</string>
-    <string name="right_to_left">Rechts-Nach-\u200BLinks</string>
-    <string name="left_to_right">Links-Nach-\u200BRechts</string>
+    <string name="right_to_left">Rechts-Nach-​Links</string>
+    <string name="left_to_right">Links-Nach-​Rechts</string>
     <string name="horizontal">Horizontal</string>
     <string name="vertical">Vertikal</string>
     <string name="reminder_off">Erinnerung aus</string>
@@ -35,17 +35,14 @@
     <string name="no_share">Keine App verfügbar, um diesen Inhalt zu teilen.</string>
     <string name="no_app_store">Kein App Store verfügbar, um diese Seite zu öffnen.</string>
     <string name="no_mail">Keine App verfügbar, um E-Mails zu senden.</string>
-
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10</string>
     <string name="new_score">neu</string>
-
     <!-- Game Screen -->
     <string name="rtl_toast">Rechts-Nach-Links Eingabe</string>
     <string name="ltr_toast">Links-Nach-Rechts Eingabe</string>
     <string name="vertical_toast">Vertikale Anordnung</string>
     <string name="horizontal_toast">Horizontale Anordnung</string>
-
     <!-- Statistics Screen -->
     <string name="result">Ergebnis</string>
     <string name="seed">Seed: %d</string>
@@ -66,36 +63,28 @@
     <string name="status">Status</string>
     <string name="no_problems">Keine Aufgabe gelöst</string>
     <string name="done">OK</string>
-
     <!-- History Screen -->
     <string name="no_games">Noch keine Spiele mit Punktestand</string>
-
     <!-- PopUps -->
     <string name="notification_popup_title">Benachrichtigungen sind deaktiviert</string>
     <string name="notification_popup_description">Bitte aktiviere Benachrichtigungen in den Einstellungen, um Erinnerungen erhalten zu können.\n\nHinweis: Akku-Optimierungen können Benachrichtigungen trotzdem blockieren.</string>
     <string name="notification_popup_confirmation_text">Einstellungen</string>
     <string name="notification_toast_text">Erinnerungen starten abends nach dem ausgewählten Intervall</string>
-
     <string name="reset_app_popup_title">App zurücksetzen?</string>
     <string name="reset_app_popup_description">Löscht alle Scores und Einstellungen.</string>
     <string name="reset_app_popup_confirmation_text">Zurücksetzen</string>
-
     <string name="quit_game_popup_title">Spiel beenden?</string>
     <string name="quit_game_popup_description">Dein aktueller Fortschritt geht verloren.</string>
     <string name="quit_game_popup_confirmation_text">Beenden</string>
     <string name="quit_game_popup_cancel_text">Fortsetzen</string>
-
     <string name="app_link_game_popup_title">Spiel von Link starten?</string>
     <string name="app_link_popup_description_new_game">Starte ein Spiel mit vordefinierten Einstellungen und einem zufälligen Seed.\n\nEin laufendes Spiel wird dadurch beendet.</string>
     <string name="app_link_popup_description_challenge">Spiel das Spiel deines Freundes nach und versuch seinen Score zu überbieten!\n\nEin laufendes Spiel wird dadurch beendet.</string>
     <string name="app_link_popup_confirmation_text">Starten</string>
-
     <string name="already_played_popup_title">Spiel bereits gespielt</string>
     <string name="already_played_popup_description">Du hast bereits ein Spiel mit den gleichen Einstellungen und Seed gespielt.\n\nProbiere einen anderen Link oder starte ein neues Spiel.</string>
-
     <string name="cancel">Abbrechen</string>
     <string name="ok">OK</string>
-
     <!-- Result PopUp -->
     <string name="waiting_title">Warte auf Gegner*in …</string>
     <string-array name="waiting_descriptions" tools:ignore="InconsistentArrays">
@@ -109,7 +98,6 @@
         <item>Du: %1$s | Gegner*in: ??\nSeed: %2$d\n\nTop Ergebnis! Plötzlich sind alle ganz ruhig.</item>
         <item>Du: %1$s | Gegner*in: ??\nSeed: %2$d\n\nSieht gut aus! Dein*e Gegner*in steht unter Druck.</item>
     </string-array>
-
     <string name="easy_win_title">Geschenkter Sieg</string>
     <string-array name="easy_win_descriptions" tools:ignore="InconsistentArrays">
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nEin Sieg, aber keine echte Herausforderung!</item>
@@ -121,7 +109,6 @@
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nDein*e Gegner*in scheint aufgegeben zu haben.</item>
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nDein*e Gegnerin ist wohl schon an der ersten Aufgabe gescheitert.</item>
     </string-array>
-
     <string name="anyone_here_title">Jemand da?</string>
     <string-array name="anyone_here_descriptions" tools:ignore="InconsistentArrays">
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nKeine Punkte, kein Spaß!</item>
@@ -134,7 +121,6 @@
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nDas war der Spiel-gewordene Flugmodus.</item>
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nWer nichts macht, macht nichts falsch. Und wer nichts falsch macht, macht alles richtig.</item>
     </string-array>
-
     <string name="win_title">Gewonnen</string>
     <string-array name="win_descriptions" tools:ignore="InconsistentArrays">
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nSo sehen Sieger*innen aus!</item>
@@ -148,7 +134,6 @@
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nDie Zahlen lügen nicht: Du hast völlig verdient gewonnen!</item>
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nOlympisch sein heißt: Ehrlich im Kampf, bescheiden im Sieg.</item>
     </string-array>
-
     <string name="close_win_title">Knapper Sieg</string>
     <string-array name="close_win_descriptions" tools:ignore="InconsistentArrays">
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nEin gutes Pferd springt nur so hoch wie es muss.</item>
@@ -162,7 +147,6 @@
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nDas war nicht knapp, das war Maßarbeit.</item>
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nWer einen Vorsprung braucht, hat nur Angst vor dem Schlusssprint.</item>
     </string-array>
-
     <string name="draw_title">Unentschieden</string>
     <string-array name="draw_descriptions" tools:ignore="InconsistentArrays">
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nUnentschieden! Zeit für ein Stechen!</item>
@@ -176,7 +160,6 @@
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nDie Geschichte ist hier noch nicht vorbei.</item>
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nWer jetzt zufrieden ist, hat keinen Ehrgeiz.</item>
     </string-array>
-
     <string name="close_defeat_title">Knapp verloren</string>
     <string-array name="close_defeat_descriptions" tools:ignore="InconsistentArrays">
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nKnapp daneben ist auch vorbei.</item>
@@ -190,7 +173,6 @@
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nErhobenen Hauptes verlieren und stärker zurückkommen.</item>
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nWeiter so! Das nächste Spiel ist deins.</item>
     </string-array>
-
     <string name="defeat_title">Verloren</string>
     <string-array name="defeat_descriptions" tools:ignore="InconsistentArrays">
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nMund abputzen und weiter machen!</item>
@@ -204,11 +186,9 @@
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nWer immer tut, was er schon kann, bleibt immer das, was er schon ist.</item>
         <item>Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nJeder braucht seine 15 Sekunden Ruhm, auch dein*e Gegner*in.</item>
     </string-array>
-
     <string name="result_popup_confirmation_text">Teilen</string>
     <string name="result_share_message_waiting">Ich: %1$s | Du: ??\nSeed: %2$d</string>
     <string name="result_share_message">Ich: %1$s | Du: %2$s\nSeed: %3$d</string>
     <string name="share_challenge">Kannst du meinen Score %1$s in Mental Math überbieten?\nSpiele meine Runde mit dem Seed %2$d nach:\n\n%3$s</string>
     <string name="share_new_game">Spiele eine Runde Mental Math mit mir!\nÖffne den Link, um ein neues Spiel mit meinen Einstellungen und folgendem Seed zu starten:\n%1$d\n\n%2$s</string>
-
 </resources>
