@@ -22,7 +22,7 @@ import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.settings.AppLocale
 import com.helddertierwelt.mentalmath.presentation.component.statistics.formatScore
@@ -34,56 +34,56 @@ import com.helddertierwelt.mentalmath.presentation.theme.yellow
 enum class GameResultType(
     val icon: Int,
     val color: Color,
-    @param:StringRes val title: Int,
-    @param:StringRes val descriptions: Int
+    @StringRes val title: Int,
+    val descriptions: List<Int>
 ) {
     WAITING(
         icon = R.drawable.hourglass_bottom_24dp,
         color = blue,
         title = R.string.waiting_title,
-        descriptions = R.array.waiting_descriptions
+        descriptions = GameResultDescriptions.waiting
     ),
     EASY_WIN(
         icon = R.drawable.favorite_24dp,
         color = red,
         title = R.string.easy_win_title,
-        descriptions = R.array.easy_win_descriptions
+        descriptions = GameResultDescriptions.easyWin
     ),
     ANYONE_HERE(
         icon = R.drawable.question_mark_24dp,
         color = blue,
         title = R.string.anyone_here_title,
-        descriptions = R.array.anyone_here_descriptions
+        descriptions = GameResultDescriptions.anyoneHere
     ),
     WIN(
         icon = R.drawable.trophy_24dp,
         color = yellow,
         title = R.string.win_title,
-        descriptions = R.array.win_descriptions
+        descriptions = GameResultDescriptions.win
     ),
     CLOSE_WIN(
         icon = R.drawable.trophy_24dp,
         color = yellow,
         title = R.string.close_win_title,
-        descriptions = R.array.close_win_descriptions
+        descriptions = GameResultDescriptions.closeWin
     ),
     DRAW(
         icon = R.drawable.partner_heart_24dp,
         color = green,
         title = R.string.draw_title,
-        descriptions = R.array.draw_descriptions
+        descriptions = GameResultDescriptions.draw
     ),
     CLOSE_DEFEAT(
         icon = R.drawable.rainy_24dp,
         color = blue,
         title = R.string.close_defeat_title,
-        descriptions = R.array.close_defeat_descriptions
+        descriptions = GameResultDescriptions.closeDefeat
     ),
     DEFEAT(
         icon = R.drawable.rainy_24dp,
         color = blue,
         title = R.string.defeat_title,
-        descriptions = R.array.defeat_descriptions
+        descriptions = GameResultDescriptions.defeat
     );
 
     @SuppressLint("ResourceType")
@@ -94,9 +94,7 @@ enum class GameResultType(
         seed: Long
     ): String {
 
-        val templates = stringArrayResource(id = descriptions)
-        val template = templates.random()
-
+        val template = stringResource(descriptions.random())
         return if (linkScore < 0f) {
             AppLocale.format(template, formatScore(currentScore), seed)
         } else {
