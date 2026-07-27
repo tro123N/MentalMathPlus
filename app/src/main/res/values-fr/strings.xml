@@ -1,10 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Mode de jeu et limite</string>
     <string name="operator_instruction">Operations et difficulté</string>
     <string name="start">Commencer</string>
-
     <!-- Settings Screen: Menu -->
     <string name="share_game">Duel</string>
     <string name="random_game">Partie aléatoire</string>
@@ -35,20 +35,17 @@
     <string name="no_share">Aucune application disponible pour partager ce contenu.</string>
     <string name="no_app_store">Aucune boutique d’applications disponible pour ouvrir cette page.</string>
     <string name="no_mail">Aucune application disponible pour envoyer des e-mails.</string>
-
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10</string>
     <string name="new_score">actuel</string>
-
     <!-- Game Screen -->
     <string name="rtl_toast">Saisie de droite à gauche</string>
     <string name="ltr_toast">Saisie de gauche à droite</string>
     <string name="horizontal_toast">Disposition horizontale</string>
     <string name="vertical_toast">Disposition verticale</string>
-
     <!-- Statistics Screen -->
     <string name="result">Résultat</string>
-    <string name="seed">Seed : %d</string>
+    <string name="seed">Seed : %d</string>
     <string name="problem_limit">Limite de problèmes</string>
     <string name="time_limit">Limite de temps</string>
     <string name="difficulty_addition">Difficulté (addition)</string>
@@ -66,36 +63,28 @@
     <string name="status">Statut</string>
     <string name="no_problems">Aucun problème résolu</string>
     <string name="done">Retour</string>
-
     <!-- History Screen -->
     <string name="no_games">Aucune partie avec un score</string>
-
     <!-- PopUps -->
     <string name="notification_popup_title">Notifications désactivées</string>
-    <string name="notification_popup_description">Les rappels utilisent des notifications : vous devez autoriser les notifications dans les paramètres avant d’activer les rappels.\n\nNote: Les paramètres d’optimisation de la batterie pourraient bloquer les notifications.</string>
+    <string name="notification_popup_description">Les rappels utilisent des notifications : vous devez autoriser les notifications dans les paramètres avant d’activer les rappels.\n\nNote : Les paramètres d’optimisation de la batterie pourraient bloquer les notifications.</string>
     <string name="notification_popup_confirmation_text">Ouvrir les paramètres</string>
     <string name="notification_toast_text">Les rappels se font en fin d’après-midi</string>
-
-    <string name="reset_app_popup_title">Réinitialiser l’app?</string>
+    <string name="reset_app_popup_title">Réinitialiser l’app ?</string>
     <string name="reset_app_popup_description">Supprime tous les scores et tous les paramètres.</string>
     <string name="reset_app_popup_confirmation_text">Réinitialiser</string>
-
-    <string name="quit_game_popup_title">Quitter?</string>
+    <string name="quit_game_popup_title">Quitter ?</string>
     <string name="quit_game_popup_description">Votre progression sera perdue.</string>
     <string name="quit_game_popup_confirmation_text">Quitter</string>
     <string name="quit_game_popup_cancel_text">Continuer</string>
-
     <string name="app_link_game_popup_title">Jouer la partie donnée par le lien ?</string>
     <string name="app_link_popup_description_new_game">Lance une partie dont les réglages sont prédéfinis, avec une graine aléatoire.\n\nSi une partie est en cours, sa progression sera perdue.</string>
     <string name="app_link_popup_description_challenge">Essaye de battre son score en rejouant la même partie.\n\nSi une partie est en cours, sa progression sera perdue.</string>
     <string name="app_link_popup_confirmation_text">Démarrer</string>
-
     <string name="already_played_popup_title">Partie déjà jouée</string>
     <string name="already_played_popup_description">Tu as déjà joué une partie avec la même graine et les mêmes paramètres.\n\nEssaye un autre lien, ou démarre une nouvelle partie.</string>
-
     <string name="cancel">Abandonner</string>
     <string name="ok">OK</string>
-
     <!-- Result PopUp -->
     <string name="waiting_title">En attente de votre adversaire…</string>
     <string-array name="waiting_descriptions" tools:ignore="InconsistentArrays">
@@ -105,8 +94,7 @@
         <item>Toi : %1$s | Adversaire : ??\nGraine : %2$d\n\nBon score, bon score, … Sera-il battu ?</item>
         <item>Toi : %1$s | Adversaire : ??\nGraine : %2$d\n\nÇa c’est fait, plus qu’à lui mettre la pression maintenant !</item>
     </string-array>
-
-    <string name="easy_win_title">Easy win</string>
+    <string name="easy_win_title">Victoire facile</string>
     <string-array name="easy_win_descriptions" tools:ignore="InconsistentArrays">
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nFacile, s’iel ne joue pas…</item>
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nReste à trouver un adversaire qui accepte le challenge.</item>
@@ -116,8 +104,7 @@
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nLa stratégie de ton adversaire : la fuite.</item>
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nTu aurais pu gagner les yeux fermés…</item>
     </string-array>
-
-    <string name="anyone_here_title">Anyone here?</string>
+    <string name="anyone_here_title">Il y a quelqu\\\'un ?</string>
     <string-array name="anyone_here_descriptions" tools:ignore="InconsistentArrays">
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nZéro points ?</item>
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nY’a quelqu’un ?</item>
@@ -126,8 +113,7 @@
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nDonc, personne n’a rien fait, c’est ça ?</item>
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nD’un certain point de vue, personne n’a perdu.</item>
     </string-array>
-
-    <string name="win_title">You won</string>
+    <string name="win_title">Tu as gagné</string>
     <string-array name="win_descriptions" tools:ignore="InconsistentArrays">
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nVoilà qui fait chauffer le cerveau !</item>
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nOhhh, la belle concentration !</item>
@@ -138,8 +124,7 @@
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nCerveau bien réveillé, adversaire KO !</item>
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nTu pourrais donner des cours à ton adversaire ?</item>
     </string-array>
-
-    <string name="close_win_title">Close call</string>
+    <string name="close_win_title">Victoire serrée</string>
     <string-array name="close_win_descriptions" tools:ignore="InconsistentArrays">
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nC’était serré, mais c’est passé !</item>
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nOuf, c’était serré !</item>
@@ -149,8 +134,7 @@
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nC’est serré (entraîne-toi, au cas où…) !</item>
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nTu as trouvé un adversaire à ton niveau, mais ça reste toi le boss.</item>
     </string-array>
-
-    <string name="draw_title">Draw</string>
+    <string name="draw_title">Match nul</string>
     <string-array name="draw_descriptions" tools:ignore="InconsistentArrays">
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nÉgalité ! Il faut jouer la belle !</item>
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nPas de gagnant : pas de perdant. Pas de perdant : pas de problème. Pas de problème : pas de problème.</item>
@@ -159,8 +143,7 @@
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nPas trop fatigués ? On en refait une ?</item>
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nIl faut en refaire une !</item>
     </string-array>
-
-    <string name="close_defeat_title">Close call</string>
+    <string name="close_defeat_title">Défaite serrée</string>
     <string-array name="close_defeat_descriptions" tools:ignore="InconsistentArrays">
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nOhh non ! C’était si proche !</item>
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nTrop triste de perdre si près de la victoire…</item>
@@ -172,8 +155,7 @@
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nIel fatigue, ça se voit, tiens bon : REVANCHE !</item>
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nLa chance, ça tourne ! La prochaine je parie sur toi !</item>
     </string-array>
-
-    <string name="defeat_title">Defeat</string>
+    <string name="defeat_title">Défaite</string>
     <string-array name="defeat_descriptions" tools:ignore="InconsistentArrays">
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nT’étais pas réveillé, c’est pas grave.</item>
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nJ’avais parié sur toi !!!</item>
@@ -186,11 +168,9 @@
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nJ’espère qu’iel ne publie pas déjà son score sur ses réseaux sociaux…</item>
         <item>Toi : %1$s | Adversaire : %2$s\nGraine : %3$d\n\nOn lui laisse ses 15 secondes de célébrité ?</item>
     </string-array>
-
     <string name="result_popup_confirmation_text">Partager</string>
-    <string name="result_share_message_waiting">Moi : %1$s | Toi : ??\nGraine : %2$d</string>
-    <string name="result_share_message">Moi : %1$s | Toi : %2$s\nGraine : %3$d</string>
-    <string name="share_challenge">%1$s points sur Mental Math, essaye de me battre !\nRejoue ma partie avec la graine %2$d:\n\n%3$s</string>
-    <string name="share_new_game">Une partie sur Mental Math ?\nSuit le lien pour démarrer une partie avec ma configuration et ma graine :\n%1$d\n\n%2$s</string>
-
+    <string name="result_share_message_waiting">Moi : %1$s | Toi : ??\nGraine : %2$d</string>
+    <string name="result_share_message">Moi : %1$s | Toi : %2$s\nGraine : %3$d</string>
+    <string name="share_challenge">%1$s points sur Mental Math, essaye de me battre !\nRejoue ma partie avec la graine %2$d:\n\n%3$s</string>
+    <string name="share_new_game">Une partie sur Mental Math ?\nSuit le lien pour démarrer une partie avec ma configuration et ma graine :\n%1$d\n\n%2$s</string>
 </resources>

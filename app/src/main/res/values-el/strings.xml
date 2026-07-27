@@ -1,18 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Επιλογή λειτουργίας και ορίου</string>
     <string name="operator_instruction">Επιλογή τελεστών και δυσκολίας</string>
     <string name="start">Εναρξη</string>
-
     <!-- Settings Screen: Menu -->
     <string name="share_game">Κοινή Χρήση Παρτίδας</string>
     <string name="random_game">Τυχαία Παρτίδα</string>
     <string name="history">Ιστορικό</string>
     <string name="phone_pad">Τηλεφωνικό Πληκτρολόγιο</string>
     <string name="number_pad">Αριθμητικό Πληκτρολόγιο</string>
-    <string name="right_to_left">Δεξιά-Προς-\u200BΑριστερά</string>
-    <string name="left_to_right">Αριστερά-Προς-\u200BΔεξιά</string>
+    <string name="right_to_left">Δεξιά-Προς-​Αριστερά</string>
+    <string name="left_to_right">Αριστερά-Προς-​Δεξιά</string>
     <string name="horizontal">Οριζόντια</string>
     <string name="vertical">Κάθετα</string>
     <string name="reminder_off">Χωρίς Υπενθύμιση</string>
@@ -26,8 +26,8 @@
     <string name="sound_off">Ήχος ανενεργός</string>
     <string name="language">Γλώσσα</string>
     <string name="about">Σχετικά</string>
-    <string name="feedback">Ανατροφο\u200Bδότηση</string>
-    <string name="recommend">Σύστ\u200Bαση</string>
+    <string name="feedback">Ανατροφο​δότηση</string>
+    <string name="recommend">Σύστ​αση</string>
     <string name="donate">Δωρεά</string>
     <string name="reset_app">Επαναφορά Εφαρμογής</string>
     <string name="unknown_error">Παρουσιάστηκε άγνωστο σφάλμα.</string>
@@ -35,17 +35,14 @@
     <string name="no_share">Δεν υπάρχει διαθέσιμη εφαρμογή για την κοινοποίηση αυτού του περιεχομένου.</string>
     <string name="no_app_store">Δεν υπάρχει διαθέσιμο κατάστημα εφαρμογών για το άνοιγμα αυτής της σελίδας.</string>
     <string name="no_mail">Δεν υπάρχει διαθέσιμη εφαρμογή για την αποστολή emails.</string>
-
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10</string>
     <string name="new_score">νέα</string>
-
     <!-- Game Screen -->
     <string name="rtl_toast">Εισαγωγή από δεξιά προς τα αριστερά</string>
     <string name="ltr_toast">Εισαγωγή από αριστερά προς τα δεξιά</string>
     <string name="horizontal_toast">Οριζόντια διάταξη</string>
     <string name="vertical_toast">Κατακόρυφη διάταξη</string>
-
     <!-- Statistics Screen -->
     <string name="result">Αποτέλεσμα</string>
     <string name="seed">Φύτρα: %d</string>
@@ -66,36 +63,28 @@
     <string name="status">Κατάσταση</string>
     <string name="no_problems">Δε λύθηκαν προβλήματα</string>
     <string name="done">Ολοκλήρωση</string>
-
     <!-- History Screen -->
     <string name="no_games">Δεν υπάρχουν παρτίδες με βαθμολογία</string>
-
     <!-- PopUps -->
     <string name="notification_popup_title">Οι ειδοποιήσεις είναι απενεργοποιημένες</string>
     <string name="notification_popup_description">Ενεργοποιήστε τις ειδοποιήσεις στις ρυθμίσεις του συστήματός σας για να ορίσετε υπενθυμίσεις.\n\nΣημείωση: Οι ρυθμίσεις βελτιστοποίησης μπαταρίας της συσκευής ενδέχεται να εξακολουθούν να αποκλείουν τις ειδοποιήσεις.</string>
     <string name="notification_popup_confirmation_text">Ανοιγμα ρυθμίσεων</string>
     <string name="notification_toast_text">Οι υπενθυμίσεις ξεκινούν το βράδυ μετά το διάλειμμα</string>
-
     <string name="reset_app_popup_title">Επαναφορά εφαρμογής;</string>
     <string name="reset_app_popup_description">Διαγράφονται όλες οι βαθμολογίες και ρυθμίσεις.</string>
     <string name="reset_app_popup_confirmation_text">Επαναφορά</string>
-
     <string name="quit_game_popup_title">Εξοδος από το παιχνίδι;</string>
     <string name="quit_game_popup_description">Η τρέχουσα πρόοδός σας θα χαθεί.</string>
     <string name="quit_game_popup_confirmation_text">Εξοδος</string>
     <string name="quit_game_popup_cancel_text">Συνέχεια</string>
-
     <string name="app_link_game_popup_title">Εναρξη παιχνιδιού από σύνδεσμο;</string>
     <string name="app_link_popup_description_new_game">Παίξτε ένα νέο παιχνίδι με προκαθορισμένες ρυθμίσεις και τυχαία φύτρα.\n\nΗ τρέχουσα πρόοδος σε παιχνίδι θα χαθεί.</string>
     <string name="app_link_popup_description_challenge">Προσπαθήστε να ξεπεράσετε το σκορ κάποιου φίλου σας επαναλαμβάνοντας το ίδιο παιχνίδι.\n\nΗ τρέχουσα πρόοδος σε παιχνίδι θα χαθεί.</string>
     <string name="app_link_popup_confirmation_text">Εναρξη</string>
-
     <string name="already_played_popup_title">Η παρτίδα έχει ήδη παιχτεί</string>
     <string name="already_played_popup_description">Εχετε ήδη παίξει μια παρτίδα με τις ίδιες ρυθμίσεις και φύτρα.\n\nΠαρακαλούμε δοκιμάστε ένα διαφορετικό link ή αρχίστε νέα παρτίδα.</string>
-
     <string name="cancel">Ακύρωση</string>
     <string name="ok">OK</string>
-
     <!-- Result PopUp -->
     <string name="waiting_title">Αναμονή για τον αντίπαλό σας…</string>
     <string-array name="waiting_descriptions" tools:ignore="InconsistentArrays">
@@ -110,8 +99,7 @@
         <item>Εσείς: %1$s | Αντίπαλος: ??\nΦύτρα: %2$d\n\nΤο σκορ σας είναι τόσο δυνατό που μάλλον απεγκαθιστούν το παιχνίδι.</item>
         <item>Εσείς: %1$s | Αντίπαλος: ??\nΦύτρα: %2$d\n\nΕίδαν το σκορ σας, και εξαφανίστηκαν μέσα στο άπειρο.</item>
     </string-array>
-
-    <string name="easy_win_title">Easy win</string>
+    <string name="easy_win_title">Εύκολη νίκη</string>
     <string-array name="easy_win_descriptions" tools:ignore="InconsistentArrays">
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΜια νίκη, αλλά χωρίς σοβαρό ανταγωνισμό!</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΤην επόμενη φορά ίσως να έχετε μια πραγματική πρόκληση.</item>
@@ -124,8 +112,7 @@
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΜπορούσατε να παίξετε με κλειστά μάτια και πάλι να κερδίσετε.</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΚερδίσατε όσο ο αντίπαλος προσπαθούσε να καταλάβει τους κανόνες.</item>
     </string-array>
-
-    <string name="anyone_here_title">Anyone here?</string>
+    <string name="anyone_here_title">Είναι κανείς εδώ;</string>
     <string-array name="anyone_here_descriptions" tools:ignore="InconsistentArrays">
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΜηδέν πόντοι, μηδέν διασκέδαση…</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΕχει ησυχία… Πολύ ησυχία.</item>
@@ -138,8 +125,7 @@
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΟ βαθμολογικός πίνακας είχε μια ξεκούραστη μέρα σήμερα.</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΕκτακτα νέα: Δεν έγινε απολύτως τίποτα!</item>
     </string-array>
-
-    <string name="win_title">You won</string>
+    <string name="win_title">Νίκησες</string>
     <string-array name="win_descriptions" tools:ignore="InconsistentArrays">
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΑυτά ήταν σοβαρά νοητικά μαθηματικά!</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΟ θρίαμβος σάς ταιριάζει πολύ!</item>
@@ -152,8 +138,7 @@
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΤα αποτελέσματα δε λένε ψέμματα - θρίαμβος.</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΓεγονότα πάνω από συναισθήματα: Τον διαλύσατε!</item>
     </string-array>
-
-    <string name="close_win_title">Close call</string>
+    <string name="close_win_title">Οριακή νίκη</string>
     <string-array name="close_win_descriptions" tools:ignore="InconsistentArrays">
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΜια δύσκολη νίκη, αλλά μετράει!</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΦιου… πάρα τρίχα!</item>
@@ -166,8 +151,7 @@
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΣεβασμός στον αντίπαλό σας, αλλά η νίκη είναι νίκη.</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΣυγχαρητήρια στον αντίπαλό σας, αλλά επικρατήσατε.</item>
     </string-array>
-
-    <string name="draw_title">Draw</string>
+    <string name="draw_title">Ισοπαλία</string>
     <string-array name="draw_descriptions" tools:ignore="InconsistentArrays">
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΜια τέλεια ισοπαλία - που πρέπει να επιλυθεί!</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΟύτε νικητής, ούτε χαμένος - απλά πρωταθλητές.</item>
@@ -180,8 +164,7 @@
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΜόνο ένα νέο παιχνίδι θα ανακυρρήξει τον τελικό νικητή.</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΙσοπαλία! Να δούμε ποιος θα αντέξει την πίεση ενός νέου γύρου.</item>
     </string-array>
-
-    <string name="close_defeat_title">Close call</string>
+    <string name="close_defeat_title">Οριακή ήττα</string>
     <string-array name="close_defeat_descriptions" tools:ignore="InconsistentArrays">
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΠολύ κοντά! Σχεδόν το είχατε!</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΜια οριακή ήττα - πάντως άλλη μια δυνατή προσπάθεια!</item>
@@ -194,8 +177,7 @@
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΠαραλίγο! Συνεχίστε, έχετε δυνατότητες.</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΚοντά, αλλά δεν τελειώσαμε - η επόμενη παρτίδα θα είναι δική σας!</item>
     </string-array>
-
-    <string name="defeat_title">Defeat</string>
+    <string name="defeat_title">Ήττα</string>
     <string-array name="defeat_descriptions" tools:ignore="InconsistentArrays">
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΔοκιμάστε άλλη μια φορά!</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΣυμβαίνει! Διαβάστε, προσαρμοστείτε, επιστρέψτε δυνατοί.</item>
@@ -208,11 +190,9 @@
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΟ αντίπαλός σας ήδη καυχιέται στους άλλους. Αξιαγάπητο.</item>
         <item>Εσείς: %1$s | Αντίπαλος: %2$s\nΦύτρα: %3$d\n\nΑφήστε τον αντίπαλο να απολαύσει 15 δευτερόλεπτα δόξας.</item>
     </string-array>
-
     <string name="result_popup_confirmation_text">Μοιραστείτε</string>
     <string name="result_share_message_waiting">Εγώ: %1$s | Εσύ: ??\nΦύτρα: %2$d</string>
     <string name="result_share_message">Εγώ: %1$s | Εσύ: %2$s\nΦύτρα: %3$d</string>
     <string name="share_challenge">Δοκιμάστε να ξεπεράσετε το σκορ μου %1$s στο Mental Math.\nΕπαναλάβετε το παιχνίδι μου με φύτρα %2$d:\n\n%3$s</string>
     <string name="share_new_game">Ας παίξουμε μια παρτίδα Mental Math!\nΚάντε κλικ στο παρακάτω link για να αρχίσετε μια φρέσκια παρτίδα με τις ρυθμίσεις μου και φύτρα:\n%1$d\n\n%2$s</string>
-
 </resources>

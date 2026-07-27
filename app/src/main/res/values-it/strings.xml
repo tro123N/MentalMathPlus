@@ -1,18 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Seleziona modalità e limite</string>
     <string name="operator_instruction">Seleziona operazioni e difficoltà</string>
     <string name="start">Inizia</string>
-
     <!-- Settings Screen: Menu -->
     <string name="share_game">Condividi gioco</string>
     <string name="random_game">Gioco casuale</string>
     <string name="history">Cronologia</string>
     <string name="phone_pad">Tastierino telefono</string>
     <string name="number_pad">Tastierino numerico</string>
-    <string name="right_to_left">Da destra a\u200B sinistra</string>
-    <string name="left_to_right">Da sinistra a\u200B destra</string>
+    <string name="right_to_left">Da destra a​ sinistra</string>
+    <string name="left_to_right">Da sinistra a​ destra</string>
     <string name="horizontal">Orizzontale</string>
     <string name="vertical">Verticale</string>
     <string name="reminder_off">Promemoria disattivato</string>
@@ -26,8 +26,8 @@
     <string name="sound_off">Audio disattivato</string>
     <string name="language">Lingua</string>
     <string name="about">Info</string>
-    <string name="feedback">Feed\u200Bback</string>
-    <string name="recommend">Consi\u200Bglia</string>
+    <string name="feedback">Feed​back</string>
+    <string name="recommend">Consi​glia</string>
     <string name="donate">Donazioni</string>
     <string name="reset_app">Ripristina app</string>
     <string name="unknown_error">Si è verificato un errore sconosciuto.</string>
@@ -35,17 +35,14 @@
     <string name="no_share">Nessuna app disponibile per condividere questo contenuto.</string>
     <string name="no_app_store">Nessun app store disponibile per aprire questa pagina.</string>
     <string name="no_mail">Nessuna app disponibile per inviare email.</string>
-
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10</string>
     <string name="new_score">nuovo</string>
-
     <!-- Game Screen -->
     <string name="rtl_toast">Input da destra a sinistra</string>
     <string name="ltr_toast">Input da sinistra a destra</string>
     <string name="horizontal_toast">Disposizione orizzontale</string>
     <string name="vertical_toast">Disposizione verticale</string>
-
     <!-- Statistics Screen -->
     <string name="result">Risultato</string>
     <string name="seed">Seed: %d</string>
@@ -66,36 +63,28 @@
     <string name="status">Stato</string>
     <string name="no_problems">Nessun problema risolto</string>
     <string name="done">Fatto</string>
-
     <!-- History Screen -->
     <string name="no_games">Non ci sono partite con un punteggio</string>
-
     <!-- PopUps -->
     <string name="notification_popup_title">Le notifiche sono disattivate</string>
     <string name="notification_popup_description">Attiva le notifiche nelle impostazioni di sistema per impostare i promemoria.\n\nNota: le impostazioni di ottimizzazione della batteria potrebbero comunque bloccarle.</string>
     <string name="notification_popup_confirmation_text">Apri impostazioni</string>
     <string name="notification_toast_text">I promemoria inizieranno di sera dopo l\'intervallo</string>
-
     <string name="reset_app_popup_title">Ripristinare l\'app?</string>
     <string name="reset_app_popup_description">Cancella tutti i punteggi e le impostazioni.</string>
     <string name="reset_app_popup_confirmation_text">Ripristina</string>
-
     <string name="quit_game_popup_title">Esci dal gioco?</string>
     <string name="quit_game_popup_description">I tuoi progressi attuali andranno perduti.</string>
     <string name="quit_game_popup_confirmation_text">Esci</string>
     <string name="quit_game_popup_cancel_text">Continua</string>
-
     <string name="app_link_game_popup_title">Avviare gioco dal link?</string>
     <string name="app_link_popup_description_new_game">Gioca una nuova partita con impostazioni predefinite e un seed casuale.\n\nI progressi della partita attuale andranno perduti.</string>
     <string name="app_link_popup_description_challenge">Prova a battere il punteggio del tuo amico rigiocando la stessa partita.\n\nI progressi della partita attuale andranno perduti.</string>
     <string name="app_link_popup_confirmation_text">Inizia</string>
-
     <string name="already_played_popup_title">Partita già giocata</string>
     <string name="already_played_popup_description">Hai già giocato una partita con le stesse impostazioni e lo stesso seed.\n\nProva un altro link o avvia una nuova partita.</string>
-
     <string name="cancel">Annulla</string>
     <string name="ok">OK</string>
-
     <!-- Result PopUp -->
     <string name="waiting_title">In attesa del tuo avversario…</string>
     <string-array name="waiting_descriptions" tools:ignore="InconsistentArrays">
@@ -110,7 +99,6 @@
         <item>Tu: %1$s | Avversario: ??\nSeed: %2$d\n\nIl tuo punteggio è così alto che probabilmente sta disinstallando l\'app.</item>
         <item>Tu: %1$s | Avversario: ??\nSeed: %2$d\n\nHa visto il tuo punteggio… ed è svanito nel nulla.</item>
     </string-array>
-
     <string name="easy_win_title">Vittoria facile</string>
     <string-array name="easy_win_descriptions" tools:ignore="InconsistentArrays">
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nUna vittoria, ma senza una vera competizione!</item>
@@ -124,7 +112,6 @@
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nAvresti potuto vincere anche a occhi chiusi.</item>
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nHai vinto mentre il tuo avversario cercava ancora di capire le regole.</item>
     </string-array>
-
     <string name="anyone_here_title">C\'è nessuno?</string>
     <string-array name="anyone_here_descriptions" tools:ignore="InconsistentArrays">
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nZero punti, zero divertimento…</item>
@@ -138,7 +125,6 @@
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nOggi il tabellone ha avuto vita facile.</item>
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nUltime notizie: non è successo assolutamente nulla!</item>
     </string-array>
-
     <string name="win_title">Hai vinto</string>
     <string-array name="win_descriptions" tools:ignore="InconsistentArrays">
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nQuesto sì che è calcolo mentale sul serio!</item>
@@ -152,7 +138,6 @@
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nI risultati non mentono - hai fatto centro.</item>
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nFatti, non parole: hai dominato!</item>
     </string-array>
-
     <string name="close_win_title">Per un pelo</string>
     <string-array name="close_win_descriptions" tools:ignore="InconsistentArrays">
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nUna vittoria sudata, ma conta comunque!</item>
@@ -166,7 +151,6 @@
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nRispetto per l\'avversario, ma una vittoria è una vittoria.</item>
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nComplimenti al tuo rivale, ma alla fine hai prevalso tu.</item>
     </string-array>
-
     <string name="draw_title">Pareggio</string>
     <string-array name="draw_descriptions" tools:ignore="InconsistentArrays">
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nParità perfetta - è ora dello spareggio!</item>
@@ -180,7 +164,6 @@
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nSolo una nuova partita potrà decretare il vero vincitore.</item>
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nÈ un pareggio! Vediamo chi reggerà la pressione nel prossimo round.</item>
     </string-array>
-
     <string name="close_defeat_title">Per un pelo</string>
     <string-array name="close_defeat_descriptions" tools:ignore="InconsistentArrays">
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nCi sei andato vicinissimo! Mancava poco!</item>
@@ -194,7 +177,6 @@
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nCi sei quasi! Continua così, il tuo talento è innegabile.</item>
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nVicini, ma non è finita - il prossimo round sarà tuo!</item>
     </string-array>
-
     <string name="defeat_title">Sconfitta</string>
     <string-array name="defeat_descriptions" tools:ignore="InconsistentArrays">
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nNon pensarci e riprova ancora!</item>
@@ -208,11 +190,9 @@
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nIl tuo avversario lo starà già raccontando a tutti. Adorabile.</item>
         <item>Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nLascia che il tuo avversario si goda i suoi quindici secondi di celebrità.</item>
     </string-array>
-
     <string name="result_popup_confirmation_text">Condividi</string>
     <string name="result_share_message_waiting">Io: %1$s | Tu: ??\nSeed: %2$d</string>
     <string name="result_share_message">Io: %1$s | Tu: %2$s\nSeed: %3$d</string>
     <string name="share_challenge">Prova a battere il mio punteggio di %1$s su Mental Math.\nRigioca la mia partita con il seed %2$d:\n\n%3$s</string>
     <string name="share_new_game">Facciamo una partita a Mental Math!\nClicca sul link qui sotto per iniziare un nuovo gioco con le mie impostazioni e lo stesso seed:\n%1$d\n\n%2$s</string>
-
 </resources>
