@@ -74,7 +74,7 @@
     <string name="notification_popup_title">Notifications désactivées</string>
     <string name="notification_popup_description">Les rappels utilisent des notifications : vous devez autoriser les notifications dans les paramètres avant d’activer les rappels.\n\nNote: Les paramètres d’optimisation de la batterie pourraient bloquer les notifications.</string>
     <string name="notification_popup_confirmation_text">Ouvrir les paramètres</string>
-    <string name="notification_toast_text">Les rappels se font en fin d’après-midi.</string>
+    <string name="notification_toast_text">Les rappels se font en fin d’après-midi</string>
 
     <string name="reset_app_popup_title">Réinitialiser l’app?</string>
     <string name="reset_app_popup_description">Supprime tous les scores et tous les paramètres.</string>
