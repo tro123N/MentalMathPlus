@@ -36,6 +36,7 @@ Important translation notes:
 - Keep escape characters like \n.
 - Keep the length roughly similar so it fits the UI.
 - Translations do not need to be literal and can be adapted naturally.
+- Especially result descriptions should be freely rewritten to sound natural in the target language.
 
 Example:
 <string name="share_challenge">Try to beat my score of %1$s in Mental Math.\nReplay my game with seed %2$d:\n\n%3$s</string>
@@ -142,13 +143,6 @@ Thank you for contributing!
 
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
-
-    <!--
-    Special translation notes:
-    - You do not need to translate every message.
-    - Untranslated messages will be skipped automatically by the app.
-    - Feel free to adapt or completely rewrite the messages instead of translating them literally, as long as they fit the game.
-    -->
 
     <!-- Result PopUp -->
     <string name="waiting_title">Waiting for your opponent…</string>

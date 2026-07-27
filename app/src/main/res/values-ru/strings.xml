@@ -107,6 +107,7 @@
     <string name="waiting_description_7">Ты: %1$s | Соперник: ??\nСид: %2$d\n\nПохоже, твой соперник в ярости покинул игру.</string>
     <string name="waiting_description_8">Ты: %1$s | Соперник: ??\nСид: %2$d\n\nОтличный результат! Вдруг все притихли.</string>
     <string name="waiting_description_9">Ты: %1$s | Соперник: ??\nСид: %2$d\n\nВыглядит неплохо! Твой соперник под давлением.</string>
+    <string name="waiting_description_10">Ты: %1$s | Соперник: ??\nСид: %2$d\n\nВызов брошен! Осталось узнать, кто осмелится его принять.</string>
 
     <string name="easy_win_title">Дармовая победа</string>
     <string name="easy_win_description_1">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПобеда, но не настоящее испытание!</string>
@@ -117,6 +118,8 @@
     <string name="easy_win_description_6">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПроще пареной репы!</string>
     <string name="easy_win_description_7">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПохоже, твой соперник сдался.</string>
     <string name="easy_win_description_8">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПохоже, твой соперник споткнулся уже на первом задании.</string>
+    <string name="easy_win_description_9">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЭто была скорее разминка, чем настоящая битва.</string>
+    <string name="easy_win_description_10">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЭто была не битва, а лёгкая прогулка.</string>
 
     <string name="anyone_here_title">Есть кто-нибудь?</string>
     <string name="anyone_here_description_1">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНет очков — нет веселья!</string>
@@ -128,6 +131,7 @@
     <string name="anyone_here_description_7">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nСкуууучно.</string>
     <string name="anyone_here_description_8">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nХоть шаром покати.</string>
     <string name="anyone_here_description_9">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nКто ничего не делает, тот не ошибается. А кто не ошибается — тот всё делает правильно.</string>
+    <string name="anyone_here_description_10">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nСамая захватывающая часть — это ожидание начала.</string>
 
     <string name="win_title">Победа</string>
     <string name="win_description_1">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nВот так выглядят победители!</string>
