@@ -107,6 +107,7 @@
     <string name="waiting_description_7">Du: %1$s | Gegner*in: ??\nSeed: %2$d\n\nDas sieht nach einem Rage-Quit deiner Konkurrenz aus.</string>
     <string name="waiting_description_8">Du: %1$s | Gegner*in: ??\nSeed: %2$d\n\nTop Ergebnis! Plötzlich sind alle ganz ruhig.</string>
     <string name="waiting_description_9">Du: %1$s | Gegner*in: ??\nSeed: %2$d\n\nSieht gut aus! Dein*e Gegner*in steht unter Druck.</string>
+    <string name="waiting_description_10">Du: %1$s | Gegner*in: ??\nSeed: %2$d\n\nDein Ergebnis steht. Jetzt fehlt nur noch jemand, der sich traut.</string>
 
     <string name="easy_win_title">Geschenkter Sieg</string>
     <string name="easy_win_description_1">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nEin Sieg, aber keine echte Herausforderung!</string>
@@ -117,6 +118,8 @@
     <string name="easy_win_description_6">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nSchenken heißt, einem anderen etwas geben, was man am liebsten selbst behalten möchte.</string>
     <string name="easy_win_description_7">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nDein*e Gegner*in scheint aufgegeben zu haben.</string>
     <string name="easy_win_description_8">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nDein*e Gegnerin ist wohl schon an der ersten Aufgabe gescheitert.</string>
+    <string name="easy_win_description_9">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nMehr Spaziergang als Wettkampf. Trotzdem: Sieg ist Sieg!</string>
+    <string name="easy_win_description_10">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nDein*e Gegner*in hat alles gegeben. Es war nur nicht besonders viel.</string>
 
     <string name="anyone_here_title">Jemand da?</string>
     <string name="anyone_here_description_1"> Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nKeine Punkte, kein Spaß!</string>
@@ -128,6 +131,7 @@
     <string name="anyone_here_description_7"> Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nLaaaaangweilig.</string>
     <string name="anyone_here_description_8"> Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nDas war der Spiel-gewordene Flugmodus.</string>
     <string name="anyone_here_description_9"> Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nWer nichts macht, macht nichts falsch. Und wer nichts falsch macht, macht alles richtig.</string>
+    <string name="anyone_here_description_10">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nEin spannendes Duell… wenn jemand mitgespielt hätte.</string>
 
     <string name="win_title">Gewonnen</string>
     <string name="win_description_1">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nSo sehen Sieger*innen aus!</string>
