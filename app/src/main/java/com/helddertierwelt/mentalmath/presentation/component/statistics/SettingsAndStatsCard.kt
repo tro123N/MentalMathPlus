@@ -103,13 +103,7 @@ fun SettingsAndStatsCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Seed: ",
-                    fontSize = lineHeight,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    lineHeight = lineHeight
-                )
-                Text(
-                    text = "${statisticsGameRecord.seed}",
+                    text = AppLocale.format(stringResource(R.string.seed), statisticsGameRecord.seed),
                     fontSize = lineHeight,
                     color = MaterialTheme.colorScheme.onPrimary,
                     lineHeight = lineHeight
