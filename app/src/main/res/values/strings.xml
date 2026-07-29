@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
 Thank you for helping translate Mental Math!
 Before you start, please read the full instructions below :)
@@ -46,7 +47,7 @@ German translation:
 
 Thank you for contributing!
 -->
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Select mode and limit</string>

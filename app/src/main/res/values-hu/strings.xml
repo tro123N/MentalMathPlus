@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Settings Screen -->
+    <string name="app_name">Mental Math</string>
+    <string name="mode_instruction">Válassz játékmódot és korlátot</string>
+    <string name="operator_instruction">Válassz műveleteket és nehézséget</string>
+    <string name="start">Indítás</string>
+
+    <!-- Settings Screen: Menu -->
+    <string name="share_game">Játék megosztása</string>
+    <string name="random_game">Véletlenszerű játék</string>
+    <string name="history">Előzmények</string>
+    <string name="phone_pad">Telefonos billentyűzet</string>
+    <string name="number_pad">Numerikus billentyűzet</string>
+    <string name="right_to_left">Jobbról\u200B balra</string>
+    <string name="left_to_right">Balról\u200B jobbra</string>
+    <string name="horizontal">Vízszintes</string>
+    <string name="vertical">Függőleges</string>
+    <string name="reminder_off">Emlékeztető kikapcsolva</string>
+    <string name="daily_reminder">Napi emlékeztető</string>
+    <string name="every_three_days">3 naponta</string>
+    <string name="weekly_reminder">Heti emlékeztető</string>
+    <string name="light_mode">Világos mód</string>
+    <string name="dark_mode">Sötét mód</string>
+    <string name="system_mode">Rendszerbeállítás</string>
+    <string name="sound_on">Hang bekapcsolva</string>
+    <string name="sound_off">Hang kikapcsolva</string>
+    <string name="language">Nyelv</string>
+    <string name="about">Névjegy</string>
+    <string name="feedback">Vissza\u200Bjelzés</string>
+    <string name="recommend">Aján\u200Blás</string>
+    <string name="donate">Támogatás</string>
+    <string name="reset_app">Alkalmazás visszaállítása</string>
+    <string name="unknown_error">Ismeretlen hiba történt.</string>
+    <string name="no_browser">Nincs elérhető alkalmazás a hivatkozás megnyitásához.</string>
+    <string name="no_share">Nincs elérhető alkalmazás a tartalom megosztásához.</string>
+    <string name="no_app_store">Nincs elérhető alkalmazásbolt az oldal megnyitásához.</string>
+    <string name="no_mail">Nincs elérhető alkalmazás e-mailek küldéséhez.</string>
+
+    <!-- Settings Screen: Leaderboard -->
+    <string name="top_ten_scores">Top 10</string>
+    <string name="new_score">új</string>
+
+    <!-- Game Screen -->
+    <string name="rtl_toast">Jobbról balra bevitel</string>
+    <string name="ltr_toast">Balról jobbra bevitel</string>
+    <string name="horizontal_toast">Vízszintes elrendezés</string>
+    <string name="vertical_toast">Függőleges elrendezés</string>
+
+    <!-- Statistics Screen -->
+    <string name="result">Eredmény</string>
+    <string name="seed">Seed: %d</string>
+    <string name="problem_limit">Feladatkorlát</string>
+    <string name="time_limit">Időkorlát</string>
+    <string name="difficulty_addition">Összeadás nehézsége</string>
+    <string name="difficulty_subtraction">Kivonás nehézsége</string>
+    <string name="difficulty_multiplication">Szorzás nehézsége</string>
+    <string name="difficulty_division">Osztás nehézsége</string>
+    <string name="time_spent">Eltelt idő</string>
+    <string name="problems_completed">Megoldott feladatok</string>
+    <string name="correct_answers">Helyes válaszok</string>
+    <string name="incorrect_answers">Helytelen válaszok</string>
+    <string name="accuracy">Pontosság</string>
+    <string name="avg_time_per_correct_answer">Átlagos idő helyes válaszonként</string>
+    <string name="score">Pontszám</string>
+    <string name="problem">Feladat</string>
+    <string name="status">Állapot</string>
+    <string name="no_problems">Nincs megoldott feladat</string>
+    <string name="done">Kész</string>
+
+    <!-- History Screen -->
+    <string name="no_games">Nincs pontszámmal rendelkező játék</string>
+
+    <!-- PopUps -->
+    <string name="notification_popup_title">Az értesítések ki vannak kapcsolva</string>
+    <string name="notification_popup_description">Az emlékeztetők beállításához engedélyezd az értesítéseket a rendszerbeállításokban.\n\nMegjegyzés: Az akkumulátor-optimalizálás továbbra is blokkolhatja az értesítéseket.</string>
+    <string name="notification_popup_confirmation_text">Beállítások megnyitása</string>
+    <string name="notification_toast_text">Az emlékeztetők az intervallum után este kezdődnek</string>
+
+    <string name="reset_app_popup_title">Visszaállítod az alkalmazást?</string>
+    <string name="reset_app_popup_description">Törli az összes pontszámot és beállítást.</string>
+    <string name="reset_app_popup_confirmation_text">Visszaállítás</string>
+
+    <string name="quit_game_popup_title">Kilépsz a játékból?</string>
+    <string name="quit_game_popup_description">A jelenlegi játékállás elvész.</string>
+    <string name="quit_game_popup_confirmation_text">Kilépés</string>
+    <string name="quit_game_popup_cancel_text">Folytatás</string>
+
+    <string name="app_link_game_popup_title">Elindítod a játékot a hivatkozásból?</string>
+    <string name="app_link_popup_description_new_game">Indíts új játékot előre beállított beállításokkal és véletlenszerű seeddel.\n\nA jelenlegi játékállás elvész.</string>
+    <string name="app_link_popup_description_challenge">Próbáld megdönteni a barátod pontszámát ugyanannak a játéknak az újrajátszásával.\n\nA jelenlegi játékállás elvész.</string>
+    <string name="app_link_popup_confirmation_text">Indítás</string>
+
+    <string name="already_played_popup_title">A játékot már játszottad</string>
+    <string name="already_played_popup_description">Már játszottál egy játékot ugyanezekkel a beállításokkal és seeddel.\n\nPróbálj ki egy másik hivatkozást, vagy indíts új játékot.</string>
+
+    <string name="cancel">Mégse</string>
+    <string name="ok">OK</string>
+
+    <!-- Result PopUp -->
+    <string name="waiting_title">Várunk az ellenfélre…</string>
+    <string name="waiting_description_1">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nMegmutattad, mit tudsz. Vajon elég lesz ez az előny?</string>
+    <string name="waiting_description_2">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nAz eredményed rögzítve. Most az ellenfélen a sor!</string>
+    <string name="waiting_description_3">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nA te köröd kész, most kezdődik a várakozás izgalma!</string>
+    <string name="waiting_description_4">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nSzép eredmény! Vajon sikerül ezt felülmúlnia?</string>
+    <string name="waiting_description_5">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nMost minden az ellenfél válaszán múlik!</string>
+    <string name="waiting_description_6">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nTe megtetted a tétet. Lássuk, mit lép az ellenfél!</string>
+    <string name="waiting_description_7">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nMost te vezetsz… de meddig?</string>
+    <string name="waiting_description_8">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nMég mindig nincs válasz… vajon számolgatja az esélyeit?</string>
+    <string name="waiting_description_9">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nEzt az eredményt nehéz lesz megdönteni. Lehet, hogy új tervet készít?</string>
+    <string name="waiting_description_10">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nMeglátta a pontszámodat… és hirtelen nagy lett a csend.</string>
+
+    <string name="easy_win_title">Könnyű győzelem</string>
+    <string name="easy_win_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEz most meglepően sima volt.</string>
+    <string name="easy_win_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nLegközelebb talán nagyobb kihívás vár.</string>
+    <string name="easy_win_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEz a meccs gyorsabban véget ért, mint elkezdődött.</string>
+    <string name="easy_win_description_4">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nÚgy tűnik, ma csak te érkeztél meg a meccsre.</string>
+    <string name="easy_win_description_5">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nA győzelem biztos volt. Az ellenfélnek ma nem ez volt a napja.</string>
+    <string name="easy_win_description_6">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nVolt itt egyáltalán verseny? Nehéz megmondani.</string>
+    <string name="easy_win_description_7">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nTe számoltál. Az ellenfél… majd legközelebb.</string>
+    <string name="easy_win_description_8">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nMa minden összejött neked.</string>
+    <string name="easy_win_description_9">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEnnél nyugodtabb győzelmet nehéz elképzelni.</string>
+    <string name="easy_win_description_10">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nMire az ellenfél bemelegedett, te már nyertél.</string>
+
+    <string name="anyone_here_title">Van még valaki?</string>
+    <string name="anyone_here_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEz a kör nem hagyott nagy nyomot maga után.</string>
+    <string name="anyone_here_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nNagy volt a csend… talán túl nagy.</string>
+    <string name="anyone_here_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEgy kör, ahol a pontok kimaradtak.</string>
+    <string name="anyone_here_description_4">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nMegnéztük. Vártunk. Nem történt semmi.</string>
+    <string name="anyone_here_description_5">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nMinden rendben működik. Csak épp pontok nélkül.</string>
+    <string name="anyone_here_description_6">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEz a meccs inkább pihenőnapot tartott.</string>
+    <string name="anyone_here_description_7">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSenki sem szerzett pontot. Ez is egy eredmény.</string>
+    <string name="anyone_here_description_8">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nMindketten kivártátok a tökéletes pillanatot.</string>
+    <string name="anyone_here_description_9">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nA pontok ma elkerültek minket.</string>
+    <string name="anyone_here_description_10">Ez a kör gyorsan véget ért… mert el sem kezdődött.</string>
+
+    <string name="win_title">Győztél</string>
+    <string name="win_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nMa nagyon ment a fejszámolás!</string>
+    <string name="win_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nA számok ma a te oldaladon álltak.</string>
+    <string name="win_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSzép munka! Ezt nehéz lesz felülmúlni.</string>
+    <string name="win_description_4">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nAz agyad ma turbófokozatba kapcsolt.</string>
+    <string name="win_description_5">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nMintha a számok súgták volna a válaszokat.</string>
+    <string name="win_description_6">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nLehet, hogy az ellenfél legközelebb számológépet kér.</string>
+    <string name="win_description_7">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nGyors voltál. Pontos voltál. Ennyi kellett.</string>
+    <string name="win_description_8">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nÚjabb győzelem! A matek ma neked drukkolt.</string>
+    <string name="win_description_9">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nA végeredmény nem hagy sok kérdést.</string>
+    <string name="win_description_10">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nMa te voltál a számok főnöke.</string>
+
+    <string name="close_win_title">Szoros győzelem</string>
+    <string name="close_win_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSzoros volt, de a győzelem a tiéd!</string>
+    <string name="close_win_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nHűha… ez nagyon közel volt!</string>
+    <string name="close_win_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nÉpphogy, de sikerült!</string>
+    <string name="close_win_description_4">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nAz utolsó pillanatban fordítottál.</string>
+    <string name="close_win_description_5">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEz tényleg hajszálon múlt.</string>
+    <string name="close_win_description_6">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSzoros meccs volt, de a végén te mosolyoghattál.</string>
+    <string name="close_win_description_7">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nAz ellenfél remekül játszott, de ma te nyertél.</string>
+    <string name="close_win_description_8">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nIzgalmas végjáték volt, szerencsére neked kedvezett.</string>
+    <string name="close_win_description_9">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSzép küzdelem volt. Egy hajszállal te bizonyultál jobbnak.</string>
+    <string name="close_win_description_10">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nJár az elismerés az ellenfélnek is, de a győzelem a tiéd.</string>
+
+    <string name="draw_title">Döntetlen</string>
+    <string name="draw_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nTeljes döntetlen. Ideje eldönteni, ki a jobb!</string>
+    <string name="draw_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSenki sem nyert, senki sem veszített. Folytatás következik!</string>
+    <string name="draw_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nUgyanazon a szinten vagytok. Jöhet a következő kör!</string>
+    <string name="draw_description_4">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEzt nem lehet döntetlenül hagyni. Ki lesz a végső győztes?</string>
+    <string name="draw_description_5">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nA pontszám sem tudott választani köztetek.</string>
+    <string name="draw_description_6">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nKi vállalja a visszavágót?</string>
+    <string name="draw_description_7">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSzinte egyformák vagytok. Ez visszavágót érdemel!</string>
+    <string name="draw_description_8">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEgy kör nem volt elég. Döntsük el újra!</string>
+    <string name="draw_description_9">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nA valódi győztes még várat magára.</string>
+    <string name="draw_description_10">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nDöntetlen lett. Lássuk, ki bírja jobban a következő kört!</string>
+
+    <string name="close_defeat_title">Hajszálon múlt</string>
+    <string name="close_defeat_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nCsak egy hajszál választott el a győzelemtől!</string>
+    <string name="close_defeat_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEz most szoros volt. Szép játék!</string>
+    <string name="close_defeat_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEzúttal neki jött ki jobban a lépés.</string>
+    <string name="close_defeat_description_4">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nMajdnem megvolt! A visszavágó még hátravan.</string>
+    <string name="close_defeat_description_5">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nNe hagyd, hogy túl sokáig élvezze ezt a győzelmet!</string>
+    <string name="close_defeat_description_6">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEz már majdnem sikerült. Még egy kis gyakorlás, és meglesz!</string>
+    <string name="close_defeat_description_7">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSzoros meccs volt, jól tartottad magad!</string>
+    <string name="close_defeat_description_8">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nNe állj meg, a győzelem már karnyújtásnyira van.</string>
+    <string name="close_defeat_description_9">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEnnél közelebb már nehéz lenne. Jó úton jársz!</string>
+    <string name="close_defeat_description_10">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nMost ő nyert… de a következő kör a tiéd lehet!</string>
+
+    <string name="defeat_title">Vereség</string>
+    <string name="defeat_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSemmi gond, rázd le és próbáld meg újra!</string>
+    <string name="defeat_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nIlyen előfordul. Tanulj belőle, és gyere vissza erősebben!</string>
+    <string name="defeat_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nMinden bajnok kezdte már így. A következő kör a tiéd lehet!</string>
+    <string name="defeat_description_4">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nMa neki sikerült jobban, de a meccs még messze nincs lezárva.</string>
+    <string name="defeat_description_5">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nNéha nyersz, néha tanulsz. Ez is a játék része.</string>
+    <string name="defeat_description_6">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSemmi dráma. Egy kör volt, nem a világ vége.</string>
+    <string name="defeat_description_7">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nNyert egy kört. Adjunk neki egy percet ünnepelni!</string>
+    <string name="defeat_description_8">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nHadd élvezze ezt a győzelmet. Neki is jár néha.</string>
+    <string name="defeat_description_9">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nValószínűleg már mindenkinek meséli. Aranyos.</string>
+    <string name="defeat_description_10">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nÉlvezze ezt a pillanatot. Nem minden nap van ilyen!</string>
+
+    <string name="result_popup_confirmation_text">Megosztás</string>
+    <string name="result_share_message_waiting">Én: %1$s | Te: ??\nSeed: %2$d</string>
+    <string name="result_share_message">Én: %1$s | Te: %2$s\nSeed: %3$d</string>
+    <string name="share_challenge">Próbáld meg felülmúlni a(z) %1$s pontos eredményemet a Mental Math játékban.\nJátszd újra ugyanazt a játékot a(z) %2$d seed használatával:\n\n%3$s</string>
+    <string name="share_new_game">Játsszunk egyet a Mental Math játékban!\nKattints az alábbi hivatkozásra egy új játék indításához az én beállításaimmal és ugyanazzal a seeddel:\n%1$d\n\n%2$s</string>
+</resources>
