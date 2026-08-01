@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Mode de jeu et limite</string>
@@ -88,100 +88,54 @@
     <string name="ok">OK</string>
     <!-- Result PopUp -->
     <string name="waiting_title">En attente de votre adversaire…</string>
-    <string name="waiting_description_1">Toi : %1$s | Adversaire : ??\nSeed : %2$d\n\nBoom, joli score, voyons si iel peut faire mieux !</string>
-    <string name="waiting_description_2">Toi : %1$s | Adversaire : ??\nSeed : %2$d\n\nTon score est enregistré, c’est à son tour !</string>
-    <string name="waiting_description_3">Toi : %1$s | Adversaire : ??\nSeed : %2$d\n\nJoli score, mais peut-être pas suffisant ?</string>
-    <string name="waiting_description_4">Toi : %1$s | Adversaire : ??\nSeed : %2$d\n\nBon score, bon score, … Sera-il battu ?</string>
-    <string name="waiting_description_5">Toi : %1$s | Adversaire : ??\nSeed : %2$d\n\nÇa c’est fait, plus qu’à lui mettre la pression maintenant !</string>
-    <string name="waiting_description_6">Toi : %1$s | Adversaire : ??\nSeed : %2$d\n\nLe score est posé, la pression est maintenant de son côté !</string>
-    <string name="waiting_description_7">Toi : %1$s | Adversaire : ??\nSeed : %2$d\n\nÀ lui de jouer… ou de trouver une bonne excuse !</string>
-    <string name="waiting_description_8">Toi : %1$s | Adversaire : ??\nSeed : %2$d\n\nUn beau départ ! Reste à voir si quelqu’un ose relever le défi.</string>
-    <string name="waiting_description_9">Toi : %1$s | Adversaire : ??\nSeed : %2$d\n\nTon résultat est affiché. Maintenant, place au suspense !</string>
-    <string name="waiting_description_10">Toi : %1$s | Adversaire : ??\nSeed : %2$d\n\nLe défi est lancé. Voyons si ton adversaire a du répondant !</string>
+    <string name="waiting_description_1">Toi : %1$s | Adversaire : ??\nSeed : %2$d\n\nTon score est enregistré, c’est à son tour !</string>
+    <string name="waiting_description_2">Toi : %1$s | Adversaire : ??\nSeed : %2$d\n\nJoli score, mais peut-être pas suffisant ?</string>
+    <string name="waiting_description_3">Toi : %1$s | Adversaire : ??\nSeed : %2$d\n\nÇa c’est fait, plus qu’à lui mettre la pression maintenant !</string>
+    <string name="waiting_description_4">Toi : %1$s | Adversaire : ??\nSeed : %2$d\n\nÀ lui de jouer… ou de trouver une bonne excuse !</string>
+    <string name="waiting_description_5">Toi : %1$s | Adversaire : ??\nSeed : %2$d\n\nLe défi est lancé. Voyons si ton adversaire a du répondant !</string>
 
     <string name="easy_win_title">Victoire facile</string>
     <string name="easy_win_description_1">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nFacile, s’iel ne joue pas…</string>
-    <string name="easy_win_description_2">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nReste à trouver un adversaire qui accepte le challenge.</string>
-    <string name="easy_win_description_3">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTon adversaire ne s’est pas présenté·e : tu gagnes par défaut.</string>
-    <string name="easy_win_description_4">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTu gagnes, mais ton adversaire n’a même pas essayé.</string>
-    <string name="easy_win_description_5">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTon adversaire n’a même pas essayé…</string>
-    <string name="easy_win_description_6">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nLa stratégie de ton adversaire : la fuite.</string>
-    <string name="easy_win_description_7">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTu aurais pu gagner les yeux fermés…</string>
-    <string name="easy_win_description_8">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTon adversaire a peut-être oublié que c’était une compétition.</string>
-    <string name="easy_win_description_9">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nUne victoire reste une victoire… même quand c’était presque un entraînement.</string>
-    <string name="easy_win_description_10">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nDifficile de perdre quand l’adversaire ne joue pas vraiment le jeu.</string>
+    <string name="easy_win_description_2">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTon adversaire a peut-être oublié que c’était une compétition.</string>
+    <string name="easy_win_description_3">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nDifficile de perdre quand l’adversaire ne joue pas vraiment le jeu.</string>
 
     <string name="anyone_here_title">Il y a quelqu\'un ?</string>
-    <string name="anyone_here_description_1">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nZéro points ?</string>
-    <string name="anyone_here_description_2">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nY’a quelqu’un ?</string>
-    <string name="anyone_here_description_3">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nAllô ? ALLÔ !?</string>
-    <string name="anyone_here_description_4">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nCe n’est pas un bug, juste une partie très… calme.</string>
-    <string name="anyone_here_description_5">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nDonc, personne n’a rien fait, c’est ça ?</string>
-    <string name="anyone_here_description_6">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nD’un certain point de vue, personne n’a perdu.</string>
-    <string name="anyone_here_description_7">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nUne partie mémorable… surtout pour son absence d’action.</string>
-    <string name="anyone_here_description_8">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nOn attendait un duel, on a eu une pause café.</string>
-    <string name="anyone_here_description_9">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nLe score est nul, mais au moins personne ne s’est fatigué.</string>
-    <string name="anyone_here_description_10">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nUn grand moment de compétition… si on peut appeler ça comme ça.</string>
+    <string name="anyone_here_description_1">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nY’a quelqu’un ?</string>
+    <string name="anyone_here_description_2">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nD’un certain point de vue, personne n’a perdu.</string>
+    <string name="anyone_here_description_3">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nOn attendait un duel, on a eu une pause café.</string>
 
     <string name="win_title">Tu as gagné</string>
-    <string name="win_description_1">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nVoilà qui fait chauffer le cerveau !</string>
-    <string name="win_description_2">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nOhhh, la belle concentration !</string>
-    <string name="win_description_3">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nImpressionnant !</string>
-    <string name="win_description_4">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTu peux remercier ton cerveau !</string>
-    <string name="win_description_5">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nGG</string>
-    <string name="win_description_6">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nPour te battre, il faut une calculette ! Et encore !</string>
-    <string name="win_description_7">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nCerveau bien réveillé, adversaire KO !</string>
-    <string name="win_description_8">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTu pourrais donner des cours à ton adversaire ?</string>
-    <string name="win_description_9">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nUne victoire bien méritée. Ton cerveau mérite une médaille !</string>
-    <string name="win_description_10">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTu as trouvé la bonne stratégie. Ton adversaire cherche encore la notice.</string>
+    <string name="win_description_1">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nImpressionnant !</string>
+    <string name="win_description_2">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nPour te battre, il faut une calculette ! Et encore !</string>
+    <string name="win_description_3">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nCerveau bien réveillé, adversaire KO !</string>
+    <string name="win_description_4">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTu pourrais donner des cours à ton adversaire ?</string>
+    <string name="win_description_5">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTu as trouvé la bonne stratégie. Ton adversaire cherche encore la notice.</string>
 
     <string name="close_win_title">Victoire serrée</string>
-    <string name="close_win_description_1">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nC’était serré, mais c’est passé !</string>
-    <string name="close_win_description_2">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nOuf, c’était serré !</string>
-    <string name="close_win_description_3">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nCourte victoire, le cerveau doit être encore chaud j’imagine ?</string>
-    <string name="close_win_description_4">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nVictoire ! À un battement de paupière près, mais VICTOIRE !</string>
-    <string name="close_win_description_5">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nMême serré, une victoire est une victoire !</string>
-    <string name="close_win_description_6">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nC’est serré (entraîne-toi, au cas où…) !</string>
-    <string name="close_win_description_7">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTu as trouvé un adversaire à ton niveau, mais ça reste toi le boss.</string>
-    <string name="close_win_description_8">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nUn point d’écart, un grand soulagement !</string>
-    <string name="close_win_description_9">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTon adversaire était juste derrière… mais derrière quand même.</string>
-    <string name="close_win_description_10">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nLe suspense était total. Heureusement, ton cerveau a tenu jusqu’au bout !</string>
+    <string name="close_win_description_1">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nVictoire ! À un battement de paupière près, mais VICTOIRE !</string>
+    <string name="close_win_description_2">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nMême serré, une victoire est une victoire !</string>
+    <string name="close_win_description_3">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nC’est serré (entraîne-toi, au cas où…) !</string>
+    <string name="close_win_description_4">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTu as trouvé un adversaire à ton niveau, mais ça reste toi le boss.</string>
+    <string name="close_win_description_5">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTon adversaire était juste derrière… mais derrière quand même.</string>
 
     <string name="draw_title">Match nul</string>
     <string name="draw_description_1">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nÉgalité ! Il faut jouer la belle !</string>
-    <string name="draw_description_2">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nPas de gagnant : pas de perdant. Pas de perdant : pas de problème. Pas de problème : pas de problème.</string>
-    <string name="draw_description_3">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTu joue contre ton clone ?</string>
-    <string name="draw_description_4">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nImpossible de savoir qui gagne… à part en rejouant !</string>
-    <string name="draw_description_5">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nPas trop fatigués ? On en refait une ?</string>
-    <string name="draw_description_6">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nIl faut en refaire une !</string>
-    <string name="draw_description_7">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nMatch nul… même le hasard n’a pas réussi à vous départager !</string>
-    <string name="draw_description_8">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nÉgalité parfaite. Le suspense demande une revanche !</string>
-    <string name="draw_description_9">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nMême score, même niveau… le prochain tour décidera !</string>
-    <string name="draw_description_10">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nVous étiez trop proches pour choisir un vainqueur. La revanche s’impose !</string>
+    <string name="draw_description_2">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTu joue contre ton clone ?</string>
+    <string name="draw_description_3">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nÉgalité parfaite. Le suspense demande une revanche !</string>
 
     <string name="close_defeat_title">Défaite serrée</string>
-    <string name="close_defeat_description_1">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nOhh non ! C’était si proche !</string>
-    <string name="close_defeat_description_2">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTrop triste de perdre si près de la victoire…</string>
-    <string name="close_defeat_description_3">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nOn va dire qu’iel a juste eu de la chance cette fois.</string>
-    <string name="close_defeat_description_4">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nPresque ! Prend ta revanche !</string>
-    <string name="close_defeat_description_5">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nNe laisse pas ton adversaire savourer cette victoire trop longtemps.</string>
-    <string name="close_defeat_description_6">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nUn peu d’entraînement et la prochaine fois sera la bonne !</string>
-    <string name="close_defeat_description_7">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nLa prochaine sera la bonne !</string>
-    <string name="close_defeat_description_8">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nIel fatigue, ça se voit, tiens bon : REVANCHE !</string>
-    <string name="close_defeat_description_9">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nLa chance, ça tourne ! La prochaine je parie sur toi !</string>
-    <string name="close_defeat_description_10">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nUne petite erreur, une grande leçon. La prochaine victoire sera pour toi !</string>
+    <string name="close_defeat_description_1">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nTrop triste de perdre si près de la victoire…</string>
+    <string name="close_defeat_description_2">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nOn va dire qu’iel a juste eu de la chance cette fois.</string>
+    <string name="close_defeat_description_3">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nPresque ! Prend ta revanche !</string>
+    <string name="close_defeat_description_4">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nNe laisse pas ton adversaire savourer cette victoire trop longtemps.</string>
+    <string name="close_defeat_description_5">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nLa chance, ça tourne ! La prochaine je parie sur toi !</string>
 
     <string name="defeat_title">Défaite</string>
-    <string name="defeat_description_1">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nT’étais pas réveillé, c’est pas grave.</string>
-    <string name="defeat_description_2">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nJ’avais parié sur toi !!!</string>
-    <string name="defeat_description_3">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nOK, une semaine d’entraînement intensif, et ça passera !</string>
-    <string name="defeat_description_4">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nOn a tous commencé par là.</string>
-    <string name="defeat_description_5">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nOh ça fait mal !</string>
-    <string name="defeat_description_6">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nOn ne peut pas tout le temps gagner j’imagine.</string>
-    <string name="defeat_description_7">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nC’est la vie.</string>
-    <string name="defeat_description_8">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nFélicite ton adversaire, il le mérite.</string>
-    <string name="defeat_description_9">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nJ’espère qu’iel ne publie pas déjà son score sur ses réseaux sociaux…</string>
-    <string name="defeat_description_10">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nOn lui laisse ses 15 secondes de célébrité ?</string>
+    <string name="defeat_description_1">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nOn a tous commencé par là.</string>
+    <string name="defeat_description_2">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nOn ne peut pas tout le temps gagner j’imagine.</string>
+    <string name="defeat_description_3">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nC’est la vie.</string>
+    <string name="defeat_description_4">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nFélicite ton adversaire, il le mérite.</string>
+    <string name="defeat_description_5">Toi : %1$s | Adversaire : %2$s\nSeed : %3$d\n\nOn lui laisse ses 15 secondes de célébrité ?</string>
 
     <string name="result_popup_confirmation_text">Partager</string>
     <string name="result_share_message_waiting">Moi : %1$s | Toi : ??\nSeed : %2$d</string>

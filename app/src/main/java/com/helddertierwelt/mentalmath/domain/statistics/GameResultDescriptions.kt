@@ -27,38 +27,19 @@ object GameResultDescriptions {
         R.string.waiting_description_2,
         R.string.waiting_description_3,
         R.string.waiting_description_4,
-        R.string.waiting_description_5,
-        R.string.waiting_description_6,
-        R.string.waiting_description_7,
-        R.string.waiting_description_8,
-        R.string.waiting_description_9,
-        R.string.waiting_description_10
+        R.string.waiting_description_5
     )
 
     val easyWin = listOf(
         R.string.easy_win_description_1,
         R.string.easy_win_description_2,
-        R.string.easy_win_description_3,
-        R.string.easy_win_description_4,
-        R.string.easy_win_description_5,
-        R.string.easy_win_description_6,
-        R.string.easy_win_description_7,
-        R.string.easy_win_description_8,
-        R.string.easy_win_description_9,
-        R.string.easy_win_description_10
+        R.string.easy_win_description_3
     )
 
     val anyoneHere = listOf(
         R.string.anyone_here_description_1,
         R.string.anyone_here_description_2,
-        R.string.anyone_here_description_3,
-        R.string.anyone_here_description_4,
-        R.string.anyone_here_description_5,
-        R.string.anyone_here_description_6,
-        R.string.anyone_here_description_7,
-        R.string.anyone_here_description_8,
-        R.string.anyone_here_description_9,
-        R.string.anyone_here_description_10
+        R.string.anyone_here_description_3
     )
 
     val win = listOf(
@@ -66,12 +47,7 @@ object GameResultDescriptions {
         R.string.win_description_2,
         R.string.win_description_3,
         R.string.win_description_4,
-        R.string.win_description_5,
-        R.string.win_description_6,
-        R.string.win_description_7,
-        R.string.win_description_8,
-        R.string.win_description_9,
-        R.string.win_description_10
+        R.string.win_description_5
     )
 
     val closeWin = listOf(
@@ -79,25 +55,13 @@ object GameResultDescriptions {
         R.string.close_win_description_2,
         R.string.close_win_description_3,
         R.string.close_win_description_4,
-        R.string.close_win_description_5,
-        R.string.close_win_description_6,
-        R.string.close_win_description_7,
-        R.string.close_win_description_8,
-        R.string.close_win_description_9,
-        R.string.close_win_description_10
+        R.string.close_win_description_5
     )
 
     val draw = listOf(
         R.string.draw_description_1,
         R.string.draw_description_2,
-        R.string.draw_description_3,
-        R.string.draw_description_4,
-        R.string.draw_description_5,
-        R.string.draw_description_6,
-        R.string.draw_description_7,
-        R.string.draw_description_8,
-        R.string.draw_description_9,
-        R.string.draw_description_10
+        R.string.draw_description_3
     )
 
     val closeDefeat = listOf(
@@ -105,12 +69,7 @@ object GameResultDescriptions {
         R.string.close_defeat_description_2,
         R.string.close_defeat_description_3,
         R.string.close_defeat_description_4,
-        R.string.close_defeat_description_5,
-        R.string.close_defeat_description_6,
-        R.string.close_defeat_description_7,
-        R.string.close_defeat_description_8,
-        R.string.close_defeat_description_9,
-        R.string.close_defeat_description_10
+        R.string.close_defeat_description_5
     )
 
     val defeat = listOf(
@@ -118,11 +77,6 @@ object GameResultDescriptions {
         R.string.defeat_description_2,
         R.string.defeat_description_3,
         R.string.defeat_description_4,
-        R.string.defeat_description_5,
-        R.string.defeat_description_6,
-        R.string.defeat_description_7,
-        R.string.defeat_description_8,
-        R.string.defeat_description_9,
-        R.string.defeat_description_10
+        R.string.defeat_description_5
     )
 }
