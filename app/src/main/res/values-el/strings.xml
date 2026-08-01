@@ -1,10 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Επιλογή λειτουργίας και ορίου</string>
     <string name="operator_instruction">Επιλογή τελεστών και δυσκολίας</string>
     <string name="start">Εναρξη</string>
-
     <!-- Settings Screen: Menu -->
     <string name="share_game">Κοινή Χρήση Παρτίδας</string>
     <string name="random_game">Τυχαία Παρτίδα</string>
@@ -43,7 +43,6 @@
     <string name="ltr_toast">Εισαγωγή από αριστερά προς τα δεξιά</string>
     <string name="horizontal_toast">Οριζόντια διάταξη</string>
     <string name="vertical_toast">Κατακόρυφη διάταξη</string>
-
     <!-- Statistics Screen -->
     <string name="result">Αποτέλεσμα</string>
     <string name="seed">Seed: %d</string>
@@ -64,7 +63,6 @@
     <string name="status">Κατάσταση</string>
     <string name="no_problems">Δε λύθηκαν προβλήματα</string>
     <string name="done">Ολοκλήρωση</string>
-
     <!-- History Screen -->
     <string name="no_games">Δεν υπάρχουν παρτίδες με βαθμολογία</string>
     <!-- PopUps -->
@@ -94,54 +92,45 @@
     <string name="waiting_description_3">Εσείς: %1$s | Αντίπαλος: ??\Seed: %2$d\n\nΟλα τα μάτια είναι πλέον στον αντίπαλό σας!</string>
     <string name="waiting_description_4">Εσείς: %1$s | Αντίπαλος: ??\Seed: %2$d\n\nΕχετε πάρει την πρωτιά… ή μήπως όχι;</string>
     <string name="waiting_description_5">Εσείς: %1$s | Αντίπαλος: ??\Seed: %2$d\n\nΗ σειρά σας τελείωσε - Η αγωνία ξεκινά!</string>
-
     <string name="easy_win_title">Εύκολη νίκη</string>
     <string name="easy_win_description_1">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΤην επόμενη φορά ίσως να έχετε μια πραγματική πρόκληση.</string>
     <string name="easy_win_description_2">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΑυτό τελείωσε πριν καν αρχίσει.</string>
     <string name="easy_win_description_3">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΟ αντίπαλος δεν έκανε το καλύτερο δυνατό του. Για την ακρίβεια δεν έκανε τίποτα!</string>
-
     <string name="anyone_here_title">Είναι κανείς εδώ;</string>
     <string name="anyone_here_description_1">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΜια παρτίδα χωρίς πόντους!</string>
     <string name="anyone_here_description_2">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΚανείς δεν σκόραρε, αλλά και κανείς δεν έχασε!</string>
     <string name="anyone_here_description_3">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΕκτακτα νέα: Δεν έγινε απολύτως τίποτα!</string>
-
     <string name="win_title">Νίκησες</string>
     <string name="win_description_1">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΟ θρίαμβος σάς ταιριάζει πολύ!</string>
     <string name="win_description_2">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΤέλεια εκτέλεση - εντυπωσιακό!</string>
     <string name="win_description_3">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΤα νοητικά μαθηματικά σας είναι πραγματικά μαγικά.</string>
     <string name="win_description_4">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΟ αντίπαλός σας θα χρειαστεί κομπιουτεράκι την επόμενη φορά!</string>
     <string name="win_description_5">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΜία ακόμα νίκη! Ο αντίπαλός σας χρειάζεται εκπαίδευση.</string>
-
     <string name="close_win_title">Οριακή νίκη</string>
-    <string name="close_win_description_1">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΜια δύσκολη νίκη, αλλά μετράει!</string>
-    <string name="close_win_description_2">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΦιου… πάρα τρίχα!</string>
+    <string name="close_win_description_1">Εσείς: %1$s | Αντίπαλος: %2$seed: %3$d\n\nΜια δύσκολη νίκη, αλλά μετράει!</string>
+    <string name="close_win_description_2">Εσείς: %1$s | Αντίπαλος: %2$seed: %3$d\n\nΦιου… πάρα τρίχα!</string>
     <string name="close_win_description_3">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΝίκη πάνω στην ώρα - το σώσατε!</string>
     <string name="close_win_description_4">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΣεβασμός στον αντίπαλό σας, αλλά η νίκη είναι νίκη.</string>
     <string name="close_win_description_5">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΣυγχαρητήρια στον αντίπαλό σας, αλλά επικρατήσατε.</string>
-
     <string name="draw_title">Ισοπαλία</string>
     <string name="draw_description_1">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΟύτε νικητής, ούτε χαμένος - απλά πρωταθλητές.</string>
     <string name="draw_description_2">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΚανείς δε θέλει να χάσει. Ωρα για νέα αναμέτρηση.</string>
     <string name="draw_description_3">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΩρα για ρεβάνς για να λυθεί αυτό μια για πάντα.</string>
-
     <string name="close_defeat_title">Οριακή ήττα</string>
     <string name="close_defeat_description_1">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΜια οριακή ήττα - πάντως άλλη μια δυνατή προσπάθεια!</string>
     <string name="close_defeat_description_2">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΠαραλίγο να κερδίσετε! Αλλά η εκδίκηση είναι γλυκειά.</string>
     <string name="close_defeat_description_3">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΣυνεχίστε την πίεση - η νίκη είναι πολύ κοντά.</string>
     <string name="close_defeat_description_4">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΠαραλίγο! Συνεχίστε, έχετε δυνατότητες.</string>
     <string name="close_defeat_description_5">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΚοντά, αλλά δεν τελειώσαμε - η επόμενη παρτίδα θα είναι δική σας!</string>
-
     <string name="defeat_title">Ήττα</string>
     <string name="defeat_description_1">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΚάθε πρωταθλητής έχει περάσει από αυτή τη θέση.</string>
     <string name="defeat_description_2">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΟ αντίπαλός σας νίκησε σήμερα, αλλά η ιστορία δεν τελείωσε.</string>
     <string name="defeat_description_3">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΠότε κερδίζεις, πότε χάνεις. Ετσι είναι η ζωή.</string>
     <string name="defeat_description_4">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΔεν έγινε κάτι - η ζωή συνεχίζεται.</string>
     <string name="defeat_description_5">Εσείς: %1$s | Αντίπαλος: %2$s\Seed: %3$d\n\nΑφήστε τον αντίπαλο να απολαύσει τη νίκη του. Ολοι έχουμε τη στιγμή μας.</string>
-
     <string name="result_popup_confirmation_text">Μοιραστείτε</string>
     <string name="result_share_message_waiting">Εγώ: %1$s | Εσύ: ??\nSeed: %2$d</string>
     <string name="result_share_message">Εγώ: %1$s | Εσύ: %2$s\nSeed: %3$d</string>
     <string name="share_challenge">Δοκιμάστε να ξεπεράσετε το σκορ μου %1$s στο Mental Math.\nΕπαναλάβετε το παιχνίδι μου με το Seed %2$d:\n\n%3$s</string>
     <string name="share_new_game">Ας παίξουμε μια παρτίδα Mental Math!\nΚάντε κλικ στο παρακάτω link για να αρχίσετε μια φρέσκια παρτίδα με τις ρυθμίσεις μου και το Seed:\n%1$d\n\n%2$s</string>
-
 </resources>
