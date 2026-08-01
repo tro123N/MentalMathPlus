@@ -92,50 +92,42 @@
     <string name="waiting_description_3">Du: %1$s | Gegner*in: ??\nSeed: %2$d\n\nDu hast die Führung übernommen … oder?</string>
     <string name="waiting_description_4">Du: %1$s | Gegner*in: ??\nSeed: %2$d\n\Starkes Ergebnis! Plötzlich sind alle ganz ruhig.</string>
     <string name="waiting_description_5">Du: %1$s | Gegner*in: ??\nSeed: %2$d\n\nDein Ergebnis steht. Jetzt fehlt nur noch jemand, der sich traut.</string>
-
     <string name="easy_win_title">Geschenkter Sieg</string>
     <string name="easy_win_description_1">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nDein*e Gegner*in hatte wohl die Hose voll!</string>
     <string name="easy_win_description_2">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nEinem geschenktem Gaul schaut man nicht ins Maul.</string>
     <string name="easy_win_description_3">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nDein*e Gegner*in hat alles gegeben. Es war nur nicht besonders viel.</string>
-
     <string name="anyone_here_title">Jemand da?</string>
     <string name="anyone_here_description_1"> Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nDas Zirpen der Grillen…</string>
     <string name="anyone_here_description_2"> Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nWow, was für eine Zeitverschwendung.</string>
     <string name="anyone_here_description_3"> Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nWer nichts macht, macht nichts falsch. Und wer nichts falsch macht, macht alles richtig.</string>
-
     <string name="win_title">Gewonnen</string>
     <string name="win_description_1">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nIch sehe ein absolutes Kopfrechen-Ass!</string>
     <string name="win_description_2">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nUfff… was für eine Machtdemonstration!</string>
     <string name="win_description_3">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nIch glaube, so was nennt man Kantersieg!</string>
     <string name="win_description_4">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nSag mal, machst du das professionell?</string>
     <string name="win_description_5">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nDu brauchst keinen Taschenrechner - Du bist einer!</string>
-
     <string name="close_win_title">Knapper Sieg</string>
     <string name="close_win_description_1">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nEin gutes Pferd springt nur so hoch wie es muss.</string>
     <string name="close_win_description_2">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nHart umkämpft und doch verdient.</string>
     <string name="close_win_description_3">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nKnapp daneben ist auch vorbei, aber knapp getroffen ist eben drin.</string>
     <string name="close_win_description_4">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nDas war nicht knapp, das war Maßarbeit.</string>
     <string name="close_win_description_5">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nWer einen Vorsprung braucht, hat nur Angst vor dem Schlusssprint.</string>
-
     <string name="draw_title">Unentschieden</string>
     <string name="draw_description_1">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nWer auf Unentschieden entscheidet, entscheidet überhaupt nicht.</string>
     <string name="draw_description_2">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nZeit für ein Rematch um das ein für alle Mal zu klären.</string>
     <string name="draw_description_3">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nEin geteilter Sieg ist eine Niederlage für beide.</string>
-
     <string name="close_defeat_title">Knapp verloren</string>
     <string name="close_defeat_description_1">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nKnapp daneben ist auch vorbei.</string>
     <string name="close_defeat_description_2">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nEine kleine Niederlage, aber ein starker Auftritt!</string>
     <string name="close_defeat_description_3">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nLass dein*e Gegner*in sich nicht zu lange im Erfolg sonnen.</string>
     <string name="close_defeat_description_4">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nEine Revanche ist Ehrensache.</string>
     <string name="close_defeat_description_5">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nEs ist immer zu früh, um aufzugeben.</string>
-
     <string name="defeat_title">Verloren</string>
     <string name="defeat_description_1">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nEine stolz getragene Niederlage ist auch ein Sieg.</string>
     <string name="defeat_description_2">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nWir dürfen jetzt nur nicht den Sand in den Kopf stecken.</string>
     <string name="defeat_description_3">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nManchmal verliert man und manchmal gewinnen die anderen.</string>
     <string name="defeat_description_4">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nDer Unterschied zwischen Meister und Anfänger ist, dass der Meister öfter gescheitert ist.</string>
     <string name="defeat_description_5">Du: %1$s | Gegner*in: %2$s\nSeed: %3$d\n\nWer immer tut, was er schon kann, bleibt immer das, was er schon ist.</string>
-
     <string name="result_popup_confirmation_text">Teilen</string>
     <string name="result_share_message_waiting">Ich: %1$s | Du: ??\nSeed: %2$d</string>
     <string name="result_share_message">Ich: %1$s | Du: %2$s\nSeed: %3$d</string>
