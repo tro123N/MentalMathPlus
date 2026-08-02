@@ -24,11 +24,11 @@
     <string name="about">حول التطبيق</string>
     <string name="horizontal_toast">تخطيط أفقي</string>
     <string name="no_app_store">لا يوجد سوق تطبيقات متاح لفتح هذه الصفحة.</string>
-    <string name="time_spent">الوقت المستغرَق</string>
+    <string name="time_spent">الوقت المُستغرَق</string>
     <string name="random_game">لعبة عشوائية</string>
     <string name="right_to_left">من اليمين إلى اليسار</string>
     <string name="history">السجلّ</string>
-    <string name="avg_time_per_correct_answer">الوقت المستغرَق لكل إجابة صحيحة</string>
+    <string name="avg_time_per_correct_answer">الوقت المُستغرَق لكل إجابة صحيحة</string>
     <string name="new_score">جديد</string>
     <string name="vertical">رأسي</string>
     <string name="language">اللغة</string>
@@ -47,10 +47,15 @@
     <string name="app_name">الحساب الذهني</string>
     <string name="no_browser">لا يوجد تطبيق متاح لفتح هذا الرابط.</string>
     <string name="sound_on">الصوت مشغل</string>
-    <string name="seed">Seed: %d</string>
+    <string name="seed">البذرة: %d</string>
     <string name="left_to_right">من اليسار إلى اليمين</string>
     <string name="sound_off">الصوت موقف</string>
     <string name="top_ten_scores">أفضل ١٠</string>
     <string name="problem_limit">حد المشكلة</string>
     <string name="system_mode">اتباع النظام</string>
+    <string name="score">العلامة</string>
+    <string name="problem">المشكلة</string>
+    <string name="status">الحالة</string>
+    <string name="no_problems">لم يتم حل أي مشاكل</string>
+    <string name="done">تم</string>
 </resources>
