@@ -7,4 +7,6 @@
     <locale android:name="ru" />
     <locale android:name="bn" />
     <locale android:name="ar" />
+    <locale android:name="hr" />
+    <locale android:name="sr" />
 </locale-config>
