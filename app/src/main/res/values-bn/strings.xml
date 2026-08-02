@@ -100,9 +100,9 @@
     <string name="waiting_title">আপনার প্রতিপক্ষের জন্য অপেক্ষা করা হচ্ছে…</string>
     <string name="waiting_description_1">আপনি: %1$s | প্রতিপক্ষ: ??\nসিড: %2$d\n\nআপনি একটি দুর্দান্ত লক্ষ্য নির্ধারণ করেছেন! দেখা যাক আপনার প্রতিপক্ষ সেটা ছুঁতে পারে কিনা!</string>
     <string name="waiting_description_2">আপনি: %1$s | প্রতিপক্ষ: ??\nসিড: %2$d\n\nআপনার স্কোর সেট হয়ে গেছে - এবার আপনার প্রতিদ্বন্দ্বীর জবাব দেওয়ার পালা!</string>
-    <string name="waiting_description_3">আপনি: %1$s | প্রতিপক্ষ: ??\nসিড: %2$d\n\nআপনার কাজ শেষ - উত্তেজনা শুরু!</string>
-    <string name="waiting_description_4">আপনি: %1$s | প্রতিপক্ষ: ??\nসিড: %2$d\n\nসবার চোখ এখন আপনার প্রতিপক্ষের দিকে!</string>
-    <string name="waiting_description_5">আপনি: %1$s | প্রতিপক্ষ: ??\nসিড: %2$d\n\nআপনি এগিয়ে আছেন… সত্যিই কি তাই?</string>
+    <string name="waiting_description_3">আপনি: %1$s | প্রতিপক্ষ: ??\nসিড: %2$d\n\nসবার চোখ এখন আপনার প্রতিপক্ষের দিকে!</string>
+    <string name="waiting_description_4">আপনি: %1$s | প্রতিপক্ষ: ??\nসিড: %2$d\n\nআপনি এগিয়ে আছেন… সত্যিই কি তাই?</string>
+    <string name="waiting_description_5">আপনি: %1$s | প্রতিপক্ষ: ??\nসিড: %2$d\n\nআপনার কাজ শেষ - উত্তেজনা শুরু!</string>
 
     <string name="easy_win_title">সহজ বিজয়</string>
     <string name="easy_win_description_1">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nহয়তো পরের বার আপনি সত্যিকারের চ্যালেঞ্জ পাবেন।</string>
@@ -110,42 +110,42 @@
     <string name="easy_win_description_3">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nআপনার প্রতিপক্ষ যখন নিয়ম বুঝতেই ব্যস্ত ছিল, তখন আপনি জিতে গেলেন।</string>
 
     <string name="anyone_here_title">কেউ আছেন?</string>
-    <string name="anyone_here_description_1">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nসব শান্ত… বড্ড বেশি শান্ত।</string>
+    <string name="anyone_here_description_1">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nকেউ পয়েন্ট পায়নি… তবে যাক, অন্তত কেউ হারেনি!</string>
     <string name="anyone_here_description_2">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nহ্যালো… হ্যালো… কেউ কি এই গেম খেলছে?</string>
-    <string name="anyone_here_description_3">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nকেউ পয়েন্ট পায়নি… তবে যাক, অন্তত কেউ হারেনি!</string>
+    <string name="anyone_here_description_3">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nসব শান্ত… বড্ড বেশি শান্ত।</string>
 
     <string name="win_title">আপনি জিতেছেন</string>
     <string name="win_description_1">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nএটি ছিল দুর্দান্ত মানসিক গণিত!</string>
-    <string name="win_description_2">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nনিখুঁত পারফরম্যান্স - অসাধারণ!</string>
+    <string name="win_description_2">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nফলাফল মিথ্যা বলে না - আপনি দারুণ খেলেছেন।</string>
     <string name="win_description_3">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nআপনার মস্তিষ্ক বাজিমাত করে দিয়েছে।</string>
     <string name="win_description_4">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nআপনার প্রতিপক্ষের পরের বার ক্যালকুলেটর লাগতে পারে!</string>
-    <string name="win_description_5">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nফলাফল মিথ্যা বলে না - আপনি দারুণ খেলেছেন।</string>
+    <string name="win_description_5">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nনিখুঁত পারফরম্যান্স - অসাধারণ!</string>
 
     <string name="close_win_title">একটুর জন্য</string>
-    <string name="close_win_description_1">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nখুব কাছাকাছি গিয়ে জয়, তবে এটাও জয়ই!</string>
-    <string name="close_win_description_2">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nখুব হাড্ডাহাড্ডি ছিল! ভালো যে আপনি নজর সরাননি।</string>
-    <string name="close_win_description_3">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nখুব কাছাকাছি! তবে জয়ের স্বাদ সবসময়ই মিষ্টি।</string>
-    <string name="close_win_description_4">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nআপনার প্রতিপক্ষ ভালো খেলেছে, তবে স্কোরবোর্ড মিথ্যা বলে না!</string>
-    <string name="close_win_description_5">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nশ্বাসরুদ্ধকর একটা ম্যাচ ছিল… কিন্তু শেষে আপনার নামটাই সবার উপরে!</string>
+    <string name="close_win_description_1">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nখুব হাড্ডাহাড্ডি ছিল! ভালো যে আপনি নজর সরাননি।</string>
+    <string name="close_win_description_2">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nখুব কাছাকাছি! তবে জয়ের স্বাদ সবসময়ই মিষ্টি।</string>
+    <string name="close_win_description_3">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nআপনার প্রতিপক্ষ ভালো খেলেছে, তবে স্কোরবোর্ড মিথ্যা বলে না!</string>
+    <string name="close_win_description_4">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nশ্বাসরুদ্ধকর একটা ম্যাচ ছিল… কিন্তু শেষে আপনার নামটাই সবার উপরে!</string>
+    <string name="close_win_description_5">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nখুব কাছাকাছি গিয়ে জয়, তবে এটাও জয়ই!</string>
 
     <string name="draw_title">ড্র</string>
-    <string name="draw_description_1">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nএকদম সমানে সমান - এবার চূড়ান্ত ম্যাচের পালা!</string>
-    <string name="draw_description_2">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nসমান সমান টক্কর! একটা রিম্যাচ হতেই পারে।</string>
+    <string name="draw_description_1">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nসমান সমান টক্কর! একটা রিম্যাচ হতেই পারে।</string>
+    <string name="draw_description_2">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nএকদম সমানে সমান - এবার চূড়ান্ত ম্যাচের পালা!</string>
     <string name="draw_description_3">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nম্যাচ ড্র! চলুন দেখি পরের রাউন্ডে কে চাপ সামলাতে পারে।</string>
 
     <string name="close_defeat_title">একটুর জন্য</string>
-    <string name="close_defeat_description_1">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nখুব কাছাকাছি! আপনি প্রায় জিতেই গিয়েছিলেন!</string>
+    <string name="close_defeat_description_1">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nখুব কাছে গিয়ে হার, কিন্তু শেষ নয় - পরের রাউন্ডটা আপনারই হবে!</string>
     <string name="close_defeat_description_2">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nঅল্পের জন্য হার - তবে দারুণ চেষ্টা করেছেন!</string>
-    <string name="close_defeat_description_3">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nপ্রায় জয়! অনুশীলন চালিয়ে যান, সাফল্য খুব কাছাকাছি।</string>
-    <string name="close_defeat_description_4">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nহাড্ডাহাড্ডি লড়াইয়ে হার, তবে আপনি ভালো সামলেছেন - চালিয়ে যান!</string>
-    <string name="close_defeat_description_5">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nখুব কাছে গিয়ে হার, কিন্তু শেষ নয় - পরের রাউন্ডটা আপনারই হবে!</string>
+    <string name="close_defeat_description_3">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nহাড্ডাহাড্ডি লড়াইয়ে হার, তবে আপনি ভালো সামলেছেন - চালিয়ে যান!</string>
+    <string name="close_defeat_description_4">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nপ্রায় জয়! অনুশীলন চালিয়ে যান, সাফল্য খুব কাছাকাছি।</string>
+    <string name="close_defeat_description_5">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nখুব কাছাকাছি! আপনি প্রায় জিতেই গিয়েছিলেন!</string>
 
     <string name="defeat_title">পরাজয়</string>
     <string name="defeat_description_1">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nহতাশা ঝেড়ে ফেলুন এবং আরেকবার চেষ্টা করুন!</string>
-    <string name="defeat_description_2">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nএমনটা হতেই পারে! শিখুন, মানিয়ে নিন এবং আরও শক্তিশালী হয়ে ফিরে আসুন।</string>
-    <string name="defeat_description_3">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nসব চ্যাম্পিয়নরাই একসময় এখানে ছিল। এবার আপনার ঘুরে দাঁড়ানোর পালা।</string>
-    <string name="defeat_description_4">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nআজ হয়তো আপনার প্রতিপক্ষ জিতেছে, কিন্তু গল্পটা এখনো শেষ হয়নি।</string>
-    <string name="defeat_description_5">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nকখনো জয়, কখনো হার। এটাই তো জীবন।</string>
+    <string name="defeat_description_2">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nসব চ্যাম্পিয়নরাই একসময় এখানে ছিল। এবার আপনার ঘুরে দাঁড়ানোর পালা।</string>
+    <string name="defeat_description_3">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nকখনো জয়, কখনো হার। এটাই তো জীবন।</string>
+    <string name="defeat_description_4">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nএমনটা হতেই পারে! শিখুন, মানিয়ে নিন এবং আরও শক্তিশালী হয়ে ফিরে আসুন।</string>
+    <string name="defeat_description_5">আপনি: %1$s | প্রতিপক্ষ: %2$s\nসিড: %3$d\n\nআজ হয়তো আপনার প্রতিপক্ষ জিতেছে, কিন্তু গল্পটা এখনো শেষ হয়নি।</string>
 
     <string name="result_popup_confirmation_text">শেয়ার করুন</string>
     <string name="result_share_message_waiting">আমি: %1$s | আপনি: ??\nসিড: %2$d</string>

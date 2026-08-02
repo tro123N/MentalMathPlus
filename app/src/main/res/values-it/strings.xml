@@ -100,8 +100,8 @@
 
     <string name="anyone_here_title">C\'è nessuno?</string>
     <string name="anyone_here_description_1">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nUna partita senza alcuno scopo!</string>
-    <string name="anyone_here_description_2">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nNessun punteggio… ma ehi, almeno non ha perso nessuno!</string>
-    <string name="anyone_here_description_3">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nA quanto pare nessuno voleva fare il primo passo.</string>
+    <string name="anyone_here_description_2">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nA quanto pare nessuno voleva fare il primo passo.</string>
+    <string name="anyone_here_description_3">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nNessun punteggio… ma ehi, almeno non ha perso nessuno!</string>
 
     <string name="win_title">Hai vinto</string>
     <string name="win_description_1">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nQuesto sì che è calcolo mentale sul serio!</string>
@@ -111,10 +111,10 @@
     <string name="win_description_5">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nFatti, non parole: hai dominato!</string>
 
     <string name="close_win_title">Per un pelo</string>
-    <string name="close_win_description_1">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nUna vittoria sudata, ma conta comunque!</string>
-    <string name="close_win_description_2">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nVittoria all\'ultimo secondo - che salvataggio!</string>
-    <string name="close_win_description_3">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nÈ stata tesa! Meno male che non hai battuto ciglio.</string>
-    <string name="close_win_description_4">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nPer un pelo! Ma la vittoria ha comunque un ottimo sapore.</string>
+    <string name="close_win_description_1">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nÈ stata tesa! Meno male che non hai battuto ciglio.</string>
+    <string name="close_win_description_2">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nPer un pelo! Ma la vittoria ha comunque un ottimo sapore.</string>
+    <string name="close_win_description_3">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nUna vittoria sudata, ma conta comunque!</string>
+    <string name="close_win_description_4">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nVittoria all\'ultimo secondo - che salvataggio!</string>
     <string name="close_win_description_5">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nRispetto per l\'avversario, ma una vittoria è una vittoria.</string>
 
     <string name="draw_title">Pareggio</string>
@@ -123,9 +123,9 @@
     <string name="draw_description_3">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nSolo una nuova partita potrà decretare il vero vincitore.</string>
 
     <string name="close_defeat_title">Per un pelo</string>
-    <string name="close_defeat_description_1">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nCi sei andato vicinissimo! Mancava poco!</string>
-    <string name="close_defeat_description_2">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nCe l\'avevi quasi fatta! Non preoccuparti, la vendetta sarà dolce.</string>
-    <string name="close_defeat_description_3">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nSconfitta sul filo del rasoio, ma hai giocato bene - continua così!</string>
+    <string name="close_defeat_description_1">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nCe l\'avevi quasi fatta! Non preoccuparti, la vendetta sarà dolce.</string>
+    <string name="close_defeat_description_2">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nSconfitta sul filo del rasoio, ma hai giocato bene - continua così!</string>
+    <string name="close_defeat_description_3">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nCi sei andato vicinissimo! Mancava poco!</string>
     <string name="close_defeat_description_4">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nNon mollare - la vittoria è dietro l\'angolo.</string>
     <string name="close_defeat_description_5">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nCi sei quasi! Continua così, il tuo talento è innegabile.</string>
 
@@ -133,8 +133,8 @@
     <string name="defeat_description_1">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nNon pensarci e riprova ancora!</string>
     <string name="defeat_description_2">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nSuccede! Impara, adattati e torna più forte di prima.</string>
     <string name="defeat_description_3">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nA volte si vince, a volte si perde. È la vita.</string>
-    <string name="defeat_description_4">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nIl tuo avversario lo starà già raccontando a tutti. Adorabile.</string>
-    <string name="defeat_description_5">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nLascia che il tuo avversario si goda i suoi quindici secondi di celebrità.</string>
+    <string name="defeat_description_4">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nLascia che il tuo avversario si goda i suoi quindici secondi di celebrità.</string>
+    <string name="defeat_description_5">Tu: %1$s | Avversario: %2$s\nSeed: %3$d\n\nIl tuo avversario lo starà già raccontando a tutti. Adorabile.</string>
 
     <string name="result_popup_confirmation_text">Condividi</string>
     <string name="result_share_message_waiting">Io: %1$s | Tu: ??\nSeed: %2$d</string>

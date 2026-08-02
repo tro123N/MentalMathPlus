@@ -99,54 +99,54 @@
 
     <!-- Result PopUp -->
     <string name="waiting_title">Várunk az ellenfélre…</string>
-    <string name="waiting_description_1">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nMegmutattad, mit tudsz. Vajon elég lesz ez az előny?</string>
-    <string name="waiting_description_2">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nSzép eredmény! Vajon sikerül ezt felülmúlnia?</string>
-    <string name="waiting_description_3">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nMost minden az ellenfél válaszán múlik!</string>
+    <string name="waiting_description_1">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nSzép eredmény! Vajon sikerül ezt felülmúlnia?</string>
+    <string name="waiting_description_2">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nMost minden az ellenfél válaszán múlik!</string>
+    <string name="waiting_description_3">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nMegmutattad, mit tudsz. Vajon elég lesz ez az előny?</string>
     <string name="waiting_description_4">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nMost te vezetsz… de meddig?</string>
     <string name="waiting_description_5">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nMeglátta a pontszámodat… és hirtelen nagy lett a csend.</string>
 
     <string name="easy_win_title">Könnyű győzelem</string>
-    <string name="easy_win_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEz most meglepően sima volt.</string>
+    <string name="easy_win_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEnnél nyugodtabb győzelmet nehéz elképzelni.</string>
     <string name="easy_win_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nÚgy tűnik, ma csak te érkeztél meg a meccsre.</string>
-    <string name="easy_win_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEnnél nyugodtabb győzelmet nehéz elképzelni.</string>
+    <string name="easy_win_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEz most meglepően sima volt.</string>
 
     <string name="anyone_here_title">Van még valaki?</string>
-    <string name="anyone_here_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nNagy volt a csend… talán túl nagy.</string>
-    <string name="anyone_here_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nMegnéztük. Vártunk. Nem történt semmi.</string>
-    <string name="anyone_here_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSenki sem szerzett pontot. Ez is egy eredmény.</string>
+    <string name="anyone_here_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSenki sem szerzett pontot. Ez is egy eredmény.</string>
+    <string name="anyone_here_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nNagy volt a csend… talán túl nagy.</string>
+    <string name="anyone_here_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nMegnéztük. Vártunk. Nem történt semmi.</string>
 
     <string name="win_title">Győztél</string>
     <string name="win_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nMa nagyon ment a fejszámolás!</string>
-    <string name="win_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSzép munka! Ezt nehéz lesz felülmúlni.</string>
-    <string name="win_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nLehet, hogy az ellenfél legközelebb számológépet kér.</string>
-    <string name="win_description_4">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nGyors voltál. Pontos voltál. Ennyi kellett.</string>
-    <string name="win_description_5">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nÚjabb győzelem! A matek ma neked drukkolt.</string>
+    <string name="win_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nÚjabb győzelem! A matek ma neked drukkolt.</string>
+    <string name="win_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nGyors voltál. Pontos voltál. Ennyi kellett.</string>
+    <string name="win_description_4">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nLehet, hogy az ellenfél legközelebb számológépet kér.</string>
+    <string name="win_description_5">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSzép munka! Ezt nehéz lesz felülmúlni.</string>
 
     <string name="close_win_title">Szoros győzelem</string>
-    <string name="close_win_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSzoros volt, de a győzelem a tiéd!</string>
-    <string name="close_win_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nHűha… ez nagyon közel volt!</string>
-    <string name="close_win_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nÉpphogy, de sikerült!</string>
-    <string name="close_win_description_4">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEz tényleg hajszálon múlt.</string>
-    <string name="close_win_description_5">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSzoros meccs volt, de a végén te mosolyoghattál.</string>
+    <string name="close_win_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEz tényleg hajszálon múlt.</string>
+    <string name="close_win_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSzoros volt, de a győzelem a tiéd!</string>
+    <string name="close_win_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSzoros meccs volt, de a végén te mosolyoghattál.</string>
+    <string name="close_win_description_4">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nÉpphogy, de sikerült!</string>
+    <string name="close_win_description_5">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nHűha… ez nagyon közel volt!</string>
 
     <string name="draw_title">Döntetlen</string>
     <string name="draw_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSenki sem nyert, senki sem veszített. Folytatás következik!</string>
-    <string name="draw_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nUgyanazon a szinten vagytok. Jöhet a következő kör!</string>
-    <string name="draw_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEgy kör nem volt elég. Döntsük el újra!</string>
+    <string name="draw_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEgy kör nem volt elég. Döntsük el újra!</string>
+    <string name="draw_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nUgyanazon a szinten vagytok. Jöhet a következő kör!</string>
 
     <string name="close_defeat_title">Hajszálon múlt</string>
     <string name="close_defeat_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nCsak egy hajszál választott el a győzelemtől!</string>
     <string name="close_defeat_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEz most szoros volt. Szép játék!</string>
     <string name="close_defeat_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nNe hagyd, hogy túl sokáig élvezze ezt a győzelmet!</string>
-    <string name="close_defeat_description_4">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSzoros meccs volt, jól tartottad magad!</string>
-    <string name="close_defeat_description_5">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEnnél közelebb már nehéz lenne. Jó úton jársz!</string>
+    <string name="close_defeat_description_4">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nEnnél közelebb már nehéz lenne. Jó úton jársz!</string>
+    <string name="close_defeat_description_5">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSzoros meccs volt, jól tartottad magad!</string>
 
     <string name="defeat_title">Vereség</string>
     <string name="defeat_description_1">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSemmi gond, rázd le és próbáld meg újra!</string>
     <string name="defeat_description_2">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nIlyen előfordul. Tanulj belőle, és gyere vissza erősebben!</string>
     <string name="defeat_description_3">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nSemmi dráma. Egy kör volt, nem a világ vége.</string>
-    <string name="defeat_description_4">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nHadd élvezze ezt a győzelmet. Neki is jár néha.</string>
-    <string name="defeat_description_5">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nValószínűleg már mindenkinek meséli. Aranyos.</string>
+    <string name="defeat_description_4">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nValószínűleg már mindenkinek meséli. Aranyos.</string>
+    <string name="defeat_description_5">Te: %1$s | Ellenfél: %2$s\nSeed: %3$d\n\nHadd élvezze ezt a győzelmet. Neki is jár néha.</string>
 
     <string name="result_popup_confirmation_text">Megosztás</string>
     <string name="result_share_message_waiting">Én: %1$s | Te: ??\nSeed: %2$d</string>

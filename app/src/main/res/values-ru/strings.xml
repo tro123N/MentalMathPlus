@@ -88,53 +88,53 @@
     <!-- Result PopUp -->
     <string name="waiting_title">Ожидание соперника …</string>
     <string name="waiting_description_1">Ты: %1$s | Соперник: ??\nСид: %2$d\n\nТы задал высокую планку! У соперника уже поджилки трясутся!</string>
-    <string name="waiting_description_2">Ты: %1$s | Соперник: ??\nСид: %2$d\n\nВсе взгляды прикованы к твоему сопернику!</string>
-    <string name="waiting_description_3">Ты: %1$s | Соперник: ??\nСид: %2$d\n\nТы вышел вперёд… или нет?</string>
-    <string name="waiting_description_4">Ты: %1$s | Соперник: ??\nСид: %2$d\n\nВыглядит неплохо! Твой соперник под давлением.</string>
+    <string name="waiting_description_2">Ты: %1$s | Соперник: ??\nСид: %2$d\n\nВыглядит неплохо! Твой соперник под давлением.</string>
+    <string name="waiting_description_3">Ты: %1$s | Соперник: ??\nСид: %2$d\n\nВсе взгляды прикованы к твоему сопернику!</string>
+    <string name="waiting_description_4">Ты: %1$s | Соперник: ??\nСид: %2$d\n\nТы вышел вперёд… или нет?</string>
     <string name="waiting_description_5">Ты: %1$s | Соперник: ??\nСид: %2$d\n\nВызов брошен! Осталось узнать, кто осмелится его принять.</string>
 
     <string name="easy_win_title">Дармовая победа</string>
-    <string name="easy_win_description_1">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nУ твоего соперника, похоже, душа в пятки ушла!</string>
-    <string name="easy_win_description_2">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНе бей лежачего!</string>
-    <string name="easy_win_description_3">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПроще пареной репы!</string>
+    <string name="easy_win_description_1">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПроще пареной репы!</string>
+    <string name="easy_win_description_2">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nУ твоего соперника, похоже, душа в пятки ушла!</string>
+    <string name="easy_win_description_3">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНе бей лежачего!</string>
 
     <string name="anyone_here_title">Есть кто-нибудь?</string>
-    <string name="anyone_here_description_1">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНи ответа, ни привета.</string>
-    <string name="anyone_here_description_2">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nХоть шаром покати.</string>
+    <string name="anyone_here_description_1">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nХоть шаром покати.</string>
+    <string name="anyone_here_description_2">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНи ответа, ни привета.</string>
     <string name="anyone_here_description_3">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nСамая захватывающая часть — это ожидание начала.</string>
 
     <string name="win_title">Победа</string>
     <string name="win_description_1">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПередо мной настоящий ас устного счёта!</string>
-    <string name="win_description_2">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nБезупречное исполнение — у соперника не было ни шанса.</string>
-    <string name="win_description_3">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nКажется, это называется разгромной победой!</string>
-    <string name="win_description_4">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nТебе не нужен калькулятор — ты сам калькулятор!</string>
-    <string name="win_description_5">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПобедителей не судят!</string>
+    <string name="win_description_2">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПобедителей не судят!</string>
+    <string name="win_description_3">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nТебе не нужен калькулятор — ты сам калькулятор!</string>
+    <string name="win_description_4">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nБезупречное исполнение — у соперника не было ни шанса.</string>
+    <string name="win_description_5">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nКажется, это называется разгромной победой!</string>
 
     <string name="close_win_title">Победа впритык</string>
     <string name="close_win_description_1">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЭто было на тоненького!</string>
-    <string name="close_win_description_2">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nВот это гонка ноздря в ноздрю! В итоге ты оказался впереди.</string>
-    <string name="close_win_description_3">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nУважение сопернику, но победа есть победа!</string>
+    <string name="close_win_description_2">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЭто было не «впритык», это была ювелирная работа.</string>
+    <string name="close_win_description_3">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nВот это гонка ноздря в ноздрю! В итоге ты оказался впереди.</string>
     <string name="close_win_description_4">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЭто было не для слабонервных. Но у тебя нервы стальные.</string>
-    <string name="close_win_description_5">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЭто было не «впритык», это была ювелирная работа.</string>
+    <string name="close_win_description_5">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nУважение сопернику, но победа есть победа!</string>
 
     <string name="draw_title">Ничья</string>
-    <string name="draw_description_1">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nОба наравне. Следующая игра всё решит.</string>
-    <string name="draw_description_2">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНи нашим, ни вашим!</string>
+    <string name="draw_description_1">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНи нашим, ни вашим!</string>
+    <string name="draw_description_2">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nОба наравне. Следующая игра всё решит.</string>
     <string name="draw_description_3">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nЭта история ещё не закончена.</string>
 
     <string name="close_defeat_title">Поражение впритык</string>
-    <string name="close_defeat_description_1">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНе всё коту масленица!</string>
-    <string name="close_defeat_description_2">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nРеванш — дело чести.</string>
-    <string name="close_defeat_description_3">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nСдаваться всегда рано.</string>
-    <string name="close_defeat_description_4">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПроиграть с высоко поднятой головой и вернуться ещё сильнее.</string>
-    <string name="close_defeat_description_5">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nТак держать! Следующая игра — твоя.</string>
+    <string name="close_defeat_description_1">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nРеванш — дело чести.</string>
+    <string name="close_defeat_description_2">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nНе всё коту масленица!</string>
+    <string name="close_defeat_description_3">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nТак держать! Следующая игра — твоя.</string>
+    <string name="close_defeat_description_4">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nСдаваться всегда рано.</string>
+    <string name="close_defeat_description_5">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПроиграть с высоко поднятой головой и вернуться ещё сильнее.</string>
 
     <string name="defeat_title">Поражение</string>
-    <string name="defeat_description_1">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nГлавное сейчас — не прятать голову в песок.</string>
-    <string name="defeat_description_2">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПервый блин комом — не беда!</string>
-    <string name="defeat_description_3">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nТяжело в учении — легко в бою!</string>
-    <string name="defeat_description_4">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nТерпение и труд всё перетрут.</string>
-    <string name="defeat_description_5">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nДорогу осилит идущий.</string>
+    <string name="defeat_description_1">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nПервый блин комом — не беда!</string>
+    <string name="defeat_description_2">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nТяжело в учении — легко в бою!</string>
+    <string name="defeat_description_3">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nДорогу осилит идущий.</string>
+    <string name="defeat_description_4">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nГлавное сейчас — не прятать голову в песок.</string>
+    <string name="defeat_description_5">Ты: %1$s | Соперник: %2$s\nСид: %3$d\n\nТерпение и труд всё перетрут.</string>
 
     <string name="result_popup_confirmation_text">Поделиться</string>
     <string name="result_share_message_waiting">Я: %1$s | Ты: ??\nСид: %2$d</string>
