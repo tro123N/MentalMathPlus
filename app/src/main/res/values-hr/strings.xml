@@ -71,7 +71,7 @@
     <!-- History Screen -->
     <string name="no_games">Nema igara s osvojenim bodovima</string>
 
-    <!-- PopUps -->
+    <!-- Pop-ups -->
     <string name="notification_popup_title">Obavijesti su onemogućene</string>
     <string name="notification_popup_description">Omogućite obavijesti u postavkama sustava kako biste postavili podsjetnike.\n\nNapomena: Postavke optimizacije baterije i dalje mogu blokirati obavijesti.</string>
     <string name="notification_popup_confirmation_text">Otvori postavke</string>
@@ -97,56 +97,56 @@
     <string name="cancel">Odustani</string>
     <string name="ok">U redu</string>
 
-    <!-- Result PopUp -->
+    <!-- Result pop-up messages -->
     <string name="waiting_title">Čekanje protivnika…</string>
-    <string name="waiting_description_1">Ti: %1$s | Protivnik: ??\nSeed igre: %2$d\n\nTko čeka, dočeka. Čekamo njegov odgovor.</string>
-    <string name="waiting_description_2">Ti: %1$s | Protivnik: ??\nSeed igre: %2$d\n\nStrpljen - spašen. Sada je red na protivniku.</string>
-    <string name="waiting_description_3">Ti: %1$s | Protivnik: ??\nSeed igre: %2$d\n\nLopta je sada na njegovoj strani.</string>
-    <string name="waiting_description_4">Ti: %1$s | Protivnik: ??\nSeed igre: %2$d\n\nPostavio si ljestvicu visoko. Može li pratiti?</string>
-    <string name="waiting_description_5">Ti: %1$s | Protivnik: ??\nSeed igre: %2$d\n\nTvoj rezultat govori sam za sebe. Protivnik ima težak zadatak.</string>
+    <string name="waiting_message_1">Ti: %1$s | Protivnik: ??\nSeed igre: %2$d\n\nTko čeka, dočeka. Čekamo njegov odgovor.</string>
+    <string name="waiting_message_2">Ti: %1$s | Protivnik: ??\nSeed igre: %2$d\n\nStrpljen - spašen. Sada je red na protivniku.</string>
+    <string name="waiting_message_3">Ti: %1$s | Protivnik: ??\nSeed igre: %2$d\n\nLopta je sada na njegovoj strani.</string>
+    <string name="waiting_message_4">Ti: %1$s | Protivnik: ??\nSeed igre: %2$d\n\nPostavio si ljestvicu visoko. Može li pratiti?</string>
+    <string name="waiting_message_5">Ti: %1$s | Protivnik: ??\nSeed igre: %2$d\n\nTvoj rezultat govori sam za sebe. Protivnik ima težak zadatak.</string>
 
     <string name="easy_win_title">Lagana pobjeda</string>
-    <string name="easy_win_description_1">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nMačji kašalj. Ovo je bilo lakše nego očekivano.</string>
-    <string name="easy_win_description_2">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nPobjeda bez po muke. Danas nije bio njegov dan.</string>
-    <string name="easy_win_description_3">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nMajstor ostaje majstor.</string>
+    <string name="easy_win_message_1">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nMačji kašalj. Ovo je bilo lakše nego očekivano.</string>
+    <string name="easy_win_message_2">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nPobjeda bez po muke. Danas nije bio njegov dan.</string>
+    <string name="easy_win_message_3">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nMajstor ostaje majstor.</string>
 
     <string name="anyone_here_title">Ima li koga?</string>
-    <string name="anyone_here_description_1">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nIma li koga? Tišina kao u grobu.</string>
-    <string name="anyone_here_description_2">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nOdjek… odjek… igra li ovo uopće netko?</string>
-    <string name="anyone_here_description_3">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nNema pomaka ni s jedne strane.</string>
+    <string name="anyone_here_message_1">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nIma li koga? Tišina kao u grobu.</string>
+    <string name="anyone_here_message_2">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nOdjek… odjek… igra li ovo uopće netko?</string>
+    <string name="anyone_here_message_3">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nNema pomaka ni s jedne strane.</string>
 
     <string name="win_title">Pobijedio si</string>
-    <string name="win_description_1">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nSvaka čast. Ovo je bila vrhunska igra.</string>
-    <string name="win_description_2">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nKapa dolje. Protivnik nije imao odgovor.</string>
-    <string name="win_description_3">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nZnanje se vidi na djelu.</string>
-    <string name="win_description_4">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nBio si korak ispred cijelo vrijeme.</string>
-    <string name="win_description_5">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nHrabri imaju sreće.</string>
+    <string name="win_message_1">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nSvaka čast. Ovo je bila vrhunska igra.</string>
+    <string name="win_message_2">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nKapa dolje. Protivnik nije imao odgovor.</string>
+    <string name="win_message_3">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nZnanje se vidi na djelu.</string>
+    <string name="win_message_4">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nBio si korak ispred cijelo vrijeme.</string>
+    <string name="win_message_5">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nHrabri imaju sreće.</string>
 
     <string name="close_win_title">Za dlaku</string>
-    <string name="close_win_description_1">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nIšlo je na nož do zadnjeg poteza.</string>
-    <string name="close_win_description_2">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nZa dlaku, ali pobjeda je pobjeda.</string>
-    <string name="close_win_description_3">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nĐavao je u detaljima. Ovaj put su bili na tvojoj strani.</string>
-    <string name="close_win_description_4">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nTko se zadnji smije, najslađe se smije.</string>
-    <string name="close_win_description_5">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nSvaka čast protivniku, ali pobjeda je tvoja.</string>
+    <string name="close_win_message_1">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nIšlo je na nož do zadnjeg poteza.</string>
+    <string name="close_win_message_2">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nZa dlaku, ali pobjeda je pobjeda.</string>
+    <string name="close_win_message_3">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nĐavao je u detaljima. Ovaj put su bili na tvojoj strani.</string>
+    <string name="close_win_message_4">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nTko se zadnji smije, najslađe se smije.</string>
+    <string name="close_win_message_5">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nSvaka čast protivniku, ali pobjeda je tvoja.</string>
 
     <string name="draw_title">Neriješeno</string>
-    <string name="draw_description_1">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nNema pobjednika ni poraženog.</string>
-    <string name="draw_description_2">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nDva majstora, jedan rezultat.</string>
-    <string name="draw_description_3">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nDanas nitko nije popustio.</string>
+    <string name="draw_message_1">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nNema pobjednika ni poraženog.</string>
+    <string name="draw_message_2">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nDva majstora, jedan rezultat.</string>
+    <string name="draw_message_3">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nDanas nitko nije popustio.</string>
 
     <string name="close_defeat_title">Za dlaku</string>
-    <string name="close_defeat_description_1">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nZa dlaku ti je pobjeda pobjegla.</string>
-    <string name="close_defeat_description_2">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nSreća danas nije bila na tvojoj strani.</string>
-    <string name="close_defeat_description_3">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nBio si blizu, ali đavao je bio u detaljima.</string>
-    <string name="close_defeat_description_4">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nNije gotovo dok nije gotovo.</string>
-    <string name="close_defeat_description_5">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nGlavu gore, idući put je tvoje.</string>
+    <string name="close_defeat_message_1">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nZa dlaku ti je pobjeda pobjegla.</string>
+    <string name="close_defeat_message_2">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nSreća danas nije bila na tvojoj strani.</string>
+    <string name="close_defeat_message_3">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nBio si blizu, ali đavao je bio u detaljima.</string>
+    <string name="close_defeat_message_4">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nNije gotovo dok nije gotovo.</string>
+    <string name="close_defeat_message_5">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nGlavu gore, idući put je tvoje.</string>
 
     <string name="defeat_title">Poraz</string>
-    <string name="defeat_description_1">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nNa greškama se uči.</string>
-    <string name="defeat_description_2">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nI najbolji griješe.</string>
-    <string name="defeat_description_3">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nNekad pobijediš, nekad izgubiš. Takav je život.</string>
-    <string name="defeat_description_4">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nNema predaje.</string>
-    <string name="defeat_description_5">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nSvaki poraz je korak prema pobjedi.</string>
+    <string name="defeat_message_1">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nNa greškama se uči.</string>
+    <string name="defeat_message_2">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nI najbolji griješe.</string>
+    <string name="defeat_message_3">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nNekad pobijediš, nekad izgubiš. Takav je život.</string>
+    <string name="defeat_message_4">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nNema predaje.</string>
+    <string name="defeat_message_5">Ti: %1$s | Protivnik: %2$s\nSeed igre: %3$d\n\nSvaki poraz je korak prema pobjedi.</string>
 
     <string name="result_popup_confirmation_text">Podijeli</string>
     <string name="result_share_message_waiting">Ja: %1$s | Ti: ??\nSjeme: %2$d</string>

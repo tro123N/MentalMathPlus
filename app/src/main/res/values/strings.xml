@@ -37,7 +37,7 @@ Important translation notes:
 - Keep escape characters like \n.
 - Keep the length roughly similar so it fits the UI.
 - Translations do not need to be literal and can be adapted naturally.
-- Especially result descriptions should be freely rewritten to sound natural in the target language.
+- Especially the result pop-up messages should be freely rewritten to sound natural in the target language.
 
 Example:
 <string name="share_challenge">Try to beat my score of %1$s in Mental Math.\nReplay my game with seed %2$d:\n\n%3$s</string>
@@ -119,7 +119,7 @@ Thank you for contributing!
     <!-- History Screen -->
     <string name="no_games">There are no games with a score</string>
 
-    <!-- PopUps -->
+    <!-- Pop-ups -->
     <string name="notification_popup_title">Notifications are disabled</string>
     <string name="notification_popup_description">Please enable notifications in your system settings to set reminders.\n\nNote: Battery optimization settings may still block notifications.</string>
     <string name="notification_popup_confirmation_text">Open settings</string>
@@ -145,56 +145,56 @@ Thank you for contributing!
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
 
-    <!-- Result PopUp -->
+    <!-- Result pop-up messages -->
     <string name="waiting_title">Waiting for your opponent…</string>
-    <string name="waiting_description_1">You: %1$s | Opponent: ??\nSeed: %2$d\n\nYou’ve set the bar! Let’s see if your opponent can catch up!</string>
-    <string name="waiting_description_2">You: %1$s | Opponent: ??\nSeed: %2$d\n\nYour score is locked in - time for your rival to respond!</string>
-    <string name="waiting_description_3">You: %1$s | Opponent: ??\nSeed: %2$d\n\nAll eyes on your opponent now!</string>
-    <string name="waiting_description_4">You: %1$s | Opponent: ??\nSeed: %2$d\n\nYou’ve taken the lead… or have you?</string>
-    <string name="waiting_description_5">You: %1$s | Opponent: ??\nSeed: %2$d\n\nYour score’s so good they’re probably uninstalling the game.</string>
+    <string name="waiting_message_1">You: %1$s | Opponent: ??\nSeed: %2$d\n\nYou’ve set the bar! Let’s see if your opponent can catch up!</string>
+    <string name="waiting_message_2">You: %1$s | Opponent: ??\nSeed: %2$d\n\nYour score is locked in - time for your rival to respond!</string>
+    <string name="waiting_message_3">You: %1$s | Opponent: ??\nSeed: %2$d\n\nAll eyes on your opponent now!</string>
+    <string name="waiting_message_4">You: %1$s | Opponent: ??\nSeed: %2$d\n\nYou’ve taken the lead… or have you?</string>
+    <string name="waiting_message_5">You: %1$s | Opponent: ??\nSeed: %2$d\n\nYour score’s so good they’re probably uninstalling the game.</string>
 
     <string name="easy_win_title">Easy win</string>
-    <string name="easy_win_description_1">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nA win, but without real competition!</string>
-    <string name="easy_win_description_2">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nYour opponent didn’t bring their A-game… or any game at all!</string>
-    <string name="easy_win_description_3">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nYou won while your opponent was still figuring out the rules.</string>
+    <string name="easy_win_message_1">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nA win, but without real competition!</string>
+    <string name="easy_win_message_2">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nYour opponent didn’t bring their A-game… or any game at all!</string>
+    <string name="easy_win_message_3">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nYou won while your opponent was still figuring out the rules.</string>
 
     <string name="anyone_here_title">Anyone here?</string>
-    <string name="anyone_here_description_1">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nA point-less game!</string>
-    <string name="anyone_here_description_2">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nEcho… echo… anybody playing this game?</string>
-    <string name="anyone_here_description_3">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nA whole lot of nothing happened here.</string>
+    <string name="anyone_here_message_1">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nA point-less game!</string>
+    <string name="anyone_here_message_2">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nEcho… echo… anybody playing this game?</string>
+    <string name="anyone_here_message_3">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nA whole lot of nothing happened here.</string>
 
     <string name="win_title">You won</string>
-    <string name="win_description_1">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nThat was some serious mental math!</string>
-    <string name="win_description_2">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nVictory looks good on you!</string>
-    <string name="win_description_3">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nYour mental math is basically magic.</string>
-    <string name="win_description_4">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nYour opponent might need a calculator next time!</string>
-    <string name="win_description_5">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nMath skills activated - opponent defeated!</string>
+    <string name="win_message_1">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nThat was some serious mental math!</string>
+    <string name="win_message_2">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nVictory looks good on you!</string>
+    <string name="win_message_3">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nYour mental math is basically magic.</string>
+    <string name="win_message_4">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nYour opponent might need a calculator next time!</string>
+    <string name="win_message_5">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nMath skills activated - opponent defeated!</string>
 
     <string name="close_win_title">Close call</string>
-    <string name="close_win_description_1">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nThat was tight! Good thing you didn’t blink.</string>
-    <string name="close_win_description_2">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nClose call! But victory still tastes delicious.</string>
-    <string name="close_win_description_3">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nGood one from your opponent, but the scoreboard doesn’t lie!</string>
-    <string name="close_win_description_4">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nThat was a cliffhanger… ending with your name on top!</string>
-    <string name="close_win_description_5">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nRespect to your opponent, but a win is a win.</string>
+    <string name="close_win_message_1">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nThat was tight! Good thing you didn’t blink.</string>
+    <string name="close_win_message_2">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nClose call! But victory still tastes delicious.</string>
+    <string name="close_win_message_3">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nGood one from your opponent, but the scoreboard doesn’t lie!</string>
+    <string name="close_win_message_4">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nThat was a cliffhanger… ending with your name on top!</string>
+    <string name="close_win_message_5">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nRespect to your opponent, but a win is a win.</string>
 
     <string name="draw_title">Draw</string>
-    <string name="draw_description_1">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nNo winner, no loser - just champions.</string>
-    <string name="draw_description_2">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nTime for a rematch to settle this once and for all.</string>
-    <string name="draw_description_3">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nOnly a new game can declare the real winner.</string>
+    <string name="draw_message_1">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nNo winner, no loser - just champions.</string>
+    <string name="draw_message_2">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nTime for a rematch to settle this once and for all.</string>
+    <string name="draw_message_3">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nOnly a new game can declare the real winner.</string>
 
     <string name="close_defeat_title">Close call</string>
-    <string name="close_defeat_description_1">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nYou almost had it! Don’t worry, revenge is sweet.</string>
-    <string name="close_defeat_description_2">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nYour opponent just got lucky this time.</string>
-    <string name="close_defeat_description_3">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nDon’t let your opponent enjoy that victory for too long.</string>
-    <string name="close_defeat_description_4">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nKeep on pushing, victory is just around the corner.</string>
-    <string name="close_defeat_description_5">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nSo close! Keep going, your skills are undeniable.</string>
+    <string name="close_defeat_message_1">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nYou almost had it! Don’t worry, revenge is sweet.</string>
+    <string name="close_defeat_message_2">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nYour opponent just got lucky this time.</string>
+    <string name="close_defeat_message_3">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nDon’t let your opponent enjoy that victory for too long.</string>
+    <string name="close_defeat_message_4">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nKeep on pushing, victory is just around the corner.</string>
+    <string name="close_defeat_message_5">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nSo close! Keep going, your skills are undeniable.</string>
 
     <string name="defeat_title">Defeat</string>
-    <string name="defeat_description_1">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nShake it off and give it another try!</string>
-    <string name="defeat_description_2">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nEvery champion has been here. Now it’s your turn to rise.</string>
-    <string name="defeat_description_3">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nYou win some, you lose some. That’s life.</string>
-    <string name="defeat_description_4">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nNo big deal - there’s more to life.</string>
-    <string name="defeat_description_5">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nLet your rival enjoy the win. Everyone needs their moment.</string>
+    <string name="defeat_message_1">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nShake it off and give it another try!</string>
+    <string name="defeat_message_2">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nEvery champion has been here. Now it’s your turn to rise.</string>
+    <string name="defeat_message_3">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nYou win some, you lose some. That’s life.</string>
+    <string name="defeat_message_4">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nNo big deal - there’s more to life.</string>
+    <string name="defeat_message_5">You: %1$s | Opponent: %2$s\nSeed: %3$d\n\nLet your rival enjoy the win. Everyone needs their moment.</string>
 
     <string name="result_popup_confirmation_text">Share</string>
     <string name="result_share_message_waiting">Me: %1$s | You: ??\nSeed: %2$d</string>

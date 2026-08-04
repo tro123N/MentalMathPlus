@@ -46,6 +46,9 @@ Explore the complete history of all your scored games. You can sort the list by 
 #### Practice Reminders
 Set up periodic reminders to support regular mental math practice. Notifications are sent in the evening (around 6 p.m.) and can be scheduled daily, every three days, or weekly.
 
+#### Customizable Interface
+Choose your preferred keypad (numeric or phone-style), display math problems horizontally or vertically, and adjust the input direction (left-to-right or right-to-left) to suit your preferences.
+
 #### Clean Design
 A simple and minimalist app design with no unnecessary elements or distractions, designed to keep your focus fully on mental math training. Supports both light and dark modes.
 

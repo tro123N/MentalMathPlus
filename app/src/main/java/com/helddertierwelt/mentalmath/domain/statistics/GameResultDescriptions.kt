@@ -23,60 +23,60 @@ import com.helddertierwelt.mentalmath.R
 object GameResultDescriptions {
 
     val waiting = listOf(
-        R.string.waiting_description_1,
-        R.string.waiting_description_2,
-        R.string.waiting_description_3,
-        R.string.waiting_description_4,
-        R.string.waiting_description_5
+        R.string.waiting_message_1,
+        R.string.waiting_message_2,
+        R.string.waiting_message_3,
+        R.string.waiting_message_4,
+        R.string.waiting_message_5
     )
 
     val easyWin = listOf(
-        R.string.easy_win_description_1,
-        R.string.easy_win_description_2,
-        R.string.easy_win_description_3
+        R.string.easy_win_message_1,
+        R.string.easy_win_message_2,
+        R.string.easy_win_message_3
     )
 
     val anyoneHere = listOf(
-        R.string.anyone_here_description_1,
-        R.string.anyone_here_description_2,
-        R.string.anyone_here_description_3
+        R.string.anyone_here_message_1,
+        R.string.anyone_here_message_2,
+        R.string.anyone_here_message_3
     )
 
     val win = listOf(
-        R.string.win_description_1,
-        R.string.win_description_2,
-        R.string.win_description_3,
-        R.string.win_description_4,
-        R.string.win_description_5
+        R.string.win_message_1,
+        R.string.win_message_2,
+        R.string.win_message_3,
+        R.string.win_message_4,
+        R.string.win_message_5
     )
 
     val closeWin = listOf(
-        R.string.close_win_description_1,
-        R.string.close_win_description_2,
-        R.string.close_win_description_3,
-        R.string.close_win_description_4,
-        R.string.close_win_description_5
+        R.string.close_win_message_1,
+        R.string.close_win_message_2,
+        R.string.close_win_message_3,
+        R.string.close_win_message_4,
+        R.string.close_win_message_5
     )
 
     val draw = listOf(
-        R.string.draw_description_1,
-        R.string.draw_description_2,
-        R.string.draw_description_3
+        R.string.draw_message_1,
+        R.string.draw_message_2,
+        R.string.draw_message_3
     )
 
     val closeDefeat = listOf(
-        R.string.close_defeat_description_1,
-        R.string.close_defeat_description_2,
-        R.string.close_defeat_description_3,
-        R.string.close_defeat_description_4,
-        R.string.close_defeat_description_5
+        R.string.close_defeat_message_1,
+        R.string.close_defeat_message_2,
+        R.string.close_defeat_message_3,
+        R.string.close_defeat_message_4,
+        R.string.close_defeat_message_5
     )
 
     val defeat = listOf(
-        R.string.defeat_description_1,
-        R.string.defeat_description_2,
-        R.string.defeat_description_3,
-        R.string.defeat_description_4,
-        R.string.defeat_description_5
+        R.string.defeat_message_1,
+        R.string.defeat_message_2,
+        R.string.defeat_message_3,
+        R.string.defeat_message_4,
+        R.string.defeat_message_5
     )
 }
