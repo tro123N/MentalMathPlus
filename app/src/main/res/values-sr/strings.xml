@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Settings Screen -->
-    <string name="app_name">Mentalna matematika</string>
+    <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Izaberite režim i broj zadataka</string>
     <string name="operator_instruction">Izaberite operacije i nivo težine</string>
     <string name="start">Počni</string>
-
     <!-- Settings Screen: Menu -->
     <string name="share_game">Podeli igru</string>
     <string name="random_game">Nasumična igra</string>
@@ -36,17 +35,14 @@
     <string name="no_share">Nijedna aplikacija nije dostupna za deljenje ovog sadržaja.</string>
     <string name="no_app_store">Nijedna prodavnica aplikacija nije dostupna za otvaranje ove stranice.</string>
     <string name="no_mail">Nijedna aplikacija nije dostupna za slanje imejlova.</string>
-
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10</string>
     <string name="new_score">novo</string>
-
     <!-- Game Screen -->
     <string name="rtl_toast">Unos zdesna nalevo</string>
     <string name="ltr_toast">Unos sleva nadesno</string>
     <string name="horizontal_toast">Vodoravni raspored</string>
     <string name="vertical_toast">Uspravni raspored</string>
-
     <!-- Statistics Screen -->
     <string name="result">Rezultat</string>
     <string name="seed">Seed: %d</string>
@@ -67,36 +63,28 @@
     <string name="status">Status</string>
     <string name="no_problems">Nema rešenih zadataka</string>
     <string name="done">Gotovo</string>
-
     <!-- History Screen -->
     <string name="no_games">Nema igara sa rezultatom</string>
-
     <!-- Pop-ups -->
     <string name="notification_popup_title">Obaveštenja su onemogućena</string>
     <string name="notification_popup_description">Omogućite obaveštenja u sistemskim podešavanjima da biste postavili podsetnike.\n\nNapomena: Podešavanja optimizacije baterije i dalje mogu blokirati obaveštenja.</string>
     <string name="notification_popup_confirmation_text">Otvori podešavanja</string>
     <string name="notification_toast_text">Podsetnici počinju uveče nakon isteka intervala</string>
-
     <string name="reset_app_popup_title">Resetovati aplikaciju?</string>
     <string name="reset_app_popup_description">Brišu se svi rezultati i podešavanja.</string>
     <string name="reset_app_popup_confirmation_text">Resetuj</string>
-
     <string name="quit_game_popup_title">Napustiti igru?</string>
     <string name="quit_game_popup_description">Vaš trenutni napredak će biti izgubljen.</string>
     <string name="quit_game_popup_confirmation_text">Napusti</string>
     <string name="quit_game_popup_cancel_text">Nastavi</string>
-
     <string name="app_link_game_popup_title">Pokrenuti igru iz linka?</string>
     <string name="app_link_popup_description_new_game">Igrajte novu igru sa unapred definisanim podešavanjima i nasumičnim Seed-om.\n\nTrenutni napredak igre će biti izgubljen.</string>
     <string name="app_link_popup_description_challenge">Pokušajte da nadmašite rezultat svog prijatelja ponovnim igranjem iste igre.\n\nTrenutni napredak igre će biti izgubljen.</string>
     <string name="app_link_popup_confirmation_text">Počni</string>
-
     <string name="already_played_popup_title">Igra je već odigrana</string>
     <string name="already_played_popup_description">Već ste igrali igru sa istim podešavanjima i Seed-om.\n\nPokušajte sa drugim linkom ili započnite novu igru.</string>
-
     <string name="cancel">Otkaži</string>
     <string name="ok">U redu</string>
-
     <!-- Result pop-up messages -->
     <string name="waiting_title">Čeka se protivnik…</string>
     <string name="waiting_message_1">Ti: %1$s | Protivnik: ??\nSeed: %2$d\n\nPokazao si šta znaš! Da vidimo može li protivnik da odgovori!</string>
@@ -153,5 +141,4 @@
     <string name="result_share_message">Ja: %1$s | Ti: %2$s\nSeed: %3$d</string>
     <string name="share_challenge">Pokušaj da nadmašiš moj rezultat od %1$s u aplikaciji Mentalna matematika.\nPonovi moju igru sa Seed-om %2$d:\n\n%3$s</string>
     <string name="share_new_game">Hajde da odigramo partiju Mentalne matematike!\nKlikni na link ispod da započneš novu igru sa mojim podešavanjima i Seed-om:\n%1$d\n\n%2$s</string>
-
 </resources>

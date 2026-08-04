@@ -3,9 +3,8 @@
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Válassz játékmódot és korlátot</string>
-    <string name="operator_instruction">Válassz műveleteket és nehézséget</string>
+    <string name="operator_instruction">Válassz műveleteket és nehézségi szintet</string>
     <string name="start">Indítás</string>
-
     <!-- Settings Screen: Menu -->
     <string name="share_game">Játék megosztása</string>
     <string name="random_game">Véletlenszerű játék</string>
@@ -26,7 +25,7 @@
     <string name="sound_on">Hang bekapcsolva</string>
     <string name="sound_off">Hang kikapcsolva</string>
     <string name="language">Nyelv</string>
-    <string name="about">Névjegy</string>
+    <string name="about">Rólunk</string>
     <string name="feedback">Vissza\u200Bjelzés</string>
     <string name="recommend">Aján\u200Blás</string>
     <string name="donate">Támogatás</string>
@@ -36,17 +35,14 @@
     <string name="no_share">Nincs elérhető alkalmazás a tartalom megosztásához.</string>
     <string name="no_app_store">Nincs elérhető alkalmazásbolt az oldal megnyitásához.</string>
     <string name="no_mail">Nincs elérhető alkalmazás e-mailek küldéséhez.</string>
-
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10</string>
     <string name="new_score">új</string>
-
     <!-- Game Screen -->
     <string name="rtl_toast">Jobbról balra bevitel</string>
     <string name="ltr_toast">Balról jobbra bevitel</string>
     <string name="horizontal_toast">Vízszintes elrendezés</string>
     <string name="vertical_toast">Függőleges elrendezés</string>
-
     <!-- Statistics Screen -->
     <string name="result">Eredmény</string>
     <string name="seed">Seed: %d</string>
@@ -67,36 +63,28 @@
     <string name="status">Állapot</string>
     <string name="no_problems">Nincs megoldott feladat</string>
     <string name="done">Kész</string>
-
     <!-- History Screen -->
     <string name="no_games">Nincs pontszámmal rendelkező játék</string>
-
     <!-- Pop-ups -->
     <string name="notification_popup_title">Az értesítések ki vannak kapcsolva</string>
     <string name="notification_popup_description">Az emlékeztetők beállításához engedélyezd az értesítéseket a rendszerbeállításokban.\n\nMegjegyzés: Az akkumulátor-optimalizálás továbbra is blokkolhatja az értesítéseket.</string>
     <string name="notification_popup_confirmation_text">Beállítások megnyitása</string>
     <string name="notification_toast_text">Az emlékeztetők az intervallum után este kezdődnek</string>
-
     <string name="reset_app_popup_title">Visszaállítod az alkalmazást?</string>
     <string name="reset_app_popup_description">Törli az összes pontszámot és beállítást.</string>
     <string name="reset_app_popup_confirmation_text">Visszaállítás</string>
-
     <string name="quit_game_popup_title">Kilépsz a játékból?</string>
     <string name="quit_game_popup_description">A jelenlegi játékállás elvész.</string>
     <string name="quit_game_popup_confirmation_text">Kilépés</string>
     <string name="quit_game_popup_cancel_text">Folytatás</string>
-
     <string name="app_link_game_popup_title">Elindítod a játékot a hivatkozásból?</string>
     <string name="app_link_popup_description_new_game">Indíts új játékot előre beállított beállításokkal és véletlenszerű seeddel.\n\nA jelenlegi játékállás elvész.</string>
     <string name="app_link_popup_description_challenge">Próbáld megdönteni a barátod pontszámát ugyanannak a játéknak az újrajátszásával.\n\nA jelenlegi játékállás elvész.</string>
     <string name="app_link_popup_confirmation_text">Indítás</string>
-
     <string name="already_played_popup_title">A játékot már játszottad</string>
     <string name="already_played_popup_description">Már játszottál egy játékot ugyanezekkel a beállításokkal és seeddel.\n\nPróbálj ki egy másik hivatkozást, vagy indíts új játékot.</string>
-
     <string name="cancel">Mégse</string>
     <string name="ok">OK</string>
-
     <!-- Result pop-up messages -->
     <string name="waiting_title">Várunk az ellenfélre…</string>
     <string name="waiting_message_1">Te: %1$s | Ellenfél: ??\nSeed: %2$d\n\nSzép eredmény! Vajon sikerül ezt felülmúlnia?</string>
