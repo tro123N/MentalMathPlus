@@ -61,6 +61,9 @@
     <string name="score">Score</string>
     <string name="problem">Aufgabe</string>
     <string name="status">Status</string>
+    <string name="status_correct">Richtig</string>
+    <string name="status_incorrect">Falsch</string>
+    <string name="status_skipped">Übersprungen</string>
     <string name="no_problems">Keine Aufgabe gelöst</string>
     <string name="done">OK</string>
     <!-- History Screen -->

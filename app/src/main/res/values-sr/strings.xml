@@ -61,6 +61,9 @@
     <string name="score">Rezultat</string>
     <string name="problem">Zadatak</string>
     <string name="status">Status</string>
+    <string name="status_correct">Tačno</string>
+    <string name="status_incorrect">Netačno</string>
+    <string name="status_skipped">Preskočeno</string>
     <string name="no_problems">Nema rešenih zadataka</string>
     <string name="done">Gotovo</string>
     <!-- History Screen -->

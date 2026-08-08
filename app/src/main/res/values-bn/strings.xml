@@ -65,6 +65,9 @@
     <string name="score">স্কোর</string>
     <string name="problem">সমস্যা</string>
     <string name="status">স্ট্যাটাস</string>
+    <string name="status_correct">সঠিক</string>
+    <string name="status_incorrect">ভুল</string>
+    <string name="status_skipped">এড়িয়ে যাওয়া হয়েছে</string>
     <string name="no_problems">কোনো সমস্যা সমাধান করা হয়নি</string>
     <string name="done">সম্পন্ন করুন</string>
 

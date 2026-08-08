@@ -1,2 +1,7 @@
-- Added Bengali translation contributed by Mahir Daiyan. Thank you! :)
 - Reorganized strings.xml files to enable translations via Weblate (https://hosted.weblate.org/projects/mental-math/)
+- Added Bengali translation contributed by Mahir Daiyan. Thank you! :)
+- Added Hungarian translation reviewed by Dóry. Thank you! :)
+- Added Serbian translation reviewed by Svetislav. Thank you! :)
+- Added Croatian translation reviewed by Ana. Thank you! :)
+- Redesigned the problem overview again to reduce confusion.
+- Added tooltips for the status icons in the problem-overview.

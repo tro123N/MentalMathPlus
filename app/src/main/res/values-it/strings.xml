@@ -61,6 +61,9 @@
     <string name="score">Punteggio</string>
     <string name="problem">Problema</string>
     <string name="status">Stato</string>
+    <string name="status_correct">Corretto</string>
+    <string name="status_incorrect">Errato</string>
+    <string name="status_skipped">Saltato</string>
     <string name="no_problems">Nessun problema risolto</string>
     <string name="done">Fatto</string>
     <!-- History Screen -->

@@ -72,10 +72,10 @@ import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil
 import com.helddertierwelt.mentalmath.domain.statistics.GameResultInfoGenerator.getGamePopUpInfo
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.component.statistics.DoneButton
-import com.helddertierwelt.mentalmath.presentation.component.statistics.ProblemsCard
-import com.helddertierwelt.mentalmath.presentation.component.statistics.SettingsAndStatsCard
+import com.helddertierwelt.mentalmath.presentation.component.statistics.problems.ProblemsCard
+import com.helddertierwelt.mentalmath.presentation.component.statistics.stats.SettingsAndStatsCard
 import com.helddertierwelt.mentalmath.presentation.component.statistics.StatisticsTopBar
-import com.helddertierwelt.mentalmath.presentation.component.statistics.formatScore
+import com.helddertierwelt.mentalmath.presentation.component.statistics.stats.formatScore
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel

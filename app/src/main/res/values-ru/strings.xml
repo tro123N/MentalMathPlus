@@ -61,6 +61,9 @@
     <string name="score">Счёт</string>
     <string name="problem">Задача</string>
     <string name="status">Статус</string>
+    <string name="status_correct">Правильно</string>
+    <string name="status_incorrect">Неправильно</string>
+    <string name="status_skipped">Пропущено</string>
     <string name="no_problems">Ни одно задание не решено</string>
     <string name="done">OK</string>
     <!-- History Screen -->

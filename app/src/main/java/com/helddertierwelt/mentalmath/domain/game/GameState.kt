@@ -76,8 +76,8 @@ data class GameState(
             val totalPauseDuration = parts[19].toLong()
             val seed = parts[20].toLong()
             val isLinkGame = parts[21].toBoolean()
-            val isRightToLeft = parts[21].toBoolean()
-            val isVerticalForm = parts[21].toBoolean()
+            val isRightToLeft = parts[22].toBoolean()
+            val isVerticalForm = parts[23].toBoolean()
             return GameState(
                 isModeEnabled = isModeEnabled,
                 modeLimit = modeLimit,

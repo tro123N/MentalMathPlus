@@ -61,6 +61,9 @@
     <string name="score">Pontszám</string>
     <string name="problem">Feladat</string>
     <string name="status">Állapot</string>
+    <string name="status_correct">Helyes</string>
+    <string name="status_incorrect">Helytelen</string>
+    <string name="status_skipped">Kihagyva</string>
     <string name="no_problems">Nincs megoldott feladat</string>
     <string name="done">Kész</string>
     <!-- History Screen -->

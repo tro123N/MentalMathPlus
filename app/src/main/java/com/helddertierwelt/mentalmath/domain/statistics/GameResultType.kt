@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.settings.AppLocale
-import com.helddertierwelt.mentalmath.presentation.component.statistics.formatScore
+import com.helddertierwelt.mentalmath.presentation.component.statistics.stats.formatScore
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red

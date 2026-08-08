@@ -113,6 +113,9 @@ Thank you for contributing!
     <string name="score">Score</string>
     <string name="problem">Problem</string>
     <string name="status">Status</string>
+    <string name="status_correct">Correct</string>
+    <string name="status_incorrect">Incorrect</string>
+    <string name="status_skipped">Skipped</string>
     <string name="no_problems">No problems solved</string>
     <string name="done">Done</string>
 

@@ -61,6 +61,9 @@
     <string name="score">Score</string>
     <string name="problem">Problème</string>
     <string name="status">Statut</string>
+    <string name="status_correct">Correct</string>
+    <string name="status_incorrect">Incorrect</string>
+    <string name="status_skipped">Passée</string>
     <string name="no_problems">Aucun problème résolu</string>
     <string name="done">Retour</string>
     <!-- History Screen -->

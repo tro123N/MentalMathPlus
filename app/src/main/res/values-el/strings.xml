@@ -64,6 +64,9 @@
     <string name="problem">Πρόβλημα</string>
     <string name="status">Κατάσταση</string>
     <string name="no_problems">Δε λύθηκαν προβλήματα</string>
+    <string name="status_correct">Σωστό</string>
+    <string name="status_incorrect">Λάθος</string>
+    <string name="status_skipped">Παραλείφθηκε</string>
     <string name="done">Ολοκλήρωση</string>
 
     <!-- History Screen -->

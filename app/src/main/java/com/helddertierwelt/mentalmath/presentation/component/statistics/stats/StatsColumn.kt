@@ -16,12 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.presentation.component.statistics
+package com.helddertierwelt.mentalmath.presentation.component.statistics.stats
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,63 +36,59 @@ import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import com.helddertierwelt.mentalmath.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsModeColumn(
-    modeEnabled: Boolean,
+fun StatsColumn(
     fontSize: TextUnit,
+    statsText: String,
+    iconId: Int,
     iconSize: Dp,
-    limit: Int
+    tooltipText: String? = null,
+    iconColor: Color? = null,
 ) {
 
-    val tooltipText = if (modeEnabled) {
-        stringResource(R.string.problem_limit)
-    } else {
-        stringResource(R.string.time_limit)
-    }
-    val tooltipState = rememberTooltipState()
     Column(
-        modifier = Modifier.fillMaxHeight(),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(8.dp))
-
-        TooltipBox(
-            state = tooltipState,
-            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above, 8.dp),
-            tooltip = {
-                PlainTooltip(
-                    shape = RoundedCornerShape(16.dp),
-                    containerColor = MaterialTheme.colorScheme.onPrimary,
-                    contentColor = MaterialTheme.colorScheme.onSecondary,
-                ) {
-                    Text(tooltipText)
-                }
-            }
-        ) {
+        val iconContent: @Composable () -> Unit = {
             Icon(
-                painter = painterResource(
-                    if (modeEnabled)
-                        R.drawable.tag_24dp
-                    else
-                        R.drawable.hourglass_bottom_24dp
-                ),
-                contentDescription = tooltipText,
+                painter = painterResource(iconId),
+                contentDescription = tooltipText ?: "icon",
                 modifier = Modifier.size(iconSize),
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = iconColor ?: Color.Unspecified
             )
+        }
+        if (tooltipText != null) {
+            val tooltipState = rememberTooltipState()
+            TooltipBox(
+                state = tooltipState,
+                positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above, 8.dp),
+                tooltip = {
+                    PlainTooltip(
+                        shape = RoundedCornerShape(16.dp),
+                        containerColor = MaterialTheme.colorScheme.onPrimary,
+                        contentColor = MaterialTheme.colorScheme.onSecondary,
+                    ) {
+                        Text(tooltipText)
+                    }
+                }
+            ) {
+                iconContent()
+            }
+        } else {
+            iconContent()
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = if (modeEnabled) "${limit * 10}" else "${limit}:00",
+            text = statsText,
             fontSize = fontSize,
             color = MaterialTheme.colorScheme.onPrimary
         )
