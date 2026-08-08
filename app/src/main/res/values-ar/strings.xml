@@ -86,12 +86,16 @@
     <string name="waiting_message_5">أنت: %1$s | الخصم: ؟؟\nالبذرة: %2$d\n\nنتيجتك رائعة لدرجة أنهم ربما سيحذفون اللعبة.</string>
     <string name="easy_win_title">فوز سهل</string>
     <string name="easy_win_message_1">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nفوز، ولكن بدون منافسة حقيقية!</string>
-    <string name="easy_win_message_2">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nلم يقدّم خصمك أفضل ما لديه… أو أي أداء على الإطلاق!</string>
+    <string name="easy_win_message_2">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nلم يقدّم خصمك أفضل ما لديه… أو أيّ أداءٍ على الإطلاق!</string>
     <string name="easy_win_message_3">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nلقد فزت بينما كان خصمك لا يزال يحاول فهم القواعد.</string>
-    <string name="anyone_here_title">هل يوجد أحد هنا؟</string>
+    <string name="anyone_here_title">هل يوجد أحدٌ هنا؟</string>
     <string name="anyone_here_message_1">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nلعبة لا طائل منها!</string>
-    <string name="anyone_here_message_2">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nصدى… صدى… هل يلعب أحد هذه اللعبة؟</string>
+    <string name="anyone_here_message_2">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nصدى… صدى… هل هناك أحدٌ يلعب هذه اللعبة؟</string>
     <string name="anyone_here_message_3">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nلم يحدث شيءٌ يُذكَر هنا.</string>
     <string name="win_title">لقد فزت</string>
     <string name="win_message_1">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nيا له من حسابٍ ذهنيٍّ مُرهِق!</string>
+    <string name="win_message_2">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nالفوز يليق بك!</string>
+    <string name="win_message_3">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nحساباتك الذهنية أشبه بالسحر.</string>
+    <string name="win_message_4">أنت: %1$s | الخصم: %2$s\nالترتيب: %3$d\n\nقد يحتاج خصمك إلى آلةٍ حاسبةٍ في المرة القادمة!</string>
+    <string name="win_message_5">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nفُعِّلت المهارات الرياضية - هُزِم الخصم!</string>
 </resources>
