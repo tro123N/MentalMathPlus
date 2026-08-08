@@ -47,7 +47,7 @@
     <string name="app_name">الحساب الذهني</string>
     <string name="no_browser">لا يوجد تطبيق متاح لفتح هذا الرابط.</string>
     <string name="sound_on">الصوت مشغل</string>
-    <string name="seed">Seed: %d</string>
+    <string name="seed">البذرة: %d</string>
     <string name="left_to_right">من اليسار إلى اليمين</string>
     <string name="sound_off">الصوت موقف</string>
     <string name="top_ten_scores">أفضل ١٠</string>
