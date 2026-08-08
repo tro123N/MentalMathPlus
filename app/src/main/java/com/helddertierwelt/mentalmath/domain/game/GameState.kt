@@ -18,7 +18,6 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.domain.game
 
-import com.helddertierwelt.mentalmath.data.mapper.SolvedProblemConverter
 import java.io.Serializable
 
 data class GameState(
@@ -31,7 +30,7 @@ data class GameState(
     val input: String = "",
     val solvedProblems: List<SolvedProblem> = emptyList(),
     val enabledOperators: Map<Operation, Pair<Float, Float>> = mutableMapOf(),
-    val isCorrect: Boolean? = null,
+    val problemStatus: ProblemStatus = ProblemStatus.SKIPPED,
 
     val correctAnswers: Int = 0,
     val wrongAnswers: Int = 0,
@@ -50,60 +49,4 @@ data class GameState(
     val isRightToLeft: Boolean = false,
     val isVerticalForm: Boolean = false
 
-) : Serializable {
-    companion object {
-        fun deserialize(serialized: String): GameState {
-            val parts = serialized.split(",")
-            val isModeEnabled = parts[0].toBoolean()
-            val modeLimit = parts[1].toInt()
-            val operand1 = parts[2].toInt()
-            val operand2 = parts[3].toInt()
-            val operator = Operation.valueOf(parts[4])
-            val input = parts[5]
-            val problems = SolvedProblemConverter().toSolvedProblemList(parts[6])
-            val enabledOperators = mutableMapOf<Operation, Pair<Float, Float>>()
-            val isCorrect = parts[8].toBooleanStrictOrNull()
-            val correctAnswers = parts[9].toInt()
-            val wrongAnswers = parts[10].toInt()
-            val skippedAnswers = parts[11].toInt()
-            val totalAnswers = parts[12].toInt()
-            val isGameStarted = parts[13].toBoolean()
-            val isTimerRunning = parts[14].toBoolean()
-            val activeTime = parts[15].toLong()
-            val totalTime = parts[16].toLong()
-            val startTimeStamp = parts[17].toLong()
-            val pausedAt = parts[18].toLong()
-            val totalPauseDuration = parts[19].toLong()
-            val seed = parts[20].toLong()
-            val isLinkGame = parts[21].toBoolean()
-            val isRightToLeft = parts[22].toBoolean()
-            val isVerticalForm = parts[23].toBoolean()
-            return GameState(
-                isModeEnabled = isModeEnabled,
-                modeLimit = modeLimit,
-                operand1 = operand1,
-                operand2 = operand2,
-                operator = operator,
-                input = input,
-                solvedProblems = problems,
-                enabledOperators = enabledOperators,
-                isCorrect = isCorrect,
-                correctAnswers = correctAnswers,
-                wrongAnswers = wrongAnswers,
-                skippedAnswers = skippedAnswers,
-                totalAnswers = totalAnswers,
-                isGameStarted = isGameStarted,
-                isTimerRunning = isTimerRunning,
-                activeTime = activeTime,
-                totalTime = totalTime,
-                startTimeStamp = startTimeStamp,
-                pausedAt = pausedAt,
-                totalPauseDuration = totalPauseDuration,
-                seed = seed,
-                isLinkGame = isLinkGame,
-                isRightToLeft = isRightToLeft,
-                isVerticalForm = isVerticalForm
-            )
-        }
-    }
-}
+) : Serializable

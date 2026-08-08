@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.game.ProblemStatus
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 
@@ -55,18 +56,18 @@ fun ProblemInput(
     input: String,
     fontSize: TextUnit,
     width: Dp,
-    isCorrect: Boolean?,
+    problemStatus: ProblemStatus,
     isRightToLeft: Boolean,
     isVerticalForm: Boolean,
     onInputClick: () -> Unit,
     onProblemClick: () -> Unit
 ) {
 
-    val color = MaterialTheme.colorScheme.onPrimary
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
+        val onPrimary = MaterialTheme.colorScheme.onPrimary
         val top = operand1.toString()
         val bottom = operand2.toString()
         val length = maxOf(top.length, bottom.length)
@@ -91,7 +92,7 @@ fun ProblemInput(
                 fontSize = fontSize,
                 lineHeight = fontSize,
                 textAlign = TextAlign.Center,
-                color = color,
+                color = onPrimary,
                 modifier = Modifier.alpha(if (isVerticalForm) 0f else 1f)
             )
 
@@ -101,7 +102,7 @@ fun ProblemInput(
                 fontSize = fontSize,
                 lineHeight = fontSize,
                 textAlign = TextAlign.Center,
-                color = color,
+                color = onPrimary,
                 modifier = Modifier.alpha(if (isVerticalForm) 1f else 0f)
             )
         }
@@ -112,7 +113,7 @@ fun ProblemInput(
             Text(
                 text = "=",
                 fontSize = fontSize,
-                color = color
+                color = onPrimary
             )
             Spacer(modifier = Modifier.width(8.dp))
             Box(
@@ -130,7 +131,7 @@ fun ProblemInput(
                         val end = size.width - arrowSize / 2
 
                         drawLine(
-                            color = color,
+                            color = onPrimary,
                             start = Offset(start + arrowSize / 2, y),
                             end = Offset(end - arrowSize / 2, y),
                             strokeWidth = 3.dp.toPx(),
@@ -150,14 +151,19 @@ fun ProblemInput(
                                 close()
                             }
                         }
-                        drawPath(path = arrowPath, color = color)
+                        drawPath(path = arrowPath, color = onPrimary)
                     }
             ) {
+                val color = when(problemStatus){
+                    ProblemStatus.CORRECT -> green
+                    ProblemStatus.INCORRECT -> red
+                    ProblemStatus.SKIPPED -> onPrimary
+                }
                 Text(
                     text = input,
                     fontSize = fontSize,
                     modifier = Modifier.align(Alignment.Center),
-                    color = if (isCorrect == true) green else if (isCorrect == false) red else color
+                    color = color
                 )
             }
         }

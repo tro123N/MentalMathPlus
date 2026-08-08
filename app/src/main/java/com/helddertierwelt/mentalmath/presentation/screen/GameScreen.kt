@@ -185,7 +185,7 @@ fun GameScreen(
                                     input = gameState.input,
                                     fontSize = problemFontSize,
                                     width = resultLineWidth,
-                                    isCorrect = gameState.isCorrect,
+                                    problemStatus = gameState.problemStatus,
                                     isRightToLeft = isRightToLeft,
                                     isVerticalForm = isVerticalForm,
                                     onInputClick = {

@@ -29,6 +29,7 @@ import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
 import com.helddertierwelt.mentalmath.data.repository.MathProblemRepository
 import com.helddertierwelt.mentalmath.domain.game.GameState
 import com.helddertierwelt.mentalmath.domain.game.Operation
+import com.helddertierwelt.mentalmath.domain.game.ProblemStatus
 import com.helddertierwelt.mentalmath.domain.game.SolvedProblem
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
 import com.helddertierwelt.mentalmath.domain.sound.SoundController
@@ -186,7 +187,7 @@ class GameViewModel @Inject constructor(
                         operand2 = operands.second,
                         operator = operation,
                         input = "",
-                        isCorrect = null
+                        problemStatus = ProblemStatus.SKIPPED
                     )
                 )
                 _isGeneratingProblem.value = false
@@ -204,7 +205,7 @@ class GameViewModel @Inject constructor(
                 newState = _gameState.value.copy(
                     skippedAnswers = _gameState.value.skippedAnswers + 1,
                     totalAnswers = _gameState.value.totalAnswers + 1,
-                    isCorrect = null
+                    problemStatus = ProblemStatus.SKIPPED
                 )
             }
 
@@ -213,7 +214,7 @@ class GameViewModel @Inject constructor(
                 newState = _gameState.value.copy(
                     correctAnswers = _gameState.value.correctAnswers + 1,
                     totalAnswers = _gameState.value.totalAnswers + 1,
-                    isCorrect = true
+                    problemStatus = ProblemStatus.CORRECT
                 )
             }
 
@@ -222,7 +223,7 @@ class GameViewModel @Inject constructor(
                 newState = _gameState.value.copy(
                     wrongAnswers = _gameState.value.wrongAnswers + 1,
                     totalAnswers = _gameState.value.totalAnswers + 1,
-                    isCorrect = false
+                    problemStatus = ProblemStatus.INCORRECT
                 )
             }
         }
