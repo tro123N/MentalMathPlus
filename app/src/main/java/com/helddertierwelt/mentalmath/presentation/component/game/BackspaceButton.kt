@@ -18,6 +18,8 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.game
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -26,6 +28,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
@@ -36,13 +40,24 @@ import com.helddertierwelt.mentalmath.presentation.theme.red
 @Composable
 fun BackspaceButton(
     onClick: () -> Unit,
+    onPress: () -> Unit,
     iconSize: Dp,
     size: Dp,
     isRightToLeft: Boolean,
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect { interaction ->
+            if (interaction is PressInteraction.Press) {
+                onPress()
+            }
+        }
+    }
 
     Button(
         onClick = onClick,
+        interactionSource = interactionSource,
         shape = CircleShape,
         modifier = Modifier.size(size),
         contentPadding = PaddingValues(0.dp),
@@ -52,7 +67,13 @@ fun BackspaceButton(
         )
     ) {
         Icon(
-            painter = painterResource(if (isRightToLeft) R.drawable.backspace_reverse_24dp else R.drawable.backspace_24dp),
+            painter = painterResource(
+                if (isRightToLeft) {
+                    R.drawable.backspace_reverse_24dp
+                } else {
+                    R.drawable.backspace_24dp
+                }
+            ),
             contentDescription = "Backspace",
             modifier = Modifier.size(iconSize),
             tint = MaterialTheme.colorScheme.onSecondary

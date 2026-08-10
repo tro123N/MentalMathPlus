@@ -56,6 +56,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.sound.SoundType
 import com.helddertierwelt.mentalmath.presentation.component.game.BackspaceButton
 import com.helddertierwelt.mentalmath.presentation.component.game.EnterButton
 import com.helddertierwelt.mentalmath.presentation.component.game.GameTopBar
@@ -68,8 +69,8 @@ import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import kotlin.math.roundToInt
 
 @Composable
@@ -208,6 +209,9 @@ fun GameScreen(
                             upperNumberRow.forEach { number ->
                                 NumberButton(
                                     number = number,
+                                    onPress = {
+                                        gameViewModel.playSound(SoundType.CLICK)
+                                    },
                                     onClick = {
                                         if (isRightToLeft) {
                                             gameViewModel.addFirstDigit(number)
@@ -228,6 +232,9 @@ fun GameScreen(
                             (4..6).forEach { number ->
                                 NumberButton(
                                     number = number,
+                                    onPress = {
+                                        gameViewModel.playSound(SoundType.CLICK)
+                                    },
                                     onClick = {
                                         if (isRightToLeft) {
                                             gameViewModel.addFirstDigit(number)
@@ -248,6 +255,9 @@ fun GameScreen(
                             (lowerNumberRow).forEach { number ->
                                 NumberButton(
                                     number = number,
+                                    onPress = {
+                                        gameViewModel.playSound(SoundType.CLICK)
+                                    },
                                     onClick = {
                                         if (isRightToLeft) {
                                             gameViewModel.addFirstDigit(number)
@@ -267,6 +277,9 @@ fun GameScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         BackspaceButton(
+                            onPress = {
+                                gameViewModel.playSound(SoundType.CLICK)
+                            },
                             onClick = {
                                 if (isRightToLeft) {
                                     gameViewModel.removeFirstDigit()
@@ -280,6 +293,9 @@ fun GameScreen(
                         )
                         NumberButton(
                             number = 0,
+                            onPress = {
+                                gameViewModel.playSound(SoundType.CLICK)
+                            },
                             onClick = {
                                 if (isRightToLeft) {
                                     gameViewModel.addFirstDigit(0)

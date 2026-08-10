@@ -18,6 +18,8 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.game
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -25,6 +27,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -34,12 +38,23 @@ import androidx.compose.ui.unit.dp
 fun NumberButton(
     number: Int,
     onClick: () -> Unit,
+    onPress: () -> Unit,
     size: Dp,
     fontSize: TextUnit,
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect { interaction ->
+            if (interaction is PressInteraction.Press) {
+                onPress()
+            }
+        }
+    }
 
     Button(
         onClick = onClick,
+        interactionSource = interactionSource,
         shape = CircleShape,
         modifier = Modifier.size(size),
         contentPadding = PaddingValues(0.dp)

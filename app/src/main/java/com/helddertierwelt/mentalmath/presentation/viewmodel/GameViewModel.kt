@@ -73,7 +73,6 @@ class GameViewModel @Inject constructor(
 
 
     fun addLastDigit(number: Int) {
-        playSound(SoundType.CLICK)
         if (_gameState.value.input.length < 7) {
             if (_gameState.value.input == "0") {
                 clearInput()
@@ -83,21 +82,18 @@ class GameViewModel @Inject constructor(
     }
 
     fun addFirstDigit(number: Int) {
-        playSound(SoundType.CLICK)
         if (_gameState.value.input.length < 7) {
             saveState(_gameState.value.copy(input = number.toString() + _gameState.value.input))
         }
     }
 
     fun removeFirstDigit() {
-        playSound(SoundType.CLICK)
         if (_gameState.value.input.isNotEmpty()) {
             saveState(_gameState.value.copy(input = _gameState.value.input.drop(1)))
         }
     }
 
     fun removeLastDigit() {
-        playSound(SoundType.CLICK)
         if (_gameState.value.input.isNotEmpty()) {
             saveState(_gameState.value.copy(input = _gameState.value.input.dropLast(1)))
         }
