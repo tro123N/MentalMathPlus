@@ -36,7 +36,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import kotlin.math.ceil
 
 @Composable
@@ -47,7 +47,7 @@ fun CountdownTimer(
 ) {
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
     val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
-    val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
+    val resultViewModel: ResultViewModel = hiltViewModel(viewModelStoreOwner)
     val timeLeft = time - gameViewModel.gameState.collectAsState().value.activeTime
     var formattedTime by remember { mutableStateOf(formatTime(timeLeft)) }
 
@@ -55,9 +55,9 @@ fun CountdownTimer(
         formattedTime = formatTime(timeLeft)
         if (timeLeft <= 0) {
             gameViewModel.endGame()
-            statisticsViewModel.setShowLoadedGameRecord(false)
+            resultViewModel.setShowLoadedGameRecord(false)
             val isLinkGame = gameViewModel.gameState.value.isLinkGame
-            if (isLinkGame) statisticsViewModel.setShowLinkGamePopUp(true)
+            if (isLinkGame) resultViewModel.setShowLinkGamePopUp(true)
             navController.navigate("statistics") {
                 popUpTo(0) { inclusive = true }
                 launchSingleTop = true

@@ -16,12 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.presentation.component.statistics.stats
+package com.helddertierwelt.mentalmath.presentation.component.result.summary
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,8 +37,8 @@ import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -45,24 +46,25 @@ import com.helddertierwelt.mentalmath.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScoreRow(
-    score: String,
-    rank: Int?,
-    scoreFontSize: TextUnit,
-    scoreIconSize: Dp,
-    modifier: Modifier = Modifier,
-    iconColor: Color = Color.Unspecified,
-    tooltipText: String = "Score"
+fun ModeColumn(
+    modeEnabled: Boolean,
+    fontSize: TextUnit,
+    iconSize: Dp,
+    limit: Int
 ) {
+
+    val tooltipText = if (modeEnabled) {
+        stringResource(R.string.problem_limit)
+    } else {
+        stringResource(R.string.time_limit)
+    }
     val tooltipState = rememberTooltipState()
-    val isTop10 = rank != null
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding( top = 8.dp, bottom = 16.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+    Column(
+        modifier = Modifier.fillMaxHeight(),
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(8.dp))
 
         TooltipBox(
             state = tooltipState,
@@ -78,26 +80,23 @@ fun ScoreRow(
             }
         ) {
             Icon(
-                painter = painterResource(R.drawable.star_24dp),
+                painter = painterResource(
+                    if (modeEnabled)
+                        R.drawable.tag_24dp
+                    else
+                        R.drawable.hourglass_bottom_24dp
+                ),
                 contentDescription = tooltipText,
-                modifier = Modifier.size(scoreIconSize),
-                tint = iconColor
+                modifier = Modifier.size(iconSize),
+                tint = MaterialTheme.colorScheme.onPrimary
             )
         }
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = score,
-            fontSize = scoreFontSize,
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+            text = if (modeEnabled) "${limit * 10}" else "${limit}:00",
+            fontSize = fontSize,
             color = MaterialTheme.colorScheme.onPrimary
         )
-        if (isTop10) {
-
-            Text(
-                text = "#$rank",
-                fontSize = scoreFontSize * 0.7f,
-                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f),
-                modifier = Modifier.padding(start = 8.dp)
-            )
-        }
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }

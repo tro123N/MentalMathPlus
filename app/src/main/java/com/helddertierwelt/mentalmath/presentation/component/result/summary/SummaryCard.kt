@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.presentation.component.statistics.stats
+package com.helddertierwelt.mentalmath.presentation.component.result.summary
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -53,11 +53,11 @@ import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import kotlin.math.roundToInt
 
 @Composable
-fun SettingsAndStatsCard(
+fun SummaryCard(
     scoreFontSize: TextUnit,
     statsFontSize: TextUnit,
     scoreIconSize: Dp,
@@ -65,21 +65,21 @@ fun SettingsAndStatsCard(
     modifier: Modifier
 ) {
     val activity = LocalActivity.current as ViewModelStoreOwner
-    val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
+    val resultViewModel: ResultViewModel = hiltViewModel(activity)
     val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
     val lineHeight = statsFontSize / 1.6f
     val themeMode = settingsViewModel.settingsState.collectAsState().value.themeMode
 
     val statisticsGameRecord =
-        if (statisticsViewModel.showLoadedGameRecord.collectAsState().value) {
-            statisticsViewModel.loadedGameRecord.collectAsState().value
+        if (resultViewModel.showLoadedGameRecord.collectAsState().value) {
+            resultViewModel.loadedGameRecord.collectAsState().value
         } else {
-            statisticsViewModel.lastGameRecord.collectAsState().value
+            resultViewModel.lastGameRecord.collectAsState().value
         }
     val correctAnswers = statisticsGameRecord.correctAnswers
 
     LaunchedEffect(Unit) {
-        statisticsViewModel.loadBestGameScores()
+        resultViewModel.loadBestGameScores()
     }
 
     Card(
@@ -119,7 +119,7 @@ fun SettingsAndStatsCard(
                     .padding(16.dp, 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                SettingsModeColumn(
+                ModeColumn(
                     modeEnabled = statisticsGameRecord.isModeEnabled,
                     fontSize = statsFontSize,
                     iconSize = statsIconSize,
@@ -132,7 +132,7 @@ fun SettingsAndStatsCard(
                     additionRange.first == additionRange.second -> additionRange.first.toString()
                     else -> "${additionRange.first}-${additionRange.second}"
                 }
-                StatsColumn(
+                IconTextColumn(
                     fontSize = statsFontSize,
                     statsText = additionRangeString,
                     iconId = R.drawable.addition_24dp,
@@ -147,7 +147,7 @@ fun SettingsAndStatsCard(
                     subtractionRange.first == subtractionRange.second -> subtractionRange.first.toString()
                     else -> "${subtractionRange.first}-${subtractionRange.second}"
                 }
-                StatsColumn(
+                IconTextColumn(
                     fontSize = statsFontSize,
                     statsText = subtractionRangeString,
                     iconId = R.drawable.subtraction_24dp,
@@ -162,7 +162,7 @@ fun SettingsAndStatsCard(
                     multiplicationRange.first == multiplicationRange.second -> multiplicationRange.first.toString()
                     else -> "${multiplicationRange.first}-${multiplicationRange.second}"
                 }
-                StatsColumn(
+                IconTextColumn(
                     fontSize = statsFontSize,
                     statsText = multiplicationRangeString,
                     iconId = R.drawable.multiplication_24dp,
@@ -177,7 +177,7 @@ fun SettingsAndStatsCard(
                     divisionRange.first == divisionRange.second -> divisionRange.first.toString()
                     else -> "${divisionRange.first}-${divisionRange.second}"
                 }
-                StatsColumn(
+                IconTextColumn(
                     fontSize = statsFontSize,
                     statsText = divisionRangeString,
                     iconId = R.drawable.division_24dp,
@@ -203,7 +203,7 @@ fun SettingsAndStatsCard(
                     totalAnswers = statisticsGameRecord.totalAnswers,
                     activeTime = statisticsGameRecord.activeTime
                 )
-                StatsColumn(
+                IconTextColumn(
                     fontSize = statsFontSize,
                     statsText = correctAnswers.toString(),
                     iconId = R.drawable.check_24dp,
@@ -211,7 +211,7 @@ fun SettingsAndStatsCard(
                     iconColor = green,
                     tooltipText = stringResource(R.string.correct_answers)
                 )
-                StatsColumn(
+                IconTextColumn(
                     fontSize = statsFontSize,
                     statsText = (statisticsGameRecord.totalAnswers - correctAnswers).toString(),
                     iconId = R.drawable.close_24dp,
@@ -222,7 +222,7 @@ fun SettingsAndStatsCard(
 
                 val percentage = correctAnswers.toFloat() / statisticsGameRecord.totalAnswers.toFloat() * 100f
                 val percentageString = if (percentage.isNaN()) "-" else AppLocale.format("%.1f", percentage)
-                StatsColumn(
+                IconTextColumn(
                     fontSize = statsFontSize,
                     statsText = percentageString,
                     iconId = R.drawable.percent_24dp,
@@ -237,7 +237,7 @@ fun SettingsAndStatsCard(
                     ThemeMode.LIGHT -> false
                     ThemeMode.SYSTEM -> isSystemInDarkTheme()
                 }
-                StatsColumn(
+                IconTextColumn(
                     fontSize = statsFontSize,
                     statsText = timePerCorrectAnswer,
                     iconId = if (darkTheme) R.drawable.timer_dark_24dp else R.drawable.timer_light_24dp,
@@ -251,7 +251,7 @@ fun SettingsAndStatsCard(
             )
             Spacer(modifier = modifier.height(8.dp))
 
-            val top10 = statisticsViewModel.bestGameScore.collectAsState().value
+            val top10 = resultViewModel.bestGameScore.collectAsState().value
             val rank = top10.indexOfFirst { it.id == statisticsGameRecord.id }
             val top10Rank = if (rank >= 0) rank + 1 else null
             val activeScore = formatScore(statisticsGameRecord.activeScore)

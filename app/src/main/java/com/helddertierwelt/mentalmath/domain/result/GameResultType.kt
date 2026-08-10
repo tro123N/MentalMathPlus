@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.domain.statistics
+package com.helddertierwelt.mentalmath.domain.result
 
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.settings.AppLocale
-import com.helddertierwelt.mentalmath.presentation.component.statistics.stats.formatScore
+import com.helddertierwelt.mentalmath.presentation.component.result.summary.formatScore
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red

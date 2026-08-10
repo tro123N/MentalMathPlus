@@ -84,7 +84,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.HistoryViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import kotlinx.coroutines.launch
 import java.security.SecureRandom
 
@@ -97,7 +97,7 @@ fun MenuSideSheet(
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
     val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
     val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
-    val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
+    val resultViewModel: ResultViewModel = hiltViewModel(viewModelStoreOwner)
     val historyViewModel: HistoryViewModel = hiltViewModel(viewModelStoreOwner)
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -251,7 +251,7 @@ fun MenuSideSheet(
                     // Random Game
                     fun startRandomGame() {
                         settingsViewModel.setIsRandomGameButtonClicked(true)
-                        statisticsViewModel.setShowLinkGamePopUp(false)
+                        resultViewModel.setShowLinkGamePopUp(false)
                         gameViewModel.reset()
                         settingsViewModel.applyRandomSettings()
                         gameViewModel.setSettings(settingsViewModel.settingsState.value)
@@ -422,7 +422,7 @@ fun MenuSideSheet(
                     )
 
                     // Sound
-                    /*CycleToggleRow(
+                    CycleToggleRow(
                         fontSize = fontSize,
                         iconSize = iconSize,
                         currentValue = settingsViewModel.settingsState.collectAsState().value.isSoundEnabled,
@@ -439,7 +439,7 @@ fun MenuSideSheet(
                                 textRes = R.string.sound_off
                             )
                         )
-                    )*/
+                    ) 
 
                     // Language
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

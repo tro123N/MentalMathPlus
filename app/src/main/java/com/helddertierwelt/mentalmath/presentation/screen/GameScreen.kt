@@ -69,7 +69,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import kotlin.math.roundToInt
 
 @Composable
@@ -96,7 +96,7 @@ fun GameScreen(
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
     val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
     val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
-    val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
+    val resultViewModel: ResultViewModel = hiltViewModel(viewModelStoreOwner)
 
     // variables
     val settingsState = settingsViewModel.settingsState.collectAsState().value
@@ -300,9 +300,9 @@ fun GameScreen(
                                 if (settingsState.isModeEnabled && totalAnswers == totalProblems) {
                                     gameViewModel.endGame()
                                     if (isLinkGame) {
-                                        statisticsViewModel.setShowLinkGamePopUp(true)
+                                        resultViewModel.setShowLinkGamePopUp(true)
                                     }
-                                    statisticsViewModel.setShowLoadedGameRecord(false)
+                                    resultViewModel.setShowLoadedGameRecord(false)
                                     navController.navigate("statistics") {
                                         popUpTo(0) { inclusive = true }
                                         launchSingleTop = true

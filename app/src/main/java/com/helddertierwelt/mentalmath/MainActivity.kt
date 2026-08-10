@@ -22,7 +22,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -30,9 +29,9 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
@@ -52,8 +51,8 @@ import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.MainActivityViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -62,33 +61,29 @@ class MainActivity : ComponentActivity() {
 
     private val gameViewModel: GameViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
-    private val statisticsViewModel: StatisticsViewModel by viewModels()
+    private val resultViewModel: ResultViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by viewModels()
     private val gameRecordFromAppLink = mutableStateOf(GameRecord())
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Splash Screen as long as settings are loading
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+                !settingsViewModel.isLoaded.value
+            }
+        }
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            lifecycleScope.launch { handleDeepLinkIntent(intent) }
-        }
-        enableEdgeToEdge(
-            navigationBarStyle = SystemBarStyle.auto(
-                lightScrim = Color(0xFFEEEEEE).toArgb(),
-                darkScrim = Color(0xFF1E1E1E).toArgb()
-            )
-        )
-        setContent {
-
-            // Splash Screen as long as settings are loading
-            installSplashScreen().apply {
-                setKeepOnScreenCondition {
-                    !settingsViewModel.isLoaded.value
-                }
+            lifecycleScope.launch {
+                handleDeepLinkIntent(intent)
             }
-
-            val navController = rememberNavController()
+        }
+        enableEdgeToEdge()
+        setContent {
             lifecycle.addObserver(gameViewModel)
-            MentalMathTheme(themeMode = settingsViewModel.settingsState.collectAsState().value.themeMode) {
+            val navController = rememberNavController()
+            val settings by settingsViewModel.settingsState.collectAsState()
+            MentalMathTheme(themeMode = settings.themeMode) {
 
                 // set system bar colors
                 val darkTheme =
@@ -130,7 +125,7 @@ class MainActivity : ComponentActivity() {
                             gameViewModel.setIsLinkGame(true)
                             settingsViewModel.applySettingsFromLink(gameRecordFromAppLink.value)
                             gameViewModel.setSettings(settingsViewModel.settingsState.value)
-                            statisticsViewModel.prepareGameFromLink(gameRecordFromAppLink.value)
+                            resultViewModel.prepareGameFromLink(gameRecordFromAppLink.value)
                             navController.navigate("game") {
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true

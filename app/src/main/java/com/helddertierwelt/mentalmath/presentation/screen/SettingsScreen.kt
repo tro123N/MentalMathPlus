@@ -69,7 +69,7 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.HistoryViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.MainActivityViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import java.security.SecureRandom
 
 @Composable
@@ -99,7 +99,7 @@ fun SettingsScreen(
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
     val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
     val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
-    val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
+    val resultViewModel: ResultViewModel = hiltViewModel(viewModelStoreOwner)
     val historyViewModel: HistoryViewModel = hiltViewModel(viewModelStoreOwner)
     val mainActivityViewModel: MainActivityViewModel = hiltViewModel(viewModelStoreOwner)
 
@@ -340,7 +340,7 @@ fun SettingsScreen(
                     StartButton(
                         onClick = {
                             settingsViewModel.setIsStartButtonClicked(true)
-                            statisticsViewModel.setShowLinkGamePopUp(false)
+                            resultViewModel.setShowLinkGamePopUp(false)
                             gameViewModel.reset()
                             val validSettings = gameViewModel.setSettings(settingsViewModel.settingsState.value)
                             if (validSettings) {
@@ -406,7 +406,7 @@ fun SettingsScreen(
                 gameViewModel.resetGameData()
                 settingsViewModel.resetSettings()
                 NotificationScheduler.cancelNotificationWork(context)
-                statisticsViewModel.resetStatistics()
+                resultViewModel.resetStatistics()
                 historyViewModel.resetHistory()
                 mainActivityViewModel.resetMainActivity()
             },

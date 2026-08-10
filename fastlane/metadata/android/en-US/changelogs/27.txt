@@ -4,4 +4,5 @@
 - Added Serbian translation reviewed by Svetislav. Thank you! :)
 - Added Croatian translation reviewed by Ana. Thank you! :)
 - Redesigned the problem overview again to reduce confusion.
-- Added tooltips for the status icons in the problem-overview.
+- Improved the problem overview for problems that span multiple lines.
+- Added tooltips for the status icons in the problem overview.

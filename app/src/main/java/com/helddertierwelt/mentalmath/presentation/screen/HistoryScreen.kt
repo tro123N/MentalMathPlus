@@ -50,7 +50,7 @@ import com.helddertierwelt.mentalmath.presentation.component.history.HistoryEntr
 import com.helddertierwelt.mentalmath.presentation.component.history.HistoryHeadCard
 import com.helddertierwelt.mentalmath.presentation.component.history.HistoryTopBar
 import com.helddertierwelt.mentalmath.presentation.viewmodel.HistoryViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 
 @Composable
 fun HistoryScreen(
@@ -59,7 +59,7 @@ fun HistoryScreen(
     // viewModels
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
     val historyViewModel: HistoryViewModel = hiltViewModel(viewModelStoreOwner)
-    val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
+    val resultViewModel: ResultViewModel = hiltViewModel(viewModelStoreOwner)
 
     // font and icon sizes
     val screenHeight = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
@@ -120,10 +120,10 @@ fun HistoryScreen(
                             isEnabled = !isEntryClicked,
                             onClick = { gameRecordId ->
                                 historyViewModel.setIsEntryClicked(true)
-                                statisticsViewModel.setNavigatedFromHistory(true)
-                                statisticsViewModel.setLoadedGameRecord(gameRecordId)
-                                statisticsViewModel.setShowLoadedGameRecord(true)
-                                statisticsViewModel.setShowLinkGamePopUp(false)
+                                resultViewModel.setNavigatedFromHistory(true)
+                                resultViewModel.setLoadedGameRecord(gameRecordId)
+                                resultViewModel.setShowLoadedGameRecord(true)
+                                resultViewModel.setShowLinkGamePopUp(false)
                                 navController.navigate("statistics")
                             }
                         )

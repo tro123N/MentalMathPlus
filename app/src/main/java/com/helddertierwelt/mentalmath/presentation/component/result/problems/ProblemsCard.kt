@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.presentation.component.statistics.problems
+package com.helddertierwelt.mentalmath.presentation.component.result.problems
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Row
@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -45,7 +46,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.game.ProblemStatus
 import com.helddertierwelt.mentalmath.presentation.theme.blue
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 
 @Composable
 fun ProblemsCard(
@@ -55,12 +56,12 @@ fun ProblemsCard(
 ) {
 
     val activity = LocalActivity.current as ViewModelStoreOwner
-    val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
+    val resultViewModel: ResultViewModel = hiltViewModel(activity)
     val solvedProblems =
-        if (statisticsViewModel.showLoadedGameRecord.collectAsState().value) {
-            statisticsViewModel.loadedGameRecord.collectAsState().value.solvedProblems
+        if (resultViewModel.showLoadedGameRecord.collectAsState().value) {
+            resultViewModel.loadedGameRecord.collectAsState().value.solvedProblems
         } else {
-            statisticsViewModel.lastGameRecord.collectAsState().value.solvedProblems
+            resultViewModel.lastGameRecord.collectAsState().value.solvedProblems
         }
 
     Card(
@@ -116,13 +117,19 @@ fun ProblemsCard(
                     else -> ProblemStatus.INCORRECT
                 }
 
-                ProblemRow(
-                    modifier = Modifier.padding(16.dp, 4.dp),
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp)
                 ) {
                     ProblemResult(
                         problem = problem,
-                        status = status, fontSize = resultFontSize
+                        status = status,
+                        fontSize = resultFontSize,
+                        modifier = Modifier.weight(1f)
                     )
+                    Spacer(modifier = Modifier.width(8.dp))
                     ProblemStatusIcon(
                         status = status,
                         iconSize = resultIconSize

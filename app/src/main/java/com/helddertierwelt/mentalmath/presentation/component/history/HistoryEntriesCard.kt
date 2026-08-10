@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
-import com.helddertierwelt.mentalmath.presentation.component.statistics.stats.formatScore
+import com.helddertierwelt.mentalmath.presentation.component.result.summary.formatScore
 
 @Composable
 fun HistoryEntriesCard(

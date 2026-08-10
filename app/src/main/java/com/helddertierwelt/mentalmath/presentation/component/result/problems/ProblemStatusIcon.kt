@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.presentation.component.statistics.problems
+package com.helddertierwelt.mentalmath.presentation.component.result.problems
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,7 +50,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.yellow
 @Composable
 fun ProblemStatusIcon(
     status: ProblemStatus,
-    iconSize: Dp
+    iconSize: Dp,
 ) {
     val tooltipState = rememberTooltipState()
 

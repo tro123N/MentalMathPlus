@@ -38,7 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.data.entity.GameScore
-import com.helddertierwelt.mentalmath.presentation.component.statistics.stats.formatScore
+import com.helddertierwelt.mentalmath.presentation.component.result.summary.formatScore
 import com.helddertierwelt.mentalmath.presentation.theme.green
 
 @Composable

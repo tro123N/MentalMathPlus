@@ -34,15 +34,15 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 
 @Composable
 fun Navigation(
     navController: NavHostController
 ) {
     val activity = LocalActivity.current as ViewModelStoreOwner
-    val statisticsViewModel: StatisticsViewModel = hiltViewModel(activity)
-    val showLoadedGameRecord = statisticsViewModel.showLoadedGameRecord.collectAsState().value
+    val resultViewModel: ResultViewModel = hiltViewModel(activity)
+    val showLoadedGameRecord = resultViewModel.showLoadedGameRecord.collectAsState().value
 
     Box(
         modifier = Modifier

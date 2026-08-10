@@ -69,16 +69,16 @@ import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.settings.AppLocale
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil
-import com.helddertierwelt.mentalmath.domain.statistics.GameResultInfoGenerator.getGamePopUpInfo
+import com.helddertierwelt.mentalmath.domain.result.GameResultInfoGenerator.getGamePopUpInfo
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
-import com.helddertierwelt.mentalmath.presentation.component.statistics.DoneButton
-import com.helddertierwelt.mentalmath.presentation.component.statistics.problems.ProblemsCard
-import com.helddertierwelt.mentalmath.presentation.component.statistics.stats.SettingsAndStatsCard
-import com.helddertierwelt.mentalmath.presentation.component.statistics.StatisticsTopBar
-import com.helddertierwelt.mentalmath.presentation.component.statistics.stats.formatScore
+import com.helddertierwelt.mentalmath.presentation.component.result.DoneButton
+import com.helddertierwelt.mentalmath.presentation.component.result.problems.ProblemsCard
+import com.helddertierwelt.mentalmath.presentation.component.result.summary.SummaryCard
+import com.helddertierwelt.mentalmath.presentation.component.result.StatisticsTopBar
+import com.helddertierwelt.mentalmath.presentation.component.result.summary.formatScore
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -105,19 +105,19 @@ fun StatisticsScreen(
     // viewModels
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
     val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
-    val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
+    val resultViewModel: ResultViewModel = hiltViewModel(viewModelStoreOwner)
 
     // variables
     val shareChallengeText = stringResource(R.string.share_challenge)
     var statsCardCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
     var hasCapturedCoordinates by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
-    val navigatedFromHistory = statisticsViewModel.navigatedFromHistory.collectAsState().value
+    val navigatedFromHistory = resultViewModel.navigatedFromHistory.collectAsState().value
     val statisticsGameRecord =
-        if (statisticsViewModel.showLoadedGameRecord.collectAsState().value) {
-            statisticsViewModel.loadedGameRecord.collectAsState().value
+        if (resultViewModel.showLoadedGameRecord.collectAsState().value) {
+            resultViewModel.loadedGameRecord.collectAsState().value
         } else {
-            statisticsViewModel.lastGameRecord.collectAsState().value
+            resultViewModel.lastGameRecord.collectAsState().value
         }
 
     fun captureSettingsCardBitmap(): Bitmap? {
@@ -174,7 +174,7 @@ fun StatisticsScreen(
 
     fun navigateBack() {
         if (navigatedFromHistory) {
-            statisticsViewModel.setNavigatedFromHistory(false)
+            resultViewModel.setNavigatedFromHistory(false)
             navController.navigate("history") {
                 popUpTo(0) { inclusive = true }
                 launchSingleTop = true
@@ -235,7 +235,7 @@ fun StatisticsScreen(
                         verticalArrangement = Arrangement.Top,
                         horizontalAlignment = Alignment.Start
                     ) {
-                        SettingsAndStatsCard(
+                        SummaryCard(
                             scoreFontSize = titleFontSize,
                             statsFontSize = resultFontSize,
                             scoreIconSize = doneIconSize,
@@ -271,10 +271,10 @@ fun StatisticsScreen(
         }
     )
 
-    val showLinkGamePopUp by statisticsViewModel.showLinkGamePopUp.collectAsState()
-    val seed by statisticsViewModel.seedFromLink.collectAsState()
-    val linkScore by statisticsViewModel.scoreFromLink.collectAsState()
-    val currentScore = statisticsViewModel.lastGameRecord.collectAsState().value.activeScore
+    val showLinkGamePopUp by resultViewModel.showLinkGamePopUp.collectAsState()
+    val seed by resultViewModel.seedFromLink.collectAsState()
+    val linkScore by resultViewModel.scoreFromLink.collectAsState()
+    val currentScore = resultViewModel.lastGameRecord.collectAsState().value.activeScore
     if (showLinkGamePopUp) {
         val gamePopUpInfo = getGamePopUpInfo(currentScore, linkScore, seed)
         val shareMessage = if (linkScore < 0f) {
@@ -299,8 +299,8 @@ fun StatisticsScreen(
             },
             confirmColor = green,
             dismissColor = green,
-            onDismissRequest = { statisticsViewModel.setShowLinkGamePopUp(false) },
-            onCancel = { statisticsViewModel.setShowLinkGamePopUp(false) },
+            onDismissRequest = { resultViewModel.setShowLinkGamePopUp(false) },
+            onCancel = { resultViewModel.setShowLinkGamePopUp(false) },
             onConfirm = {
                 coroutineScope.launch {
                     scrollState.animateScrollTo(0)

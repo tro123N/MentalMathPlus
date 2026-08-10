@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class StatisticsViewModel @Inject constructor(
+class ResultViewModel @Inject constructor(
     private val gameRecordRepository: GameRecordRepository
 ) : ViewModel() {
 

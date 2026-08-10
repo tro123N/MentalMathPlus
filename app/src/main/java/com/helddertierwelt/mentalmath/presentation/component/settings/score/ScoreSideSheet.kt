@@ -72,7 +72,7 @@ import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.StatisticsViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -82,7 +82,7 @@ fun ScoreSideSheet(
     navController: NavController,
 ) {
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
-    val statisticsViewModel: StatisticsViewModel = hiltViewModel(viewModelStoreOwner)
+    val resultViewModel: ResultViewModel = hiltViewModel(viewModelStoreOwner)
     val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
 
     val coroutineScope = rememberCoroutineScope()
@@ -174,7 +174,7 @@ fun ScoreSideSheet(
                 modifier = Modifier.fillMaxSize()
             ) {
                 val hasGamesWithScore by settingsViewModel.hasGamesWithScore.collectAsState()
-                val lastGameId = statisticsViewModel.lastGameRecord.collectAsState().value.id
+                val lastGameId = resultViewModel.lastGameRecord.collectAsState().value.id
                 Spacer(modifier = Modifier.height(16.dp))
                 if (hasGamesWithScore) {
                     Row(
@@ -209,9 +209,9 @@ fun ScoreSideSheet(
                         isEnabled = !isScoreClicked,
                         onClick = { gameRecord ->
                             settingsViewModel.setIsScoreClicked(true)
-                            statisticsViewModel.setLoadedGameRecord(gameRecord.id)
-                            statisticsViewModel.setShowLoadedGameRecord(true)
-                            statisticsViewModel.setShowLinkGamePopUp(false)
+                            resultViewModel.setLoadedGameRecord(gameRecord.id)
+                            resultViewModel.setShowLoadedGameRecord(true)
+                            resultViewModel.setShowLinkGamePopUp(false)
 
                             navController.navigate("statistics") {
                                 popUpTo(0) { inclusive = true }
