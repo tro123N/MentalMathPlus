@@ -83,8 +83,8 @@ import com.helddertierwelt.mentalmath.domain.settings.ToggleOption
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.HistoryViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import kotlinx.coroutines.launch
 import java.security.SecureRandom
 
@@ -422,7 +422,7 @@ fun MenuSideSheet(
                     )
 
                     // Sound
-                    CycleToggleRow(
+                    /*CycleToggleRow(
                         fontSize = fontSize,
                         iconSize = iconSize,
                         currentValue = settingsViewModel.settingsState.collectAsState().value.isSoundEnabled,
@@ -439,7 +439,7 @@ fun MenuSideSheet(
                                 textRes = R.string.sound_off
                             )
                         )
-                    ) 
+                    ) */
 
                     // Language
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
