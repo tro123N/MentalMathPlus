@@ -86,8 +86,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            isShrinkResources = false
+            isMinifyEnabled = true
+            isShrinkResources = true
         }
     }
 
@@ -102,7 +102,6 @@ android {
     }
 
     packaging {
-        jniLibs.keepDebugSymbols += "**/*.so"
         resources {
             excludes += "assets/dexopt/baseline.prof"
             excludes += "assets/dexopt/baseline.profm"

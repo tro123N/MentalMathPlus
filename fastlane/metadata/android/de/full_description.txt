@@ -27,6 +27,9 @@ Du kannst den kompletten Spielverlauf all deiner Spiele mit Punktzahl einsehen. 
 Übungs-Erinnerungen
 Erhalte regelmäßige Erinnerungen für dein Kopfrechentraining. Die Benachrichtigungen werden am frühen Abend (nach 18 Uhr) gesendet und können täglich, alle drei Tage oder wöchentlich geplant werden.
 
+Anpassbare Benutzeroberfläche
+Wähle deine bevorzugte Eingabemethode (Ziffernblock oder Telefon-Tastatur), zeige die Aufgaben horizontal oder vertikal an und passe die Eingaberichtung (links-nach-rechts oder rechts-nach-links) an deine persönlichen Vorlieben an.
+
 Übersichtliches Design
 Die App besitzt ein einfaches und minimalistisches Design ohne unnötige Elemente, damit du dich voll und ganz auf das Kopfrechentraining konzentrieren kannst. Es wird sowohl ein Light- als auch ein Dark-Mode unterstützt.
 
