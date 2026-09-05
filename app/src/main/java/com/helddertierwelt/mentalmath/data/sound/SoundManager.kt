@@ -41,8 +41,8 @@ class SoundManager @Inject constructor(
     )
 
     private val sounds = mapOf(
-        SoundType.ENABLE to Sound(soundPool.load(context, R.raw.backspace, 1), volume = 1f),
-        SoundType.DISABLE to Sound(soundPool.load(context, R.raw.backspace, 1), volume = 1f),
+        SoundType.ENABLE to Sound(soundPool.load(context, R.raw.enable, 1), volume = 1f),
+        SoundType.DISABLE to Sound(soundPool.load(context, R.raw.disable, 1), volume = 1f),
         SoundType.SLIDER to Sound(soundPool.load(context, R.raw.slider, 1), volume = 1f),
         SoundType.START to Sound(soundPool.load(context, R.raw.start, 1), volume = 1f),
         SoundType.NUMPAD to Sound(soundPool.load(context, R.raw.numpad, 1), volume = 1f),

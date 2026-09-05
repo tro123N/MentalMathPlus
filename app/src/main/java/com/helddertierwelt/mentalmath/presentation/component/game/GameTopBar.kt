@@ -41,8 +41,6 @@ import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
-import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,7 +51,6 @@ fun GameTopBar(
 ) {
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
     val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
-    val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
 
     TopAppBar(
         title = {},
@@ -81,8 +78,8 @@ fun GameTopBar(
             }
         },
         actions = {
-            if (settingsViewModel.settingsState.collectAsState().value.isModeEnabled) {
-                val totalTasks = (settingsViewModel.settingsState.collectAsState().value.limit * 10).roundToInt()
+            if (gameViewModel.gameState.collectAsState().value.isModeEnabled) {
+                val totalTasks = (gameViewModel.gameState.collectAsState().value.modeLimit * 10)
                 val answeredTasks = gameViewModel.gameState.collectAsState().value.totalAnswers
                 Text(
                     text = "$answeredTasks/$totalTasks",
@@ -94,7 +91,7 @@ fun GameTopBar(
                 CountdownTimer(
                     fontSize = fontSize,
                     navController = navController,
-                    time = settingsViewModel.settingsState.collectAsState().value.limit.toLong() * 60000L,
+                    time = gameViewModel.gameState.collectAsState().value.modeLimit.toLong() * 60000L,
                 )
             }
         },
