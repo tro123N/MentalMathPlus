@@ -255,19 +255,18 @@ class GameViewModel @Inject constructor(
     }
 
     fun setSettings(settingsState: SettingsState) : Boolean {
-        val enabledOperators = buildMap {
-            if (settingsState.isAdditionEnabled) {
-                put(Operation.ADDITION, settingsState.additionRange)
-            }
-            if (settingsState.isSubtractionEnabled) {
-                put(Operation.SUBTRACTION, settingsState.subtractionRange)
-            }
-            if (settingsState.isMultiplicationEnabled) {
-                put(Operation.MULTIPLICATION, settingsState.multiplicationRange)
-            }
-            if (settingsState.isDivisionEnabled) {
-                put(Operation.DIVISION, settingsState.divisionRange)
-            }
+        val enabledOperators: MutableMap<Operation, Pair<Float, Float>> = mutableMapOf()
+        if (settingsState.isAdditionEnabled) {
+            enabledOperators[Operation.ADDITION] = settingsState.additionRange
+        }
+        if (settingsState.isSubtractionEnabled) {
+            enabledOperators[Operation.SUBTRACTION] = settingsState.subtractionRange
+        }
+        if (settingsState.isMultiplicationEnabled) {
+            enabledOperators[Operation.MULTIPLICATION] = settingsState.multiplicationRange
+        }
+        if (settingsState.isDivisionEnabled) {
+            enabledOperators[Operation.DIVISION] = settingsState.divisionRange
         }
         if (enabledOperators.isEmpty()) return false
 
