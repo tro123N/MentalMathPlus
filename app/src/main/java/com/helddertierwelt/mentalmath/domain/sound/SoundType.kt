@@ -19,10 +19,19 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.domain.sound
 
 enum class SoundType {
-    CLICK,
+    ENABLE,
+    DISABLE,
+    SLIDER,
+    START,
+    NUMPAD,
+    BACKSPACE,
     CORRECT,
     SKIPPED,
     WRONG,
-    CANCEL,
-    TIMEUP
+    STOP,
+    NEUTRAL,
+    BAD,
+    OKAY,
+    GOOD,
+    BEST
 }

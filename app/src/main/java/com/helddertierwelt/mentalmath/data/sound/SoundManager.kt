@@ -35,17 +35,39 @@ class SoundManager @Inject constructor(
         .setMaxStreams(5)
         .build()
 
+    private data class Sound(
+        val resourceId: Int,
+        val volume: Float = 1f
+    )
+
     private val sounds = mapOf(
-        SoundType.CORRECT to soundPool.load(context, R.raw.correct1, 1),
-        SoundType.WRONG to soundPool.load(context, R.raw.wrong1, 1),
-        SoundType.SKIPPED to soundPool.load(context, R.raw.skip3, 1),
-        SoundType.CLICK to soundPool.load(context, R.raw.click1_disable, 1),
-        SoundType.CANCEL to soundPool.load(context, R.raw.wrong5, 1),
-        )
+        SoundType.ENABLE to Sound(soundPool.load(context, R.raw.backspace, 1), volume = 1f),
+        SoundType.DISABLE to Sound(soundPool.load(context, R.raw.backspace, 1), volume = 1f),
+        SoundType.SLIDER to Sound(soundPool.load(context, R.raw.slider, 1), volume = 1f),
+        SoundType.START to Sound(soundPool.load(context, R.raw.start, 1), volume = 1f),
+        SoundType.NUMPAD to Sound(soundPool.load(context, R.raw.numpad, 1), volume = 1f),
+        SoundType.BACKSPACE to Sound(soundPool.load(context, R.raw.backspace, 1), volume = 1f),
+        SoundType.CORRECT to Sound(soundPool.load(context, R.raw.correct, 1), volume = 1f),
+        SoundType.SKIPPED to Sound(soundPool.load(context, R.raw.skip, 1), volume = 1f),
+        SoundType.WRONG to Sound(soundPool.load(context, R.raw.wrong, 1), volume = 1f),
+        SoundType.STOP to Sound(soundPool.load(context, R.raw.stop, 1), volume = 1f),
+        SoundType.NEUTRAL to Sound(soundPool.load(context, R.raw.neutral, 1), volume = 1f),
+        SoundType.BAD to Sound(soundPool.load(context, R.raw.bad, 1), volume = 1f),
+        SoundType.OKAY to Sound(soundPool.load(context, R.raw.okay, 1), volume = 1f),
+        SoundType.GOOD to Sound(soundPool.load(context, R.raw.good, 1), volume = 1f),
+        SoundType.BEST to Sound(soundPool.load(context, R.raw.best, 1), volume = 1f),
+    )
 
     fun play(sound: SoundType) {
         sounds[sound]?.let {
-            soundPool.play(it, 1f, 1f, 1, 0, 1f)
+            soundPool.play(
+                it.resourceId,
+                it.volume,
+                it.volume,
+                1,
+                0,
+                1f
+            )
         }
     }
 }

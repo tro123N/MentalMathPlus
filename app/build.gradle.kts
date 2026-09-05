@@ -172,14 +172,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 }
 
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.add(
-            "-Xannotation-default-target=param-property"
-        )
-    }
-}
-
 protobuf {
     protoc {
         artifact = "com.google.protobuf:protoc:3.25.0"

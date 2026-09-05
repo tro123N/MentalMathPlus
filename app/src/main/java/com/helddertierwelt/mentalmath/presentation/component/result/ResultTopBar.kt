@@ -43,7 +43,7 @@ import com.helddertierwelt.mentalmath.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StatisticsTopBar(
+fun ResultTopBar(
     titleId: Int,
     titleFontSize: TextUnit,
     iconSize: Dp,

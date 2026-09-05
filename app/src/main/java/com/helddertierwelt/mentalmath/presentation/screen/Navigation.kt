@@ -79,7 +79,7 @@ fun Navigation(
                         targetOffsetX = { it })
                 }
             ) {
-                StatisticsScreen(
+                ResultScreen(
                     navController = navController
                 )
             }

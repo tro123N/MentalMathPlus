@@ -23,18 +23,23 @@ import androidx.lifecycle.viewModelScope
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.data.entity.GameScore
 import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
+import com.helddertierwelt.mentalmath.domain.sound.SoundController
+import com.helddertierwelt.mentalmath.domain.sound.SoundType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class ResultViewModel @Inject constructor(
-    private val gameRecordRepository: GameRecordRepository
-) : ViewModel() {
+    private val gameRecordRepository: GameRecordRepository,
+    private val soundController: SoundController,
+    ) : ViewModel() {
 
     private val _showLoadedGameRecord = MutableStateFlow(false)
     val showLoadedGameRecord = _showLoadedGameRecord.asStateFlow()
@@ -114,6 +119,17 @@ class ResultViewModel @Inject constructor(
                 gameRecord.divisionRangeEnd
             )
             _bestGameScores.value = resultBestGameScores
+        }
+    }
+
+    fun playSound(sound: SoundType) {
+        soundController.play(sound)
+    }
+
+    fun playResultSound(sound: SoundType) {
+        viewModelScope.launch {
+            delay(550.milliseconds)
+            soundController.play(sound)
         }
     }
 }

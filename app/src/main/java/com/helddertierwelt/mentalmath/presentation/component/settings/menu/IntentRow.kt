@@ -37,6 +37,7 @@ fun IntentRow(
     fontSize: TextUnit,
     iconSize: Dp,
     intentProvider: () -> Intent,
+    onClickSound: () -> Unit,
     errorMessage: String,
     color: Color = MaterialTheme.colorScheme.onPrimary,
     isEnabled: Boolean = true
@@ -52,6 +53,7 @@ fun IntentRow(
         color = color,
         isEnabled = isEnabled
     ) {
+        onClickSound()
         try {
             context.startActivity(intentProvider())
         } catch (_: ActivityNotFoundException) {

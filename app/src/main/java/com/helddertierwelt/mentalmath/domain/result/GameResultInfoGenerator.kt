@@ -44,7 +44,8 @@ object GameResultInfoGenerator {
             icon = type.icon,
             color = type.color,
             title = stringResource(type.title),
-            description = type.getRandomDescription(currentScore, linkScore, seed)
+            description = type.getRandomDescription(currentScore, linkScore, seed),
+            sound = type.sound
         )
     }
 }

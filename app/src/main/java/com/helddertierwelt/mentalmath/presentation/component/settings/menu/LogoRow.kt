@@ -50,6 +50,7 @@ fun LogoRow(
     size: Dp,
     imageId: Int,
     intentProvider: () -> Intent,
+    onClickSound: () -> Unit,
     text: String,
     errorMessage: String,
 ) {
@@ -60,6 +61,7 @@ fun LogoRow(
             .padding(horizontal = 12.dp)
             .clip(RoundedCornerShape(16.dp))
             .clickable {
+                onClickSound()
                 try {
                     context.startActivity(intentProvider())
                 } catch (e: ActivityNotFoundException) {

@@ -104,14 +104,14 @@ class GameViewModel @Inject constructor(
     }
 
     fun toggleIsRightToLeft(): Boolean {
-        playSound(SoundType.CLICK)
+        playSound(SoundType.ENABLE)
         val newValue = !_gameState.value.isRightToLeft
         saveState(_gameState.value.copy(isRightToLeft = newValue))
         return newValue
     }
 
     fun toggleIsVerticalForm(): Boolean {
-        playSound(SoundType.CLICK)
+        playSound(SoundType.ENABLE)
         val newValue = !_gameState.value.isVerticalForm
         saveState(_gameState.value.copy(isVerticalForm = newValue))
         return newValue
@@ -283,6 +283,91 @@ class GameViewModel @Inject constructor(
         return true
     }
 
+    fun setRandomSettings(settingsState: SettingsState) {
+
+        // random mode and limit
+        val isModeEnabled = listOf(true, false).random()
+        val limit = (1..5).random().toFloat()
+
+        // random difficultyRanges
+        val pairs = (1..9).flatMap { a ->
+            (a..9).map { b -> a.toFloat() to b.toFloat() }
+        }
+
+        val additionRange = pairs.random()
+        val subtractionRange = pairs.random()
+        val multiplicationRange = pairs.random()
+        val divisionRange = pairs.random()
+
+        // random selection of operations
+        val operationSelection = (1..15).random()
+
+        val isAdditionEnabled = ((operationSelection shr 0) and 1) == 1
+        val isSubtractionEnabled = ((operationSelection shr 1) and 1) == 1
+        val isMultiplicationEnabled = ((operationSelection shr 2) and 1) == 1
+        val isDivisionEnabled = ((operationSelection shr 3) and 1) == 1
+
+        val enabledOperators = buildMap {
+            if (isAdditionEnabled) {
+                put(Operation.ADDITION, additionRange)
+            }
+            if (isSubtractionEnabled) {
+                put(Operation.SUBTRACTION, subtractionRange)
+            }
+            if (isMultiplicationEnabled) {
+                put(Operation.MULTIPLICATION, multiplicationRange)
+            }
+            if (isDivisionEnabled) {
+                put(Operation.DIVISION, divisionRange)
+            }
+        }
+
+        saveState(
+            _gameState.value.copy(
+                enabledOperators = enabledOperators,
+                isModeEnabled = isModeEnabled,
+                modeLimit = limit.toInt(),
+                isRightToLeft = settingsState.isRightToLeftDefault,
+                isVerticalForm = settingsState.isVerticalFormDefault
+            )
+        )
+    }
+
+    fun setSettingsFromLink(
+        gameRecord: GameRecord,
+        settingsState: SettingsState
+    ) {
+        val additionRange = gameRecord.additionRangeStart.toFloat() to gameRecord.additionRangeEnd.toFloat()
+        val subtractionRange = gameRecord.subtractionRangeStart.toFloat() to gameRecord.subtractionRangeEnd.toFloat()
+        val multiplicationRange = gameRecord.multiplicationRangeStart.toFloat() to gameRecord.multiplicationRangeEnd.toFloat()
+        val divisionRange = gameRecord.divisionRangeStart.toFloat() to gameRecord.divisionRangeEnd.toFloat()
+
+        val enabledOperators = buildMap {
+            if (additionRange.first != 0f && additionRange.second != 0f) {
+                put(Operation.ADDITION, additionRange)
+            }
+            if (subtractionRange.first != 0f && subtractionRange.second != 0f) {
+                put(Operation.SUBTRACTION, subtractionRange)
+            }
+            if (multiplicationRange.first != 0f && multiplicationRange.second != 0f) {
+                put(Operation.MULTIPLICATION, multiplicationRange)
+            }
+            if (divisionRange.first != 0f && divisionRange.second != 0f) {
+                put(Operation.DIVISION, divisionRange)
+            }
+        }
+        if (enabledOperators.isEmpty()) return
+        saveState(
+            _gameState.value.copy(
+                enabledOperators = enabledOperators,
+                isModeEnabled = gameRecord.isModeEnabled,
+                modeLimit = gameRecord.modeLimit,
+                isRightToLeft = settingsState.isRightToLeftDefault,
+                isVerticalForm = settingsState.isVerticalFormDefault
+            )
+        )
+    }
+
     fun setIsLinkGame(isLinkGame: Boolean) {
         saveState(
             _gameState.value.copy(
@@ -421,11 +506,29 @@ class GameViewModel @Inject constructor(
     fun endGame() {
         pauseTimer()
         saveGameRecord()
-        saveState(_gameState.value.copy(isGameStarted = false))
+        val gameState = _gameState.value
+        saveState(gameState.copy(isGameStarted = false))
+
+        if (!gameState.isLinkGame) {
+            val correctPercentage =
+                if (gameState.totalAnswers > 0) {
+                    gameState.correctAnswers.toFloat() / gameState.totalAnswers
+                } else {
+                    0f
+                }
+
+            val sound = when {
+                correctPercentage >= 0.9f -> SoundType.BEST
+                correctPercentage >= 0.8f -> SoundType.GOOD
+                correctPercentage >= 0.5f -> SoundType.OKAY
+                else -> SoundType.BAD
+            }
+            playResultSound(sound)
+        }
     }
 
     fun cancelGame() {
-        playSound(SoundType.CANCEL)
+        playSound(SoundType.STOP)
         pauseTimer()
         saveCancelledGameRecord()
         saveState(_gameState.value.copy(isGameStarted = false))
@@ -433,6 +536,13 @@ class GameViewModel @Inject constructor(
 
     fun playSound(sound: SoundType) {
         soundController.play(sound)
+    }
+
+    fun playResultSound(sound: SoundType) {
+        viewModelScope.launch {
+            delay(550.milliseconds)
+            soundController.play(sound)
+        }
     }
 
     override fun onPause(owner: LifecycleOwner) {

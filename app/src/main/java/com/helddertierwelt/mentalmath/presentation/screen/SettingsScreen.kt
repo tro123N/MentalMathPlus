@@ -52,6 +52,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler
+import com.helddertierwelt.mentalmath.domain.sound.SoundType
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.component.settings.menu.MenuSideSheet
 import com.helddertierwelt.mentalmath.presentation.component.settings.score.ScoreSideSheet
@@ -68,8 +69,8 @@ import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.HistoryViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.MainActivityViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import java.security.SecureRandom
 
 @Composable
@@ -136,8 +137,12 @@ fun SettingsScreen(
         topBar = {
             SettingsTopBar(
                 titleFontSize = titleFontSize,
-                onMenuClick = { settingsViewModel.toggleMenuOpen() },
+                onMenuClick = {
+                    settingsViewModel.playSound(SoundType.ENABLE)
+                    settingsViewModel.toggleMenuOpen()
+                },
                 onScoreClick = {
+                    settingsViewModel.playSound(SoundType.ENABLE)
                     settingsViewModel.loadBestGameScores()
                     settingsViewModel.toggleScoreOpen()
                 },
@@ -339,6 +344,7 @@ fun SettingsScreen(
                     }
                     StartButton(
                         onClick = {
+                            settingsViewModel.playSound(SoundType.START)
                             settingsViewModel.setIsStartButtonClicked(true)
                             resultViewModel.setShowLinkGamePopUp(false)
                             gameViewModel.reset()
@@ -384,10 +390,14 @@ fun SettingsScreen(
         PopUp(
             onDismissRequest = { settingsViewModel.setShowNotificationPermissionPopUp(false) },
             onConfirm = {
+                settingsViewModel.playSound(SoundType.ENABLE)
                 openNotificationSettings(context)
                 settingsViewModel.setShowNotificationPermissionPopUp(false)
             },
-            onCancel = { settingsViewModel.setShowNotificationPermissionPopUp(false) },
+            onCancel = {
+                settingsViewModel.playSound(SoundType.ENABLE)
+                settingsViewModel.setShowNotificationPermissionPopUp(false)
+            },
             titleSize = titleFontSize,
             descriptionSize = popUpDescriptionFontSize,
             title = stringResource(R.string.notification_popup_title),
@@ -403,6 +413,7 @@ fun SettingsScreen(
         PopUp(
             onDismissRequest = { settingsViewModel.setShowResetPopUp(false) },
             onConfirm = {
+                settingsViewModel.playSound(SoundType.STOP)
                 gameViewModel.resetGameData()
                 settingsViewModel.resetSettings()
                 NotificationScheduler.cancelNotificationWork(context)
@@ -410,7 +421,10 @@ fun SettingsScreen(
                 historyViewModel.resetHistory()
                 mainActivityViewModel.resetMainActivity()
             },
-            onCancel = { settingsViewModel.setShowResetPopUp(false) },
+            onCancel = {
+                settingsViewModel.playSound(SoundType.ENABLE)
+                settingsViewModel.setShowResetPopUp(false)
+            },
             titleSize = titleFontSize,
             descriptionSize = popUpDescriptionFontSize,
             title = stringResource(R.string.reset_app_popup_title),

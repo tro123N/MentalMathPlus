@@ -33,6 +33,8 @@ import com.helddertierwelt.mentalmath.data.repository.SettingsRepository
 import com.helddertierwelt.mentalmath.domain.settings.NotificationMode
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
 import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
+import com.helddertierwelt.mentalmath.domain.sound.SoundController
+import com.helddertierwelt.mentalmath.domain.sound.SoundType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,8 +46,9 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val repository: SettingsRepository,
-    private val gameRecordRepository: GameRecordRepository
-) : ViewModel() {
+    private val gameRecordRepository: GameRecordRepository,
+    private val soundController: SoundController,
+    ) : ViewModel() {
 
     private val _isLoaded = MutableStateFlow(false)
     val isLoaded = _isLoaded.asStateFlow()
@@ -93,61 +96,87 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun toggleMode() {
+        playSound(SoundType.ENABLE)
         _settingsState.value =
             _settingsState.value.copy(isModeEnabled = !_settingsState.value.isModeEnabled)
         saveState()
     }
 
     fun updateLimit(value: Float) {
+        playSound(SoundType.SLIDER)
         _settingsState.value = _settingsState.value.copy(limit = value)
         saveState()
     }
 
     fun updatePlusRange(plusRange: ClosedFloatingPointRange<Float>) {
+        playSound(SoundType.SLIDER)
         _settingsState.value =
             _settingsState.value.copy(additionRange = plusRange.start to plusRange.endInclusive)
         saveState()
     }
 
     fun updateMinusRange(minusRange: ClosedFloatingPointRange<Float>) {
+        playSound(SoundType.SLIDER)
         _settingsState.value =
             _settingsState.value.copy(subtractionRange = minusRange.start to minusRange.endInclusive)
         saveState()
     }
 
     fun updateMultiplyRange(multiplyRange: ClosedFloatingPointRange<Float>) {
+        playSound(SoundType.SLIDER)
         _settingsState.value =
             _settingsState.value.copy(multiplicationRange = multiplyRange.start to multiplyRange.endInclusive)
         saveState()
     }
 
     fun updateDivideRange(divideRange: ClosedFloatingPointRange<Float>) {
+        playSound(SoundType.SLIDER)
         _settingsState.value =
             _settingsState.value.copy(divisionRange = divideRange.start to divideRange.endInclusive)
         saveState()
     }
 
     fun toggleAddition() {
-        _settingsState.value =
-            _settingsState.value.copy(isAdditionEnabled = !_settingsState.value.isAdditionEnabled)
+        val newValue = !_settingsState.value.isAdditionEnabled
+        _settingsState.value = _settingsState.value.copy(
+            isAdditionEnabled = newValue
+        )
+        playSound(
+            if (newValue) SoundType.ENABLE else SoundType.DISABLE
+        )
         saveState()
     }
 
     fun toggleSubtraction() {
-        _settingsState.value =
-            _settingsState.value.copy(isSubtractionEnabled = !_settingsState.value.isSubtractionEnabled)
+        val newValue = !_settingsState.value.isSubtractionEnabled
+        _settingsState.value = _settingsState.value.copy(
+            isSubtractionEnabled = newValue
+        )
+        playSound(
+            if (newValue) SoundType.ENABLE else SoundType.DISABLE
+        )
         saveState()
     }
 
     fun toggleMultiplication() {
-        _settingsState.value =
-            _settingsState.value.copy(isMultiplicationEnabled = !_settingsState.value.isMultiplicationEnabled)
+        val newValue = !_settingsState.value.isMultiplicationEnabled
+        _settingsState.value = _settingsState.value.copy(
+            isMultiplicationEnabled = newValue
+        )
+        playSound(
+            if (newValue) SoundType.ENABLE else SoundType.DISABLE
+        )
         saveState()
     }
 
     fun toggleDivide() {
-        _settingsState.value =
-            _settingsState.value.copy(isDivisionEnabled = !_settingsState.value.isDivisionEnabled)
+        val newValue = !_settingsState.value.isDivisionEnabled
+        _settingsState.value = _settingsState.value.copy(
+            isDivisionEnabled = newValue
+        )
+        playSound(
+            if (newValue) SoundType.ENABLE else SoundType.DISABLE
+        )
         saveState()
     }
 
@@ -163,6 +192,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun setThemeMode(mode: ThemeMode) {
+        playSound(SoundType.ENABLE)
         _settingsState.value = _settingsState.value.copy(themeMode = mode)
         saveState()
     }
@@ -215,12 +245,14 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun toggleInputLayout() {
+        playSound(SoundType.ENABLE)
         _settingsState.value =
             _settingsState.value.copy(isNumpadDefault = !_settingsState.value.isNumpadDefault)
         saveState()
     }
 
     fun toggleInputMethod(): Boolean {
+        playSound(SoundType.ENABLE)
         val newValue = !_settingsState.value.isRightToLeftDefault
         _settingsState.value = _settingsState.value.copy(isRightToLeftDefault = newValue)
         saveState()
@@ -228,6 +260,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun toggleForm(): Boolean {
+        playSound(SoundType.ENABLE)
         val newValue = !_settingsState.value.isVerticalFormDefault
         _settingsState.value = _settingsState.value.copy(isVerticalFormDefault = newValue)
         saveState()
@@ -235,6 +268,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun toggleSound() {
+        playSound(SoundType.ENABLE)
         _settingsState.value =
             _settingsState.value.copy(isSoundEnabled = !_settingsState.value.isSoundEnabled)
         saveState()
@@ -341,41 +375,6 @@ class SettingsViewModel @Inject constructor(
         saveState()
     }
 
-    fun applyRandomSettings() {
-
-        // random mode and limit
-        val isModeEnabled = listOf(true, false).random()
-        val limit = (1..5).random().toFloat()
-
-        // random difficultyRanges
-        val pairs = (1..9).flatMap { a -> (a..9).map { b -> a.toFloat() to b.toFloat() } }
-        val additionRange = pairs.random()
-        val subtractionRange = pairs.random()
-        val multiplicationRange = pairs.random()
-        val divisionRange = pairs.random()
-
-        // random selection of operations
-        val operationSelection = (1..15).random()
-        val isAdditionEnabled = ((operationSelection shr 0) and 1) == 1
-        val isSubtractionEnabled = ((operationSelection shr 1) and 1) == 1
-        val isMultiplicationEnabled = ((operationSelection shr 2) and 1) == 1
-        val isDivisionEnabled = ((operationSelection shr 3) and 1) == 1
-
-        _settingsState.value = _settingsState.value.copy(
-            isModeEnabled = isModeEnabled,
-            limit = limit,
-            additionRange = additionRange,
-            subtractionRange = subtractionRange,
-            multiplicationRange = multiplicationRange,
-            divisionRange = divisionRange,
-            isAdditionEnabled = isAdditionEnabled,
-            isSubtractionEnabled = isSubtractionEnabled,
-            isMultiplicationEnabled = isMultiplicationEnabled,
-            isDivisionEnabled = isDivisionEnabled
-        )
-        saveState()
-    }
-
     fun generateSeedLink(seed: Long): String {
         val state = _settingsState.value
         val settingsStringByteArray = listOf(
@@ -394,6 +393,10 @@ class SettingsViewModel @Inject constructor(
 
         val encoded = Base64.encodeToString(settingsStringByteArray, Base64.URL_SAFE or Base64.NO_WRAP)
         return "https://mental-math.codeberg.page/app?s=${encoded}"
+    }
+
+    fun playSound(sound: SoundType) {
+        soundController.play(sound)
     }
 
     private fun saveState() {

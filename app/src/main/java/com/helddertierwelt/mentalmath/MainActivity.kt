@@ -44,6 +44,7 @@ import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil.deserialize
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil.isValidQueryParameter
 import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
+import com.helddertierwelt.mentalmath.domain.sound.SoundType
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.screen.Navigation
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
@@ -123,9 +124,9 @@ class MainActivity : ComponentActivity() {
                         onConfirm = {
                             gameViewModel.reset()
                             gameViewModel.setIsLinkGame(true)
-                            settingsViewModel.applySettingsFromLink(gameRecordFromAppLink.value)
-                            gameViewModel.setSettings(settingsViewModel.settingsState.value)
+                            gameViewModel.setSettingsFromLink(gameRecordFromAppLink.value, settingsViewModel.settingsState.value)
                             resultViewModel.prepareGameFromLink(gameRecordFromAppLink.value)
+                            mainActivityViewModel.playSound(SoundType.START)
                             navController.navigate("game") {
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true
@@ -134,7 +135,10 @@ class MainActivity : ComponentActivity() {
                             gameRecordFromAppLink.value = GameRecord()
                             mainActivityViewModel.setShowDeepLinkPopUp(false)
                         },
-                        onCancel = { mainActivityViewModel.setShowDeepLinkPopUp(false) },
+                        onCancel = {
+                            mainActivityViewModel.playSound(SoundType.ENABLE)
+                            mainActivityViewModel.setShowDeepLinkPopUp(false)
+                        },
                         titleSize = titleFontSize,
                         descriptionSize = popUpDescriptionFontSize,
                         title = stringResource(R.string.app_link_game_popup_title),
@@ -154,8 +158,10 @@ class MainActivity : ComponentActivity() {
                 if (showAlreadyPlayedPopUp) {
                     PopUp(
                         onDismissRequest = { mainActivityViewModel.setShowAlreadyPlayedPopUp(false) },
-                        onConfirm = { mainActivityViewModel.setShowAlreadyPlayedPopUp(false) },
-                        onCancel = { mainActivityViewModel.setShowAlreadyPlayedPopUp(false) },
+                        onConfirm = {
+                            mainActivityViewModel.playSound(SoundType.ENABLE)
+                            mainActivityViewModel.setShowAlreadyPlayedPopUp(false)
+                        },
                         titleSize = titleFontSize,
                         descriptionSize = popUpDescriptionFontSize,
                         title = stringResource(R.string.already_played_popup_title),

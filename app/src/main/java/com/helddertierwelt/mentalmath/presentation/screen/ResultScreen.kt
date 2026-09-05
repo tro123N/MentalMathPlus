@@ -67,24 +67,24 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.result.GameResultInfoGenerator.getGamePopUpInfo
 import com.helddertierwelt.mentalmath.domain.settings.AppLocale
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil
-import com.helddertierwelt.mentalmath.domain.result.GameResultInfoGenerator.getGamePopUpInfo
+import com.helddertierwelt.mentalmath.domain.sound.SoundType
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.component.result.DoneButton
+import com.helddertierwelt.mentalmath.presentation.component.result.ResultTopBar
 import com.helddertierwelt.mentalmath.presentation.component.result.problems.ProblemsCard
 import com.helddertierwelt.mentalmath.presentation.component.result.summary.SummaryCard
-import com.helddertierwelt.mentalmath.presentation.component.result.StatisticsTopBar
 import com.helddertierwelt.mentalmath.presentation.component.result.summary.formatScore
 import com.helddertierwelt.mentalmath.presentation.theme.green
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 
 @Composable
-fun StatisticsScreen(
+fun ResultScreen(
     navController: NavController,
 ) {
     val context = LocalContext.current
@@ -104,7 +104,6 @@ fun StatisticsScreen(
 
     // viewModels
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
-    val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
     val resultViewModel: ResultViewModel = hiltViewModel(viewModelStoreOwner)
 
     // variables
@@ -113,7 +112,7 @@ fun StatisticsScreen(
     var hasCapturedCoordinates by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val navigatedFromHistory = resultViewModel.navigatedFromHistory.collectAsState().value
-    val statisticsGameRecord =
+    val resultGameRecord =
         if (resultViewModel.showLoadedGameRecord.collectAsState().value) {
             resultViewModel.loadedGameRecord.collectAsState().value
         } else {
@@ -152,7 +151,7 @@ fun StatisticsScreen(
     fun shareResult(context: Context, bitmap: Bitmap, shareText: String) {
         try {
             val imageUri = saveBitmapToCacheAndGetUri(context, bitmap)
-            Log.d("StatisticsScreen", "Sharing result: $shareText")
+            Log.d("ResultScreen", "Sharing result: $shareText")
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "image/png"
                 putExtra(Intent.EXTRA_STREAM, imageUri)
@@ -163,12 +162,12 @@ fun StatisticsScreen(
                 Intent.createChooser(shareIntent, "Share Score")
             )
         } catch (e: Exception) {
-            Log.e("StatisticsScreen", "Error when sharing result of link-game", e)
+            Log.e("ResultScreen", "Error when sharing result of link-game", e)
         }
     }
 
     fun createLink(): String {
-        val settingsString = SettingsLinkUtil.serialize(statisticsGameRecord)
+        val settingsString = SettingsLinkUtil.serialize(resultGameRecord)
         return "https://mental-math.codeberg.page/app?s=${settingsString}"
     }
 
@@ -189,11 +188,12 @@ fun StatisticsScreen(
 
     Scaffold(
         topBar = {
-            StatisticsTopBar(
+            ResultTopBar(
                 R.string.result,
                 titleFontSize = titleFontSize,
                 iconSize = shareIconSize,
                 onShareClick = {
+                    resultViewModel.playSound(SoundType.ENABLE)
                     coroutineScope.launch {
                         scrollState.animateScrollTo(0)
                         val bitmap = captureSettingsCardBitmap()
@@ -203,8 +203,8 @@ fun StatisticsScreen(
                                 bitmap,
                                 AppLocale.format(
                                     shareChallengeText,
-                                    formatScore(statisticsGameRecord.activeScore),
-                                    statisticsGameRecord.seed,
+                                    formatScore(resultGameRecord.activeScore),
+                                    resultGameRecord.seed,
                                     createLink()
                                 )
                             )
@@ -264,7 +264,10 @@ fun StatisticsScreen(
                         fontSize = fontSize,
                         iconSize = doneIconSize,
                         modifier = Modifier,
-                        onClick = { navigateBack() }
+                        onClick = {
+                            resultViewModel.playSound(SoundType.ENABLE)
+                            navigateBack()
+                        }
                     )
                 }
             }
@@ -282,6 +285,7 @@ fun StatisticsScreen(
         } else {
             AppLocale.format(stringResource(R.string.result_share_message), formatScore(currentScore), formatScore(linkScore), seed)
         }
+        resultViewModel.playResultSound(gamePopUpInfo.sound)
         PopUp(
             titleSize = titleFontSize,
             descriptionSize = (0.018f * screenHeight.value).sp,
@@ -300,8 +304,11 @@ fun StatisticsScreen(
             confirmColor = green,
             dismissColor = green,
             onDismissRequest = { resultViewModel.setShowLinkGamePopUp(false) },
-            onCancel = { resultViewModel.setShowLinkGamePopUp(false) },
+            onCancel = {
+                resultViewModel.playSound(SoundType.ENABLE)
+                resultViewModel.setShowLinkGamePopUp(false) },
             onConfirm = {
+                resultViewModel.playSound(SoundType.ENABLE)
                 coroutineScope.launch {
                     scrollState.animateScrollTo(0)
                     val bitmap = captureSettingsCardBitmap()

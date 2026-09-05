@@ -19,7 +19,9 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.presentation.screen
 
 
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalActivity
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +35,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -45,6 +48,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.sound.SoundType
 import com.helddertierwelt.mentalmath.presentation.component.history.HistoryDoneButton
 import com.helddertierwelt.mentalmath.presentation.component.history.HistoryEntriesCard
 import com.helddertierwelt.mentalmath.presentation.component.history.HistoryHeadCard
@@ -75,6 +79,13 @@ fun HistoryScreen(
     val currentSortMode = historyViewModel.sortMode.collectAsState().value
     val isEntryClicked = historyViewModel.isEntryClicked.collectAsState().value
 
+    fun navigateBack() {
+        navController.navigate("settings") {
+            popUpTo(0) { inclusive = true }
+            launchSingleTop = true
+        }
+    }
+
     LaunchedEffect(Unit) {
         historyViewModel.setIsEntryClicked(false)
     }
@@ -85,7 +96,10 @@ fun HistoryScreen(
                 R.string.history,
                 titleFontSize = titleFontSize,
                 iconSize = iconSize,
-                onClick = { historyViewModel.setSortMode(it) },
+                onClick = {
+                    historyViewModel.playSound(SoundType.ENABLE)
+                    historyViewModel.setSortMode(it)
+                },
                 currentSortMode = currentSortMode
             )
         },
@@ -119,6 +133,7 @@ fun HistoryScreen(
                             fontSize = 12.sp,
                             isEnabled = !isEntryClicked,
                             onClick = { gameRecordId ->
+                                historyViewModel.playSound(SoundType.ENABLE)
                                 historyViewModel.setIsEntryClicked(true)
                                 resultViewModel.setNavigatedFromHistory(true)
                                 resultViewModel.setLoadedGameRecord(gameRecordId)
@@ -136,14 +151,21 @@ fun HistoryScreen(
                         iconSize = doneIconSize,
                         modifier = Modifier,
                         onClick = {
-                            navController.navigate("settings") {
-                                popUpTo(0) { inclusive = true }
-                                launchSingleTop = true
-                            }
+                            historyViewModel.playSound(SoundType.ENABLE)
+                            navigateBack()
                         }
                     )
                 }
             }
         }
     )
+
+    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    DisposableEffect(Unit) {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() { navigateBack() }
+        }
+        backPressedDispatcher?.addCallback(callback)
+        onDispose { callback.remove() }
+    }
 }
