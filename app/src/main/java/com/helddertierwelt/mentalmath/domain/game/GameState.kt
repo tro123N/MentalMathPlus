@@ -18,8 +18,10 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.domain.game
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class GameState(
 
     val isModeEnabled: Boolean = false,
@@ -29,7 +31,7 @@ data class GameState(
     val operator: Operation = Operation.ADDITION,
     val input: String = "",
     val solvedProblems: List<SolvedProblem> = emptyList(),
-    val enabledOperators: Map<Operation, Pair<Float, Float>> = mutableMapOf(),
+    val enabledOperators: Map<Operation, Pair<Float, Float>> = emptyMap(),
     val problemStatus: ProblemStatus = ProblemStatus.SKIPPED,
 
     val correctAnswers: Int = 0,
@@ -49,4 +51,4 @@ data class GameState(
     val isRightToLeft: Boolean = false,
     val isVerticalForm: Boolean = false
 
-) : Serializable
+) : Parcelable

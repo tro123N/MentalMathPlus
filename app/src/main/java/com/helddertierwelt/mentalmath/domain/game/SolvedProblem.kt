@@ -18,13 +18,16 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.domain.game
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 @Serializable
+@Parcelize
 data class SolvedProblem(
     val operand1: Int,
     val operand2: Int,
     val operator: Operation,
     val correctResult: Int,
     val userInput: String,
-) : java.io.Serializable
+) : Parcelable
