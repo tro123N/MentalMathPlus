@@ -21,7 +21,7 @@ package com.helddertierwelt.mentalmath.domain.game
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class Operation(val symbol: String) : java.io.Serializable {
+enum class Operation(val symbol: String) {
     ADDITION("+"),
     SUBTRACTION("−"),
     MULTIPLICATION("×"),
