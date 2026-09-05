@@ -71,7 +71,6 @@ import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
-import kotlin.math.roundToInt
 
 @Composable
 fun GameScreen(
@@ -128,10 +127,10 @@ fun GameScreen(
                 )
                 LinearProgressIndicator(
                     progress = {
-                        if (settingsState.isModeEnabled) {
-                            gameState.totalAnswers / (settingsState.limit * 10)
+                        if (gameState.isModeEnabled) {
+                            gameState.totalAnswers / (gameState.modeLimit * 10f)
                         } else {
-                            gameState.activeTime / (settingsState.limit * 60000L)
+                            gameState.activeTime / (gameState.modeLimit.toFloat() * 60000L)
                         }
                     },
                     modifier = Modifier
@@ -311,9 +310,9 @@ fun GameScreen(
                                 gameViewModel.addProblemToList()
                                 gameViewModel.checkAnswerAndCount()
                                 val totalAnswers = gameViewModel.gameState.value.totalAnswers
-                                val totalProblems = (settingsState.limit * 10).roundToInt()
+                                val totalProblems = (gameState.modeLimit * 10)
                                 val isLinkGame = gameViewModel.gameState.value.isLinkGame
-                                if (settingsState.isModeEnabled && totalAnswers == totalProblems) {
+                                if (gameState.isModeEnabled && totalAnswers == totalProblems) {
                                     gameViewModel.endGame()
                                     if (isLinkGame) {
                                         resultViewModel.setShowLinkGamePopUp(true)

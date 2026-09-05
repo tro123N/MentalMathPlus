@@ -52,8 +52,8 @@ import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
+import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import kotlin.math.roundToInt
 
 @Composable
@@ -221,7 +221,11 @@ fun SummaryCard(
                 )
 
                 val percentage = correctAnswers.toFloat() / statisticsGameRecord.totalAnswers.toFloat() * 100f
-                val percentageString = if (percentage.isNaN()) "-" else AppLocale.format("%.1f", percentage)
+                val percentageString = when {
+                    percentage.isNaN() -> "-"
+                    percentage % 1f == 0f -> AppLocale.format("%.0f%%", percentage)
+                    else -> AppLocale.format("%.1f%%", percentage)
+                }
                 IconTextColumn(
                     fontSize = statsFontSize,
                     statsText = percentageString,
