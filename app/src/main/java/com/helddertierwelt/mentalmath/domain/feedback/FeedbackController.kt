@@ -16,10 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.domain.sound
+package com.helddertierwelt.mentalmath.domain.feedback
 
+import com.helddertierwelt.mentalmath.data.feedback.HapticManager
+import com.helddertierwelt.mentalmath.data.feedback.SoundManager
 import com.helddertierwelt.mentalmath.data.repository.SettingsRepository
-import com.helddertierwelt.mentalmath.data.sound.SoundManager
+import com.helddertierwelt.mentalmath.domain.settings.FeedbackMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,24 +29,27 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SoundController @Inject constructor(
+class FeedbackController @Inject constructor(
     private val soundManager: SoundManager,
+    private val hapticManager: HapticManager,
     settingsRepository: SettingsRepository
 ) {
 
-    private var soundEnabled = false
+    private var feedbackMode = FeedbackMode.FEEDBACK_OFF
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
             settingsRepository.settingsFlow.collect {
-                soundEnabled = it.isSoundEnabled
+                feedbackMode = it.feedbackMode
             }
         }
     }
 
-    fun play(sound: SoundType) {
-        if (soundEnabled) {
-            soundManager.play(sound)
+    fun play(feedback: FeedbackType) {
+        when (feedbackMode) {
+            FeedbackMode.FEEDBACK_OFF -> Unit
+            FeedbackMode.SOUND -> soundManager.play(feedback)
+            FeedbackMode.VIBRATION -> hapticManager.perform(feedback)
         }
     }
 }

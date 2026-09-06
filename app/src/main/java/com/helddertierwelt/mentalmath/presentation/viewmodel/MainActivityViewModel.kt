@@ -19,8 +19,8 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.helddertierwelt.mentalmath.domain.sound.SoundController
-import com.helddertierwelt.mentalmath.domain.sound.SoundType
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackController
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
-    private val soundController: SoundController,
+    private val feedbackController: FeedbackController,
     ) : ViewModel() {
     private val _showAlreadyPlayedPopUp = MutableStateFlow(false)
     val showAlreadyPlayedPopUp: StateFlow<Boolean> = _showAlreadyPlayedPopUp
@@ -49,7 +49,7 @@ class MainActivityViewModel @Inject constructor(
         setShowDeepLinkPopUp(false)
     }
 
-    fun playSound(sound: SoundType) {
-        soundController.play(sound)
+    fun playSound(sound: FeedbackType) {
+        feedbackController.play(sound)
     }
 }

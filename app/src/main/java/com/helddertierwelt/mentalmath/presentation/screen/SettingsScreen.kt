@@ -52,7 +52,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler
-import com.helddertierwelt.mentalmath.domain.sound.SoundType
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.component.settings.menu.MenuSideSheet
 import com.helddertierwelt.mentalmath.presentation.component.settings.score.ScoreSideSheet
@@ -138,11 +138,11 @@ fun SettingsScreen(
             SettingsTopBar(
                 titleFontSize = titleFontSize,
                 onMenuClick = {
-                    settingsViewModel.playSound(SoundType.ENABLE)
+                    settingsViewModel.playSound(FeedbackType.TAP)
                     settingsViewModel.toggleMenuOpen()
                 },
                 onScoreClick = {
-                    settingsViewModel.playSound(SoundType.ENABLE)
+                    settingsViewModel.playSound(FeedbackType.TAP)
                     settingsViewModel.loadBestGameScores()
                     settingsViewModel.toggleScoreOpen()
                 },
@@ -344,7 +344,7 @@ fun SettingsScreen(
                     }
                     StartButton(
                         onClick = {
-                            settingsViewModel.playSound(SoundType.START)
+                            settingsViewModel.playSound(FeedbackType.START)
                             settingsViewModel.setIsStartButtonClicked(true)
                             resultViewModel.setShowLinkGamePopUp(false)
                             gameViewModel.reset()
@@ -390,12 +390,12 @@ fun SettingsScreen(
         PopUp(
             onDismissRequest = { settingsViewModel.setShowNotificationPermissionPopUp(false) },
             onConfirm = {
-                settingsViewModel.playSound(SoundType.ENABLE)
+                settingsViewModel.playSound(FeedbackType.TAP)
                 openNotificationSettings(context)
                 settingsViewModel.setShowNotificationPermissionPopUp(false)
             },
             onCancel = {
-                settingsViewModel.playSound(SoundType.ENABLE)
+                settingsViewModel.playSound(FeedbackType.TAP)
                 settingsViewModel.setShowNotificationPermissionPopUp(false)
             },
             titleSize = titleFontSize,
@@ -413,7 +413,7 @@ fun SettingsScreen(
         PopUp(
             onDismissRequest = { settingsViewModel.setShowResetPopUp(false) },
             onConfirm = {
-                settingsViewModel.playSound(SoundType.STOP)
+                settingsViewModel.playSound(FeedbackType.STOP)
                 gameViewModel.resetGameData()
                 settingsViewModel.resetSettings()
                 NotificationScheduler.cancelNotificationWork(context)
@@ -422,7 +422,7 @@ fun SettingsScreen(
                 mainActivityViewModel.resetMainActivity()
             },
             onCancel = {
-                settingsViewModel.playSound(SoundType.ENABLE)
+                settingsViewModel.playSound(FeedbackType.TAP)
                 settingsViewModel.setShowResetPopUp(false)
             },
             titleSize = titleFontSize,

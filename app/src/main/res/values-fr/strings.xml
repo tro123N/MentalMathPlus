@@ -24,6 +24,7 @@
     <string name="system_mode">Thème du système</string>
     <string name="sound_on">Son activé</string>
     <string name="sound_off">Son désactivé</string>
+    <string name="vibration">Vibration</string>
     <string name="language">Langue</string>
     <string name="about">À propos</string>
     <string name="feedback">Commenter</string>

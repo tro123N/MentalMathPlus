@@ -38,9 +38,9 @@ data class SettingsState(
 
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val notificationMode: NotificationMode = NotificationMode.OFF,
+    val feedbackMode: FeedbackMode = FeedbackMode.FEEDBACK_OFF,
     val isNumpadDefault: Boolean = false,
     val isRightToLeftDefault: Boolean = false,
-    val isSoundEnabled: Boolean = false,
     val isVerticalFormDefault: Boolean = false
 
 ) : Parcelable

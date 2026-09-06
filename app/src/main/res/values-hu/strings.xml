@@ -24,6 +24,7 @@
     <string name="system_mode">Rendszerbeállítás</string>
     <string name="sound_on">Hang bekapcsolva</string>
     <string name="sound_off">Hang kikapcsolva</string>
+    <string name="vibration">Rezgés</string>
     <string name="language">Nyelv</string>
     <string name="about">Rólunk</string>
     <string name="feedback">Vissza\u200Bjelzés</string>

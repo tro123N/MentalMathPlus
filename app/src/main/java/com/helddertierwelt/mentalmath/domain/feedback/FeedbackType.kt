@@ -16,9 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.domain.sound
+package com.helddertierwelt.mentalmath.domain.feedback
 
-enum class SoundType {
+enum class FeedbackType {
+    TAP,
     ENABLE,
     DISABLE,
     SLIDER,

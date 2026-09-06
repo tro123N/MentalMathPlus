@@ -70,7 +70,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
-import com.helddertierwelt.mentalmath.domain.sound.SoundType
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
@@ -209,7 +209,7 @@ fun ScoreSideSheet(
                         lastGameId = lastGameId,
                         isEnabled = !isScoreClicked,
                         onClick = { gameRecord ->
-                            settingsViewModel.playSound(SoundType.ENABLE)
+                            settingsViewModel.playSound(FeedbackType.TAP)
                             settingsViewModel.setIsScoreClicked(true)
                             resultViewModel.setLoadedGameRecord(gameRecord.id)
                             resultViewModel.setShowLoadedGameRecord(true)

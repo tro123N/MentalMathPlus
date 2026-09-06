@@ -25,6 +25,7 @@
     <string name="system_mode">Επιλογή Συστήματος</string>
     <string name="sound_on">Ήχος ενεργός</string>
     <string name="sound_off">Ήχος ανενεργός</string>
+    <string name="vibration">Δόνηση</string>
     <string name="language">Γλώσσα</string>
     <string name="about">Σχετικά</string>
     <string name="feedback">Ανατροφο​δότηση</string>

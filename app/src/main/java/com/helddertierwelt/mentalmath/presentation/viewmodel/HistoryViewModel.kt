@@ -22,8 +22,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
-import com.helddertierwelt.mentalmath.domain.sound.SoundController
-import com.helddertierwelt.mentalmath.domain.sound.SoundType
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackController
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.presentation.component.history.SortMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +35,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
     private val gameRecordRepository: GameRecordRepository,
-    private val soundController: SoundController,
+    private val feedbackController: FeedbackController,
     ) : ViewModel() {
 
     private val _allGames = MutableStateFlow<List<GameRecord>>(emptyList())
@@ -68,7 +68,7 @@ class HistoryViewModel @Inject constructor(
         loadAllGames()
     }
 
-    fun playSound(sound: SoundType) {
-        soundController.play(sound)
+    fun playSound(sound: FeedbackType) {
+        feedbackController.play(sound)
     }
 }

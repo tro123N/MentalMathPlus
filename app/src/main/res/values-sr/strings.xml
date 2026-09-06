@@ -24,6 +24,7 @@
     <string name="system_mode">Sistemski režim</string>
     <string name="sound_on">Zvuk uključen</string>
     <string name="sound_off">Zvuk isključen</string>
+    <string name="vibration">Vibracija</string>
     <string name="language">Jezik</string>
     <string name="about">O aplikaciji</string>
     <string name="feedback">Povratne informacije</string>

@@ -19,12 +19,12 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.domain.result
 
 import androidx.compose.ui.graphics.Color
-import com.helddertierwelt.mentalmath.domain.sound.SoundType
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 
 data class GameResultInfo(
     val icon: Int,
     val color: Color,
     val title: String,
     val description: String,
-    val sound: SoundType
+    val sound: FeedbackType
 )

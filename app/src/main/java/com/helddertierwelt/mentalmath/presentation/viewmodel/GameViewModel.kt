@@ -27,13 +27,13 @@ import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.data.entity.MathProblem
 import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
 import com.helddertierwelt.mentalmath.data.repository.MathProblemRepository
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackController
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.game.GameState
 import com.helddertierwelt.mentalmath.domain.game.Operation
 import com.helddertierwelt.mentalmath.domain.game.ProblemStatus
 import com.helddertierwelt.mentalmath.domain.game.SolvedProblem
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
-import com.helddertierwelt.mentalmath.domain.sound.SoundController
-import com.helddertierwelt.mentalmath.domain.sound.SoundType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -55,7 +55,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class GameViewModel @Inject constructor(
     private val mathProblemRepository: MathProblemRepository,
     private val gameRecordRepository: GameRecordRepository,
-    private val soundController: SoundController,
+    private val feedbackController: FeedbackController,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel(), DefaultLifecycleObserver {
 
@@ -104,14 +104,14 @@ class GameViewModel @Inject constructor(
     }
 
     fun toggleIsRightToLeft(): Boolean {
-        playSound(SoundType.ENABLE)
+        playSound(FeedbackType.TAP)
         val newValue = !_gameState.value.isRightToLeft
         saveState(_gameState.value.copy(isRightToLeft = newValue))
         return newValue
     }
 
     fun toggleIsVerticalForm(): Boolean {
-        playSound(SoundType.ENABLE)
+        playSound(FeedbackType.TAP)
         val newValue = !_gameState.value.isVerticalForm
         saveState(_gameState.value.copy(isVerticalForm = newValue))
         return newValue
@@ -197,7 +197,7 @@ class GameViewModel @Inject constructor(
         val newState: GameState
         when (userInput) {
             null -> {
-                playSound(SoundType.SKIPPED)
+                playSound(FeedbackType.SKIPPED)
                 newState = _gameState.value.copy(
                     skippedAnswers = _gameState.value.skippedAnswers + 1,
                     totalAnswers = _gameState.value.totalAnswers + 1,
@@ -206,7 +206,7 @@ class GameViewModel @Inject constructor(
             }
 
             correctResult -> {
-                playSound(SoundType.CORRECT)
+                playSound(FeedbackType.CORRECT)
                 newState = _gameState.value.copy(
                     correctAnswers = _gameState.value.correctAnswers + 1,
                     totalAnswers = _gameState.value.totalAnswers + 1,
@@ -215,7 +215,7 @@ class GameViewModel @Inject constructor(
             }
 
             else -> {
-                playSound(SoundType.WRONG)
+                playSound(FeedbackType.WRONG)
                 newState = _gameState.value.copy(
                     wrongAnswers = _gameState.value.wrongAnswers + 1,
                     totalAnswers = _gameState.value.totalAnswers + 1,
@@ -518,31 +518,24 @@ class GameViewModel @Inject constructor(
                 }
 
             val sound = when {
-                correctPercentage >= 0.9f -> SoundType.BEST
-                correctPercentage >= 0.8f -> SoundType.GOOD
-                correctPercentage >= 0.5f -> SoundType.OKAY
-                else -> SoundType.BAD
+                correctPercentage >= 0.9f -> FeedbackType.BEST
+                correctPercentage >= 0.8f -> FeedbackType.GOOD
+                correctPercentage >= 0.5f -> FeedbackType.OKAY
+                else -> FeedbackType.BAD
             }
-            playResultSound(sound)
+            playSound(sound)
         }
     }
 
     fun cancelGame() {
-        playSound(SoundType.STOP)
+        playSound(FeedbackType.STOP)
         pauseTimer()
         saveCancelledGameRecord()
         saveState(_gameState.value.copy(isGameStarted = false))
     }
 
-    fun playSound(sound: SoundType) {
-        soundController.play(sound)
-    }
-
-    fun playResultSound(sound: SoundType) {
-        viewModelScope.launch {
-            delay(550.milliseconds)
-            soundController.play(sound)
-        }
+    fun playSound(sound: FeedbackType) {
+        feedbackController.play(sound)
     }
 
     override fun onPause(owner: LifecycleOwner) {

@@ -48,7 +48,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
-import com.helddertierwelt.mentalmath.domain.sound.SoundType
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.presentation.component.history.HistoryDoneButton
 import com.helddertierwelt.mentalmath.presentation.component.history.HistoryEntriesCard
 import com.helddertierwelt.mentalmath.presentation.component.history.HistoryHeadCard
@@ -97,7 +97,7 @@ fun HistoryScreen(
                 titleFontSize = titleFontSize,
                 iconSize = iconSize,
                 onClick = {
-                    historyViewModel.playSound(SoundType.ENABLE)
+                    historyViewModel.playSound(FeedbackType.TAP)
                     historyViewModel.setSortMode(it)
                 },
                 currentSortMode = currentSortMode
@@ -133,7 +133,7 @@ fun HistoryScreen(
                             fontSize = 12.sp,
                             isEnabled = !isEntryClicked,
                             onClick = { gameRecordId ->
-                                historyViewModel.playSound(SoundType.ENABLE)
+                                historyViewModel.playSound(FeedbackType.TAP)
                                 historyViewModel.setIsEntryClicked(true)
                                 resultViewModel.setNavigatedFromHistory(true)
                                 resultViewModel.setLoadedGameRecord(gameRecordId)
@@ -151,7 +151,7 @@ fun HistoryScreen(
                         iconSize = doneIconSize,
                         modifier = Modifier,
                         onClick = {
-                            historyViewModel.playSound(SoundType.ENABLE)
+                            historyViewModel.playSound(FeedbackType.TAP)
                             navigateBack()
                         }
                     )

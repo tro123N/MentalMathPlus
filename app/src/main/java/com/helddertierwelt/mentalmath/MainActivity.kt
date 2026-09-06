@@ -41,10 +41,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
+import com.helddertierwelt.mentalmath.data.feedback.HapticManager
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil.deserialize
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil.isValidQueryParameter
 import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
-import com.helddertierwelt.mentalmath.domain.sound.SoundType
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.screen.Navigation
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
@@ -56,10 +57,13 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @Inject
+    lateinit var hapticManager: HapticManager
     private val gameViewModel: GameViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
     private val resultViewModel: ResultViewModel by viewModels()
@@ -74,6 +78,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         super.onCreate(savedInstanceState)
+        hapticManager.attach(window.decorView)
         if (savedInstanceState == null) {
             lifecycleScope.launch {
                 handleDeepLinkIntent(intent)
@@ -126,7 +131,7 @@ class MainActivity : ComponentActivity() {
                             gameViewModel.setIsLinkGame(true)
                             gameViewModel.setSettingsFromLink(gameRecordFromAppLink.value, settingsViewModel.settingsState.value)
                             resultViewModel.prepareGameFromLink(gameRecordFromAppLink.value)
-                            mainActivityViewModel.playSound(SoundType.START)
+                            mainActivityViewModel.playSound(FeedbackType.START)
                             navController.navigate("game") {
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true
@@ -136,7 +141,7 @@ class MainActivity : ComponentActivity() {
                             mainActivityViewModel.setShowDeepLinkPopUp(false)
                         },
                         onCancel = {
-                            mainActivityViewModel.playSound(SoundType.ENABLE)
+                            mainActivityViewModel.playSound(FeedbackType.TAP)
                             mainActivityViewModel.setShowDeepLinkPopUp(false)
                         },
                         titleSize = titleFontSize,
@@ -159,7 +164,7 @@ class MainActivity : ComponentActivity() {
                     PopUp(
                         onDismissRequest = { mainActivityViewModel.setShowAlreadyPlayedPopUp(false) },
                         onConfirm = {
-                            mainActivityViewModel.playSound(SoundType.ENABLE)
+                            mainActivityViewModel.playSound(FeedbackType.TAP)
                             mainActivityViewModel.setShowAlreadyPlayedPopUp(false)
                         },
                         titleSize = titleFontSize,
@@ -178,6 +183,11 @@ class MainActivity : ComponentActivity() {
         Log.d("DeepLink", "onNewIntent called. Intent: $intent")
         super.onNewIntent(intent)
         lifecycleScope.launch { handleDeepLinkIntent(intent) }
+    }
+
+    override fun onDestroy() {
+        hapticManager.detach()
+        super.onDestroy()
     }
 
     private suspend fun handleDeepLinkIntent(intent: Intent?) {

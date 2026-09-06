@@ -31,6 +31,7 @@
     <string name="avg_time_per_correct_answer">الوقت المُستغرَق لكل إجابة صحيحة</string>
     <string name="new_score">جديد</string>
     <string name="vertical">رأسي</string>
+    <string name="vibration">اهتزاز</string>
     <string name="language">اللغة</string>
     <string name="difficulty_addition">صعوبة الجمع</string>
     <string name="mode_instruction">حدد الوضع والحد</string>

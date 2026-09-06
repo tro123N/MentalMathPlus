@@ -67,10 +67,10 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.result.GameResultInfoGenerator.getGamePopUpInfo
 import com.helddertierwelt.mentalmath.domain.settings.AppLocale
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil
-import com.helddertierwelt.mentalmath.domain.sound.SoundType
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.component.result.DoneButton
 import com.helddertierwelt.mentalmath.presentation.component.result.ResultTopBar
@@ -193,7 +193,7 @@ fun ResultScreen(
                 titleFontSize = titleFontSize,
                 iconSize = shareIconSize,
                 onShareClick = {
-                    resultViewModel.playSound(SoundType.ENABLE)
+                    resultViewModel.playSound(FeedbackType.TAP)
                     coroutineScope.launch {
                         scrollState.animateScrollTo(0)
                         val bitmap = captureSettingsCardBitmap()
@@ -265,7 +265,7 @@ fun ResultScreen(
                         iconSize = doneIconSize,
                         modifier = Modifier,
                         onClick = {
-                            resultViewModel.playSound(SoundType.ENABLE)
+                            resultViewModel.playSound(FeedbackType.TAP)
                             navigateBack()
                         }
                     )
@@ -285,7 +285,7 @@ fun ResultScreen(
         } else {
             AppLocale.format(stringResource(R.string.result_share_message), formatScore(currentScore), formatScore(linkScore), seed)
         }
-        resultViewModel.playResultSound(gamePopUpInfo.sound)
+        resultViewModel.playSound(gamePopUpInfo.sound)
         PopUp(
             titleSize = titleFontSize,
             descriptionSize = (0.018f * screenHeight.value).sp,
@@ -305,10 +305,10 @@ fun ResultScreen(
             dismissColor = green,
             onDismissRequest = { resultViewModel.setShowLinkGamePopUp(false) },
             onCancel = {
-                resultViewModel.playSound(SoundType.ENABLE)
+                resultViewModel.playSound(FeedbackType.TAP)
                 resultViewModel.setShowLinkGamePopUp(false) },
             onConfirm = {
-                resultViewModel.playSound(SoundType.ENABLE)
+                resultViewModel.playSound(FeedbackType.TAP)
                 coroutineScope.launch {
                     scrollState.animateScrollTo(0)
                     val bitmap = captureSettingsCardBitmap()

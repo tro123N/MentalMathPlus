@@ -62,6 +62,13 @@ message SettingsStateProto {
 
   NotificationMode notification_mode = 19;
 
-  bool is_sound_enabled = 20;
-  bool is_vertical_form_default =21;
+  enum FeedbackMode {
+    FEEDBACK_OFF = 0;
+    SOUND = 1;
+    VIBRATION = 2;
+  }
+
+  FeedbackMode feedback_mode = 20;
+
+  bool is_vertical_form_default = 21;
 }

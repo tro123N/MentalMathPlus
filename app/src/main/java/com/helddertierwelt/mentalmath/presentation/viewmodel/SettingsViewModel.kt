@@ -30,11 +30,12 @@ import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.data.entity.GameScore
 import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
 import com.helddertierwelt.mentalmath.data.repository.SettingsRepository
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackController
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
+import com.helddertierwelt.mentalmath.domain.settings.FeedbackMode
 import com.helddertierwelt.mentalmath.domain.settings.NotificationMode
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
 import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
-import com.helddertierwelt.mentalmath.domain.sound.SoundController
-import com.helddertierwelt.mentalmath.domain.sound.SoundType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,7 +48,7 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val repository: SettingsRepository,
     private val gameRecordRepository: GameRecordRepository,
-    private val soundController: SoundController,
+    private val feedbackController: FeedbackController,
     ) : ViewModel() {
 
     private val _isLoaded = MutableStateFlow(false)
@@ -96,41 +97,41 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun toggleMode() {
-        playSound(SoundType.ENABLE)
+        playSound(FeedbackType.TAP)
         _settingsState.value =
             _settingsState.value.copy(isModeEnabled = !_settingsState.value.isModeEnabled)
         saveState()
     }
 
     fun updateLimit(value: Float) {
-        playSound(SoundType.SLIDER)
+        playSound(FeedbackType.SLIDER)
         _settingsState.value = _settingsState.value.copy(limit = value)
         saveState()
     }
 
     fun updatePlusRange(plusRange: ClosedFloatingPointRange<Float>) {
-        playSound(SoundType.SLIDER)
+        playSound(FeedbackType.SLIDER)
         _settingsState.value =
             _settingsState.value.copy(additionRange = plusRange.start to plusRange.endInclusive)
         saveState()
     }
 
     fun updateMinusRange(minusRange: ClosedFloatingPointRange<Float>) {
-        playSound(SoundType.SLIDER)
+        playSound(FeedbackType.SLIDER)
         _settingsState.value =
             _settingsState.value.copy(subtractionRange = minusRange.start to minusRange.endInclusive)
         saveState()
     }
 
     fun updateMultiplyRange(multiplyRange: ClosedFloatingPointRange<Float>) {
-        playSound(SoundType.SLIDER)
+        playSound(FeedbackType.SLIDER)
         _settingsState.value =
             _settingsState.value.copy(multiplicationRange = multiplyRange.start to multiplyRange.endInclusive)
         saveState()
     }
 
     fun updateDivideRange(divideRange: ClosedFloatingPointRange<Float>) {
-        playSound(SoundType.SLIDER)
+        playSound(FeedbackType.SLIDER)
         _settingsState.value =
             _settingsState.value.copy(divisionRange = divideRange.start to divideRange.endInclusive)
         saveState()
@@ -142,7 +143,7 @@ class SettingsViewModel @Inject constructor(
             isAdditionEnabled = newValue
         )
         playSound(
-            if (newValue) SoundType.ENABLE else SoundType.DISABLE
+            if (newValue) FeedbackType.ENABLE else FeedbackType.DISABLE
         )
         saveState()
     }
@@ -153,7 +154,7 @@ class SettingsViewModel @Inject constructor(
             isSubtractionEnabled = newValue
         )
         playSound(
-            if (newValue) SoundType.ENABLE else SoundType.DISABLE
+            if (newValue) FeedbackType.ENABLE else FeedbackType.DISABLE
         )
         saveState()
     }
@@ -164,7 +165,7 @@ class SettingsViewModel @Inject constructor(
             isMultiplicationEnabled = newValue
         )
         playSound(
-            if (newValue) SoundType.ENABLE else SoundType.DISABLE
+            if (newValue) FeedbackType.ENABLE else FeedbackType.DISABLE
         )
         saveState()
     }
@@ -175,7 +176,7 @@ class SettingsViewModel @Inject constructor(
             isDivisionEnabled = newValue
         )
         playSound(
-            if (newValue) SoundType.ENABLE else SoundType.DISABLE
+            if (newValue) FeedbackType.ENABLE else FeedbackType.DISABLE
         )
         saveState()
     }
@@ -192,13 +193,19 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun setThemeMode(mode: ThemeMode) {
-        playSound(SoundType.ENABLE)
+        playSound(FeedbackType.TAP)
         _settingsState.value = _settingsState.value.copy(themeMode = mode)
         saveState()
     }
 
     fun setNotificationMode(mode: NotificationMode) {
         _settingsState.value = _settingsState.value.copy(notificationMode = mode)
+        saveState()
+    }
+
+    fun setFeedbackMode(mode: FeedbackMode) {
+        playSound(FeedbackType.TAP)
+        _settingsState.value = _settingsState.value.copy(feedbackMode = mode)
         saveState()
     }
 
@@ -245,14 +252,14 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun toggleInputLayout() {
-        playSound(SoundType.ENABLE)
+        playSound(FeedbackType.TAP)
         _settingsState.value =
             _settingsState.value.copy(isNumpadDefault = !_settingsState.value.isNumpadDefault)
         saveState()
     }
 
     fun toggleInputMethod(): Boolean {
-        playSound(SoundType.ENABLE)
+        playSound(FeedbackType.TAP)
         val newValue = !_settingsState.value.isRightToLeftDefault
         _settingsState.value = _settingsState.value.copy(isRightToLeftDefault = newValue)
         saveState()
@@ -260,18 +267,11 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun toggleForm(): Boolean {
-        playSound(SoundType.ENABLE)
+        playSound(FeedbackType.TAP)
         val newValue = !_settingsState.value.isVerticalFormDefault
         _settingsState.value = _settingsState.value.copy(isVerticalFormDefault = newValue)
         saveState()
         return newValue
-    }
-
-    fun toggleSound() {
-        _settingsState.value =
-            _settingsState.value.copy(isSoundEnabled = !_settingsState.value.isSoundEnabled)
-        saveState()
-        playSound(SoundType.ENABLE)
     }
 
     fun resetSettings() {
@@ -395,8 +395,8 @@ class SettingsViewModel @Inject constructor(
         return "https://mental-math.codeberg.page/app?s=${encoded}"
     }
 
-    fun playSound(sound: SoundType) {
-        soundController.play(sound)
+    fun playSound(sound: FeedbackType) {
+        feedbackController.play(sound)
     }
 
     private fun saveState() {

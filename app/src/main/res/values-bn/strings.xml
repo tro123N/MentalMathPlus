@@ -25,6 +25,7 @@
     <string name="system_mode">সিস্টেম মোড</string>
     <string name="sound_on">সাউন্ড চালু</string>
     <string name="sound_off">সাউন্ড বন্ধ</string>
+    <string name="vibration">কম্পন</string>
     <string name="language">ভাষা</string>
     <string name="about">সম্পর্কে</string>
     <string name="feedback">ফিড\u200Bব্যাক</string>

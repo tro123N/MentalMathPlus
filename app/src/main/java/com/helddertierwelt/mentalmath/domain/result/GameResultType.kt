@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.settings.AppLocale
-import com.helddertierwelt.mentalmath.domain.sound.SoundType
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.presentation.component.result.summary.formatScore
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
@@ -37,63 +37,63 @@ enum class GameResultType(
     val color: Color,
     @StringRes val title: Int,
     val descriptions: List<Int>,
-    val sound: SoundType
+    val sound: FeedbackType
 ) {
     WAITING(
         icon = R.drawable.hourglass_bottom_24dp,
         color = blue,
         title = R.string.waiting_title,
         descriptions = GameResultDescriptions.waiting,
-        sound = SoundType.NEUTRAL
+        sound = FeedbackType.NEUTRAL
     ),
     EASY_WIN(
         icon = R.drawable.favorite_24dp,
         color = red,
         title = R.string.easy_win_title,
         descriptions = GameResultDescriptions.easyWin,
-        sound = SoundType.GOOD
+        sound = FeedbackType.GOOD
     ),
     ANYONE_HERE(
         icon = R.drawable.question_mark_24dp,
         color = blue,
         title = R.string.anyone_here_title,
         descriptions = GameResultDescriptions.anyoneHere,
-        sound = SoundType.NEUTRAL
+        sound = FeedbackType.NEUTRAL
     ),
     WIN(
         icon = R.drawable.trophy_24dp,
         color = yellow,
         title = R.string.win_title,
         descriptions = GameResultDescriptions.win,
-        sound = SoundType.BEST
+        sound = FeedbackType.BEST
     ),
     CLOSE_WIN(
         icon = R.drawable.trophy_24dp,
         color = yellow,
         title = R.string.close_win_title,
         descriptions = GameResultDescriptions.closeWin,
-        sound = SoundType.BEST
+        sound = FeedbackType.BEST
     ),
     DRAW(
         icon = R.drawable.partner_heart_24dp,
         color = green,
         title = R.string.draw_title,
         descriptions = GameResultDescriptions.draw,
-        sound = SoundType.OKAY
+        sound = FeedbackType.OKAY
     ),
     CLOSE_DEFEAT(
         icon = R.drawable.rainy_24dp,
         color = blue,
         title = R.string.close_defeat_title,
         descriptions = GameResultDescriptions.closeDefeat,
-        sound = SoundType.BAD
+        sound = FeedbackType.BAD
     ),
     DEFEAT(
         icon = R.drawable.rainy_24dp,
         color = blue,
         title = R.string.defeat_title,
         descriptions = GameResultDescriptions.defeat,
-        sound = SoundType.BAD
+        sound = FeedbackType.BAD
     );
 
     @SuppressLint("ResourceType")

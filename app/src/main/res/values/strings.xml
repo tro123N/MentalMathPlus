@@ -73,6 +73,7 @@ Thank you for contributing!
     <string name="system_mode">System Mode</string>
     <string name="sound_on">Sound On</string>
     <string name="sound_off">Sound Off</string>
+    <string name="vibration">Vibration</string>
     <string name="language">Language</string>
     <string name="about">About</string>
     <string name="feedback">Feed\u200Bback</string>

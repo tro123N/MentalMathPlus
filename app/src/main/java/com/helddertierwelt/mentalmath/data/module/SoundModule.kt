@@ -19,7 +19,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.data.module
 
 import android.content.Context
-import com.helddertierwelt.mentalmath.data.sound.SoundManager
+import com.helddertierwelt.mentalmath.data.feedback.SoundManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

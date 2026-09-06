@@ -56,7 +56,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
-import com.helddertierwelt.mentalmath.domain.sound.SoundType
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.presentation.component.game.BackspaceButton
 import com.helddertierwelt.mentalmath.presentation.component.game.EnterButton
 import com.helddertierwelt.mentalmath.presentation.component.game.GameTopBar
@@ -209,7 +209,7 @@ fun GameScreen(
                                 NumberButton(
                                     number = number,
                                     onPress = {
-                                        gameViewModel.playSound(SoundType.NUMPAD)
+                                        gameViewModel.playSound(FeedbackType.NUMPAD)
                                     },
                                     onClick = {
                                         if (isRightToLeft) {
@@ -232,7 +232,7 @@ fun GameScreen(
                                 NumberButton(
                                     number = number,
                                     onPress = {
-                                        gameViewModel.playSound(SoundType.NUMPAD)
+                                        gameViewModel.playSound(FeedbackType.NUMPAD)
                                     },
                                     onClick = {
                                         if (isRightToLeft) {
@@ -255,7 +255,7 @@ fun GameScreen(
                                 NumberButton(
                                     number = number,
                                     onPress = {
-                                        gameViewModel.playSound(SoundType.NUMPAD)
+                                        gameViewModel.playSound(FeedbackType.NUMPAD)
                                     },
                                     onClick = {
                                         if (isRightToLeft) {
@@ -277,7 +277,7 @@ fun GameScreen(
                     ) {
                         BackspaceButton(
                             onPress = {
-                                gameViewModel.playSound(SoundType.BACKSPACE)
+                                gameViewModel.playSound(FeedbackType.BACKSPACE)
                             },
                             onClick = {
                                 if (isRightToLeft) {
@@ -293,7 +293,7 @@ fun GameScreen(
                         NumberButton(
                             number = 0,
                             onPress = {
-                                gameViewModel.playSound(SoundType.NUMPAD)
+                                gameViewModel.playSound(FeedbackType.NUMPAD)
                             },
                             onClick = {
                                 if (isRightToLeft) {
@@ -367,7 +367,7 @@ fun GameScreen(
                 }
             },
             onCancel = {
-                gameViewModel.playSound(SoundType.ENABLE)
+                gameViewModel.playSound(FeedbackType.TAP)
                 showDialog = false
             },
             titleSize = titleFontSize,
