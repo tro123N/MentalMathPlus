@@ -97,41 +97,41 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun toggleMode() {
-        playSound(FeedbackType.TAP)
+        playFeedback(FeedbackType.TAP)
         _settingsState.value =
             _settingsState.value.copy(isModeEnabled = !_settingsState.value.isModeEnabled)
         saveState()
     }
 
     fun updateLimit(value: Float) {
-        playSound(FeedbackType.SLIDER)
+        playFeedback(FeedbackType.SLIDER)
         _settingsState.value = _settingsState.value.copy(limit = value)
         saveState()
     }
 
     fun updatePlusRange(plusRange: ClosedFloatingPointRange<Float>) {
-        playSound(FeedbackType.SLIDER)
+        playFeedback(FeedbackType.SLIDER)
         _settingsState.value =
             _settingsState.value.copy(additionRange = plusRange.start to plusRange.endInclusive)
         saveState()
     }
 
     fun updateMinusRange(minusRange: ClosedFloatingPointRange<Float>) {
-        playSound(FeedbackType.SLIDER)
+        playFeedback(FeedbackType.SLIDER)
         _settingsState.value =
             _settingsState.value.copy(subtractionRange = minusRange.start to minusRange.endInclusive)
         saveState()
     }
 
     fun updateMultiplyRange(multiplyRange: ClosedFloatingPointRange<Float>) {
-        playSound(FeedbackType.SLIDER)
+        playFeedback(FeedbackType.SLIDER)
         _settingsState.value =
             _settingsState.value.copy(multiplicationRange = multiplyRange.start to multiplyRange.endInclusive)
         saveState()
     }
 
     fun updateDivideRange(divideRange: ClosedFloatingPointRange<Float>) {
-        playSound(FeedbackType.SLIDER)
+        playFeedback(FeedbackType.SLIDER)
         _settingsState.value =
             _settingsState.value.copy(divisionRange = divideRange.start to divideRange.endInclusive)
         saveState()
@@ -142,7 +142,7 @@ class SettingsViewModel @Inject constructor(
         _settingsState.value = _settingsState.value.copy(
             isAdditionEnabled = newValue
         )
-        playSound(
+        playFeedback(
             if (newValue) FeedbackType.ENABLE else FeedbackType.DISABLE
         )
         saveState()
@@ -153,7 +153,7 @@ class SettingsViewModel @Inject constructor(
         _settingsState.value = _settingsState.value.copy(
             isSubtractionEnabled = newValue
         )
-        playSound(
+        playFeedback(
             if (newValue) FeedbackType.ENABLE else FeedbackType.DISABLE
         )
         saveState()
@@ -164,7 +164,7 @@ class SettingsViewModel @Inject constructor(
         _settingsState.value = _settingsState.value.copy(
             isMultiplicationEnabled = newValue
         )
-        playSound(
+        playFeedback(
             if (newValue) FeedbackType.ENABLE else FeedbackType.DISABLE
         )
         saveState()
@@ -175,7 +175,7 @@ class SettingsViewModel @Inject constructor(
         _settingsState.value = _settingsState.value.copy(
             isDivisionEnabled = newValue
         )
-        playSound(
+        playFeedback(
             if (newValue) FeedbackType.ENABLE else FeedbackType.DISABLE
         )
         saveState()
@@ -193,7 +193,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun setThemeMode(mode: ThemeMode) {
-        playSound(FeedbackType.TAP)
+        playFeedback(FeedbackType.TAP)
         _settingsState.value = _settingsState.value.copy(themeMode = mode)
         saveState()
     }
@@ -204,9 +204,10 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun setFeedbackMode(mode: FeedbackMode) {
-        playSound(FeedbackType.TAP)
+        feedbackController.setMode(mode)
         _settingsState.value = _settingsState.value.copy(feedbackMode = mode)
         saveState()
+        playFeedback(FeedbackType.TAP)
     }
 
     fun setShowResetPopUp(value: Boolean) {
@@ -252,14 +253,14 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun toggleInputLayout() {
-        playSound(FeedbackType.TAP)
+        playFeedback(FeedbackType.TAP)
         _settingsState.value =
             _settingsState.value.copy(isNumpadDefault = !_settingsState.value.isNumpadDefault)
         saveState()
     }
 
     fun toggleInputMethod(): Boolean {
-        playSound(FeedbackType.TAP)
+        playFeedback(FeedbackType.TAP)
         val newValue = !_settingsState.value.isRightToLeftDefault
         _settingsState.value = _settingsState.value.copy(isRightToLeftDefault = newValue)
         saveState()
@@ -267,7 +268,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun toggleForm(): Boolean {
-        playSound(FeedbackType.TAP)
+        playFeedback(FeedbackType.TAP)
         val newValue = !_settingsState.value.isVerticalFormDefault
         _settingsState.value = _settingsState.value.copy(isVerticalFormDefault = newValue)
         saveState()
@@ -395,8 +396,8 @@ class SettingsViewModel @Inject constructor(
         return "https://mental-math.codeberg.page/app?s=${encoded}"
     }
 
-    fun playSound(sound: FeedbackType) {
-        feedbackController.play(sound)
+    fun playFeedback(feedbackType: FeedbackType) {
+        feedbackController.play(feedbackType)
     }
 
     private fun saveState() {

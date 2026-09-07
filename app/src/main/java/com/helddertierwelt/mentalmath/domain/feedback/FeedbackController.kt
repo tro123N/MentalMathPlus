@@ -45,6 +45,10 @@ class FeedbackController @Inject constructor(
         }
     }
 
+    fun setMode(mode: FeedbackMode) {
+        feedbackMode = mode
+    }
+
     fun play(feedback: FeedbackType) {
         when (feedbackMode) {
             FeedbackMode.FEEDBACK_OFF -> Unit

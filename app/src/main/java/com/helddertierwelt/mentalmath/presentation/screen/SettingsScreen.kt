@@ -138,11 +138,11 @@ fun SettingsScreen(
             SettingsTopBar(
                 titleFontSize = titleFontSize,
                 onMenuClick = {
-                    settingsViewModel.playSound(FeedbackType.TAP)
+                    settingsViewModel.playFeedback(FeedbackType.TAP)
                     settingsViewModel.toggleMenuOpen()
                 },
                 onScoreClick = {
-                    settingsViewModel.playSound(FeedbackType.TAP)
+                    settingsViewModel.playFeedback(FeedbackType.TAP)
                     settingsViewModel.loadBestGameScores()
                     settingsViewModel.toggleScoreOpen()
                 },
@@ -344,7 +344,7 @@ fun SettingsScreen(
                     }
                     StartButton(
                         onClick = {
-                            settingsViewModel.playSound(FeedbackType.START)
+                            settingsViewModel.playFeedback(FeedbackType.START)
                             settingsViewModel.setIsStartButtonClicked(true)
                             resultViewModel.setShowLinkGamePopUp(false)
                             gameViewModel.reset()
@@ -390,12 +390,12 @@ fun SettingsScreen(
         PopUp(
             onDismissRequest = { settingsViewModel.setShowNotificationPermissionPopUp(false) },
             onConfirm = {
-                settingsViewModel.playSound(FeedbackType.TAP)
+                settingsViewModel.playFeedback(FeedbackType.TAP)
                 openNotificationSettings(context)
                 settingsViewModel.setShowNotificationPermissionPopUp(false)
             },
             onCancel = {
-                settingsViewModel.playSound(FeedbackType.TAP)
+                settingsViewModel.playFeedback(FeedbackType.TAP)
                 settingsViewModel.setShowNotificationPermissionPopUp(false)
             },
             titleSize = titleFontSize,
@@ -413,7 +413,7 @@ fun SettingsScreen(
         PopUp(
             onDismissRequest = { settingsViewModel.setShowResetPopUp(false) },
             onConfirm = {
-                settingsViewModel.playSound(FeedbackType.STOP)
+                settingsViewModel.playFeedback(FeedbackType.STOP)
                 gameViewModel.resetGameData()
                 settingsViewModel.resetSettings()
                 NotificationScheduler.cancelNotificationWork(context)
@@ -422,7 +422,7 @@ fun SettingsScreen(
                 mainActivityViewModel.resetMainActivity()
             },
             onCancel = {
-                settingsViewModel.playSound(FeedbackType.TAP)
+                settingsViewModel.playFeedback(FeedbackType.TAP)
                 settingsViewModel.setShowResetPopUp(false)
             },
             titleSize = titleFontSize,

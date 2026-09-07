@@ -26,5 +26,5 @@ data class GameResultInfo(
     val color: Color,
     val title: String,
     val description: String,
-    val sound: FeedbackType
+    val feedbackType: FeedbackType
 )

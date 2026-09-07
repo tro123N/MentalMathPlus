@@ -131,7 +131,7 @@ class MainActivity : ComponentActivity() {
                             gameViewModel.setIsLinkGame(true)
                             gameViewModel.setSettingsFromLink(gameRecordFromAppLink.value, settingsViewModel.settingsState.value)
                             resultViewModel.prepareGameFromLink(gameRecordFromAppLink.value)
-                            mainActivityViewModel.playSound(FeedbackType.START)
+                            mainActivityViewModel.playFeedback(FeedbackType.START)
                             navController.navigate("game") {
                                 popUpTo(0) { inclusive = true }
                                 launchSingleTop = true
@@ -141,7 +141,7 @@ class MainActivity : ComponentActivity() {
                             mainActivityViewModel.setShowDeepLinkPopUp(false)
                         },
                         onCancel = {
-                            mainActivityViewModel.playSound(FeedbackType.TAP)
+                            mainActivityViewModel.playFeedback(FeedbackType.TAP)
                             mainActivityViewModel.setShowDeepLinkPopUp(false)
                         },
                         titleSize = titleFontSize,
@@ -164,7 +164,7 @@ class MainActivity : ComponentActivity() {
                     PopUp(
                         onDismissRequest = { mainActivityViewModel.setShowAlreadyPlayedPopUp(false) },
                         onConfirm = {
-                            mainActivityViewModel.playSound(FeedbackType.TAP)
+                            mainActivityViewModel.playFeedback(FeedbackType.TAP)
                             mainActivityViewModel.setShowAlreadyPlayedPopUp(false)
                         },
                         titleSize = titleFontSize,

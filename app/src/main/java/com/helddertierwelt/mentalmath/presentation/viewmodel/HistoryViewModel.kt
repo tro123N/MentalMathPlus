@@ -68,7 +68,7 @@ class HistoryViewModel @Inject constructor(
         loadAllGames()
     }
 
-    fun playSound(sound: FeedbackType) {
-        feedbackController.play(sound)
+    fun playFeedback(feedbackType: FeedbackType) {
+        feedbackController.play(feedbackType)
     }
 }

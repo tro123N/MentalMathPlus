@@ -209,7 +209,7 @@ fun GameScreen(
                                 NumberButton(
                                     number = number,
                                     onPress = {
-                                        gameViewModel.playSound(FeedbackType.NUMPAD)
+                                        gameViewModel.playFeedback(FeedbackType.NUMPAD)
                                     },
                                     onClick = {
                                         if (isRightToLeft) {
@@ -232,7 +232,7 @@ fun GameScreen(
                                 NumberButton(
                                     number = number,
                                     onPress = {
-                                        gameViewModel.playSound(FeedbackType.NUMPAD)
+                                        gameViewModel.playFeedback(FeedbackType.NUMPAD)
                                     },
                                     onClick = {
                                         if (isRightToLeft) {
@@ -255,7 +255,7 @@ fun GameScreen(
                                 NumberButton(
                                     number = number,
                                     onPress = {
-                                        gameViewModel.playSound(FeedbackType.NUMPAD)
+                                        gameViewModel.playFeedback(FeedbackType.NUMPAD)
                                     },
                                     onClick = {
                                         if (isRightToLeft) {
@@ -277,7 +277,7 @@ fun GameScreen(
                     ) {
                         BackspaceButton(
                             onPress = {
-                                gameViewModel.playSound(FeedbackType.BACKSPACE)
+                                gameViewModel.playFeedback(FeedbackType.BACKSPACE)
                             },
                             onClick = {
                                 if (isRightToLeft) {
@@ -293,7 +293,7 @@ fun GameScreen(
                         NumberButton(
                             number = 0,
                             onPress = {
-                                gameViewModel.playSound(FeedbackType.NUMPAD)
+                                gameViewModel.playFeedback(FeedbackType.NUMPAD)
                             },
                             onClick = {
                                 if (isRightToLeft) {
@@ -367,7 +367,7 @@ fun GameScreen(
                 }
             },
             onCancel = {
-                gameViewModel.playSound(FeedbackType.TAP)
+                gameViewModel.playFeedback(FeedbackType.TAP)
                 showDialog = false
             },
             titleSize = titleFontSize,

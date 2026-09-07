@@ -49,7 +49,7 @@ class MainActivityViewModel @Inject constructor(
         setShowDeepLinkPopUp(false)
     }
 
-    fun playSound(sound: FeedbackType) {
-        feedbackController.play(sound)
+    fun playFeedback(feedbackType: FeedbackType) {
+        feedbackController.play(feedbackType)
     }
 }

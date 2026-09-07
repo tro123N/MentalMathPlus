@@ -104,14 +104,14 @@ class GameViewModel @Inject constructor(
     }
 
     fun toggleIsRightToLeft(): Boolean {
-        playSound(FeedbackType.TAP)
+        playFeedback(FeedbackType.TAP)
         val newValue = !_gameState.value.isRightToLeft
         saveState(_gameState.value.copy(isRightToLeft = newValue))
         return newValue
     }
 
     fun toggleIsVerticalForm(): Boolean {
-        playSound(FeedbackType.TAP)
+        playFeedback(FeedbackType.TAP)
         val newValue = !_gameState.value.isVerticalForm
         saveState(_gameState.value.copy(isVerticalForm = newValue))
         return newValue
@@ -197,7 +197,7 @@ class GameViewModel @Inject constructor(
         val newState: GameState
         when (userInput) {
             null -> {
-                playSound(FeedbackType.SKIPPED)
+                playFeedback(FeedbackType.SKIPPED)
                 newState = _gameState.value.copy(
                     skippedAnswers = _gameState.value.skippedAnswers + 1,
                     totalAnswers = _gameState.value.totalAnswers + 1,
@@ -206,7 +206,7 @@ class GameViewModel @Inject constructor(
             }
 
             correctResult -> {
-                playSound(FeedbackType.CORRECT)
+                playFeedback(FeedbackType.CORRECT)
                 newState = _gameState.value.copy(
                     correctAnswers = _gameState.value.correctAnswers + 1,
                     totalAnswers = _gameState.value.totalAnswers + 1,
@@ -215,7 +215,7 @@ class GameViewModel @Inject constructor(
             }
 
             else -> {
-                playSound(FeedbackType.WRONG)
+                playFeedback(FeedbackType.WRONG)
                 newState = _gameState.value.copy(
                     wrongAnswers = _gameState.value.wrongAnswers + 1,
                     totalAnswers = _gameState.value.totalAnswers + 1,
@@ -517,25 +517,32 @@ class GameViewModel @Inject constructor(
                     0f
                 }
 
-            val sound = when {
+            val feedbackType = when {
                 correctPercentage >= 0.9f -> FeedbackType.BEST
                 correctPercentage >= 0.8f -> FeedbackType.GOOD
                 correctPercentage >= 0.5f -> FeedbackType.OKAY
                 else -> FeedbackType.BAD
             }
-            playSound(sound)
+            playDelayedFeedback(feedbackType)
         }
     }
 
     fun cancelGame() {
-        playSound(FeedbackType.STOP)
+        playFeedback(FeedbackType.STOP)
         pauseTimer()
         saveCancelledGameRecord()
         saveState(_gameState.value.copy(isGameStarted = false))
     }
 
-    fun playSound(sound: FeedbackType) {
-        feedbackController.play(sound)
+    fun playFeedback(feedbackType: FeedbackType) {
+        feedbackController.play(feedbackType)
+    }
+
+    fun playDelayedFeedback(feedbackType: FeedbackType) {
+        viewModelScope.launch {
+            delay(400.milliseconds)
+            playFeedback(feedbackType)
+        }
     }
 
     override fun onPause(owner: LifecycleOwner) {

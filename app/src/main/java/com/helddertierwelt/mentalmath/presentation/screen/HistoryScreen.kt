@@ -97,7 +97,7 @@ fun HistoryScreen(
                 titleFontSize = titleFontSize,
                 iconSize = iconSize,
                 onClick = {
-                    historyViewModel.playSound(FeedbackType.TAP)
+                    historyViewModel.playFeedback(FeedbackType.TAP)
                     historyViewModel.setSortMode(it)
                 },
                 currentSortMode = currentSortMode
@@ -133,7 +133,7 @@ fun HistoryScreen(
                             fontSize = 12.sp,
                             isEnabled = !isEntryClicked,
                             onClick = { gameRecordId ->
-                                historyViewModel.playSound(FeedbackType.TAP)
+                                historyViewModel.playFeedback(FeedbackType.TAP)
                                 historyViewModel.setIsEntryClicked(true)
                                 resultViewModel.setNavigatedFromHistory(true)
                                 resultViewModel.setLoadedGameRecord(gameRecordId)
@@ -151,7 +151,7 @@ fun HistoryScreen(
                         iconSize = doneIconSize,
                         modifier = Modifier,
                         onClick = {
-                            historyViewModel.playSound(FeedbackType.TAP)
+                            historyViewModel.playFeedback(FeedbackType.TAP)
                             navigateBack()
                         }
                     )

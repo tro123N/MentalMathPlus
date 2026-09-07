@@ -219,7 +219,7 @@ fun MenuSideSheet(
                                 "https://codeberg.org/Mental-Math/MentalMath/releases/tag/v${BuildConfig.VERSION_NAME}".toUri()
                             )
                         },
-                        onClickSound = { settingsViewModel.playSound(FeedbackType.TAP) },
+                        onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
                         text = " v${BuildConfig.VERSION_NAME}",
                         errorMessage = stringResource(R.string.no_browser)
                     )
@@ -248,7 +248,7 @@ fun MenuSideSheet(
                                 "Share Game"
                             )
                         },
-                        onClickSound = { settingsViewModel.playSound(FeedbackType.TAP) },
+                        onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
                         errorMessage = stringResource(R.string.no_share)
                     )
 
@@ -258,7 +258,7 @@ fun MenuSideSheet(
                         resultViewModel.setShowLinkGamePopUp(false)
                         gameViewModel.reset()
                         gameViewModel.setRandomSettings(settingsViewModel.settingsState.value)
-                        settingsViewModel.playSound(FeedbackType.START)
+                        settingsViewModel.playFeedback(FeedbackType.START)
                         navController.navigate("game") {
                             popUpTo(0) { inclusive = true }
                             launchSingleTop = true
@@ -281,7 +281,7 @@ fun MenuSideSheet(
 
                     // History
                     fun openHistory() {
-                        settingsViewModel.playSound(FeedbackType.TAP)
+                        settingsViewModel.playFeedback(FeedbackType.TAP)
                         historyViewModel.loadAllGames()
                         navController.navigate("history") {
                             popUpTo(0) { inclusive = true }
@@ -303,7 +303,7 @@ fun MenuSideSheet(
                         iconSize = iconSize,
                         currentValue = settingsViewModel.settingsState.collectAsState().value.notificationMode,
                         onValueChange = {
-                            settingsViewModel.playSound(FeedbackType.TAP)
+                            settingsViewModel.playFeedback(FeedbackType.TAP)
                             if (it == NotificationMode.OFF || settingsViewModel.isPermissionGranted(context)) {
                                 settingsViewModel.setNotificationMode(it)
                                 NotificationScheduler.scheduleNotificationWork(context, it, calculateAnchorTime(it))
@@ -465,7 +465,7 @@ fun MenuSideSheet(
                                     data = Uri.fromParts("package", context.packageName, null)
                                 }
                             },
-                            onClickSound = { settingsViewModel.playSound(FeedbackType.TAP) },
+                            onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
                             errorMessage = stringResource(R.string.unknown_error)
                         )
                     }
@@ -483,7 +483,7 @@ fun MenuSideSheet(
                                 "https://mental-math.codeberg.page".toUri()
                             )
                         },
-                        onClickSound = { settingsViewModel.playSound(FeedbackType.TAP) },
+                        onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
                         errorMessage = stringResource(R.string.no_browser)
                     )
 
@@ -501,7 +501,7 @@ fun MenuSideSheet(
                                 putExtra(Intent.EXTRA_SUBJECT, "Mental Math: Feedback")
                             }
                         },
-                        onClickSound = { settingsViewModel.playSound(FeedbackType.TAP) },
+                        onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
                         errorMessage = stringResource(R.string.no_mail)
                     )
 
@@ -518,7 +518,7 @@ fun MenuSideSheet(
                                 "market://details?id=com.helddertierwelt.mentalmath".toUri()
                             )
                         },
-                        onClickSound = { settingsViewModel.playSound(FeedbackType.TAP) },
+                        onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
                         errorMessage = stringResource(R.string.no_app_store)
                     )
 
@@ -530,7 +530,7 @@ fun MenuSideSheet(
                         fontSize = fontSize,
                         iconSize = iconSize,
                         intentProvider = { Intent(Intent.ACTION_VIEW, "https://ko-fi.com/mental_math".toUri()) },
-                        onClickSound = { settingsViewModel.playSound(FeedbackType.TAP) },
+                        onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
                         errorMessage = stringResource(R.string.no_browser)
                     )
 
@@ -545,7 +545,7 @@ fun MenuSideSheet(
                         iconSize = iconSize,
                         color = red,
                         onClick = {
-                            settingsViewModel.playSound(FeedbackType.TAP)
+                            settingsViewModel.playFeedback(FeedbackType.TAP)
                             settingsViewModel.setShowResetPopUp(true)
                         }
                     )

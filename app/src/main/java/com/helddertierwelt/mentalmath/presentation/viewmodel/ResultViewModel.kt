@@ -27,11 +27,13 @@ import com.helddertierwelt.mentalmath.domain.feedback.FeedbackController
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class ResultViewModel @Inject constructor(
@@ -120,7 +122,14 @@ class ResultViewModel @Inject constructor(
         }
     }
 
-    fun playSound(sound: FeedbackType) {
-        feedbackController.play(sound)
+    fun playFeedback(feedbackType: FeedbackType) {
+        feedbackController.play(feedbackType)
+    }
+
+    fun playDelayedFeedback(feedbackType: FeedbackType) {
+        viewModelScope.launch {
+            delay(400.milliseconds)
+            playFeedback(feedbackType)
+        }
     }
 }

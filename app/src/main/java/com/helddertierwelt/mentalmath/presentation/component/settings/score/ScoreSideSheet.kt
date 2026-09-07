@@ -209,7 +209,7 @@ fun ScoreSideSheet(
                         lastGameId = lastGameId,
                         isEnabled = !isScoreClicked,
                         onClick = { gameRecord ->
-                            settingsViewModel.playSound(FeedbackType.TAP)
+                            settingsViewModel.playFeedback(FeedbackType.TAP)
                             settingsViewModel.setIsScoreClicked(true)
                             resultViewModel.setLoadedGameRecord(gameRecord.id)
                             resultViewModel.setShowLoadedGameRecord(true)

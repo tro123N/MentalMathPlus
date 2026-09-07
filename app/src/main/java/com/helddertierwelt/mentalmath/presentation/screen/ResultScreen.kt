@@ -193,7 +193,7 @@ fun ResultScreen(
                 titleFontSize = titleFontSize,
                 iconSize = shareIconSize,
                 onShareClick = {
-                    resultViewModel.playSound(FeedbackType.TAP)
+                    resultViewModel.playFeedback(FeedbackType.TAP)
                     coroutineScope.launch {
                         scrollState.animateScrollTo(0)
                         val bitmap = captureSettingsCardBitmap()
@@ -265,7 +265,7 @@ fun ResultScreen(
                         iconSize = doneIconSize,
                         modifier = Modifier,
                         onClick = {
-                            resultViewModel.playSound(FeedbackType.TAP)
+                            resultViewModel.playFeedback(FeedbackType.TAP)
                             navigateBack()
                         }
                     )
@@ -285,7 +285,7 @@ fun ResultScreen(
         } else {
             AppLocale.format(stringResource(R.string.result_share_message), formatScore(currentScore), formatScore(linkScore), seed)
         }
-        resultViewModel.playSound(gamePopUpInfo.sound)
+        resultViewModel.playDelayedFeedback(gamePopUpInfo.feedbackType)
         PopUp(
             titleSize = titleFontSize,
             descriptionSize = (0.018f * screenHeight.value).sp,
@@ -305,10 +305,10 @@ fun ResultScreen(
             dismissColor = green,
             onDismissRequest = { resultViewModel.setShowLinkGamePopUp(false) },
             onCancel = {
-                resultViewModel.playSound(FeedbackType.TAP)
+                resultViewModel.playFeedback(FeedbackType.TAP)
                 resultViewModel.setShowLinkGamePopUp(false) },
             onConfirm = {
-                resultViewModel.playSound(FeedbackType.TAP)
+                resultViewModel.playFeedback(FeedbackType.TAP)
                 coroutineScope.launch {
                     scrollState.animateScrollTo(0)
                     val bitmap = captureSettingsCardBitmap()
