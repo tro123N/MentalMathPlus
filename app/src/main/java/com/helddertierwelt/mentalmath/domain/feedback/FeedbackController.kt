@@ -21,7 +21,8 @@ package com.helddertierwelt.mentalmath.domain.feedback
 import com.helddertierwelt.mentalmath.data.feedback.SoundManager
 import com.helddertierwelt.mentalmath.data.feedback.VibrationManager
 import com.helddertierwelt.mentalmath.data.repository.SettingsRepository
-import com.helddertierwelt.mentalmath.domain.settings.FeedbackMode
+import com.helddertierwelt.mentalmath.domain.settings.SoundMode
+import com.helddertierwelt.mentalmath.domain.settings.VibrationMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,25 +36,34 @@ class FeedbackController @Inject constructor(
     settingsRepository: SettingsRepository
 ) {
 
-    private var feedbackMode = FeedbackMode.FEEDBACK_OFF
+    private var soundMode = SoundMode.SOUND_OFF
+    private var vibrationMode = VibrationMode.VIBRATION_OFF
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
             settingsRepository.settingsFlow.collect {
-                feedbackMode = it.feedbackMode
+                soundMode = it.soundMode
+                vibrationMode = it.vibrationMode
             }
         }
     }
 
-    fun setMode(mode: FeedbackMode) {
-        feedbackMode = mode
+    fun setSoundMode(mode: SoundMode) {
+        soundMode = mode
+    }
+
+    fun setVibrationMode(mode: VibrationMode) {
+        vibrationMode = mode
     }
 
     fun play(feedback: FeedbackType) {
-        when (feedbackMode) {
-            FeedbackMode.FEEDBACK_OFF -> Unit
-            FeedbackMode.SOUND -> soundManager.play(feedback)
-            FeedbackMode.VIBRATION -> vibrationManager.perform(feedback)
+        when (soundMode) {
+            SoundMode.SOUND_OFF -> Unit
+            SoundMode.SOUND_ON -> soundManager.play(feedback)
+        }
+        when (vibrationMode) {
+            VibrationMode.VIBRATION_OFF -> Unit
+            VibrationMode.VIBRATION_ON -> vibrationManager.perform(feedback)
         }
     }
 }

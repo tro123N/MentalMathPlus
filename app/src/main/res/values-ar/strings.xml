@@ -31,7 +31,9 @@
     <string name="avg_time_per_correct_answer">الوقت المُستغرَق لكل إجابة صحيحة</string>
     <string name="new_score">جديد</string>
     <string name="vertical">رأسي</string>
-    <string name="vibration">اهتزاز</string>
+    <string name="vibration_on">الاهتزاز قيد التشغيل</string>
+    <string name="vibration_off">الاهتزاز متوقف</string>
+    <string name="vibration_toast_text">قد تتأثر الاهتزازات بالجهاز أو إعدادات النظام</string>
     <string name="language">اللغة</string>
     <string name="difficulty_addition">صعوبة الجمع</string>
     <string name="mode_instruction">حدد الوضع والحد</string>

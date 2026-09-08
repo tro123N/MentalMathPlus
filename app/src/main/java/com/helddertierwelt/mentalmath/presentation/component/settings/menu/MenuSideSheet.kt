@@ -76,12 +76,13 @@ import com.helddertierwelt.mentalmath.BuildConfig
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler
 import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler.calculateAnchorTime
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.settings.AppLocale
 import com.helddertierwelt.mentalmath.domain.settings.NotificationMode
+import com.helddertierwelt.mentalmath.domain.settings.SoundMode
 import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
 import com.helddertierwelt.mentalmath.domain.settings.ToggleOption
-import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
-import com.helddertierwelt.mentalmath.domain.settings.FeedbackMode
+import com.helddertierwelt.mentalmath.domain.settings.VibrationMode
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.HistoryViewModel
@@ -121,6 +122,8 @@ fun MenuSideSheet(
     var isFirstRender by remember { mutableStateOf(true) }
     val isRandomGameButtonClicked = settingsViewModel.isRandomGameButtonClicked.collectAsState().value
     val notificationToastText = stringResource(R.string.notification_toast_text)
+    val vibrationToastText = stringResource(R.string.vibration_toast_text)
+
 
     LaunchedEffect(Unit) {
         settingsViewModel.settingsState.collect { settingsState ->
@@ -431,23 +434,47 @@ fun MenuSideSheet(
                     CycleToggleRow(
                         fontSize = fontSize,
                         iconSize = iconSize,
-                        currentValue = settingsViewModel.settingsState.collectAsState().value.feedbackMode,
-                        onValueChange = { settingsViewModel.setFeedbackMode(it) },
+                        currentValue = settingsViewModel.settingsState.collectAsState().value.soundMode,
+                        onValueChange = { settingsViewModel.setSoundMode(it) },
                         options = listOf(
                             ToggleOption(
-                                value = FeedbackMode.FEEDBACK_OFF,
+                                value = SoundMode.SOUND_OFF,
                                 iconRes = R.drawable.volume_off_24dp,
                                 textRes = R.string.sound_off
                             ),
                             ToggleOption(
-                                value = FeedbackMode.SOUND,
+                                value = SoundMode.SOUND_ON,
                                 iconRes = R.drawable.volume_up_24dp,
                                 textRes = R.string.sound_on
+                            )
+                        )
+                    )
+
+                    // Vibration
+                    CycleToggleRow(
+                        fontSize = fontSize,
+                        iconSize = iconSize,
+                        currentValue = settingsViewModel.settingsState.collectAsState().value.vibrationMode,
+                        onValueChange = {
+                            settingsViewModel.setVibrationMode(it)
+                            if (it == VibrationMode.VIBRATION_ON) {
+                                Toast.makeText(
+                                    context,
+                                    vibrationToastText,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        },
+                        options = listOf(
+                            ToggleOption(
+                                value = VibrationMode.VIBRATION_OFF,
+                                iconRes = R.drawable.mobile_vibrate_off_24dp,
+                                textRes = R.string.vibration_off
                             ),
                             ToggleOption(
-                                value = FeedbackMode.VIBRATION,
+                                value = VibrationMode.VIBRATION_ON,
                                 iconRes = R.drawable.mobile_vibrate_24dp,
-                                textRes = R.string.vibration
+                                textRes = R.string.vibration_on
                             )
                         )
                     )

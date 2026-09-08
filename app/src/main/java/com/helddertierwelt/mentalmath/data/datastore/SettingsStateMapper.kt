@@ -19,20 +19,22 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.data.datastore
 
 import com.helddertierwelt.mentalmath.SettingsStateProto
-import com.helddertierwelt.mentalmath.SettingsStateProto.FeedbackMode.FEEDBACK_OFF
-import com.helddertierwelt.mentalmath.SettingsStateProto.FeedbackMode.SOUND
-import com.helddertierwelt.mentalmath.SettingsStateProto.FeedbackMode.VIBRATION
 import com.helddertierwelt.mentalmath.SettingsStateProto.NotificationMode.DAILY
 import com.helddertierwelt.mentalmath.SettingsStateProto.NotificationMode.OFF
 import com.helddertierwelt.mentalmath.SettingsStateProto.NotificationMode.THREEDAILY
 import com.helddertierwelt.mentalmath.SettingsStateProto.NotificationMode.WEEKLY
+import com.helddertierwelt.mentalmath.SettingsStateProto.SoundMode.SOUND_OFF
+import com.helddertierwelt.mentalmath.SettingsStateProto.SoundMode.SOUND_ON
 import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.DARK
 import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.LIGHT
 import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.SYSTEM
-import com.helddertierwelt.mentalmath.domain.settings.FeedbackMode
+import com.helddertierwelt.mentalmath.SettingsStateProto.VibrationMode.VIBRATION_OFF
+import com.helddertierwelt.mentalmath.SettingsStateProto.VibrationMode.VIBRATION_ON
 import com.helddertierwelt.mentalmath.domain.settings.NotificationMode
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
+import com.helddertierwelt.mentalmath.domain.settings.SoundMode
 import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
+import com.helddertierwelt.mentalmath.domain.settings.VibrationMode
 
 fun SettingsState.toProto(): SettingsStateProto {
     return SettingsStateProto.newBuilder()
@@ -68,11 +70,16 @@ fun SettingsState.toProto(): SettingsStateProto {
                 NotificationMode.WEEKLY -> WEEKLY
             }
         )
-        .setFeedbackMode(
-            when (feedbackMode) {
-                FeedbackMode.FEEDBACK_OFF -> FEEDBACK_OFF
-                FeedbackMode.SOUND -> SOUND
-                FeedbackMode.VIBRATION -> VIBRATION
+        .setSoundMode(
+            when (soundMode) {
+                SoundMode.SOUND_OFF -> SOUND_OFF
+                SoundMode.SOUND_ON -> SOUND_ON
+            }
+        )
+        .setVibrationMode(
+            when (vibrationMode) {
+                VibrationMode.VIBRATION_OFF -> VIBRATION_OFF
+                VibrationMode.VIBRATION_ON -> VIBRATION_ON
             }
         )
         .build()
@@ -92,11 +99,15 @@ fun SettingsStateProto.toSettingsState(): SettingsState {
         isDivisionEnabled = isDivideEnabled,
         isNumpadDefault = isNumpadDefault,
         isRightToLeftDefault = isRightToLeftDefault,
-        feedbackMode = when (feedbackMode) {
-            FEEDBACK_OFF -> FeedbackMode.FEEDBACK_OFF
-            SOUND -> FeedbackMode.SOUND
-            VIBRATION -> FeedbackMode.VIBRATION
-            SettingsStateProto.FeedbackMode.UNRECOGNIZED -> FeedbackMode.FEEDBACK_OFF
+        soundMode = when (soundMode) {
+            SOUND_OFF -> SoundMode.SOUND_OFF
+            SOUND_ON -> SoundMode.SOUND_ON
+            SettingsStateProto.SoundMode.UNRECOGNIZED -> SoundMode.SOUND_OFF
+        },
+        vibrationMode = when (vibrationMode) {
+            VIBRATION_OFF -> VibrationMode.VIBRATION_OFF
+            VIBRATION_ON -> VibrationMode.VIBRATION_ON
+            SettingsStateProto.VibrationMode.UNRECOGNIZED -> VibrationMode.VIBRATION_OFF
         },
         isVerticalFormDefault = isVerticalFormDefault,
         themeMode = when (themeMode) {

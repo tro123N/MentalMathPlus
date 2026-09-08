@@ -49,6 +49,9 @@ Set up periodic reminders to support regular mental math practice. Notifications
 #### Customizable Interface
 Choose your preferred keypad (numeric or phone-style), display math problems horizontally or vertically, and adjust the input direction (left-to-right or right-to-left) to suit your preferences.
 
+#### Sound & Vibration
+Choose sound and/or vibration as feedback during games for clearer, more immediate feedback. Both options can be enabled or disabled independently. Vibration may depend on your device or system settings.
+
 #### Clean Design
 A simple and minimalist app design with no unnecessary elements or distractions, designed to keep your focus fully on mental math training. Supports both light and dark modes.
 
@@ -120,7 +123,7 @@ Your privacy is important. Here are the key facts:
 
 - "Mental Math" does not collect, store, or process any personal data and does not use trackers, ads, or third-party services.
 - Android may require a brief internet connection once to verify the domain used for the app’s game links. Apart from that, no internet connection is required.
-- By default, no permissions are required. If haptic feedback is enabled, the app uses the vibrate permission to provide vibration feedback. When reminders are enabled, the app requests notification permission and uses system features to ensure reminders survive device restarts and trigger reliably.
+- By default, no permissions are required. Enabling vibration feedback requires permission to vibrate. Enabling reminders requires notification permission and uses system features to ensure reminders survive device restarts and trigger reliably.
 
 ## Contributing
 Contributions are welcome. There are several ways to support "Mental Math":

@@ -48,8 +48,8 @@ message SettingsStateProto {
     LIGHT = 1;
     DARK = 2;
   }
-
   ThemeMode theme_mode = 16;
+
   bool is_numpad_default = 17;
   bool is_right_to_left_default = 18;
 
@@ -59,16 +59,20 @@ message SettingsStateProto {
     THREEDAILY = 2;
     WEEKLY = 3;
   }
-
   NotificationMode notification_mode = 19;
 
-  enum FeedbackMode {
-    FEEDBACK_OFF = 0;
-    SOUND = 1;
-    VIBRATION = 2;
+  enum SoundMode {
+    SOUND_OFF = 0;
+    SOUND_ON = 1;
   }
-
-  FeedbackMode feedback_mode = 20;
+  SoundMode sound_mode = 20;
 
   bool is_vertical_form_default = 21;
+
+  enum VibrationMode {
+    VIBRATION_OFF = 0;
+    VIBRATION_ON = 1;
+  }
+  VibrationMode vibration_mode = 22;
+
 }

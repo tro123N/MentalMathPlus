@@ -38,7 +38,8 @@ data class SettingsState(
 
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val notificationMode: NotificationMode = NotificationMode.OFF,
-    val feedbackMode: FeedbackMode = FeedbackMode.FEEDBACK_OFF,
+    val soundMode: SoundMode = SoundMode.SOUND_OFF,
+    val vibrationMode: VibrationMode = VibrationMode.VIBRATION_OFF,
     val isNumpadDefault: Boolean = false,
     val isRightToLeftDefault: Boolean = false,
     val isVerticalFormDefault: Boolean = false

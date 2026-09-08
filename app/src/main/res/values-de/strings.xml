@@ -24,7 +24,9 @@
     <string name="system_mode">System Design</string>
     <string name="sound_on">Sound an</string>
     <string name="sound_off">Sound aus</string>
-    <string name="vibration">Vibration</string>
+    <string name="vibration_on">Vibration an</string>
+    <string name="vibration_off">Vibration aus</string>
+    <string name="vibration_toast_text">Vibration kann vom Gerät oder den Systemeinstellungen abhängen</string>
     <string name="language">Sprache</string>
     <string name="about">Über die App</string>
     <string name="feedback">Feedback</string>

@@ -24,7 +24,9 @@
     <string name="system_mode">Način sustava</string>
     <string name="sound_on">Zvuk uključen</string>
     <string name="sound_off">Zvuk isključen</string>
-    <string name="vibration">Vibracija</string>
+    <string name="vibration_on">Vibracija uključena</string>
+    <string name="vibration_off">Vibracija isključena</string>
+    <string name="vibration_toast_text">Vibracija može ovisiti o uređaju ili postavkama sustava</string>
     <string name="language">Jezik</string>
     <string name="about">O aplikaciji</string>
     <string name="feedback">Povratne informacije</string>

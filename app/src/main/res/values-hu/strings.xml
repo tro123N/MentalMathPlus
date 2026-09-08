@@ -24,7 +24,9 @@
     <string name="system_mode">Rendszerbeállítás</string>
     <string name="sound_on">Hang bekapcsolva</string>
     <string name="sound_off">Hang kikapcsolva</string>
-    <string name="vibration">Rezgés</string>
+    <string name="vibration_on">Rezgés bekapcsolva</string>
+    <string name="vibration_off">Rezgés kikapcsolva</string>
+    <string name="vibration_toast_text">A rezgés függhet az eszköztől vagy a rendszerbeállításoktól</string>
     <string name="language">Nyelv</string>
     <string name="about">Rólunk</string>
     <string name="feedback">Vissza\u200Bjelzés</string>

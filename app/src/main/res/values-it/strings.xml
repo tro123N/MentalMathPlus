@@ -24,7 +24,9 @@
     <string name="system_mode">Tema di sistema</string>
     <string name="sound_on">Audio attivo</string>
     <string name="sound_off">Audio disattivato</string>
-    <string name="vibration">Vibrazione</string>
+    <string name="vibration_on">Vibrazione attiva</string>
+    <string name="vibration_off">Vibrazione disattivata</string>
+    <string name="vibration_toast_text">La vibrazione può dipendere dal dispositivo o dalle impostazioni di sistema</string>
     <string name="language">Lingua</string>
     <string name="about">Info</string>
     <string name="feedback">Feed​back</string>

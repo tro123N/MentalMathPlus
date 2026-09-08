@@ -24,7 +24,9 @@
     <string name="system_mode">Системная тема</string>
     <string name="sound_on">Звук включён</string>
     <string name="sound_off">Звук выключен</string>
-    <string name="vibration">Вибрация</string>
+    <string name="vibration_on">Вибрация включена</string>
+    <string name="vibration_off">Вибрация выключена</string>
+    <string name="vibration_toast_text">Вибрация может зависеть от устройства или настроек системы</string>
     <string name="language">Язык</string>
     <string name="about">О приложении</string>
     <string name="feedback">Обратная связь</string>

@@ -25,7 +25,9 @@
     <string name="system_mode">Επιλογή Συστήματος</string>
     <string name="sound_on">Ήχος ενεργός</string>
     <string name="sound_off">Ήχος ανενεργός</string>
-    <string name="vibration">Δόνηση</string>
+    <string name="vibration_on">Δόνηση ενεργή</string>
+    <string name="vibration_off">Δόνηση ανενεργή</string>
+    <string name="vibration_toast_text">Η δόνηση μπορεί να επηρεάζεται από τη συσκευή ή τις ρυθμίσεις συστήματος</string>
     <string name="language">Γλώσσα</string>
     <string name="about">Σχετικά</string>
     <string name="feedback">Ανατροφο​δότηση</string>

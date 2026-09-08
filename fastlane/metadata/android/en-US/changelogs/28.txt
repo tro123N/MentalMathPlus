@@ -1,0 +1,5 @@
+- Added sound as a feedback option.
+- Added vibration as a feedback option.
+- Added Arabic translation contributed by Eisa Ali and E Ta. Thank you! :)
+- Previous game settings are now preserved after Random Game or Link Game.
+- Help improve translations on https://hosted.weblate.org/projects/mental-math/

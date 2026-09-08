@@ -32,10 +32,11 @@ import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
 import com.helddertierwelt.mentalmath.data.repository.SettingsRepository
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackController
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
-import com.helddertierwelt.mentalmath.domain.settings.FeedbackMode
 import com.helddertierwelt.mentalmath.domain.settings.NotificationMode
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
+import com.helddertierwelt.mentalmath.domain.settings.SoundMode
 import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
+import com.helddertierwelt.mentalmath.domain.settings.VibrationMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -203,9 +204,16 @@ class SettingsViewModel @Inject constructor(
         saveState()
     }
 
-    fun setFeedbackMode(mode: FeedbackMode) {
-        feedbackController.setMode(mode)
-        _settingsState.value = _settingsState.value.copy(feedbackMode = mode)
+    fun setSoundMode(mode: SoundMode) {
+        feedbackController.setSoundMode(mode)
+        _settingsState.value = _settingsState.value.copy(soundMode = mode)
+        saveState()
+        playFeedback(FeedbackType.TAP)
+    }
+
+    fun setVibrationMode(mode: VibrationMode) {
+        feedbackController.setVibrationMode(mode)
+        _settingsState.value = _settingsState.value.copy(vibrationMode = mode)
         saveState()
         playFeedback(FeedbackType.TAP)
     }
