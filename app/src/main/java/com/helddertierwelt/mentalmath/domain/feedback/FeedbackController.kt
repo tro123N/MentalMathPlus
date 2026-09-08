@@ -18,8 +18,8 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.domain.feedback
 
-import com.helddertierwelt.mentalmath.data.feedback.HapticManager
 import com.helddertierwelt.mentalmath.data.feedback.SoundManager
+import com.helddertierwelt.mentalmath.data.feedback.VibrationManager
 import com.helddertierwelt.mentalmath.data.repository.SettingsRepository
 import com.helddertierwelt.mentalmath.domain.settings.FeedbackMode
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +31,7 @@ import javax.inject.Singleton
 @Singleton
 class FeedbackController @Inject constructor(
     private val soundManager: SoundManager,
-    private val hapticManager: HapticManager,
+    private val vibrationManager: VibrationManager,
     settingsRepository: SettingsRepository
 ) {
 
@@ -53,7 +53,7 @@ class FeedbackController @Inject constructor(
         when (feedbackMode) {
             FeedbackMode.FEEDBACK_OFF -> Unit
             FeedbackMode.SOUND -> soundManager.play(feedback)
-            FeedbackMode.VIBRATION -> hapticManager.perform(feedback)
+            FeedbackMode.VIBRATION -> vibrationManager.perform(feedback)
         }
     }
 }

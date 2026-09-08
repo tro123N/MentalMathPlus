@@ -41,7 +41,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
-import com.helddertierwelt.mentalmath.data.feedback.HapticManager
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil.deserialize
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil.isValidQueryParameter
@@ -57,13 +56,10 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var hapticManager: HapticManager
     private val gameViewModel: GameViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
     private val resultViewModel: ResultViewModel by viewModels()
@@ -78,7 +74,6 @@ class MainActivity : ComponentActivity() {
             }
         }
         super.onCreate(savedInstanceState)
-        hapticManager.attach(window.decorView)
         if (savedInstanceState == null) {
             lifecycleScope.launch {
                 handleDeepLinkIntent(intent)
@@ -185,10 +180,6 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch { handleDeepLinkIntent(intent) }
     }
 
-    override fun onDestroy() {
-        hapticManager.detach()
-        super.onDestroy()
-    }
 
     private suspend fun handleDeepLinkIntent(intent: Intent?) {
         val data = intent?.data

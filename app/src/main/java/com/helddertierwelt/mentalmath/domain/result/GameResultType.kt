@@ -44,56 +44,56 @@ enum class GameResultType(
         color = blue,
         title = R.string.waiting_title,
         descriptions = GameResultDescriptions.waiting,
-        feedbackType = FeedbackType.NEUTRAL
+        feedbackType = FeedbackType.LINK_GAME_NEUTRAL
     ),
     EASY_WIN(
         icon = R.drawable.favorite_24dp,
         color = red,
         title = R.string.easy_win_title,
         descriptions = GameResultDescriptions.easyWin,
-        feedbackType = FeedbackType.GOOD
+        feedbackType = FeedbackType.LINK_GAME_GOOD
     ),
     ANYONE_HERE(
         icon = R.drawable.question_mark_24dp,
         color = blue,
         title = R.string.anyone_here_title,
         descriptions = GameResultDescriptions.anyoneHere,
-        feedbackType = FeedbackType.NEUTRAL
+        feedbackType = FeedbackType.LINK_GAME_NEUTRAL
     ),
     WIN(
         icon = R.drawable.trophy_24dp,
         color = yellow,
         title = R.string.win_title,
         descriptions = GameResultDescriptions.win,
-        feedbackType = FeedbackType.BEST
+        feedbackType = FeedbackType.LINK_GAME_BEST
     ),
     CLOSE_WIN(
         icon = R.drawable.trophy_24dp,
         color = yellow,
         title = R.string.close_win_title,
         descriptions = GameResultDescriptions.closeWin,
-        feedbackType = FeedbackType.BEST
+        feedbackType = FeedbackType.LINK_GAME_BEST
     ),
     DRAW(
         icon = R.drawable.partner_heart_24dp,
         color = green,
         title = R.string.draw_title,
         descriptions = GameResultDescriptions.draw,
-        feedbackType = FeedbackType.OKAY
+        feedbackType = FeedbackType.LINK_GAME_OKAY
     ),
     CLOSE_DEFEAT(
         icon = R.drawable.rainy_24dp,
         color = blue,
         title = R.string.close_defeat_title,
         descriptions = GameResultDescriptions.closeDefeat,
-        feedbackType = FeedbackType.BAD
+        feedbackType = FeedbackType.LINK_GAME_BAD
     ),
     DEFEAT(
         icon = R.drawable.rainy_24dp,
         color = blue,
         title = R.string.defeat_title,
         descriptions = GameResultDescriptions.defeat,
-        feedbackType = FeedbackType.BAD
+        feedbackType = FeedbackType.LINK_GAME_BAD
     );
 
     @SuppressLint("ResourceType")

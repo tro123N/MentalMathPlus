@@ -52,11 +52,15 @@ class SoundManager @Inject constructor(
         FeedbackType.SKIPPED to Sound(soundPool.load(context, R.raw.skip, 1), volume = 1f),
         FeedbackType.WRONG to Sound(soundPool.load(context, R.raw.wrong, 1), volume = 1f),
         FeedbackType.STOP to Sound(soundPool.load(context, R.raw.stop, 1), volume = 1f),
-        FeedbackType.NEUTRAL to Sound(soundPool.load(context, R.raw.neutral, 1), volume = 1f),
-        FeedbackType.BAD to Sound(soundPool.load(context, R.raw.bad, 1), volume = 1f),
-        FeedbackType.OKAY to Sound(soundPool.load(context, R.raw.okay, 1), volume = 1f),
-        FeedbackType.GOOD to Sound(soundPool.load(context, R.raw.good, 1), volume = 1f),
-        FeedbackType.BEST to Sound(soundPool.load(context, R.raw.best, 1), volume = 1f),
+        FeedbackType.LINK_GAME_NEUTRAL to Sound(soundPool.load(context, R.raw.link_game_neutral, 1), volume = 1f),
+        FeedbackType.LINK_GAME_BAD to Sound(soundPool.load(context, R.raw.link_game_bad, 1), volume = 1f),
+        FeedbackType.LINK_GAME_OKAY to Sound(soundPool.load(context, R.raw.link_game_okay, 1), volume = 1f),
+        FeedbackType.LINK_GAME_GOOD to Sound(soundPool.load(context, R.raw.link_game_good, 1), volume = 1f),
+        FeedbackType.LINK_GAME_BEST to Sound(soundPool.load(context, R.raw.link_game_best, 1), volume = 1f),
+        FeedbackType.RESULT_BAD to Sound(soundPool.load(context, R.raw.result_bad, 1), volume = 1f),
+        FeedbackType.RESULT_OKAY to Sound(soundPool.load(context, R.raw.result_okay, 1), volume = 1f),
+        FeedbackType.RESULT_GOOD to Sound(soundPool.load(context, R.raw.result_good, 1), volume = 1f),
+        FeedbackType.RESULT_PERFECT to Sound(soundPool.load(context, R.raw.result_perfect, 1), volume = 1f),
     )
 
     fun play(sound: FeedbackType) {

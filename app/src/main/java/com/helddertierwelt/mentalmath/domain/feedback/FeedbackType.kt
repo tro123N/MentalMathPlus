@@ -30,9 +30,13 @@ enum class FeedbackType {
     SKIPPED,
     WRONG,
     STOP,
-    NEUTRAL,
-    BAD,
-    OKAY,
-    GOOD,
-    BEST
+    LINK_GAME_NEUTRAL,
+    LINK_GAME_BAD,
+    LINK_GAME_OKAY,
+    LINK_GAME_GOOD,
+    LINK_GAME_BEST,
+    RESULT_BAD,
+    RESULT_OKAY,
+    RESULT_GOOD,
+    RESULT_PERFECT,
 }

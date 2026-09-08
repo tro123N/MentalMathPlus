@@ -518,10 +518,10 @@ class GameViewModel @Inject constructor(
                 }
 
             val feedbackType = when {
-                correctPercentage >= 0.9f -> FeedbackType.BEST
-                correctPercentage >= 0.8f -> FeedbackType.GOOD
-                correctPercentage >= 0.5f -> FeedbackType.OKAY
-                else -> FeedbackType.BAD
+                correctPercentage == 1f -> FeedbackType.RESULT_PERFECT
+                correctPercentage >= 0.8f -> FeedbackType.RESULT_GOOD
+                correctPercentage >= 0.6f -> FeedbackType.RESULT_OKAY
+                else -> FeedbackType.RESULT_BAD
             }
             playDelayedFeedback(feedbackType)
         }
