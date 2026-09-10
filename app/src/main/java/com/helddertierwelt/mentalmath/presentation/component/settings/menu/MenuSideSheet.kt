@@ -541,13 +541,13 @@ fun MenuSideSheet(
                                         errorMessage = stringResource(R.string.unknown_error)
                                     )
                                 }
-                            })
-
+                            }
+                        )
 
                         ExpandableMenuGroup(
                             title = stringResource(R.string.support),
                             fontSize = fontSize,
-                            iconResId = R.drawable.favorite_24dp,
+                            iconResId = R.drawable.partner_heart_24dp,
                             iconSize = iconSize,
                             isExpanded = expandedGroup == SettingsGroup.SUPPORT,
                             onToggle = {
@@ -559,23 +559,6 @@ fun MenuSideSheet(
                                     }
                             },
                             content = {
-                                // Website Link
-                                IntentRow(
-                                    iconResId = R.drawable.info_24dp,
-                                    contentDescription = "About",
-                                    text = stringResource(R.string.about),
-                                    fontSize = fontSize,
-                                    iconSize = iconSize,
-                                    intentProvider = {
-                                        Intent(
-                                            Intent.ACTION_VIEW,
-                                            "https://mental-math.codeberg.page".toUri()
-                                        )
-                                    },
-                                    onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
-                                    errorMessage = stringResource(R.string.no_browser)
-                                )
-
                                 // Feedback Link
                                 IntentRow(
                                     iconResId = R.drawable.feedback_24dp,
@@ -627,7 +610,25 @@ fun MenuSideSheet(
                                     onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
                                     errorMessage = stringResource(R.string.no_browser)
                                 )
-                            })
+                            }
+                        )
+
+                        // Website Link
+                        IntentRow(
+                            iconResId = R.drawable.info_24dp,
+                            contentDescription = "About",
+                            text = stringResource(R.string.about),
+                            fontSize = fontSize,
+                            iconSize = iconSize,
+                            intentProvider = {
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    "https://mental-math.codeberg.page".toUri()
+                                )
+                            },
+                            onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
+                            errorMessage = stringResource(R.string.no_browser)
+                        )
 
                         Spacer(modifier = Modifier.height(16.dp))
                     }
