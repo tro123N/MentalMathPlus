@@ -38,6 +38,9 @@
     <string name="no_share">Нет приложения, чтобы поделиться этим контентом.</string>
     <string name="no_app_store">Нет доступного магазина приложений для открытия этой страницы.</string>
     <string name="no_mail">Нет приложения для отправки писем.</string>
+    <string name="game_settings">Настройки игры</string>
+    <string name="app_settings">Настройки приложения</string>
+    <string name="support">Поддержать</string>
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Топ-10</string>
     <string name="new_score">новый</string>

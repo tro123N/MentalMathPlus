@@ -310,7 +310,7 @@ fun MenuSideSheet(
                         )
 
                         ExpandableMenuGroup(
-                            title = "Game Settings",
+                            title = stringResource(R.string.game_settings),
                             fontSize = fontSize,
                             iconResId = R.drawable.gamepad_24dp,
                             iconSize = iconSize,
@@ -387,7 +387,7 @@ fun MenuSideSheet(
                         )
 
                         ExpandableMenuGroup(
-                            title = "App Settings",
+                            title = stringResource(R.string.app_settings),
                             fontSize = fontSize,
                             iconResId = R.drawable.settings_24dp,
                             iconSize = iconSize,
@@ -545,7 +545,7 @@ fun MenuSideSheet(
 
 
                         ExpandableMenuGroup(
-                            title = "Support",
+                            title = stringResource(R.string.support),
                             fontSize = fontSize,
                             iconResId = R.drawable.favorite_24dp,
                             iconSize = iconSize,

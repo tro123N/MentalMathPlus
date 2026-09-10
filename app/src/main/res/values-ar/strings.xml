@@ -131,4 +131,7 @@
     <string name="result_share_message">أنا: %1$s | أنت: %2$s\nالبذرة: %3$d</string>
     <string name="share_challenge">حاول أنْ تتفوّق على نتيجتي البالغة %1$s في تطبيق الحساب الذهني.\nأعد تشغيل لعبتي باستخدام البذرة %2$d:\n\n%3$s</string>
     <string name="share_new_game">هيّا نلعب جولةً من الحساب الذهني!\nانقر على الرابط أدناه لبدء لعبةٍ جديدةٍ بإعداداتي ورقم البذرة:\n%1$d\n\n%2$s</string>
+    <string name="game_settings">إعدادات اللعبة</string>
+    <string name="app_settings">إعدادات التطبيق</string>
+    <string name="support">دعم التطبيق</string>
 </resources>

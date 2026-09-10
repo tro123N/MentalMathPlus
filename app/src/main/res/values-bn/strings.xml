@@ -39,6 +39,9 @@
     <string name="no_share">এই কন্টেন্ট শেয়ার করার জন্য কোনো অ্যাপ নেই।</string>
     <string name="no_app_store">এই পেজটি খোলার জন্য কোনো অ্যাপ স্টোর নেই।</string>
     <string name="no_mail">ইমেল পাঠানোর জন্য কোনো অ্যাপ নেই।</string>
+    <string name="game_settings">গেমের সেটিংস</string>
+    <string name="app_settings">অ্যাপের সেটিংস</string>
+    <string name="support">অ্যাপকে সহায়তা করুন</string>
 
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">শীর্ষ ১০</string>

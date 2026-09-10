@@ -38,6 +38,9 @@
     <string name="no_share">Nincs elérhető alkalmazás a tartalom megosztásához.</string>
     <string name="no_app_store">Nincs elérhető alkalmazásbolt az oldal megnyitásához.</string>
     <string name="no_mail">Nincs elérhető alkalmazás e-mailek küldéséhez.</string>
+    <string name="game_settings">Játékbeállítások</string>
+    <string name="app_settings">Alkalmazásbeállítások</string>
+    <string name="support">Támogatás</string>
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10</string>
     <string name="new_score">új</string>

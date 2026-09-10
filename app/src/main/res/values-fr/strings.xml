@@ -38,6 +38,9 @@
     <string name="no_share">Aucune application disponible pour partager ce contenu.</string>
     <string name="no_app_store">Aucune boutique d’applications disponible pour ouvrir cette page.</string>
     <string name="no_mail">Aucune application disponible pour envoyer des e-mails.</string>
+    <string name="game_settings">Paramètres du jeu</string>
+    <string name="app_settings">Paramètres de l’application</string>
+    <string name="support">Soutenir</string>
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10</string>
     <string name="new_score">actuel</string>

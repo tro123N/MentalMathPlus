@@ -87,6 +87,9 @@ Thank you for contributing!
     <string name="no_share">No app available to share this content.</string>
     <string name="no_app_store">No app store available to open this page.</string>
     <string name="no_mail">No app available to send emails.</string>
+    <string name="game_settings">Game Settings</string>
+    <string name="app_settings">App Settings</string>
+    <string name="support">Support</string>
 
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10</string>

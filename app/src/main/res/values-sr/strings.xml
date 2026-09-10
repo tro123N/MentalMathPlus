@@ -38,6 +38,9 @@
     <string name="no_share">Nijedna aplikacija nije dostupna za deljenje ovog sadržaja.</string>
     <string name="no_app_store">Nijedna prodavnica aplikacija nije dostupna za otvaranje ove stranice.</string>
     <string name="no_mail">Nijedna aplikacija nije dostupna za slanje imejlova.</string>
+    <string name="game_settings">Postavke igre</string>
+    <string name="app_settings">Postavke aplikacije</string>
+    <string name="support">Podrži</string>
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10</string>
     <string name="new_score">novo</string>

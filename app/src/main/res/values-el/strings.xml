@@ -39,6 +39,9 @@
     <string name="no_share">Δεν υπάρχει διαθέσιμη εφαρμογή για την κοινοποίηση αυτού του περιεχομένου.</string>
     <string name="no_app_store">Δεν υπάρχει διαθέσιμο κατάστημα εφαρμογών για το άνοιγμα αυτής της σελίδας.</string>
     <string name="no_mail">Δεν υπάρχει διαθέσιμη εφαρμογή για την αποστολή emails.</string>
+    <string name="game_settings">Ρυθμίσεις παιχνιδιού</string>
+    <string name="app_settings">Ρυθμίσεις εφαρμογής</string>
+    <string name="support">Υποστήριξη</string>
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10</string>
     <string name="new_score">νέα</string>
