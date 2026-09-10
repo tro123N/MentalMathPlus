@@ -209,463 +209,472 @@ fun MenuSideSheet(
             )
         ) {
 
-            Box {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(scrollState)
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Box(
+                    modifier = Modifier.weight(1f)
                 ) {
-                    // App Logo
-                    Spacer(modifier = Modifier.height(8.dp))
-                    LogoRow(
-                        size = logoSize,
-                        imageId = R.drawable.mental_math,
-                        intentProvider = {
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                "https://codeberg.org/Mental-Math/MentalMath/releases/tag/v${BuildConfig.VERSION_NAME}".toUri()
-                            )
-                        },
-                        onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
-                        text = " v${BuildConfig.VERSION_NAME}",
-                        errorMessage = stringResource(R.string.no_browser)
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(scrollState)
+                    ) {
+                        // App Logo
+                        Spacer(modifier = Modifier.height(8.dp))
+                        LogoRow(
+                            size = logoSize,
+                            imageId = R.drawable.mental_math,
+                            intentProvider = {
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    "https://codeberg.org/Mental-Math/MentalMath/releases/tag/v${BuildConfig.VERSION_NAME}".toUri()
+                                )
+                            },
+                            onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
+                            text = " v${BuildConfig.VERSION_NAME}",
+                            errorMessage = stringResource(R.string.no_browser)
+                        )
 
-                    // Share Game Link
-                    IntentRow(
-                        iconResId = R.drawable.swords_24dp,
-                        contentDescription = "Share Game",
-                        text = stringResource(R.string.share_game),
-                        fontSize = fontSize,
-                        iconSize = iconSize,
-                        isEnabled = settingsViewModel.isAnyOperationEnabled(),
-                        intentProvider = {
-                            Intent.createChooser(
-                                Intent(Intent.ACTION_SEND).apply {
-                                    type = "text/plain"
-                                    var seed: Long
-                                    do {
-                                        seed = SecureRandom().nextLong()
-                                    } while (seed < 0)
-                                    val seedLink = settingsViewModel.generateSeedLink(seed)
-                                    val shareText = AppLocale.format(shareNewGameMessage, seed, seedLink)
-                                    Log.d("SettingsScreen", "Sharing seed game: $shareText")
-                                    putExtra(Intent.EXTRA_TEXT, shareText)
-                                },
-                                "Share Game"
-                            )
-                        },
-                        onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
-                        errorMessage = stringResource(R.string.no_share)
-                    )
+                        // Share Game Link
+                        IntentRow(
+                            iconResId = R.drawable.swords_24dp,
+                            contentDescription = "Share Game",
+                            text = stringResource(R.string.share_game),
+                            fontSize = fontSize,
+                            iconSize = iconSize,
+                            isEnabled = settingsViewModel.isAnyOperationEnabled(),
+                            intentProvider = {
+                                Intent.createChooser(
+                                    Intent(Intent.ACTION_SEND).apply {
+                                        type = "text/plain"
+                                        var seed: Long
+                                        do {
+                                            seed = SecureRandom().nextLong()
+                                        } while (seed < 0)
+                                        val seedLink = settingsViewModel.generateSeedLink(seed)
+                                        val shareText = AppLocale.format(shareNewGameMessage, seed, seedLink)
+                                        Log.d("SettingsScreen", "Sharing seed game: $shareText")
+                                        putExtra(Intent.EXTRA_TEXT, shareText)
+                                    },
+                                    "Share Game"
+                                )
+                            },
+                            onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
+                            errorMessage = stringResource(R.string.no_share)
+                        )
 
-                    // Random Game
-                    fun startRandomGame() {
-                        settingsViewModel.setIsRandomGameButtonClicked(true)
-                        resultViewModel.setShowLinkGamePopUp(false)
-                        gameViewModel.reset()
-                        gameViewModel.setRandomSettings(settingsViewModel.settingsState.value)
-                        settingsViewModel.playFeedback(FeedbackType.START)
-                        navController.navigate("game") {
-                            popUpTo(0) { inclusive = true }
-                            launchSingleTop = true
+                        // Random Game
+                        fun startRandomGame() {
+                            settingsViewModel.setIsRandomGameButtonClicked(true)
+                            resultViewModel.setShowLinkGamePopUp(false)
+                            gameViewModel.reset()
+                            gameViewModel.setRandomSettings(settingsViewModel.settingsState.value)
+                            settingsViewModel.playFeedback(FeedbackType.START)
+                            navController.navigate("game") {
+                                popUpTo(0) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                            var seed: Long
+                            do {
+                                seed = SecureRandom().nextLong()
+                            } while (seed < 0)
+                            gameViewModel.startGame(seed)
                         }
-                        var seed: Long
-                        do {
-                            seed = SecureRandom().nextLong()
-                        } while (seed < 0)
-                        gameViewModel.startGame(seed)
-                    }
-                    ActionRow(
-                        iconResId = R.drawable.casino_24dp,
-                        contentDescription = "Random Game",
-                        text = stringResource(R.string.random_game),
-                        fontSize = fontSize,
-                        iconSize = iconSize,
-                        isEnabled = !isRandomGameButtonClicked,
-                        onClick = { startRandomGame() }
-                    )
+                        ActionRow(
+                            iconResId = R.drawable.casino_24dp,
+                            contentDescription = "Random Game",
+                            text = stringResource(R.string.random_game),
+                            fontSize = fontSize,
+                            iconSize = iconSize,
+                            isEnabled = !isRandomGameButtonClicked,
+                            onClick = { startRandomGame() }
+                        )
 
-                    // History
-                    fun openHistory() {
-                        settingsViewModel.playFeedback(FeedbackType.TAP)
-                        historyViewModel.loadAllGames()
-                        navController.navigate("history") {
-                            popUpTo(0) { inclusive = true }
-                            launchSingleTop = true
+                        // History
+                        fun openHistory() {
+                            settingsViewModel.playFeedback(FeedbackType.TAP)
+                            historyViewModel.loadAllGames()
+                            navController.navigate("history") {
+                                popUpTo(0) { inclusive = true }
+                                launchSingleTop = true
+                            }
                         }
-                    }
-                    ActionRow(
-                        iconResId = R.drawable.history_24dp,
-                        contentDescription = "History",
-                        text = stringResource(R.string.history),
-                        fontSize = fontSize,
-                        iconSize = iconSize,
-                        onClick = { openHistory() }
-                    )
+                        ActionRow(
+                            iconResId = R.drawable.history_24dp,
+                            contentDescription = "History",
+                            text = stringResource(R.string.history),
+                            fontSize = fontSize,
+                            iconSize = iconSize,
+                            onClick = { openHistory() }
+                        )
 
-                    ExpandableMenuGroup(
-                        title = "Game Settings",
-                        fontSize = fontSize,
-                        iconResId = R.drawable.videogame_asset_24dp,
-                        iconSize = iconSize,
-                        isExpanded = expandedGroup == SettingsGroup.GAME,
-                        onToggle = {
-                            expandedGroup =
-                                if (expandedGroup == SettingsGroup.GAME) {
-                                    null
-                                } else {
-                                    SettingsGroup.GAME
-                                }
-                        },
-                        content = {
-                            // Horizontal/Vertical Form
-                            CycleToggleRow(
-                                fontSize = fontSize,
-                                iconSize = iconSize,
-                                currentValue = settingsViewModel.settingsState.collectAsState().value.isVerticalFormDefault,
-                                onValueChange = { settingsViewModel.toggleForm() },
-                                options = listOf(
-                                    ToggleOption(
-                                        value = true,
-                                        iconRes = R.drawable.vertical_layout_24dp,
-                                        textRes = R.string.vertical
-                                    ),
-                                    ToggleOption(
-                                        value = false,
-                                        iconRes = R.drawable.horizontal_layout_24dp,
-                                        textRes = R.string.horizontal
+                        ExpandableMenuGroup(
+                            title = "Game Settings",
+                            fontSize = fontSize,
+                            iconResId = R.drawable.videogame_asset_24dp,
+                            iconSize = iconSize,
+                            isExpanded = expandedGroup == SettingsGroup.GAME,
+                            onToggle = {
+                                expandedGroup =
+                                    if (expandedGroup == SettingsGroup.GAME) {
+                                        null
+                                    } else {
+                                        SettingsGroup.GAME
+                                    }
+                            },
+                            content = {
+                                // Horizontal/Vertical Form
+                                CycleToggleRow(
+                                    fontSize = fontSize,
+                                    iconSize = iconSize,
+                                    currentValue = settingsViewModel.settingsState.collectAsState().value.isVerticalFormDefault,
+                                    onValueChange = { settingsViewModel.toggleForm() },
+                                    options = listOf(
+                                        ToggleOption(
+                                            value = true,
+                                            iconRes = R.drawable.vertical_layout_24dp,
+                                            textRes = R.string.vertical
+                                        ),
+                                        ToggleOption(
+                                            value = false,
+                                            iconRes = R.drawable.horizontal_layout_24dp,
+                                            textRes = R.string.horizontal
+                                        )
                                     )
                                 )
-                            )
 
-                            // Input Layout
-                            CycleToggleRow(
-                                fontSize = fontSize,
-                                iconSize = iconSize,
-                                currentValue = settingsViewModel.settingsState.collectAsState().value.isNumpadDefault,
-                                onValueChange = { settingsViewModel.toggleInputLayout() },
-                                options = listOf(
-                                    ToggleOption(
-                                        value = true,
-                                        iconRes = R.drawable.dialpad_24dp,
-                                        textRes = R.string.number_pad
-                                    ),
-                                    ToggleOption(
-                                        value = false,
-                                        iconRes = R.drawable.dialpad_24dp,
-                                        textRes = R.string.phone_pad
+                                // Input Layout
+                                CycleToggleRow(
+                                    fontSize = fontSize,
+                                    iconSize = iconSize,
+                                    currentValue = settingsViewModel.settingsState.collectAsState().value.isNumpadDefault,
+                                    onValueChange = { settingsViewModel.toggleInputLayout() },
+                                    options = listOf(
+                                        ToggleOption(
+                                            value = true,
+                                            iconRes = R.drawable.dialpad_24dp,
+                                            textRes = R.string.number_pad
+                                        ),
+                                        ToggleOption(
+                                            value = false,
+                                            iconRes = R.drawable.dialpad_24dp,
+                                            textRes = R.string.phone_pad
+                                        )
                                     )
                                 )
-                            )
 
-                            // Input Method
-                            CycleToggleRow(
-                                fontSize = fontSize,
-                                iconSize = iconSize,
-                                currentValue = settingsViewModel.settingsState.collectAsState().value.isRightToLeftDefault,
-                                onValueChange = { settingsViewModel.toggleInputMethod() },
-                                options = listOf(
-                                    ToggleOption(
-                                        value = true,
-                                        iconRes = R.drawable.right_to_left_24dp,
-                                        textRes = R.string.right_to_left
-                                    ),
-                                    ToggleOption(
-                                        value = false,
-                                        iconRes = R.drawable.left_to_right_24dp,
-                                        textRes = R.string.left_to_right
+                                // Input Method
+                                CycleToggleRow(
+                                    fontSize = fontSize,
+                                    iconSize = iconSize,
+                                    currentValue = settingsViewModel.settingsState.collectAsState().value.isRightToLeftDefault,
+                                    onValueChange = { settingsViewModel.toggleInputMethod() },
+                                    options = listOf(
+                                        ToggleOption(
+                                            value = true,
+                                            iconRes = R.drawable.right_to_left_24dp,
+                                            textRes = R.string.right_to_left
+                                        ),
+                                        ToggleOption(
+                                            value = false,
+                                            iconRes = R.drawable.left_to_right_24dp,
+                                            textRes = R.string.left_to_right
+                                        )
                                     )
                                 )
-                            )
-                        }
-                    )
+                            }
+                        )
 
-                    ExpandableMenuGroup(
-                        title = "App Settings",
-                        fontSize = fontSize,
-                        iconResId = R.drawable.settings_24dp,
-                        iconSize = iconSize,
-                        isExpanded = expandedGroup == SettingsGroup.APP,
-                        onToggle = {
-                            expandedGroup =
-                                if (expandedGroup == SettingsGroup.APP) {
-                                    null
-                                } else {
-                                    SettingsGroup.APP
-                                }
-                        },
-                        content = {
-                            // Notifications
-                            CycleToggleRow(
-                                fontSize = fontSize,
-                                iconSize = iconSize,
-                                currentValue = settingsViewModel.settingsState.collectAsState().value.notificationMode,
-                                onValueChange = {
-                                    settingsViewModel.playFeedback(FeedbackType.TAP)
-                                    if (it == NotificationMode.OFF || settingsViewModel.isPermissionGranted(context)) {
-                                        settingsViewModel.setNotificationMode(it)
-                                        NotificationScheduler.scheduleNotificationWork(context, it, calculateAnchorTime(it))
-                                        if (it == NotificationMode.DAILY) {
+                        ExpandableMenuGroup(
+                            title = "App Settings",
+                            fontSize = fontSize,
+                            iconResId = R.drawable.settings_24dp,
+                            iconSize = iconSize,
+                            isExpanded = expandedGroup == SettingsGroup.APP,
+                            onToggle = {
+                                expandedGroup =
+                                    if (expandedGroup == SettingsGroup.APP) {
+                                        null
+                                    } else {
+                                        SettingsGroup.APP
+                                    }
+                            },
+                            content = {
+                                // Notifications
+                                CycleToggleRow(
+                                    fontSize = fontSize,
+                                    iconSize = iconSize,
+                                    currentValue = settingsViewModel.settingsState.collectAsState().value.notificationMode,
+                                    onValueChange = {
+                                        settingsViewModel.playFeedback(FeedbackType.TAP)
+                                        if (it == NotificationMode.OFF || settingsViewModel.isPermissionGranted(context)) {
+                                            settingsViewModel.setNotificationMode(it)
+                                            NotificationScheduler.scheduleNotificationWork(
+                                                context,
+                                                it,
+                                                calculateAnchorTime(it)
+                                            )
+                                            if (it == NotificationMode.DAILY) {
+                                                Toast.makeText(
+                                                    context,
+                                                    notificationToastText,
+                                                    Toast.LENGTH_LONG
+                                                ).show()
+                                            }
+                                        } else {
+                                            settingsViewModel.setShowNotificationPermissionPopUp(true)
+                                        }
+                                    },
+                                    options = listOf(
+                                        ToggleOption(
+                                            NotificationMode.OFF,
+                                            R.drawable.notifications_off_24dp,
+                                            R.string.reminder_off
+                                        ),
+                                        ToggleOption(
+                                            NotificationMode.DAILY,
+                                            R.drawable.notifications_active_24dp,
+                                            R.string.daily_reminder
+                                        ),
+                                        ToggleOption(
+                                            NotificationMode.THREEDAILY,
+                                            R.drawable.notifications_active_24dp,
+                                            R.string.every_three_days
+                                        ),
+                                        ToggleOption(
+                                            NotificationMode.WEEKLY,
+                                            R.drawable.notifications_active_24dp,
+                                            R.string.weekly_reminder
+                                        )
+                                    )
+                                )
+
+                                // Theme
+                                CycleToggleRow(
+                                    fontSize = fontSize,
+                                    iconSize = iconSize,
+                                    currentValue = settingsViewModel.settingsState.collectAsState().value.themeMode,
+                                    onValueChange = { settingsViewModel.setThemeMode(it) },
+                                    options = listOf(
+                                        ToggleOption(
+                                            ThemeMode.DARK,
+                                            R.drawable.dark_mode_24dp,
+                                            R.string.dark_mode
+                                        ),
+                                        ToggleOption(
+                                            ThemeMode.LIGHT,
+                                            R.drawable.light_mode_24dp,
+                                            R.string.light_mode
+                                        ),
+                                        ToggleOption(
+                                            ThemeMode.SYSTEM,
+                                            R.drawable.dark_light_mode_24dp,
+                                            R.string.system_mode
+                                        )
+                                    )
+                                )
+
+                                // Sound
+                                CycleToggleRow(
+                                    fontSize = fontSize,
+                                    iconSize = iconSize,
+                                    currentValue = settingsViewModel.settingsState.collectAsState().value.soundMode,
+                                    onValueChange = { settingsViewModel.setSoundMode(it) },
+                                    options = listOf(
+                                        ToggleOption(
+                                            value = SoundMode.SOUND_OFF,
+                                            iconRes = R.drawable.volume_off_24dp,
+                                            textRes = R.string.sound_off
+                                        ),
+                                        ToggleOption(
+                                            value = SoundMode.SOUND_ON,
+                                            iconRes = R.drawable.volume_up_24dp,
+                                            textRes = R.string.sound_on
+                                        )
+                                    )
+                                )
+
+                                // Vibration
+                                CycleToggleRow(
+                                    fontSize = fontSize,
+                                    iconSize = iconSize,
+                                    currentValue = settingsViewModel.settingsState.collectAsState().value.vibrationMode,
+                                    onValueChange = {
+                                        settingsViewModel.setVibrationMode(it)
+                                        if (it == VibrationMode.VIBRATION_ON) {
                                             Toast.makeText(
                                                 context,
-                                                notificationToastText,
+                                                vibrationToastText,
                                                 Toast.LENGTH_LONG
                                             ).show()
                                         }
+                                    },
+                                    options = listOf(
+                                        ToggleOption(
+                                            value = VibrationMode.VIBRATION_OFF,
+                                            iconRes = R.drawable.mobile_vibrate_off_24dp,
+                                            textRes = R.string.vibration_off
+                                        ),
+                                        ToggleOption(
+                                            value = VibrationMode.VIBRATION_ON,
+                                            iconRes = R.drawable.mobile_vibrate_24dp,
+                                            textRes = R.string.vibration_on
+                                        )
+                                    )
+                                )
+
+                                // Language
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    IntentRow(
+                                        iconResId = R.drawable.translate_24dp,
+                                        contentDescription = "Language",
+                                        text = stringResource(R.string.language),
+                                        fontSize = fontSize,
+                                        iconSize = iconSize,
+                                        intentProvider = {
+                                            Intent(Settings.ACTION_APP_LOCALE_SETTINGS).apply {
+                                                data = Uri.fromParts("package", context.packageName, null)
+                                            }
+                                        },
+                                        onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
+                                        errorMessage = stringResource(R.string.unknown_error)
+                                    )
+                                }
+                            })
+
+
+                        ExpandableMenuGroup(
+                            title = "Support",
+                            fontSize = fontSize,
+                            iconResId = R.drawable.favorite_24dp,
+                            iconSize = iconSize,
+                            isExpanded = expandedGroup == SettingsGroup.SUPPORT,
+                            onToggle = {
+                                expandedGroup =
+                                    if (expandedGroup == SettingsGroup.SUPPORT) {
+                                        null
                                     } else {
-                                        settingsViewModel.setShowNotificationPermissionPopUp(true)
+                                        SettingsGroup.SUPPORT
                                     }
-                                },
-                                options = listOf(
-                                    ToggleOption(
-                                        NotificationMode.OFF,
-                                        R.drawable.notifications_off_24dp,
-                                        R.string.reminder_off
-                                    ),
-                                    ToggleOption(
-                                        NotificationMode.DAILY,
-                                        R.drawable.notifications_active_24dp,
-                                        R.string.daily_reminder
-                                    ),
-                                    ToggleOption(
-                                        NotificationMode.THREEDAILY,
-                                        R.drawable.notifications_active_24dp,
-                                        R.string.every_three_days
-                                    ),
-                                    ToggleOption(
-                                        NotificationMode.WEEKLY,
-                                        R.drawable.notifications_active_24dp,
-                                        R.string.weekly_reminder
-                                    )
-                                )
-                            )
-
-                            // Theme
-                            CycleToggleRow(
-                                fontSize = fontSize,
-                                iconSize = iconSize,
-                                currentValue = settingsViewModel.settingsState.collectAsState().value.themeMode,
-                                onValueChange = { settingsViewModel.setThemeMode(it) },
-                                options = listOf(
-                                    ToggleOption(
-                                        ThemeMode.DARK,
-                                        R.drawable.dark_mode_24dp,
-                                        R.string.dark_mode
-                                    ),
-                                    ToggleOption(
-                                        ThemeMode.LIGHT,
-                                        R.drawable.light_mode_24dp,
-                                        R.string.light_mode
-                                    ),
-                                    ToggleOption(
-                                        ThemeMode.SYSTEM,
-                                        R.drawable.dark_light_mode_24dp,
-                                        R.string.system_mode
-                                    )
-                                )
-                            )
-
-                            // Sound
-                            CycleToggleRow(
-                                fontSize = fontSize,
-                                iconSize = iconSize,
-                                currentValue = settingsViewModel.settingsState.collectAsState().value.soundMode,
-                                onValueChange = { settingsViewModel.setSoundMode(it) },
-                                options = listOf(
-                                    ToggleOption(
-                                        value = SoundMode.SOUND_OFF,
-                                        iconRes = R.drawable.volume_off_24dp,
-                                        textRes = R.string.sound_off
-                                    ),
-                                    ToggleOption(
-                                        value = SoundMode.SOUND_ON,
-                                        iconRes = R.drawable.volume_up_24dp,
-                                        textRes = R.string.sound_on
-                                    )
-                                )
-                            )
-
-                            // Vibration
-                            CycleToggleRow(
-                                fontSize = fontSize,
-                                iconSize = iconSize,
-                                currentValue = settingsViewModel.settingsState.collectAsState().value.vibrationMode,
-                                onValueChange = {
-                                    settingsViewModel.setVibrationMode(it)
-                                    if (it == VibrationMode.VIBRATION_ON) {
-                                        Toast.makeText(
-                                            context,
-                                            vibrationToastText,
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                },
-                                options = listOf(
-                                    ToggleOption(
-                                        value = VibrationMode.VIBRATION_OFF,
-                                        iconRes = R.drawable.mobile_vibrate_off_24dp,
-                                        textRes = R.string.vibration_off
-                                    ),
-                                    ToggleOption(
-                                        value = VibrationMode.VIBRATION_ON,
-                                        iconRes = R.drawable.mobile_vibrate_24dp,
-                                        textRes = R.string.vibration_on
-                                    )
-                                )
-                            )
-
-                            // Language
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            },
+                            content = {
+                                // Website Link
                                 IntentRow(
-                                    iconResId = R.drawable.translate_24dp,
-                                    contentDescription = "Language",
-                                    text = stringResource(R.string.language),
+                                    iconResId = R.drawable.info_24dp,
+                                    contentDescription = "About",
+                                    text = stringResource(R.string.about),
                                     fontSize = fontSize,
                                     iconSize = iconSize,
                                     intentProvider = {
-                                        Intent(Settings.ACTION_APP_LOCALE_SETTINGS).apply {
-                                            data = Uri.fromParts("package", context.packageName, null)
+                                        Intent(
+                                            Intent.ACTION_VIEW,
+                                            "https://mental-math.codeberg.page".toUri()
+                                        )
+                                    },
+                                    onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
+                                    errorMessage = stringResource(R.string.no_browser)
+                                )
+
+                                // Feedback Link
+                                IntentRow(
+                                    iconResId = R.drawable.feedback_24dp,
+                                    contentDescription = "Feedback",
+                                    text = stringResource(R.string.feedback),
+                                    fontSize = fontSize,
+                                    iconSize = iconSize,
+                                    intentProvider = {
+                                        Intent(Intent.ACTION_SEND).apply {
+                                            selector = Intent(Intent.ACTION_SENDTO, "mailto:".toUri())
+                                            putExtra(Intent.EXTRA_EMAIL, arrayOf("mental_math_app@pm.me"))
+                                            putExtra(Intent.EXTRA_SUBJECT, "Mental Math: Feedback")
                                         }
                                     },
                                     onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
-                                    errorMessage = stringResource(R.string.unknown_error)
+                                    errorMessage = stringResource(R.string.no_mail)
                                 )
-                            }
-                        })
 
+                                // Recommendation Link
+                                IntentRow(
+                                    iconResId = R.drawable.thumb_up_24dp,
+                                    contentDescription = "Recommend",
+                                    text = stringResource(R.string.recommend),
+                                    fontSize = fontSize,
+                                    iconSize = iconSize,
+                                    intentProvider = {
+                                        Intent(
+                                            Intent.ACTION_VIEW,
+                                            "market://details?id=com.helddertierwelt.mentalmath".toUri()
+                                        )
+                                    },
+                                    onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
+                                    errorMessage = stringResource(R.string.no_app_store)
+                                )
 
-                    ExpandableMenuGroup(
-                        title = "Support",
-                        fontSize = fontSize,
-                        iconResId = R.drawable.favorite_24dp,
-                        iconSize = iconSize,
-                        isExpanded = expandedGroup == SettingsGroup.SUPPORT,
-                        onToggle = {
-                            expandedGroup =
-                                if (expandedGroup == SettingsGroup.SUPPORT) {
-                                    null
-                                } else {
-                                    SettingsGroup.SUPPORT
-                                }
-                        },
-                        content = {
-                            // Website Link
-                            IntentRow(
-                                iconResId = R.drawable.info_24dp,
-                                contentDescription = "About",
-                                text = stringResource(R.string.about),
-                                fontSize = fontSize,
-                                iconSize = iconSize,
-                                intentProvider = {
-                                    Intent(
-                                        Intent.ACTION_VIEW,
-                                        "https://mental-math.codeberg.page".toUri()
-                                    )
-                                },
-                                onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
-                                errorMessage = stringResource(R.string.no_browser)
-                            )
+                                // Donation Link
+                                IntentRow(
+                                    iconResId = R.drawable.volunteer_activism_24dp,
+                                    contentDescription = "Donate",
+                                    text = stringResource(R.string.donate),
+                                    fontSize = fontSize,
+                                    iconSize = iconSize,
+                                    intentProvider = {
+                                        Intent(
+                                            Intent.ACTION_VIEW,
+                                            "https://ko-fi.com/mental_math".toUri()
+                                        )
+                                    },
+                                    onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
+                                    errorMessage = stringResource(R.string.no_browser)
+                                )
+                            })
 
-                            // Feedback Link
-                            IntentRow(
-                                iconResId = R.drawable.feedback_24dp,
-                                contentDescription = "Feedback",
-                                text = stringResource(R.string.feedback),
-                                fontSize = fontSize,
-                                iconSize = iconSize,
-                                intentProvider = {
-                                    Intent(Intent.ACTION_SEND).apply {
-                                        selector = Intent(Intent.ACTION_SENDTO, "mailto:".toUri())
-                                        putExtra(Intent.EXTRA_EMAIL, arrayOf("mental_math_app@pm.me"))
-                                        putExtra(Intent.EXTRA_SUBJECT, "Mental Math: Feedback")
-                                    }
-                                },
-                                onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
-                                errorMessage = stringResource(R.string.no_mail)
-                            )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
 
-                            // Recommendation Link
-                            IntentRow(
-                                iconResId = R.drawable.thumb_up_24dp,
-                                contentDescription = "Recommend",
-                                text = stringResource(R.string.recommend),
-                                fontSize = fontSize,
-                                iconSize = iconSize,
-                                intentProvider = {
-                                    Intent(
-                                        Intent.ACTION_VIEW,
-                                        "market://details?id=com.helddertierwelt.mentalmath".toUri()
-                                    )
-                                },
-                                onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
-                                errorMessage = stringResource(R.string.no_app_store)
-                            )
-
-                            // Donation Link
-                            IntentRow(
-                                iconResId = R.drawable.volunteer_activism_24dp,
-                                contentDescription = "Donate",
-                                text = stringResource(R.string.donate),
-                                fontSize = fontSize,
-                                iconSize = iconSize,
-                                intentProvider = {
-                                    Intent(
-                                        Intent.ACTION_VIEW,
-                                        "https://ko-fi.com/mental_math".toUri()
-                                    )
-                                },
-                                onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
-                                errorMessage = stringResource(R.string.no_browser)
-                            )
-                        })
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Clear Data Button
-                    ActionRow(
-                        iconResId = R.drawable.delete_24dp,
-                        contentDescription = "Reset",
-                        text = stringResource(R.string.reset_app),
-                        fontSize = fontSize,
-                        iconSize = iconSize,
-                        color = red,
-                        onClick = {
-                            settingsViewModel.playFeedback(FeedbackType.TAP)
-                            settingsViewModel.setShowResetPopUp(true)
+                    // ScrollFade for top
+                    val showTopFade by remember {
+                        derivedStateOf {
+                            scrollState.value > 0
                         }
+                    }
+                    ScrollFade(
+                        visible = showTopFade,
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .fillMaxWidth()
+                            .height(32.dp)
                     )
-                    Spacer(modifier = Modifier.height(12.dp))
-                }
 
-                // ScrollFade for top
-                val showTopFade by remember {
-                    derivedStateOf {
-                        scrollState.value > 0
+                    // ScrollFade for bottom
+                    val showBottomFade by remember {
+                        derivedStateOf {
+                            scrollState.value < scrollState.maxValue
+                        }
                     }
+                    ScrollFade(
+                        visible = showBottomFade,
+                        reverse = true,
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxWidth()
+                            .height(64.dp)
+                    )
                 }
-                ScrollFade(
-                    visible = showTopFade,
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .fillMaxWidth()
-                        .height(32.dp)
-                )
-
-                // ScrollFade for bottom
-                val showBottomFade by remember {
-                    derivedStateOf {
-                        scrollState.value < scrollState.maxValue
+                // Clear Data Button
+                ActionRow(
+                    iconResId = R.drawable.delete_24dp,
+                    contentDescription = "Reset",
+                    text = stringResource(R.string.reset_app),
+                    fontSize = fontSize,
+                    iconSize = iconSize,
+                    color = red,
+                    onClick = {
+                        settingsViewModel.playFeedback(FeedbackType.TAP)
+                        settingsViewModel.setShowResetPopUp(true)
                     }
-                }
-                ScrollFade(
-                    visible = showBottomFade,
-                    reverse = true,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .height(64.dp)
                 )
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
