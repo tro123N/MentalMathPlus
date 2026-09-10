@@ -312,7 +312,7 @@ fun MenuSideSheet(
                         ExpandableMenuGroup(
                             title = "Game Settings",
                             fontSize = fontSize,
-                            iconResId = R.drawable.videogame_asset_24dp,
+                            iconResId = R.drawable.gamepad_24dp,
                             iconSize = iconSize,
                             isExpanded = expandedGroup == SettingsGroup.GAME,
                             onToggle = {
