@@ -33,6 +33,7 @@ import com.helddertierwelt.mentalmath.data.repository.SettingsRepository
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackController
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.settings.NotificationMode
+import com.helddertierwelt.mentalmath.domain.settings.SettingsGroup
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
 import com.helddertierwelt.mentalmath.domain.settings.SoundMode
 import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
@@ -87,6 +88,9 @@ class SettingsViewModel @Inject constructor(
 
     private val _isSliderActive = MutableStateFlow(false)
     val isSliderActive = _isSliderActive.asStateFlow()
+
+    private val _expandedGroup = MutableStateFlow<SettingsGroup?>(null)
+    val expandedGroup = _expandedGroup.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -283,10 +287,20 @@ class SettingsViewModel @Inject constructor(
         return newValue
     }
 
+    fun toggleGroup(group: SettingsGroup) {
+        _expandedGroup.value =
+            if (_expandedGroup.value == group) {
+                null
+            } else {
+                group
+            }
+    }
+
     fun resetSettings() {
         _settingsState.value = SettingsState()
         _isLoaded.value = false
         _isMenuOpen.value = false
+        _expandedGroup.value = null
         _isScoreOpen.value = false
         _showResetPopUp.value = false
         _hasGamesWithScore.value = false

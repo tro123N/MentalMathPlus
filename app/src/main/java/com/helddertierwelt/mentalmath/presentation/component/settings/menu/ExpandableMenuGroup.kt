@@ -95,20 +95,18 @@ fun ExpandableMenuGroup(
                 modifier = Modifier.size(iconSize),
                 tint = color
             )
-
-            Spacer(modifier = Modifier.width(16.dp))
         }
+    }
 
-        AnimatedVisibility(
-            visible = isExpanded,
-            enter = expandVertically() + fadeIn(),
-            exit = shrinkVertically() + fadeOut()
+    AnimatedVisibility(
+        visible = isExpanded,
+        enter = expandVertically() + fadeIn(),
+        exit = shrinkVertically() + fadeOut()
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                content()
-            }
+            content()
         }
     }
 }

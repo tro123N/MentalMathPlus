@@ -57,7 +57,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -119,10 +118,9 @@ fun MenuSideSheet(
     val logoSize = (0.11f * screenHeight.value).dp
 
     val isSheetOpen = settingsViewModel.isMenuOpen.collectAsState().value
+    val expandedGroup = settingsViewModel.expandedGroup.collectAsState().value
     val scrollState = rememberScrollState()
-    var expandedGroup by rememberSaveable {
-        mutableStateOf<SettingsGroup?>(null)
-    }
+
     var isInteractionEnabled by remember { mutableStateOf(true) }
     var isFirstRender by remember { mutableStateOf(true) }
     val isRandomGameButtonClicked = settingsViewModel.isRandomGameButtonClicked.collectAsState().value
@@ -315,14 +313,7 @@ fun MenuSideSheet(
                             iconResId = R.drawable.gamepad_24dp,
                             iconSize = iconSize,
                             isExpanded = expandedGroup == SettingsGroup.GAME,
-                            onToggle = {
-                                expandedGroup =
-                                    if (expandedGroup == SettingsGroup.GAME) {
-                                        null
-                                    } else {
-                                        SettingsGroup.GAME
-                                    }
-                            },
+                            onToggle = { settingsViewModel.toggleGroup(SettingsGroup.GAME) },
                             content = {
                                 // Horizontal/Vertical Form
                                 CycleToggleRow(
@@ -340,26 +331,6 @@ fun MenuSideSheet(
                                             value = false,
                                             iconRes = R.drawable.horizontal_layout_24dp,
                                             textRes = R.string.horizontal
-                                        )
-                                    )
-                                )
-
-                                // Input Layout
-                                CycleToggleRow(
-                                    fontSize = fontSize,
-                                    iconSize = iconSize,
-                                    currentValue = settingsViewModel.settingsState.collectAsState().value.isNumpadDefault,
-                                    onValueChange = { settingsViewModel.toggleInputLayout() },
-                                    options = listOf(
-                                        ToggleOption(
-                                            value = true,
-                                            iconRes = R.drawable.dialpad_24dp,
-                                            textRes = R.string.number_pad
-                                        ),
-                                        ToggleOption(
-                                            value = false,
-                                            iconRes = R.drawable.dialpad_24dp,
-                                            textRes = R.string.phone_pad
                                         )
                                     )
                                 )
@@ -383,6 +354,26 @@ fun MenuSideSheet(
                                         )
                                     )
                                 )
+
+                                // Input Layout
+                                CycleToggleRow(
+                                    fontSize = fontSize,
+                                    iconSize = iconSize,
+                                    currentValue = settingsViewModel.settingsState.collectAsState().value.isNumpadDefault,
+                                    onValueChange = { settingsViewModel.toggleInputLayout() },
+                                    options = listOf(
+                                        ToggleOption(
+                                            value = true,
+                                            iconRes = R.drawable.dialpad_24dp,
+                                            textRes = R.string.number_pad
+                                        ),
+                                        ToggleOption(
+                                            value = false,
+                                            iconRes = R.drawable.dialpad_24dp,
+                                            textRes = R.string.phone_pad
+                                        )
+                                    )
+                                )
                             }
                         )
 
@@ -392,64 +383,8 @@ fun MenuSideSheet(
                             iconResId = R.drawable.settings_24dp,
                             iconSize = iconSize,
                             isExpanded = expandedGroup == SettingsGroup.APP,
-                            onToggle = {
-                                expandedGroup =
-                                    if (expandedGroup == SettingsGroup.APP) {
-                                        null
-                                    } else {
-                                        SettingsGroup.APP
-                                    }
-                            },
+                            onToggle = { settingsViewModel.toggleGroup(SettingsGroup.APP) },
                             content = {
-                                // Notifications
-                                CycleToggleRow(
-                                    fontSize = fontSize,
-                                    iconSize = iconSize,
-                                    currentValue = settingsViewModel.settingsState.collectAsState().value.notificationMode,
-                                    onValueChange = {
-                                        settingsViewModel.playFeedback(FeedbackType.TAP)
-                                        if (it == NotificationMode.OFF || settingsViewModel.isPermissionGranted(context)) {
-                                            settingsViewModel.setNotificationMode(it)
-                                            NotificationScheduler.scheduleNotificationWork(
-                                                context,
-                                                it,
-                                                calculateAnchorTime(it)
-                                            )
-                                            if (it == NotificationMode.DAILY) {
-                                                Toast.makeText(
-                                                    context,
-                                                    notificationToastText,
-                                                    Toast.LENGTH_LONG
-                                                ).show()
-                                            }
-                                        } else {
-                                            settingsViewModel.setShowNotificationPermissionPopUp(true)
-                                        }
-                                    },
-                                    options = listOf(
-                                        ToggleOption(
-                                            NotificationMode.OFF,
-                                            R.drawable.notifications_off_24dp,
-                                            R.string.reminder_off
-                                        ),
-                                        ToggleOption(
-                                            NotificationMode.DAILY,
-                                            R.drawable.notifications_active_24dp,
-                                            R.string.daily_reminder
-                                        ),
-                                        ToggleOption(
-                                            NotificationMode.THREEDAILY,
-                                            R.drawable.notifications_active_24dp,
-                                            R.string.every_three_days
-                                        ),
-                                        ToggleOption(
-                                            NotificationMode.WEEKLY,
-                                            R.drawable.notifications_active_24dp,
-                                            R.string.weekly_reminder
-                                        )
-                                    )
-                                )
-
                                 // Theme
                                 CycleToggleRow(
                                     fontSize = fontSize,
@@ -524,6 +459,55 @@ fun MenuSideSheet(
                                     )
                                 )
 
+                                // Notifications
+                                CycleToggleRow(
+                                    fontSize = fontSize,
+                                    iconSize = iconSize,
+                                    currentValue = settingsViewModel.settingsState.collectAsState().value.notificationMode,
+                                    onValueChange = {
+                                        settingsViewModel.playFeedback(FeedbackType.TAP)
+                                        if (it == NotificationMode.OFF || settingsViewModel.isPermissionGranted(context)) {
+                                            settingsViewModel.setNotificationMode(it)
+                                            NotificationScheduler.scheduleNotificationWork(
+                                                context,
+                                                it,
+                                                calculateAnchorTime(it)
+                                            )
+                                            if (it == NotificationMode.DAILY) {
+                                                Toast.makeText(
+                                                    context,
+                                                    notificationToastText,
+                                                    Toast.LENGTH_LONG
+                                                ).show()
+                                            }
+                                        } else {
+                                            settingsViewModel.setShowNotificationPermissionPopUp(true)
+                                        }
+                                    },
+                                    options = listOf(
+                                        ToggleOption(
+                                            NotificationMode.OFF,
+                                            R.drawable.notifications_off_24dp,
+                                            R.string.reminder_off
+                                        ),
+                                        ToggleOption(
+                                            NotificationMode.DAILY,
+                                            R.drawable.notifications_active_24dp,
+                                            R.string.daily_reminder
+                                        ),
+                                        ToggleOption(
+                                            NotificationMode.THREEDAILY,
+                                            R.drawable.notifications_active_24dp,
+                                            R.string.every_three_days
+                                        ),
+                                        ToggleOption(
+                                            NotificationMode.WEEKLY,
+                                            R.drawable.notifications_active_24dp,
+                                            R.string.weekly_reminder
+                                        )
+                                    )
+                                )
+
                                 // Language
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                     IntentRow(
@@ -550,14 +534,7 @@ fun MenuSideSheet(
                             iconResId = R.drawable.partner_heart_24dp,
                             iconSize = iconSize,
                             isExpanded = expandedGroup == SettingsGroup.SUPPORT,
-                            onToggle = {
-                                expandedGroup =
-                                    if (expandedGroup == SettingsGroup.SUPPORT) {
-                                        null
-                                    } else {
-                                        SettingsGroup.SUPPORT
-                                    }
-                            },
+                            onToggle = { settingsViewModel.toggleGroup(SettingsGroup.SUPPORT) },
                             content = {
                                 // Feedback Link
                                 IntentRow(

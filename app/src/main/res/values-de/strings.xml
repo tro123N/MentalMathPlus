@@ -38,9 +38,9 @@
     <string name="no_share">Keine App verfügbar, um diesen Inhalt zu teilen.</string>
     <string name="no_app_store">Kein App Store verfügbar, um diese Seite zu öffnen.</string>
     <string name="no_mail">Keine App verfügbar, um E-Mails zu senden.</string>
-    <string name="game_settings">Spiel Einstellungen</string>
-    <string name="app_settings">App Einstellungen</string>
-    <string name="support">Unterstützen</string>
+    <string name="game_settings">Spiel Einstell\u200Bungen</string>
+    <string name="app_settings">App Einstell\u200Bungen</string>
+    <string name="support">Unterstütz\u200Ben</string>
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10</string>
     <string name="new_score">neu</string>
