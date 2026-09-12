@@ -56,7 +56,11 @@ message SettingsStateProto {
   }
   InputMode input_mode = 17;
 
-  bool is_right_to_left_default = 18;
+  enum InputDirectionMode {
+    LEFT_TO_RIGHT = 0;
+    RIGHT_TO_LEFT  = 1;
+  }
+  InputDirectionMode input_direction_mode = 18;
 
   enum NotificationMode {
     OFF = 0;
@@ -72,7 +76,11 @@ message SettingsStateProto {
   }
   SoundMode sound_mode = 20;
 
-  bool is_vertical_form_default = 21;
+  enum FormMode {
+    HORIZONTAL = 0;
+    VERTICAL  = 1;
+  }
+  FormMode form_mode = 21;
 
   enum VibrationMode {
     VIBRATION_OFF = 0;

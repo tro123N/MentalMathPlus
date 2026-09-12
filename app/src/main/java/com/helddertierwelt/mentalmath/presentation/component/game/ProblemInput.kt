@@ -45,6 +45,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.game.ProblemStatus
+import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 
@@ -57,8 +59,8 @@ fun ProblemInput(
     fontSize: TextUnit,
     width: Dp,
     problemStatus: ProblemStatus,
-    isRightToLeft: Boolean,
-    isVerticalForm: Boolean,
+    inputDirectionMode: InputDirectionMode,
+    formMode: FormMode,
     onInputClick: () -> Unit,
     onProblemClick: () -> Unit
 ) {
@@ -93,7 +95,7 @@ fun ProblemInput(
                 lineHeight = fontSize,
                 textAlign = TextAlign.Center,
                 color = onPrimary,
-                modifier = Modifier.alpha(if (isVerticalForm) 0f else 1f)
+                modifier = Modifier.alpha(if (formMode == FormMode.VERTICAL) 0f else 1f)
             )
 
             Text(
@@ -103,7 +105,7 @@ fun ProblemInput(
                 lineHeight = fontSize,
                 textAlign = TextAlign.Center,
                 color = onPrimary,
-                modifier = Modifier.alpha(if (isVerticalForm) 1f else 0f)
+                modifier = Modifier.alpha(if (formMode == FormMode.VERTICAL) 1f else 0f)
             )
         }
         Box(
@@ -139,7 +141,7 @@ fun ProblemInput(
                         )
 
                         val arrowPath = Path().apply {
-                            if (isRightToLeft) {
+                            if (inputDirectionMode == InputDirectionMode.RIGHT_TO_LEFT) {
                                 moveTo(start, y)
                                 lineTo(start + arrowSize, y - arrowSize / 2)
                                 lineTo(start + arrowSize, y + arrowSize / 2)

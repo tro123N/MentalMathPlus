@@ -32,7 +32,13 @@ import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.LIGHT
 import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.SYSTEM
 import com.helddertierwelt.mentalmath.SettingsStateProto.VibrationMode.VIBRATION_OFF
 import com.helddertierwelt.mentalmath.SettingsStateProto.VibrationMode.VIBRATION_ON
+import com.helddertierwelt.mentalmath.SettingsStateProto.InputDirectionMode.LEFT_TO_RIGHT
+import com.helddertierwelt.mentalmath.SettingsStateProto.InputDirectionMode.RIGHT_TO_LEFT
+import com.helddertierwelt.mentalmath.SettingsStateProto.FormMode.HORIZONTAL
+import com.helddertierwelt.mentalmath.SettingsStateProto.FormMode.VERTICAL
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
+import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.NotificationMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.SoundMode
@@ -61,8 +67,18 @@ fun SettingsState.toProto(): SettingsStateProto {
                 InputMode.NUMBER_PAD -> NUMBER_PAD
             }
         )
-        .setIsRightToLeftDefault(isRightToLeftDefault)
-        .setIsVerticalFormDefault(isVerticalFormDefault)
+        .setInputDirectionMode(
+            when (inputDirectionMode) {
+                InputDirectionMode.LEFT_TO_RIGHT -> LEFT_TO_RIGHT
+                InputDirectionMode.RIGHT_TO_LEFT -> RIGHT_TO_LEFT
+            }
+        )
+        .setFormMode(
+            when (formMode) {
+                FormMode.HORIZONTAL -> HORIZONTAL
+                FormMode.VERTICAL -> VERTICAL
+            }
+        )
         .setThemeMode(
             when (themeMode) {
                 ThemeMode.SYSTEM -> SYSTEM
@@ -110,7 +126,16 @@ fun SettingsStateProto.toSettingsState(): SettingsState {
             NUMBER_PAD -> InputMode.NUMBER_PAD
             SettingsStateProto.InputMode.UNRECOGNIZED -> InputMode.PHONE_KEYPAD
         },
-        isRightToLeftDefault = isRightToLeftDefault,
+        inputDirectionMode = when (inputDirectionMode) {
+            LEFT_TO_RIGHT -> InputDirectionMode.LEFT_TO_RIGHT
+            RIGHT_TO_LEFT -> InputDirectionMode.RIGHT_TO_LEFT
+            SettingsStateProto.InputDirectionMode.UNRECOGNIZED -> InputDirectionMode.LEFT_TO_RIGHT
+        },
+        formMode = when (formMode) {
+            HORIZONTAL -> FormMode.HORIZONTAL
+            VERTICAL -> FormMode.VERTICAL
+            SettingsStateProto.FormMode.UNRECOGNIZED -> FormMode.HORIZONTAL
+        },
         soundMode = when (soundMode) {
             SOUND_OFF -> SoundMode.SOUND_OFF
             SOUND_ON -> SoundMode.SOUND_ON
@@ -121,7 +146,6 @@ fun SettingsStateProto.toSettingsState(): SettingsState {
             VIBRATION_ON -> VibrationMode.VIBRATION_ON
             SettingsStateProto.VibrationMode.UNRECOGNIZED -> VibrationMode.VIBRATION_OFF
         },
-        isVerticalFormDefault = isVerticalFormDefault,
         themeMode = when (themeMode) {
             LIGHT -> ThemeMode.LIGHT
             DARK -> ThemeMode.DARK

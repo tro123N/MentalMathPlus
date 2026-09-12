@@ -34,6 +34,8 @@ import com.helddertierwelt.mentalmath.domain.game.Operation
 import com.helddertierwelt.mentalmath.domain.game.ProblemStatus
 import com.helddertierwelt.mentalmath.domain.game.SolvedProblem
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
+import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -103,18 +105,32 @@ class GameViewModel @Inject constructor(
         saveState(_gameState.value.copy(input = ""))
     }
 
-    fun toggleIsRightToLeft(): Boolean {
+    fun toggleInputDirection(): InputDirectionMode {
         playFeedback(FeedbackType.TAP)
-        val newValue = !_gameState.value.isRightToLeft
-        saveState(_gameState.value.copy(isRightToLeft = newValue))
-        return newValue
+
+        val newInputDirectionMode = when (_gameState.value.inputDirectionMode) {
+            InputDirectionMode.LEFT_TO_RIGHT -> InputDirectionMode.RIGHT_TO_LEFT
+            InputDirectionMode.RIGHT_TO_LEFT -> InputDirectionMode.LEFT_TO_RIGHT
+        }
+
+        saveState(
+            _gameState.value.copy(inputDirectionMode = newInputDirectionMode)
+        )
+        return newInputDirectionMode
     }
 
-    fun toggleIsVerticalForm(): Boolean {
+    fun toggleFormMode(): FormMode {
         playFeedback(FeedbackType.TAP)
-        val newValue = !_gameState.value.isVerticalForm
-        saveState(_gameState.value.copy(isVerticalForm = newValue))
-        return newValue
+
+        val newFormMode = when (_gameState.value.formMode) {
+            FormMode.HORIZONTAL -> FormMode.VERTICAL
+            FormMode.VERTICAL -> FormMode.HORIZONTAL
+        }
+
+        saveState(
+            _gameState.value.copy(formMode = newFormMode)
+        )
+        return newFormMode
     }
 
     fun generateNewProblem() {
@@ -276,8 +292,8 @@ class GameViewModel @Inject constructor(
                 enabledOperators = enabledOperators,
                 isModeEnabled = settingsState.isModeEnabled,
                 modeLimit = settingsState.limit.toInt(),
-                isRightToLeft = settingsState.isRightToLeftDefault,
-                isVerticalForm = settingsState.isVerticalFormDefault
+                inputDirectionMode = settingsState.inputDirectionMode,
+                formMode = settingsState.formMode
             )
         )
         return true
@@ -327,8 +343,8 @@ class GameViewModel @Inject constructor(
                 enabledOperators = enabledOperators,
                 isModeEnabled = isModeEnabled,
                 modeLimit = limit.toInt(),
-                isRightToLeft = settingsState.isRightToLeftDefault,
-                isVerticalForm = settingsState.isVerticalFormDefault
+                inputDirectionMode = settingsState.inputDirectionMode,
+                formMode = settingsState.formMode
             )
         )
     }
@@ -362,8 +378,8 @@ class GameViewModel @Inject constructor(
                 enabledOperators = enabledOperators,
                 isModeEnabled = gameRecord.isModeEnabled,
                 modeLimit = gameRecord.modeLimit,
-                isRightToLeft = settingsState.isRightToLeftDefault,
-                isVerticalForm = settingsState.isVerticalFormDefault
+                inputDirectionMode = settingsState.inputDirectionMode,
+                formMode = settingsState.formMode
             )
         )
     }

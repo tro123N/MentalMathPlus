@@ -80,6 +80,8 @@ import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.settings.AppLocale
 import com.helddertierwelt.mentalmath.domain.settings.SettingsGroup
 import com.helddertierwelt.mentalmath.domain.settings.ToggleOption
+import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.NotificationMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.SoundMode
@@ -320,16 +322,16 @@ fun MenuSideSheet(
                                 CycleToggleRow(
                                     fontSize = fontSize,
                                     iconSize = iconSize,
-                                    currentValue = settingsViewModel.settingsState.collectAsState().value.isVerticalFormDefault,
-                                    onValueChange = { settingsViewModel.toggleForm() },
+                                    currentValue = settingsViewModel.settingsState.collectAsState().value.formMode,
+                                    onValueChange = { settingsViewModel.setFormMode(it) },
                                     options = listOf(
                                         ToggleOption(
-                                            value = true,
+                                            value = FormMode.VERTICAL,
                                             iconRes = R.drawable.vertical_layout_24dp,
                                             textRes = R.string.vertical
                                         ),
                                         ToggleOption(
-                                            value = false,
+                                            value = FormMode.HORIZONTAL,
                                             iconRes = R.drawable.horizontal_layout_24dp,
                                             textRes = R.string.horizontal
                                         )
@@ -340,16 +342,16 @@ fun MenuSideSheet(
                                 CycleToggleRow(
                                     fontSize = fontSize,
                                     iconSize = iconSize,
-                                    currentValue = settingsViewModel.settingsState.collectAsState().value.isRightToLeftDefault,
-                                    onValueChange = { settingsViewModel.toggleInputMethod() },
+                                    currentValue = settingsViewModel.settingsState.collectAsState().value.inputDirectionMode,
+                                    onValueChange = { settingsViewModel.setInputDirectionMode(it) },
                                     options = listOf(
                                         ToggleOption(
-                                            value = true,
+                                            value = InputDirectionMode.RIGHT_TO_LEFT,
                                             iconRes = R.drawable.right_to_left_24dp,
                                             textRes = R.string.right_to_left
                                         ),
                                         ToggleOption(
-                                            value = false,
+                                            value = InputDirectionMode.LEFT_TO_RIGHT,
                                             iconRes = R.drawable.left_to_right_24dp,
                                             textRes = R.string.left_to_right
                                         )

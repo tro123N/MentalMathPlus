@@ -57,6 +57,8 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
+import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
 import com.helddertierwelt.mentalmath.presentation.component.game.BackspaceButton
 import com.helddertierwelt.mentalmath.presentation.component.game.EnterButton
 import com.helddertierwelt.mentalmath.presentation.component.game.GameTopBar
@@ -103,8 +105,8 @@ fun GameScreen(
     val upperNumberRow = settingsState.inputMode.upperNumberRow
     val lowerNumberRow = settingsState.inputMode.lowerNumberRow
     val gameState = gameViewModel.gameState.collectAsState().value
-    val isRightToLeft = gameState.isRightToLeft
-    val isVerticalForm = gameState.isVerticalForm
+    val inputDirectionMode = gameState.inputDirectionMode
+    val formMode = gameState.formMode
     val isGeneratingProblem by gameViewModel.isGeneratingProblem.collectAsState()
     var toastEvent by remember { mutableStateOf<ToastEvent?>(null) }
     val rtlMessage = stringResource(R.string.rtl_toast)
@@ -186,16 +188,22 @@ fun GameScreen(
                                     fontSize = problemFontSize,
                                     width = resultLineWidth,
                                     problemStatus = gameState.problemStatus,
-                                    isRightToLeft = isRightToLeft,
-                                    isVerticalForm = isVerticalForm,
+                                    inputDirectionMode = inputDirectionMode,
+                                    formMode = formMode,
                                     onInputClick = {
-                                        val isRightToLeftUpdated = gameViewModel.toggleIsRightToLeft()
-                                        val message = if (isRightToLeftUpdated) rtlMessage else ltrMessage
+                                        val inputDirectionModeUpdated = gameViewModel.toggleInputDirection()
+                                        val message = when (inputDirectionModeUpdated) {
+                                            InputDirectionMode.RIGHT_TO_LEFT -> rtlMessage
+                                            InputDirectionMode.LEFT_TO_RIGHT -> ltrMessage
+                                        }
                                         toastEvent = ToastEvent(message)
                                     },
                                     onProblemClick = {
-                                        val isVerticalFormUpdated = gameViewModel.toggleIsVerticalForm()
-                                        val message = if (isVerticalFormUpdated) verticalLayoutMessage else horizontalLayoutMessage
+                                        val formModeUpdated = gameViewModel.toggleFormMode()
+                                        val message = when (formModeUpdated) {
+                                            FormMode.VERTICAL -> verticalLayoutMessage
+                                            FormMode.HORIZONTAL -> horizontalLayoutMessage
+                                        }
                                         toastEvent = ToastEvent(message)
                                     }
                                 )
@@ -208,14 +216,11 @@ fun GameScreen(
                             upperNumberRow.forEach { number ->
                                 NumberButton(
                                     number = number,
-                                    onPress = {
-                                        gameViewModel.playFeedback(FeedbackType.NUMPAD)
-                                    },
+                                    onPress = { gameViewModel.playFeedback(FeedbackType.NUMPAD) },
                                     onClick = {
-                                        if (isRightToLeft) {
-                                            gameViewModel.addFirstDigit(number)
-                                        } else {
-                                            gameViewModel.addLastDigit(number)
+                                        when (inputDirectionMode) {
+                                            InputDirectionMode.LEFT_TO_RIGHT -> { gameViewModel.addLastDigit(number) }
+                                            InputDirectionMode.RIGHT_TO_LEFT -> { gameViewModel.addFirstDigit(number) }
                                         }
                                     },
                                     size = roundButtonSize,
@@ -231,14 +236,11 @@ fun GameScreen(
                             (4..6).forEach { number ->
                                 NumberButton(
                                     number = number,
-                                    onPress = {
-                                        gameViewModel.playFeedback(FeedbackType.NUMPAD)
-                                    },
+                                    onPress = { gameViewModel.playFeedback(FeedbackType.NUMPAD) },
                                     onClick = {
-                                        if (isRightToLeft) {
-                                            gameViewModel.addFirstDigit(number)
-                                        } else {
-                                            gameViewModel.addLastDigit(number)
+                                        when (inputDirectionMode) {
+                                            InputDirectionMode.LEFT_TO_RIGHT -> { gameViewModel.addLastDigit(number) }
+                                            InputDirectionMode.RIGHT_TO_LEFT -> { gameViewModel.addFirstDigit(number) }
                                         }
                                     },
                                     size = roundButtonSize,
@@ -254,14 +256,11 @@ fun GameScreen(
                             (lowerNumberRow).forEach { number ->
                                 NumberButton(
                                     number = number,
-                                    onPress = {
-                                        gameViewModel.playFeedback(FeedbackType.NUMPAD)
-                                    },
+                                    onPress = { gameViewModel.playFeedback(FeedbackType.NUMPAD) },
                                     onClick = {
-                                        if (isRightToLeft) {
-                                            gameViewModel.addFirstDigit(number)
-                                        } else {
-                                            gameViewModel.addLastDigit(number)
+                                        when (inputDirectionMode) {
+                                            InputDirectionMode.LEFT_TO_RIGHT -> { gameViewModel.addLastDigit(number) }
+                                            InputDirectionMode.RIGHT_TO_LEFT -> { gameViewModel.addFirstDigit(number) }
                                         }
                                     },
                                     size = roundButtonSize,
@@ -276,30 +275,24 @@ fun GameScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         BackspaceButton(
-                            onPress = {
-                                gameViewModel.playFeedback(FeedbackType.BACKSPACE)
-                            },
+                            onPress = { gameViewModel.playFeedback(FeedbackType.BACKSPACE) },
                             onClick = {
-                                if (isRightToLeft) {
-                                    gameViewModel.removeFirstDigit()
-                                } else {
-                                    gameViewModel.removeLastDigit()
+                                when (inputDirectionMode) {
+                                    InputDirectionMode.LEFT_TO_RIGHT -> { gameViewModel.removeLastDigit() }
+                                    InputDirectionMode.RIGHT_TO_LEFT -> { gameViewModel.removeFirstDigit() }
                                 }
                             },
-                            isRightToLeft = isRightToLeft,
+                            inputDirectionMode = inputDirectionMode,
                             size = roundButtonSize,
                             iconSize = backSpaceIconSize
                         )
                         NumberButton(
                             number = 0,
-                            onPress = {
-                                gameViewModel.playFeedback(FeedbackType.NUMPAD)
-                            },
+                            onPress = { gameViewModel.playFeedback(FeedbackType.NUMPAD) },
                             onClick = {
-                                if (isRightToLeft) {
-                                    gameViewModel.addFirstDigit(0)
-                                } else {
-                                    gameViewModel.addLastDigit(0)
+                                when (inputDirectionMode) {
+                                    InputDirectionMode.LEFT_TO_RIGHT -> { gameViewModel.addLastDigit(0) }
+                                    InputDirectionMode.RIGHT_TO_LEFT -> { gameViewModel.addFirstDigit(0) }
                                 }
                             },
                             size = roundButtonSize,

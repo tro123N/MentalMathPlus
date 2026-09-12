@@ -35,6 +35,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
 import com.helddertierwelt.mentalmath.presentation.theme.red
 
 @Composable
@@ -43,7 +44,7 @@ fun BackspaceButton(
     onPress: () -> Unit,
     iconSize: Dp,
     size: Dp,
-    isRightToLeft: Boolean,
+    inputDirectionMode: InputDirectionMode,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -68,10 +69,9 @@ fun BackspaceButton(
     ) {
         Icon(
             painter = painterResource(
-                if (isRightToLeft) {
-                    R.drawable.backspace_reverse_24dp
-                } else {
-                    R.drawable.backspace_24dp
+                when (inputDirectionMode) {
+                    InputDirectionMode.LEFT_TO_RIGHT -> R.drawable.backspace_24dp
+                    InputDirectionMode.RIGHT_TO_LEFT -> R.drawable.backspace_reverse_24dp
                 }
             ),
             contentDescription = "Backspace",

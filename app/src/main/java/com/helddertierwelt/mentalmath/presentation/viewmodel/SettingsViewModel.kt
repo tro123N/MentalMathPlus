@@ -34,6 +34,8 @@ import com.helddertierwelt.mentalmath.domain.feedback.FeedbackController
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.settings.SettingsGroup
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
+import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.NotificationMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.SoundMode
@@ -271,20 +273,16 @@ class SettingsViewModel @Inject constructor(
         saveState()
     }
 
-    fun toggleInputMethod(): Boolean {
+    fun setInputDirectionMode(mode: InputDirectionMode) {
         playFeedback(FeedbackType.TAP)
-        val newValue = !_settingsState.value.isRightToLeftDefault
-        _settingsState.value = _settingsState.value.copy(isRightToLeftDefault = newValue)
+        _settingsState.value = _settingsState.value.copy(inputDirectionMode = mode)
         saveState()
-        return newValue
     }
 
-    fun toggleForm(): Boolean {
+    fun setFormMode(mode: FormMode) {
         playFeedback(FeedbackType.TAP)
-        val newValue = !_settingsState.value.isVerticalFormDefault
-        _settingsState.value = _settingsState.value.copy(isVerticalFormDefault = newValue)
+        _settingsState.value = _settingsState.value.copy(formMode = mode)
         saveState()
-        return newValue
     }
 
     fun toggleGroup(group: SettingsGroup) {
@@ -367,35 +365,6 @@ class SettingsViewModel @Inject constructor(
 
     suspend fun checkIfGameWasAlreadyPlayed(gameRecord: GameRecord): Boolean {
         return gameRecordRepository.wasAlreadyPlayed(gameRecord)
-    }
-
-    fun applySettingsFromLink(gameRecordFromLink: GameRecord) {
-        val isModeEnabled = gameRecordFromLink.isModeEnabled
-        val limit = gameRecordFromLink.modeLimit.toFloat()
-
-        val additionRange = Pair(gameRecordFromLink.additionRangeStart.toFloat(), gameRecordFromLink.additionRangeEnd.toFloat())
-        val subtractionRange = Pair(gameRecordFromLink.subtractionRangeStart.toFloat(), gameRecordFromLink.subtractionRangeEnd.toFloat())
-        val multiplicationRange = Pair(gameRecordFromLink.multiplicationRangeStart.toFloat(), gameRecordFromLink.multiplicationRangeEnd.toFloat())
-        val divisionRange = Pair(gameRecordFromLink.divisionRangeStart.toFloat(), gameRecordFromLink.divisionRangeEnd.toFloat())
-
-        val isAdditionEnabled = additionRange.first != 0f && additionRange.second != 0f
-        val isSubtractionEnabled = subtractionRange.first != 0f && subtractionRange.second != 0f
-        val isMultiplicationEnabled = multiplicationRange.first != 0f && multiplicationRange.second != 0f
-        val isDivisionEnabled = divisionRange.first != 0f && divisionRange.second != 0f
-
-        _settingsState.value = _settingsState.value.copy(
-            isModeEnabled = isModeEnabled,
-            limit = limit,
-            additionRange = if (isAdditionEnabled) additionRange else _settingsState.value.additionRange,
-            subtractionRange = if (isSubtractionEnabled) subtractionRange else _settingsState.value.subtractionRange,
-            multiplicationRange = if (isMultiplicationEnabled) multiplicationRange else _settingsState.value.multiplicationRange,
-            divisionRange = if (isDivisionEnabled) divisionRange else _settingsState.value.divisionRange,
-            isAdditionEnabled = isAdditionEnabled,
-            isSubtractionEnabled = isSubtractionEnabled,
-            isMultiplicationEnabled = isMultiplicationEnabled,
-            isDivisionEnabled = isDivisionEnabled
-        )
-        saveState()
     }
 
     fun generateSeedLink(seed: Long): String {

@@ -19,6 +19,8 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.domain.game
 
 import android.os.Parcelable
+import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -48,7 +50,7 @@ data class GameState(
     val totalPauseDuration: Long = 0L,
     val seed: Long = 0L,
     val isLinkGame: Boolean = false,
-    val isRightToLeft: Boolean = false,
-    val isVerticalForm: Boolean = false
+    val inputDirectionMode: InputDirectionMode = InputDirectionMode.LEFT_TO_RIGHT,
+    val formMode: FormMode = FormMode.HORIZONTAL
 
 ) : Parcelable
