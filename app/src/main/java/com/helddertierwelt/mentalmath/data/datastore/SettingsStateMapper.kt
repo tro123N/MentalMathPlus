@@ -19,6 +19,8 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.data.datastore
 
 import com.helddertierwelt.mentalmath.SettingsStateProto
+import com.helddertierwelt.mentalmath.SettingsStateProto.InputMode.NUMBER_PAD
+import com.helddertierwelt.mentalmath.SettingsStateProto.InputMode.PHONE_KEYPAD
 import com.helddertierwelt.mentalmath.SettingsStateProto.NotificationMode.DAILY
 import com.helddertierwelt.mentalmath.SettingsStateProto.NotificationMode.OFF
 import com.helddertierwelt.mentalmath.SettingsStateProto.NotificationMode.THREEDAILY
@@ -30,11 +32,12 @@ import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.LIGHT
 import com.helddertierwelt.mentalmath.SettingsStateProto.ThemeMode.SYSTEM
 import com.helddertierwelt.mentalmath.SettingsStateProto.VibrationMode.VIBRATION_OFF
 import com.helddertierwelt.mentalmath.SettingsStateProto.VibrationMode.VIBRATION_ON
-import com.helddertierwelt.mentalmath.domain.settings.NotificationMode
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
-import com.helddertierwelt.mentalmath.domain.settings.SoundMode
-import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
-import com.helddertierwelt.mentalmath.domain.settings.VibrationMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.InputMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.NotificationMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.SoundMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.ThemeMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.VibrationMode
 
 fun SettingsState.toProto(): SettingsStateProto {
     return SettingsStateProto.newBuilder()
@@ -52,7 +55,12 @@ fun SettingsState.toProto(): SettingsStateProto {
         .setIsMinusEnabled(isSubtractionEnabled)
         .setIsMultiplyEnabled(isMultiplicationEnabled)
         .setIsDivideEnabled(isDivisionEnabled)
-        .setIsNumpadDefault(isNumpadDefault)
+        .setInputMode(
+            when (inputMode) {
+                InputMode.PHONE_KEYPAD -> PHONE_KEYPAD
+                InputMode.NUMBER_PAD -> NUMBER_PAD
+            }
+        )
         .setIsRightToLeftDefault(isRightToLeftDefault)
         .setIsVerticalFormDefault(isVerticalFormDefault)
         .setThemeMode(
@@ -97,7 +105,11 @@ fun SettingsStateProto.toSettingsState(): SettingsState {
         isSubtractionEnabled = isMinusEnabled,
         isMultiplicationEnabled = isMultiplyEnabled,
         isDivisionEnabled = isDivideEnabled,
-        isNumpadDefault = isNumpadDefault,
+        inputMode = when (inputMode) {
+            PHONE_KEYPAD -> InputMode.PHONE_KEYPAD
+            NUMBER_PAD -> InputMode.NUMBER_PAD
+            SettingsStateProto.InputMode.UNRECOGNIZED -> InputMode.PHONE_KEYPAD
+        },
         isRightToLeftDefault = isRightToLeftDefault,
         soundMode = when (soundMode) {
             SOUND_OFF -> SoundMode.SOUND_OFF

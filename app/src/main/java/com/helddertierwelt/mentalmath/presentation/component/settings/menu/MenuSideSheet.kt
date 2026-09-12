@@ -78,12 +78,13 @@ import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler
 import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler.calculateAnchorTime
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.settings.AppLocale
-import com.helddertierwelt.mentalmath.domain.settings.NotificationMode
 import com.helddertierwelt.mentalmath.domain.settings.SettingsGroup
-import com.helddertierwelt.mentalmath.domain.settings.SoundMode
-import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
 import com.helddertierwelt.mentalmath.domain.settings.ToggleOption
-import com.helddertierwelt.mentalmath.domain.settings.VibrationMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.InputMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.NotificationMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.SoundMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.ThemeMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.VibrationMode
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.HistoryViewModel
@@ -359,16 +360,16 @@ fun MenuSideSheet(
                                 CycleToggleRow(
                                     fontSize = fontSize,
                                     iconSize = iconSize,
-                                    currentValue = settingsViewModel.settingsState.collectAsState().value.isNumpadDefault,
-                                    onValueChange = { settingsViewModel.toggleInputLayout() },
+                                    currentValue = settingsViewModel.settingsState.collectAsState().value.inputMode,
+                                    onValueChange = { settingsViewModel.setInputMode(it) },
                                     options = listOf(
                                         ToggleOption(
-                                            value = true,
+                                            value = InputMode.NUMBER_PAD,
                                             iconRes = R.drawable.dialpad_24dp,
                                             textRes = R.string.number_pad
                                         ),
                                         ToggleOption(
-                                            value = false,
+                                            value = InputMode.PHONE_KEYPAD,
                                             iconRes = R.drawable.dialpad_24dp,
                                             textRes = R.string.phone_pad
                                         )

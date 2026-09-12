@@ -21,8 +21,8 @@ package com.helddertierwelt.mentalmath.domain.feedback
 import com.helddertierwelt.mentalmath.data.feedback.SoundManager
 import com.helddertierwelt.mentalmath.data.feedback.VibrationManager
 import com.helddertierwelt.mentalmath.data.repository.SettingsRepository
-import com.helddertierwelt.mentalmath.domain.settings.SoundMode
-import com.helddertierwelt.mentalmath.domain.settings.VibrationMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.SoundMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.VibrationMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

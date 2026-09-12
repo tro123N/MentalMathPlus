@@ -23,7 +23,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.helddertierwelt.mentalmath.domain.settings.NotificationMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.NotificationMode
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 

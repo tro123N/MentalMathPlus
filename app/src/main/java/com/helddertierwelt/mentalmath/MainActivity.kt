@@ -44,7 +44,7 @@ import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil.deserialize
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil.isValidQueryParameter
-import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.ThemeMode
 import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.screen.Navigation
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme

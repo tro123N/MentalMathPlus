@@ -16,8 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.domain.settings
+package com.helddertierwelt.mentalmath.domain.settings.enums
 
-enum class SoundMode {
-    SOUND_OFF, SOUND_ON
+enum class NotificationMode(val intervalDays: Int) {
+    OFF(0),
+    DAILY(1),
+    THREEDAILY(3),
+    WEEKLY(7)
 }

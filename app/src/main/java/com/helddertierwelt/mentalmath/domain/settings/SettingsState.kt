@@ -19,6 +19,11 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.domain.settings
 
 import android.os.Parcelable
+import com.helddertierwelt.mentalmath.domain.settings.enums.InputMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.NotificationMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.SoundMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.ThemeMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.VibrationMode
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -40,7 +45,7 @@ data class SettingsState(
     val notificationMode: NotificationMode = NotificationMode.OFF,
     val soundMode: SoundMode = SoundMode.SOUND_OFF,
     val vibrationMode: VibrationMode = VibrationMode.VIBRATION_OFF,
-    val isNumpadDefault: Boolean = false,
+    val inputMode: InputMode = InputMode.PHONE_KEYPAD,
     val isRightToLeftDefault: Boolean = false,
     val isVerticalFormDefault: Boolean = false
 

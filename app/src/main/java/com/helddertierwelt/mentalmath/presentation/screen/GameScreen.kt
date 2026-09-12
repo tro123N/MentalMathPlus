@@ -100,8 +100,8 @@ fun GameScreen(
 
     // variables
     val settingsState = settingsViewModel.settingsState.collectAsState().value
-    val upperNumberRow = if (settingsState.isNumpadDefault) 7..9 else 1..3
-    val lowerNumberRow = if (settingsState.isNumpadDefault) 1..3 else 7..9
+    val upperNumberRow = settingsState.inputMode.upperNumberRow
+    val lowerNumberRow = settingsState.inputMode.lowerNumberRow
     val gameState = gameViewModel.gameState.collectAsState().value
     val isRightToLeft = gameState.isRightToLeft
     val isVerticalForm = gameState.isVerticalForm

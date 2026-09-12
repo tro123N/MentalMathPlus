@@ -50,7 +50,12 @@ message SettingsStateProto {
   }
   ThemeMode theme_mode = 16;
 
-  bool is_numpad_default = 17;
+  enum InputMode {
+    PHONE_KEYPAD = 0;
+    NUMBER_PAD  = 1;
+  }
+  InputMode input_mode = 17;
+
   bool is_right_to_left_default = 18;
 
   enum NotificationMode {

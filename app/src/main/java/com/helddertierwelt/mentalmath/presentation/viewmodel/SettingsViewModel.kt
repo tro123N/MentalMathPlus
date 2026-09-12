@@ -32,12 +32,13 @@ import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
 import com.helddertierwelt.mentalmath.data.repository.SettingsRepository
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackController
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
-import com.helddertierwelt.mentalmath.domain.settings.NotificationMode
 import com.helddertierwelt.mentalmath.domain.settings.SettingsGroup
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
-import com.helddertierwelt.mentalmath.domain.settings.SoundMode
-import com.helddertierwelt.mentalmath.domain.settings.ThemeMode
-import com.helddertierwelt.mentalmath.domain.settings.VibrationMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.InputMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.NotificationMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.SoundMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.ThemeMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.VibrationMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,7 +49,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val repository: SettingsRepository,
+    private val settingsRepository: SettingsRepository,
     private val gameRecordRepository: GameRecordRepository,
     private val feedbackController: FeedbackController,
     ) : ViewModel() {
@@ -94,7 +95,7 @@ class SettingsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.settingsFlow.collect { loadedState ->
+            settingsRepository.settingsFlow.collect { loadedState ->
                 _settingsState.value = loadedState
                 _isLoaded.value = true
             }
@@ -264,10 +265,9 @@ class SettingsViewModel @Inject constructor(
         _isScoreOpen.value = !_isScoreOpen.value
     }
 
-    fun toggleInputLayout() {
+    fun setInputMode(mode: InputMode) {
         playFeedback(FeedbackType.TAP)
-        _settingsState.value =
-            _settingsState.value.copy(isNumpadDefault = !_settingsState.value.isNumpadDefault)
+        _settingsState.value = _settingsState.value.copy(inputMode = mode)
         saveState()
     }
 
@@ -424,7 +424,7 @@ class SettingsViewModel @Inject constructor(
 
     private fun saveState() {
         viewModelScope.launch {
-            repository.saveSettings(_settingsState.value)
+            settingsRepository.saveSettings(_settingsState.value)
         }
     }
 }
