@@ -286,6 +286,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun toggleGroup(group: SettingsGroup) {
+        playFeedback(FeedbackType.TAP)
         _expandedGroup.value =
             if (_expandedGroup.value == group) {
                 null
