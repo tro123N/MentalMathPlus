@@ -70,15 +70,19 @@ fun CustomSlider(
         contentAlignment = Alignment.Center
     ) {
 
-        val positionFraction =
-            (value - valueRange.start) / (valueRange.endInclusive - valueRange.start)
-        val shorterSliderWidth = sliderWidth / 1.1
-        val offsetX = (shorterSliderWidth * positionFraction - shorterSliderWidth / 2).toInt()
+        fun thumbOffset(thumbValue: Float): Int {
+            val positionFraction =
+                (thumbValue - valueRange.start) / (valueRange.endInclusive - valueRange.start)
+            val shorterSliderWidth = sliderWidth / 1.05
+            return (shorterSliderWidth * positionFraction - shorterSliderWidth / 2).toInt()
+        }
+
         Text(
             modifier = Modifier
                 .offset {
                     IntOffset(
-                        x = offsetX, y = (-size.roundToPx() / 1.25f).toInt()
+                        x = thumbOffset(value),
+                        y = (-size.roundToPx() / 1.25f).toInt()
                     )
                 }
                 .alpha(if (isDragging) 1f else 0f)

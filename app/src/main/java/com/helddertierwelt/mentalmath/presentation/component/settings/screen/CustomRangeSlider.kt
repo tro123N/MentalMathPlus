@@ -35,6 +35,7 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -60,99 +61,102 @@ fun CustomRangeSlider(
     size: Dp,
     thumbnailFontSize: TextUnit,
 ) {
-    val startInteractionSource = remember { MutableInteractionSource() }
-    val endInteractionSource = remember { MutableInteractionSource() }
-    val isDraggingStart by startInteractionSource.collectIsDraggedAsState()
-    val isDraggingEnd by endInteractionSource.collectIsDraggedAsState()
-    var sliderWidth by remember { mutableIntStateOf(0) }
-    val value = value.first..value.second
+    key(isEnabled) {
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .onGloballyPositioned {
-                sliderWidth = it.size.width
-            },
-        contentAlignment = Alignment.Center
-    ) {
+        val startInteractionSource = remember { MutableInteractionSource() }
+        val endInteractionSource = remember { MutableInteractionSource() }
+        val isDraggingStart by startInteractionSource.collectIsDraggedAsState()
+        val isDraggingEnd by endInteractionSource.collectIsDraggedAsState()
+        var sliderWidth by remember { mutableIntStateOf(0) }
+        val value = value.first..value.second
 
-        fun thumbOffset(thumbValue: Float): Int {
-            val positionFraction =
-                (thumbValue - valueRange.start) / (valueRange.endInclusive - valueRange.start)
-            val shorterSliderWidth = sliderWidth / 1.05
-            return (shorterSliderWidth * positionFraction - shorterSliderWidth / 2).toInt()
-        }
-
-        Text(
-            modifier = Modifier
-                .offset {
-                    IntOffset(
-                        x = thumbOffset(value.start),
-                        y = (-size.roundToPx() / 1.25f).toInt()
-                    )
-                }
-                .alpha(if (isDraggingStart) 1f else 0f)
-                .background(
-                    activeTrackColor,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .padding(horizontal = 6.dp),
-            text = "${value.start.toInt()}",
-            color = MaterialTheme.colorScheme.surface,
-            fontSize = thumbnailFontSize
-        )
-
-        Text(
-            modifier = Modifier
-                .offset {
-                    IntOffset(
-                        x = thumbOffset(value.endInclusive),
-                        y = (-size.roundToPx() / 1.25f).toInt()
-                    )
-                }
-                .alpha(if (isDraggingEnd) 1f else 0f)
-                .background(
-                    activeTrackColor,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .padding(horizontal = 6.dp),
-            text = "${value.endInclusive.toInt()}",
-            color = MaterialTheme.colorScheme.surface,
-            fontSize = thumbnailFontSize
-        )
-
-        val sliderColors: SliderColors
-        if (isEnabled) {
-            sliderColors = SliderDefaults.colors(
-                thumbColor = activeTrackColor,
-                activeTrackColor = activeTrackColor,
-                inactiveTrackColor = MaterialTheme.colorScheme.surface,
-                activeTickColor = MaterialTheme.colorScheme.background,
-                inactiveTickColor = activeTrackColor
-            )
-        } else {
-            sliderColors = SliderDefaults.colors(
-                thumbColor = MaterialTheme.colorScheme.onPrimary,
-                activeTrackColor = MaterialTheme.colorScheme.onPrimary,
-                inactiveTrackColor = MaterialTheme.colorScheme.surface,
-                activeTickColor = MaterialTheme.colorScheme.background,
-                inactiveTickColor = MaterialTheme.colorScheme.onPrimary
-            )
-        }
-
-        RangeSlider(
-            value = value,
-            valueRange = valueRange,
-            steps = valueRange.endInclusive.toInt() - valueRange.start.toInt() - 1,
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(size),
-            colors = sliderColors,
-            enabled = isEnabled,
-            startInteractionSource = startInteractionSource,
-            endInteractionSource = endInteractionSource,
-            onValueChange = onValueChange,
-            onValueChangeFinished = onValueChangeFinished
-        )
+                .onGloballyPositioned {
+                    sliderWidth = it.size.width
+                },
+            contentAlignment = Alignment.Center
+        ) {
+
+            fun thumbOffset(thumbValue: Float): Int {
+                val positionFraction =
+                    (thumbValue - valueRange.start) / (valueRange.endInclusive - valueRange.start)
+                val shorterSliderWidth = sliderWidth / 1.05
+                return (shorterSliderWidth * positionFraction - shorterSliderWidth / 2).toInt()
+            }
+
+            Text(
+                modifier = Modifier
+                    .offset {
+                        IntOffset(
+                            x = thumbOffset(value.start),
+                            y = (-size.roundToPx() / 1.25f).toInt()
+                        )
+                    }
+                    .alpha(if (isDraggingStart) 1f else 0f)
+                    .background(
+                        activeTrackColor,
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .padding(horizontal = 6.dp),
+                text = "${value.start.toInt()}",
+                color = MaterialTheme.colorScheme.surface,
+                fontSize = thumbnailFontSize
+            )
+
+            Text(
+                modifier = Modifier
+                    .offset {
+                        IntOffset(
+                            x = thumbOffset(value.endInclusive),
+                            y = (-size.roundToPx() / 1.25f).toInt()
+                        )
+                    }
+                    .alpha(if (isDraggingEnd) 1f else 0f)
+                    .background(
+                        activeTrackColor,
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .padding(horizontal = 6.dp),
+                text = "${value.endInclusive.toInt()}",
+                color = MaterialTheme.colorScheme.surface,
+                fontSize = thumbnailFontSize
+            )
+
+            val sliderColors: SliderColors
+            if (isEnabled) {
+                sliderColors = SliderDefaults.colors(
+                    thumbColor = activeTrackColor,
+                    activeTrackColor = activeTrackColor,
+                    inactiveTrackColor = MaterialTheme.colorScheme.surface,
+                    activeTickColor = MaterialTheme.colorScheme.background,
+                    inactiveTickColor = activeTrackColor
+                )
+            } else {
+                sliderColors = SliderDefaults.colors(
+                    thumbColor = MaterialTheme.colorScheme.onPrimary,
+                    activeTrackColor = MaterialTheme.colorScheme.onPrimary,
+                    inactiveTrackColor = MaterialTheme.colorScheme.surface,
+                    activeTickColor = MaterialTheme.colorScheme.background,
+                    inactiveTickColor = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+
+            RangeSlider(
+                value = value,
+                valueRange = valueRange,
+                steps = valueRange.endInclusive.toInt() - valueRange.start.toInt() - 1,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(size),
+                colors = sliderColors,
+                enabled = isEnabled,
+                startInteractionSource = startInteractionSource,
+                endInteractionSource = endInteractionSource,
+                onValueChange = onValueChange,
+                onValueChangeFinished = onValueChangeFinished
+            )
+        }
     }
 }
