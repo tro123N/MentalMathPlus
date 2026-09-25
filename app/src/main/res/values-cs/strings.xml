@@ -1,3 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Mental Math</string>
+    <string name="mode_instruction">Zvolte režim a limit</string>
+    <string name="operator_instruction">Zvolte operace a složitost</string>
+    <string name="start">Start</string>
+    <string name="share_game">Sdílet hru</string>
+    <string name="random_game">Náhodná hra</string>
+    <string name="history">Historie</string>
+    <string name="phone_pad">Telefonní klávesnice</string>
+    <string name="number_pad">číselná klávesnice</string>
+    <string name="right_to_left">Zpráva doleva</string>
+    <string name="left_to_right">Zleva doprava</string>
+    <string name="horizontal">Horizontální</string>
+    <string name="vertical">Vertikální</string>
+    <string name="reminder_off">Vypnutý připomínáč</string>
+    <string name="daily_reminder">Každodenní připomínáč</string>
+    <string name="every_three_days">Každé 3 dny</string>
+    <string name="weekly_reminder">Týdenní připomínáč</string>
+    <string name="light_mode">Světlý režim</string>
+    <string name="dark_mode">Černý režim</string>
 </resources>
