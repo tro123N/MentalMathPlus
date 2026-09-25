@@ -3,4 +3,5 @@
 - Reorganized the menu with expandable categories for a more structured layout.
 - Added Arabic translation contributed by Eisa Ali and E Ta. Thank you! :)
 - Previous game settings are now preserved after Random Game or Link Game.
+- Fixed a bug when disabling the slider while dragging.
 - Help improve translations on https://hosted.weblate.org/projects/mental-math/
