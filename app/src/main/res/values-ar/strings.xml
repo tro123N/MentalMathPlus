@@ -12,10 +12,10 @@
     <string name="no_mail">لا يوجد تطبيق متاح لإرسال رسائل البريد الإلكتروني.</string>
     <string name="time_limit">الحد الزمني</string>
     <string name="weekly_reminder">تذكير أسبوعي</string>
-    <string name="reset_app">أعد ضبط التطبيق</string>
+    <string name="reset_app">إعادة ضبط التطبيق</string>
     <string name="feedback">علِّق حول التطبيق</string>
     <string name="difficulty_multiplication">صعوبة الضرب</string>
-    <string name="start">ابدأ</string>
+    <string name="start">بدء</string>
     <string name="incorrect_answers">الإجابات غير الصحيحة</string>
     <string name="number_pad">لوحة الأرقام</string>
     <string name="difficulty_subtraction">صعوبة الطرح</string>
@@ -31,8 +31,8 @@
     <string name="avg_time_per_correct_answer">الوقت المُستغرَق لكل إجابة صحيحة</string>
     <string name="new_score">جديد</string>
     <string name="vertical">رأسي</string>
-    <string name="vibration_on">الاهتزاز مشغل</string>
-    <string name="vibration_off">الاهتزاز موقف</string>
+    <string name="vibration_on">الاهتزاز مفعّل</string>
+    <string name="vibration_off">الاهتزاز معطّل</string>
     <string name="vibration_toast_text">قد تتأثر الاهتزازات بالجهاز أو إعدادات النظام</string>
     <string name="language">اللغة</string>
     <string name="difficulty_addition">صعوبة الجمع</string>
@@ -47,13 +47,13 @@
     <string name="reminder_off">التذكير موقف</string>
     <string name="every_three_days">كل ٣ أيام</string>
     <string name="daily_reminder">تذكير يومي</string>
-    <string name="app_name">الحساب الذهني</string>
+    <string name="app_name">Mental Math</string>
     <string name="no_browser">لا يوجد تطبيق متاح لفتح هذا الرابط.</string>
     <string name="sound_on">الصوت مشغل</string>
     <string name="seed">البذرة: %d</string>
     <string name="left_to_right">من اليسار إلى اليمين</string>
     <string name="sound_off">الصوت موقف</string>
-    <string name="top_ten_scores">أفضل عشر نتائج</string>
+    <string name="top_ten_scores">أفضل ١٠</string>
     <string name="problem_limit">حد المشكلة</string>
     <string name="system_mode">اتباع النظام</string>
     <string name="score">العلامة</string>
@@ -133,5 +133,5 @@
     <string name="share_new_game">هيّا نلعب جولةً من الحساب الذهني!\nانقر على الرابط أدناه لبدء لعبةٍ جديدةٍ بإعداداتي ورقم البذرة:\n%1$d\n\n%2$s</string>
     <string name="game_settings">إعدادات اللعبة</string>
     <string name="app_settings">إعدادات التطبيق</string>
-    <string name="support">ادعم التطبيق</string>
+    <string name="support">دعم التطبيق</string>
 </resources>
