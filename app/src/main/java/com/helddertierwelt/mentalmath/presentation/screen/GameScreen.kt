@@ -120,6 +120,23 @@ fun GameScreen(
         gameViewModel.startTimerIfNeeded()
     }
 
+    LaunchedEffect(Unit) {
+        gameViewModel.gameEvents.collect { event ->
+            when (event) {
+                GameViewModel.GameEvent.GameFinished -> {
+
+                    resultViewModel.setShowLoadedGameRecord(false)
+                    resultViewModel.setShowLinkGamePopUp(gameViewModel.gameState.value.isLinkGame)
+
+                    navController.navigate("result") {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             Column {
@@ -300,26 +317,7 @@ fun GameScreen(
                             fontSize = numberFontSize
                         )
                         EnterButton(
-                            onClick = {
-                                gameViewModel.addProblemToList()
-                                gameViewModel.checkAnswerAndCount()
-                                val totalAnswers = gameViewModel.gameState.value.totalAnswers
-                                val totalProblems = (gameState.modeLimit * 10)
-                                val isLinkGame = gameViewModel.gameState.value.isLinkGame
-                                if (gameState.gameMode != GameMode.TIMED && totalAnswers == totalProblems) { // Todo
-                                    gameViewModel.endGame()
-                                    if (isLinkGame) {
-                                        resultViewModel.setShowLinkGamePopUp(true)
-                                    }
-                                    resultViewModel.setShowLoadedGameRecord(false)
-                                    navController.navigate("statistics") {
-                                        popUpTo(0) { inclusive = true }
-                                        launchSingleTop = true
-                                    }
-                                } else {
-                                    gameViewModel.generateNewProblem()
-                                }
-                            },
+                            onClick = { gameViewModel.submitAnswer() },
                             enabled = !isGeneratingProblem,
                             isToggled = gameState.input.isEmpty(),
                             size = roundButtonSize,

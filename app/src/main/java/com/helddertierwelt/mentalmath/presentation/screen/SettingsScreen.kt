@@ -345,7 +345,7 @@ fun SettingsScreen(
                             settingsViewModel.playFeedback(FeedbackType.START)
                             settingsViewModel.setIsStartButtonClicked(true)
                             resultViewModel.setShowLinkGamePopUp(false)
-                            gameViewModel.reset()
+                            gameViewModel.resetGameState()
                             val validSettings = gameViewModel.setSettings(settingsViewModel.settingsState.value)
                             if (validSettings) {
                                 navController.navigate("game") {

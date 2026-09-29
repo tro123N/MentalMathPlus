@@ -122,7 +122,7 @@ class MainActivity : ComponentActivity() {
                     PopUp(
                         onDismissRequest = { mainActivityViewModel.setShowDeepLinkPopUp(false) },
                         onConfirm = {
-                            gameViewModel.reset()
+                            gameViewModel.resetGameState()
                             gameViewModel.setIsLinkGame(true)
                             gameViewModel.setSettingsFromLink(gameRecordFromAppLink.value, settingsViewModel.settingsState.value)
                             resultViewModel.prepareGameFromLink(gameRecordFromAppLink.value)

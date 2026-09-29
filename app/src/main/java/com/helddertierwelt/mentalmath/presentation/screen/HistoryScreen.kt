@@ -139,7 +139,7 @@ fun HistoryScreen(
                                 resultViewModel.setLoadedGameRecord(gameRecordId)
                                 resultViewModel.setShowLoadedGameRecord(true)
                                 resultViewModel.setShowLinkGamePopUp(false)
-                                navController.navigate("statistics")
+                                navController.navigate("result")
                             }
                         )
                     }

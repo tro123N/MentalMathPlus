@@ -23,50 +23,29 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
-import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
-import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import kotlin.math.ceil
 
 @Composable
-fun CountdownTimer(
+fun CountdownDisplay(
     fontSize: TextUnit,
-    navController: NavController,
     time: Long,
 ) {
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
     val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
-    val resultViewModel: ResultViewModel = hiltViewModel(viewModelStoreOwner)
-    val timeLeft = time - gameViewModel.gameState.collectAsState().value.activeTime
-    var formattedTime by remember { mutableStateOf(formatTime(timeLeft)) }
 
-    LaunchedEffect(timeLeft) {
-        formattedTime = formatTime(timeLeft)
-        if (timeLeft <= 0) {
-            gameViewModel.endGame()
-            resultViewModel.setShowLoadedGameRecord(false)
-            val isLinkGame = gameViewModel.gameState.value.isLinkGame
-            if (isLinkGame) resultViewModel.setShowLinkGamePopUp(true)
-            navController.navigate("statistics") {
-                popUpTo(0) { inclusive = true }
-                launchSingleTop = true
-            }
-        }
-    }
+    val gameState by gameViewModel.gameState.collectAsState()
+    val timeLeft = time - gameState.activeTime
 
     Text(
-        text = formattedTime,
+        text = formatTime(timeLeft.coerceAtLeast(0)),
         color = MaterialTheme.colorScheme.onPrimary,
         fontSize = fontSize,
         modifier = Modifier.padding(end = 24.dp)

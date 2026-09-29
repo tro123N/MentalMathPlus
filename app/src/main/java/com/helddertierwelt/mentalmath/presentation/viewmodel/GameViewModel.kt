@@ -41,7 +41,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -68,12 +70,19 @@ class GameViewModel @Inject constructor(
     val gameState = _gameState.asStateFlow()
 
     private var timerJob: Job? = null
+
+    sealed interface GameEvent {
+        data object GameFinished : GameEvent
+    }
+
+    private val _gameEvents = MutableSharedFlow<GameEvent>()
+    val gameEvents = _gameEvents.asSharedFlow()
+
     private var random: Random = Random(System.currentTimeMillis())
     private val randomMutex = Mutex()
 
     private val _isGeneratingProblem = MutableStateFlow(false)
     val isGeneratingProblem = _isGeneratingProblem.asStateFlow()
-
 
     fun addLastDigit(number: Int) {
         if (_gameState.value.input.length < 7) {
@@ -134,7 +143,109 @@ class GameViewModel @Inject constructor(
         return newFormMode
     }
 
-    fun generateNewProblem() {
+    fun startGame(seed: Long) {
+        random = Random(seed)
+        generateNewProblem()
+        setStartTimestamp()
+        saveState(
+            _gameState.value.copy(
+                isGameStarted = true,
+                seed = seed
+            )
+        )
+        startTimer()
+    }
+
+    fun submitAnswer() {
+        val state = _gameState.value
+        val newState: GameState
+
+        val userInput = state.input.toIntOrNull()
+        val correctResult = calculateResult()
+
+        when (userInput) {
+            null -> {
+                playFeedback(FeedbackType.SKIPPED)
+
+                newState = state.copy(
+                    skippedAnswers = state.skippedAnswers + 1,
+                    totalAnswers = state.totalAnswers + 1,
+                    problemStatus = ProblemStatus.SKIPPED
+                )
+            }
+
+            correctResult -> {
+                playFeedback(FeedbackType.CORRECT)
+                newState = state.copy(
+                    correctAnswers = state.correctAnswers + 1,
+                    totalAnswers = state.totalAnswers + 1,
+                    problemStatus = ProblemStatus.CORRECT
+                )
+            }
+
+            else -> {
+                playFeedback(FeedbackType.WRONG)
+                newState = state.copy(
+                    wrongAnswers = state.wrongAnswers + 1,
+                    totalAnswers = state.totalAnswers + 1,
+                    problemStatus = ProblemStatus.INCORRECT
+                )
+            }
+        }
+
+        val solvedProblem = SolvedProblem(
+            operand1 = state.operand1,
+            operand2 = state.operand2,
+            operator = state.operator,
+            correctResult = correctResult,
+            userInput = if (state.input.isNotEmpty()) {
+                state.input.trimStart('0').ifEmpty { "0" }
+            } else {
+                ""
+            }
+        )
+
+        saveState(
+            newState.copy(
+                solvedProblems = state.solvedProblems + solvedProblem
+            )
+        )
+
+        if (shouldEndGame()) {
+            endGame()
+        } else {
+            generateNewProblem()
+        }
+    }
+
+    private fun calculateResult(): Int {
+        return when (_gameState.value.operator) {
+            Operation.ADDITION -> _gameState.value.operand1 + _gameState.value.operand2
+            Operation.SUBTRACTION -> _gameState.value.operand1 - _gameState.value.operand2
+            Operation.MULTIPLICATION -> _gameState.value.operand1 * _gameState.value.operand2
+            Operation.DIVISION -> if (_gameState.value.operand2 != 0) _gameState.value.operand1 / _gameState.value.operand2 else 0
+        }
+    }
+
+    private fun shouldEndGame(): Boolean {
+        val state = _gameState.value
+
+        return when (state.gameMode) {
+            GameMode.PROBLEMS -> {
+                val totalProblems = state.modeLimit * 10
+                state.totalAnswers >= totalProblems
+            }
+
+            GameMode.TIMED -> {
+                val totalTime = state.modeLimit.toLong() * 60_000L
+                state.activeTime >= totalTime
+            }
+
+            else -> false
+        }
+    }
+
+    private fun generateNewProblem() {
 
         viewModelScope.launch(Dispatchers.IO) {
             _isGeneratingProblem.value = true
@@ -208,66 +319,90 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun checkAnswerAndCount() {
-        val correctResult = calculateResult()
-        val userInput = _gameState.value.input.toIntOrNull()
-        val newState: GameState
-        when (userInput) {
-            null -> {
-                playFeedback(FeedbackType.SKIPPED)
-                newState = _gameState.value.copy(
-                    skippedAnswers = _gameState.value.skippedAnswers + 1,
-                    totalAnswers = _gameState.value.totalAnswers + 1,
-                    problemStatus = ProblemStatus.SKIPPED
-                )
-            }
+    fun endGame() {
+        pauseTimer()
+        saveGameRecord()
+        val gameState = _gameState.value
+        saveState(gameState.copy(isGameStarted = false))
 
-            correctResult -> {
-                playFeedback(FeedbackType.CORRECT)
-                newState = _gameState.value.copy(
-                    correctAnswers = _gameState.value.correctAnswers + 1,
-                    totalAnswers = _gameState.value.totalAnswers + 1,
-                    problemStatus = ProblemStatus.CORRECT
-                )
-            }
+        if (!gameState.isLinkGame) {
+            val correctPercentage = gameState.correctAnswers.toFloat() / gameState.totalAnswers.coerceAtLeast(1)
 
-            else -> {
-                playFeedback(FeedbackType.WRONG)
-                newState = _gameState.value.copy(
-                    wrongAnswers = _gameState.value.wrongAnswers + 1,
-                    totalAnswers = _gameState.value.totalAnswers + 1,
-                    problemStatus = ProblemStatus.INCORRECT
-                )
+            val feedbackType = when {
+                correctPercentage == 1f -> FeedbackType.RESULT_PERFECT
+                correctPercentage >= 0.8f -> FeedbackType.RESULT_GOOD
+                correctPercentage >= 0.6f -> FeedbackType.RESULT_OKAY
+                else -> FeedbackType.RESULT_BAD
             }
+            playDelayedFeedback(feedbackType)
         }
-        saveState(newState)
-    }
 
-    private fun calculateResult(): Int {
-        return when (_gameState.value.operator) {
-            Operation.ADDITION -> _gameState.value.operand1 + _gameState.value.operand2
-            Operation.SUBTRACTION -> _gameState.value.operand1 - _gameState.value.operand2
-            Operation.MULTIPLICATION -> _gameState.value.operand1 * _gameState.value.operand2
-            Operation.DIVISION -> if (_gameState.value.operand2 != 0) _gameState.value.operand1 / _gameState.value.operand2 else 0
+        viewModelScope.launch {
+            _gameEvents.emit(GameEvent.GameFinished)
         }
     }
 
-    fun addProblemToList() {
-        val solvedProblem = SolvedProblem(
-            operand1 = _gameState.value.operand1,
-            operand2 = _gameState.value.operand2,
-            operator = _gameState.value.operator,
-            correctResult = calculateResult(),
-            userInput = if (_gameState.value.input.isNotEmpty()) {
-                _gameState.value.input.trimStart('0').ifEmpty { "0" }
-            } else {
-                ""
-            }
+    fun cancelGame() {
+        playFeedback(FeedbackType.STOP)
+        pauseTimer()
+        saveCancelledGameRecord()
+        saveState(_gameState.value.copy(isGameStarted = false))
+    }
+
+    private fun saveGameRecord() {
+        val state = _gameState.value
+        val activeMinutes = max(1f / 60f, state.activeTime / 60000f)
+        val totalMinutes = max(1f / 60f, state.totalTime / 60000f)
+        val correctAnswers = state.correctAnswers.toFloat()
+        val totalAnswers = max(1, state.totalAnswers).toFloat()
+        val activeScore = 10f * correctAnswers.pow(2f) / (activeMinutes * totalAnswers)
+        val totalScore = 10f * correctAnswers.pow(2f) / (totalMinutes * totalAnswers)
+
+        val gameRecord = createGameRecord(
+            state = state,
+            activeScore = activeScore,
+            totalScore = totalScore
         )
-        saveState(
-            _gameState.value.copy(
-                solvedProblems = _gameState.value.solvedProblems + solvedProblem
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val newId = gameRecordRepository.insertGameRecord(gameRecord)
+            gameRecordRepository.setLastGameRecord(
+                gameRecord.copy(id = newId.toInt())
             )
+        }
+    }
+
+    private fun saveCancelledGameRecord() {
+        val cancelledGame = createGameRecord(_gameState.value)
+        viewModelScope.launch(Dispatchers.IO) {
+            gameRecordRepository.insertGameRecord(cancelledGame)
+        }
+    }
+
+    private fun createGameRecord(
+        state: GameState,
+        activeScore: Float = 0f,
+        totalScore: Float = 0f
+    ): GameRecord {
+        return GameRecord(
+            gameMode = state.gameMode,
+            modeLimit = state.modeLimit,
+            additionRangeStart = state.enabledOperators[Operation.ADDITION]?.first?.toInt() ?: 0,
+            additionRangeEnd = state.enabledOperators[Operation.ADDITION]?.second?.toInt() ?: 0,
+            subtractionRangeStart = state.enabledOperators[Operation.SUBTRACTION]?.first?.toInt() ?: 0,
+            subtractionRangeEnd = state.enabledOperators[Operation.SUBTRACTION]?.second?.toInt() ?: 0,
+            multiplicationRangeStart = state.enabledOperators[Operation.MULTIPLICATION]?.first?.toInt() ?: 0,
+            multiplicationRangeEnd = state.enabledOperators[Operation.MULTIPLICATION]?.second?.toInt() ?: 0,
+            divisionRangeStart = state.enabledOperators[Operation.DIVISION]?.first?.toInt() ?: 0,
+            divisionRangeEnd = state.enabledOperators[Operation.DIVISION]?.second?.toInt() ?: 0,
+            totalAnswers = state.totalAnswers,
+            correctAnswers = state.correctAnswers,
+            totalTime = state.totalTime,
+            activeTime = state.activeTime,
+            activeScore = activeScore,
+            totalScore = totalScore,
+            solvedProblems = state.solvedProblems,
+            seed = state.seed
         )
     }
 
@@ -350,10 +485,7 @@ class GameViewModel @Inject constructor(
         )
     }
 
-    fun setSettingsFromLink(
-        gameRecord: GameRecord,
-        settingsState: SettingsState
-    ) {
+    fun setSettingsFromLink(gameRecord: GameRecord, settingsState: SettingsState) {
         val additionRange = gameRecord.additionRangeStart.toFloat() to gameRecord.additionRangeEnd.toFloat()
         val subtractionRange = gameRecord.subtractionRangeStart.toFloat() to gameRecord.subtractionRangeEnd.toFloat()
         val multiplicationRange = gameRecord.multiplicationRangeStart.toFloat() to gameRecord.multiplicationRangeEnd.toFloat()
@@ -393,107 +525,63 @@ class GameViewModel @Inject constructor(
         )
     }
 
-    fun startGame(seed: Long) {
-        random = Random(seed)
-        generateNewProblem()
-        setStartTimestamp()
-        saveState(
-            _gameState.value.copy(
-                isGameStarted = true,
-                seed = seed
-            )
-        )
-        startTimer()
-    }
-
-    fun saveGameRecord() {
-        val activeMinutes = max(1f / 60f, _gameState.value.activeTime / 60000f)
-        val totalMinutes = max(1f / 60f, _gameState.value.totalTime / 60000f)
-        val correctAnswers = _gameState.value.correctAnswers.toFloat()
-        val totalAnswers = max(1, _gameState.value.totalAnswers).toFloat()
-        val activeScore = 10f * correctAnswers.pow(2f) / (activeMinutes * totalAnswers)
-        val totalScore = 10f * correctAnswers.pow(2f) / (totalMinutes * totalAnswers)
-
-        val lastGame = GameRecord(
-            gameMode = _gameState.value.gameMode,
-            modeLimit = _gameState.value.modeLimit,
-            additionRangeStart = _gameState.value.enabledOperators[Operation.ADDITION]?.first?.toInt() ?: 0,
-            additionRangeEnd = _gameState.value.enabledOperators[Operation.ADDITION]?.second?.toInt() ?: 0,
-            subtractionRangeStart = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.first?.toInt() ?: 0,
-            subtractionRangeEnd = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.second?.toInt() ?: 0,
-            multiplicationRangeStart = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.first?.toInt() ?: 0,
-            multiplicationRangeEnd = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.second?.toInt() ?: 0,
-            divisionRangeStart = _gameState.value.enabledOperators[Operation.DIVISION]?.first?.toInt() ?: 0,
-            divisionRangeEnd = _gameState.value.enabledOperators[Operation.DIVISION]?.second?.toInt() ?: 0,
-            totalAnswers = _gameState.value.totalAnswers,
-            correctAnswers = _gameState.value.correctAnswers,
-            totalTime = _gameState.value.totalTime,
-            activeTime = _gameState.value.activeTime,
-            activeScore = activeScore,
-            totalScore = totalScore,
-            solvedProblems = _gameState.value.solvedProblems,
-            seed = _gameState.value.seed
-        )
-
-        viewModelScope.launch(Dispatchers.IO) {
-            val newId = gameRecordRepository.insertGameRecord(lastGame)
-            gameRecordRepository.setLastGameRecord(lastGame.copy(id = newId.toInt()))
-        }
-    }
-
-    fun saveCancelledGameRecord() {
-        val cancelledGame = GameRecord(
-            gameMode = _gameState.value.gameMode,
-            modeLimit = _gameState.value.modeLimit,
-            additionRangeStart = _gameState.value.enabledOperators[Operation.ADDITION]?.first?.toInt() ?: 0,
-            additionRangeEnd = _gameState.value.enabledOperators[Operation.ADDITION]?.second?.toInt() ?: 0,
-            subtractionRangeStart = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.first?.toInt() ?: 0,
-            subtractionRangeEnd = _gameState.value.enabledOperators[Operation.SUBTRACTION]?.second?.toInt() ?: 0,
-            multiplicationRangeStart = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.first?.toInt() ?: 0,
-            multiplicationRangeEnd = _gameState.value.enabledOperators[Operation.MULTIPLICATION]?.second?.toInt() ?: 0,
-            divisionRangeStart = _gameState.value.enabledOperators[Operation.DIVISION]?.first?.toInt() ?: 0,
-            divisionRangeEnd = _gameState.value.enabledOperators[Operation.DIVISION]?.second?.toInt() ?: 0,
-            seed = _gameState.value.seed
-        )
-
-        viewModelScope.launch(Dispatchers.IO) {
-            gameRecordRepository.insertGameRecord(cancelledGame)
-        }
-    }
-
-    fun reset() {
+    fun resetGameState() {
         saveState(GameState())
     }
 
     fun resetGameData() {
-        reset()
+        resetGameState()
         viewModelScope.launch(Dispatchers.IO) {
             gameRecordRepository.reset()
         }
     }
 
-    fun setStartTimestamp() {
+    fun playFeedback(feedbackType: FeedbackType) {
+        feedbackController.play(feedbackType)
+    }
+
+    fun playDelayedFeedback(feedbackType: FeedbackType) {
+        viewModelScope.launch {
+            delay(400.milliseconds)
+            playFeedback(feedbackType)
+        }
+    }
+
+    private fun setStartTimestamp() {
         saveState(_gameState.value.copy(startTimeStamp = System.currentTimeMillis()))
     }
 
-    fun startTimer() {
+    private fun updateGameTime() {
+        val state = _gameState.value
+
+        val elapsedTime = System.currentTimeMillis() - state.startTimeStamp
+        val activeTime = elapsedTime - state.totalPauseDuration
+
+        saveState(
+            state.copy(
+                activeTime = activeTime,
+                totalTime = elapsedTime
+            )
+        )
+
+        if (shouldEndGame()) {
+            endGame()
+        }
+    }
+
+    private fun startTimer() {
         if (!_gameState.value.isGameStarted) return
         saveState(_gameState.value.copy(isTimerRunning = true))
+
         timerJob = viewModelScope.launch(Dispatchers.Default) {
             while (_gameState.value.isTimerRunning) {
-                val elapsedTime = System.currentTimeMillis() - _gameState.value.startTimeStamp
-                saveState(
-                    _gameState.value.copy(
-                        activeTime = elapsedTime - _gameState.value.totalPauseDuration,
-                        totalTime = elapsedTime
-                    )
-                )
+                updateGameTime()
                 delay(100.milliseconds)
             }
         }
     }
 
-    fun pauseTimer() {
+    private fun pauseTimer() {
         if (_gameState.value.isGameStarted && _gameState.value.isTimerRunning) {
             saveState(
                 _gameState.value.copy(
@@ -511,54 +599,12 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun resumeTimer() {
+    private fun resumeTimer() {
         if (_gameState.value.isGameStarted && !_gameState.value.isTimerRunning) {
             val totalPauseDuration =
                 _gameState.value.totalPauseDuration + (System.currentTimeMillis() - _gameState.value.pausedAt)
             saveState(_gameState.value.copy(totalPauseDuration = totalPauseDuration))
             startTimer()
-        }
-    }
-
-    fun endGame() {
-        pauseTimer()
-        saveGameRecord()
-        val gameState = _gameState.value
-        saveState(gameState.copy(isGameStarted = false))
-
-        if (!gameState.isLinkGame) {
-            val correctPercentage =
-                if (gameState.totalAnswers > 0) {
-                    gameState.correctAnswers.toFloat() / gameState.totalAnswers
-                } else {
-                    0f
-                }
-
-            val feedbackType = when {
-                correctPercentage == 1f -> FeedbackType.RESULT_PERFECT
-                correctPercentage >= 0.8f -> FeedbackType.RESULT_GOOD
-                correctPercentage >= 0.6f -> FeedbackType.RESULT_OKAY
-                else -> FeedbackType.RESULT_BAD
-            }
-            playDelayedFeedback(feedbackType)
-        }
-    }
-
-    fun cancelGame() {
-        playFeedback(FeedbackType.STOP)
-        pauseTimer()
-        saveCancelledGameRecord()
-        saveState(_gameState.value.copy(isGameStarted = false))
-    }
-
-    fun playFeedback(feedbackType: FeedbackType) {
-        feedbackController.play(feedbackType)
-    }
-
-    fun playDelayedFeedback(feedbackType: FeedbackType) {
-        viewModelScope.launch {
-            delay(400.milliseconds)
-            playFeedback(feedbackType)
         }
     }
 

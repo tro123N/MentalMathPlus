@@ -269,7 +269,7 @@ fun MenuSideSheet(
                         fun startRandomGame() {
                             settingsViewModel.setIsRandomGameButtonClicked(true)
                             resultViewModel.setShowLinkGamePopUp(false)
-                            gameViewModel.reset()
+                            gameViewModel.resetGameState()
                             gameViewModel.setRandomSettings(settingsViewModel.settingsState.value)
                             settingsViewModel.playFeedback(FeedbackType.START)
                             navController.navigate("game") {

@@ -72,7 +72,7 @@ fun Navigation(
             }
 
             composable(
-                route = "statistics",
+                route = "result",
                 enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
                 exitTransition = {
                     if (!showLoadedGameRecord) null else slideOutHorizontally(

@@ -81,6 +81,7 @@ fun GameTopBar(
         actions = {
             val gameState = gameViewModel.gameState.collectAsState().value
             when (gameState.gameMode) {
+
                 GameMode.PROBLEMS -> {
                     val totalTasks = gameState.modeLimit * 10
                     val answeredTasks = gameState.totalAnswers
@@ -94,9 +95,8 @@ fun GameTopBar(
                 }
 
                 GameMode.TIMED -> {
-                    CountdownTimer(
+                    CountdownDisplay(
                         fontSize = fontSize,
-                        navController = navController,
                         time = gameState.modeLimit.toLong() * 60000L,
                     )
                 }
