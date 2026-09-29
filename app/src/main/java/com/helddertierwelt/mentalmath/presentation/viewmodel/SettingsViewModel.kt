@@ -35,6 +35,7 @@ import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.settings.SettingsGroup
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
 import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.NotificationMode
@@ -104,10 +105,9 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun toggleMode() {
+    fun setGameMode(gameMode : GameMode) {
         playFeedback(FeedbackType.TAP)
-        _settingsState.value =
-            _settingsState.value.copy(isModeEnabled = !_settingsState.value.isModeEnabled)
+        _settingsState.value = _settingsState.value.copy(gameMode = gameMode)
         saveState()
     }
 
@@ -323,7 +323,7 @@ class SettingsViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             val hasGamesWithScore = gameRecordRepository.hasGamesWithScore(
-                settingsState.value.isModeEnabled,
+                settingsState.value.gameMode,
                 settingsState.value.limit.toInt(),
                 additionRangeStart,
                 additionRangeEnd,
@@ -349,7 +349,7 @@ class SettingsViewModel @Inject constructor(
         val divisionRangeEnd = if (settingsState.value.isDivisionEnabled) settingsState.value.divisionRange.second.toInt() else 0
         viewModelScope.launch(Dispatchers.IO) {
             val resultBestGames = gameRecordRepository.findBestGameScores(
-                settingsState.value.isModeEnabled,
+                settingsState.value.gameMode,
                 settingsState.value.limit.toInt(),
                 additionRangeStart,
                 additionRangeEnd,
@@ -371,7 +371,11 @@ class SettingsViewModel @Inject constructor(
     fun generateSeedLink(seed: Long): String {
         val state = _settingsState.value
         val settingsStringByteArray = listOf(
-            if (state.isModeEnabled) "1" else "0",
+            when (state.gameMode) {
+                GameMode.TIMED -> "0"
+                GameMode.PROBLEMS -> "1"
+                GameMode.SURVIVAL -> "2"
+            },
             state.limit.toInt().toString(),
             if (state.isAdditionEnabled) state.additionRange.first.toInt().toString() else "0",
             if (state.isAdditionEnabled) state.additionRange.second.toInt().toString() else "0",

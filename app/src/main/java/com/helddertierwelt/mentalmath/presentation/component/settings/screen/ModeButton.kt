@@ -29,26 +29,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 
 @Composable
 fun ModeButton(
-    iconId1: Int,
-    iconId2: Int,
-    isToggled: Boolean,
-    onClick: () -> Unit,
+    gameMode: GameMode,
+    onClick: (GameMode) -> Unit,
     iconSize: Dp,
     size: Dp,
 ) {
-    val icon = if (isToggled) iconId1 else iconId2
-
     Button(
-        onClick = onClick,
+        onClick = { onClick(gameMode.next()) },
         shape = CircleShape,
         modifier = Modifier.size(size),
         contentPadding = PaddingValues(0.dp)
     ) {
         Icon(
-            painter = painterResource(icon),
+            painter = painterResource(gameMode.icon),
             contentDescription = "Mode",
             modifier = Modifier.size(iconSize),
             tint = MaterialTheme.colorScheme.onPrimary

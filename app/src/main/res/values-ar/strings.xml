@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="second">ث</string>
+    <string name="minute">د</string>
     <string name="light_mode">الوضع الفاتح</string>
     <string name="horizontal">أفقي</string>
     <string name="accuracy">الدقة</string>
-    <string name="problems_completed">المشكلات المحلولة</string>
+    <string name="problems_completed">المسائل المحلولة</string>
     <string name="difficulty_division">صعوبة القسمة</string>
     <string name="vertical_toast">تخطيط رأسي</string>
     <string name="no_share">لا يوجد تطبيق متاح لمشاركة هذا المحتوى.</string>
@@ -35,6 +37,7 @@
     <string name="vibration_off">الاهتزاز معطّل</string>
     <string name="vibration_toast_text">قد تتأثر الاهتزازات بالجهاز أو إعدادات النظام</string>
     <string name="language">اللغة</string>
+    <string name="survival_initial_time">الوقت الأولي لكل مسألة</string>
     <string name="difficulty_addition">صعوبة الجمع</string>
     <string name="mode_instruction">حدد الوضع والحد</string>
     <string name="phone_pad">لوحة الهاتف</string>
@@ -54,12 +57,12 @@
     <string name="left_to_right">من اليسار إلى اليمين</string>
     <string name="sound_off">الصوت موقف</string>
     <string name="top_ten_scores">أفضل ١٠</string>
-    <string name="problem_limit">حد المشكلة</string>
+    <string name="problem_limit">حد المسائل</string>
     <string name="system_mode">اتباع النظام</string>
     <string name="score">العلامة</string>
-    <string name="problem">المشكلة</string>
+    <string name="problem">مسألة</string>
     <string name="status">الحالة</string>
-    <string name="no_problems">لم تُحَلّ أية مشكلات</string>
+    <string name="no_problems">لم تُحَلّ أية مسائل</string>
     <string name="done">تم</string>
     <string name="no_games">لا توجد لعبات ذات علامة</string>
     <string name="notification_popup_title">الإشعارات معطلة</string>

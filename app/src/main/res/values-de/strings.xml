@@ -3,6 +3,8 @@
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Modus und Limit auswählen</string>
+    <string name="second">s</string>
+    <string name="minute">min</string>
     <string name="operator_instruction">Operationen und Schwierigkeit auswählen</string>
     <string name="start">Starten</string>
     <!-- Settings Screen: Menu -->
@@ -54,6 +56,7 @@
     <string name="seed">Seed: %d</string>
     <string name="problem_limit">Aufgabenlimit</string>
     <string name="time_limit">Zeitlimit</string>
+    <string name="survival_initial_time">Initiale Zeit pro Aufgabe</string>
     <string name="difficulty_addition">Schwierigkeit Addition</string>
     <string name="difficulty_subtraction">Schwierigkeit Subtraktion</string>
     <string name="difficulty_multiplication">Schwierigkeit Multiplikation</string>

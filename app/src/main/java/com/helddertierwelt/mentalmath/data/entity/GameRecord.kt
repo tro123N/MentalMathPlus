@@ -22,12 +22,13 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.helddertierwelt.mentalmath.domain.game.SolvedProblem
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 
 @Entity(
     tableName = "game_records",
     indices = [
         Index(
-            value = ["isModeEnabled", "modeLimit", "additionRangeStart", "additionRangeEnd",
+            value = ["gameMode", "modeLimit", "additionRangeStart", "additionRangeEnd",
                 "subtractionRangeStart", "subtractionRangeEnd",
                 "multiplicationRangeStart", "multiplicationRangeEnd",
                 "divisionRangeStart", "divisionRangeEnd"]
@@ -37,7 +38,7 @@ import com.helddertierwelt.mentalmath.domain.game.SolvedProblem
 data class GameRecord(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
 
-    val isModeEnabled: Boolean = false,
+    val gameMode: GameMode = GameMode.TIMED,
     val modeLimit: Int = 0,
 
     val additionRangeStart: Int = 0,

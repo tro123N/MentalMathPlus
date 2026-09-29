@@ -58,6 +58,7 @@ import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
 import com.helddertierwelt.mentalmath.presentation.component.game.BackspaceButton
 import com.helddertierwelt.mentalmath.presentation.component.game.EnterButton
@@ -129,10 +130,10 @@ fun GameScreen(
                 )
                 LinearProgressIndicator(
                     progress = {
-                        if (gameState.isModeEnabled) {
-                            gameState.totalAnswers / (gameState.modeLimit * 10f)
-                        } else {
-                            gameState.activeTime / (gameState.modeLimit.toFloat() * 60000L)
+                        when (gameState.gameMode) {
+                            GameMode.PROBLEMS -> gameState.totalAnswers / (gameState.modeLimit * 10f)
+                            GameMode.TIMED -> gameState.activeTime / (gameState.modeLimit.toFloat() * 60000L)
+                            GameMode.SURVIVAL -> 0f// Todo
                         }
                     },
                     modifier = Modifier
@@ -305,7 +306,7 @@ fun GameScreen(
                                 val totalAnswers = gameViewModel.gameState.value.totalAnswers
                                 val totalProblems = (gameState.modeLimit * 10)
                                 val isLinkGame = gameViewModel.gameState.value.isLinkGame
-                                if (gameState.isModeEnabled && totalAnswers == totalProblems) {
+                                if (gameState.gameMode != GameMode.TIMED && totalAnswers == totalProblems) { // Todo
                                     gameViewModel.endGame()
                                     if (isLinkGame) {
                                         resultViewModel.setShowLinkGamePopUp(true)

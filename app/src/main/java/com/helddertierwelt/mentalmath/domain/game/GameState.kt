@@ -20,13 +20,14 @@ package com.helddertierwelt.mentalmath.domain.game
 
 import android.os.Parcelable
 import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class GameState(
 
-    val isModeEnabled: Boolean = false,
+    val gameMode: GameMode = GameMode.PROBLEMS,
     val modeLimit: Int = 1,
     val operand1: Int = 1,
     val operand2: Int = 1,

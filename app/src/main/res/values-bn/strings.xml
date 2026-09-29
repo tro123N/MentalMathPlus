@@ -3,6 +3,8 @@
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">মোড এবং লিমিট নির্বাচন করুন</string>
+    <string name="second">সে.</string>
+    <string name="minute">মি.</string>
     <string name="operator_instruction">অপারেশন এবং কঠোরতা নির্বাচন করুন</string>
     <string name="start">শুরু করুন</string>
 
@@ -56,25 +58,26 @@
     <!-- Statistics Screen -->
     <string name="result">ফলাফল</string>
     <string name="seed">সিড: %d</string>
-    <string name="problem_limit">সমস্যার লিমিট</string>
+    <string name="problem_limit">অঙ্কের সীমা</string>
     <string name="time_limit">সময়সীমা</string>
+    <string name="survival_initial_time">প্রতি অঙ্কের শুরুর সময়</string>
     <string name="difficulty_addition">যোগের কঠোরতা</string>
     <string name="difficulty_subtraction">বিয়োগের কঠোরতা</string>
     <string name="difficulty_multiplication">গুণের কঠোরতা</string>
     <string name="difficulty_division">ভাগের কঠোরতা</string>
     <string name="time_spent">অতিবাহিত সময়</string>
-    <string name="problems_completed">সম্পন্ন হওয়া সমস্যা</string>
+    <string name="problems_completed">সমাধান করা অঙ্ক</string>
     <string name="correct_answers">সঠিক উত্তর</string>
     <string name="incorrect_answers">ভুল উত্তর</string>
     <string name="accuracy">নির্ভুলতা</string>
     <string name="avg_time_per_correct_answer">প্রতিটি সঠিক উত্তরের জন্য ব্যয় করা সময়</string>
     <string name="score">স্কোর</string>
-    <string name="problem">সমস্যা</string>
+    <string name="problem">অঙ্ক</string>
     <string name="status">স্ট্যাটাস</string>
     <string name="status_correct">সঠিক</string>
     <string name="status_incorrect">ভুল</string>
     <string name="status_skipped">এড়িয়ে যাওয়া হয়েছে</string>
-    <string name="no_problems">কোনো সমস্যা সমাধান করা হয়নি</string>
+    <string name="no_problems">কোনো অঙ্ক সমাধান করা হয়নি</string>
     <string name="done">সম্পন্ন করুন</string>
 
     <!-- History Screen -->

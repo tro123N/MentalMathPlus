@@ -21,6 +21,7 @@ package com.helddertierwelt.mentalmath.data.repository
 import com.helddertierwelt.mentalmath.data.dao.GameRecordDao
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.data.entity.GameScore
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,7 +34,7 @@ class GameRecordRepository @Inject constructor(
     private val _lastGameRecord = MutableStateFlow(
         GameRecord(
             id = -1,
-            isModeEnabled = false,
+            gameMode = GameMode.TIMED,
             modeLimit = 0,
             additionRangeStart = 0,
             additionRangeEnd = 0,
@@ -58,7 +59,7 @@ class GameRecordRepository @Inject constructor(
     private val _loadedGameRecord = MutableStateFlow(
         GameRecord(
             id = -1,
-            isModeEnabled = false,
+            gameMode = GameMode.TIMED,
             modeLimit = 0,
             additionRangeStart = 0,
             additionRangeEnd = 0,
@@ -95,7 +96,7 @@ class GameRecordRepository @Inject constructor(
     }
 
     suspend fun findBestGameScores(
-        isModeEnabled: Boolean,
+        gameMode: GameMode,
         modeLimit: Int,
         additionRangeStart: Int,
         additionRangeEnd: Int,
@@ -107,7 +108,7 @@ class GameRecordRepository @Inject constructor(
         divisionRangeEnd: Int
     ): List<GameScore> {
         return gameRecordDao.findBestGameScores(
-            isModeEnabled,
+            gameMode,
             modeLimit,
             additionRangeStart,
             additionRangeEnd,
@@ -121,7 +122,7 @@ class GameRecordRepository @Inject constructor(
     }
 
     suspend fun hasGamesWithScore(
-        isModeEnabled: Boolean,
+        gameMode: GameMode,
         modeLimit: Int,
         additionRangeStart: Int,
         additionRangeEnd: Int,
@@ -133,7 +134,7 @@ class GameRecordRepository @Inject constructor(
         divisionRangeEnd: Int
     ): Boolean {
         return gameRecordDao.hasGamesWithScore(
-            isModeEnabled,
+            gameMode,
             modeLimit,
             additionRangeStart,
             additionRangeEnd,
@@ -148,7 +149,7 @@ class GameRecordRepository @Inject constructor(
 
     suspend fun wasAlreadyPlayed(gameRecord: GameRecord): Boolean {
         return gameRecordDao.wasAlreadyPlayed(
-            gameRecord.isModeEnabled,
+            gameRecord.gameMode,
             gameRecord.modeLimit,
             gameRecord.additionRangeStart,
             gameRecord.additionRangeEnd,
@@ -177,7 +178,7 @@ class GameRecordRepository @Inject constructor(
     fun resetLastGameRecord() {
         _lastGameRecord.value = GameRecord(
             id = -1,
-            isModeEnabled = false,
+            gameMode = GameMode.TIMED,
             modeLimit = 0,
             additionRangeStart = 0,
             additionRangeEnd = 0,
@@ -201,7 +202,7 @@ class GameRecordRepository @Inject constructor(
     fun resetLoadedGameRecord() {
         _loadedGameRecord.value = GameRecord(
             id = -1,
-            isModeEnabled = false,
+            gameMode = GameMode.TIMED,
             modeLimit = 0,
             additionRangeStart = 0,
             additionRangeEnd = 0,

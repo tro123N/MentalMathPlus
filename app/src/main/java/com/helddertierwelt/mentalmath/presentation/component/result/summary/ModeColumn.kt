@@ -43,20 +43,21 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModeColumn(
-    modeEnabled: Boolean,
+    gameMode: GameMode,
     fontSize: TextUnit,
     iconSize: Dp,
     limit: Int
 ) {
 
-    val tooltipText = if (modeEnabled) {
-        stringResource(R.string.problem_limit)
-    } else {
-        stringResource(R.string.time_limit)
+    val tooltipText = when (gameMode) {
+        GameMode.PROBLEMS -> stringResource(R.string.problem_limit)
+        GameMode.TIMED -> stringResource(R.string.time_limit)
+        GameMode.SURVIVAL -> stringResource(R.string.survival_initial_time)
     }
     val tooltipState = rememberTooltipState()
     Column(
@@ -80,12 +81,7 @@ fun ModeColumn(
             }
         ) {
             Icon(
-                painter = painterResource(
-                    if (modeEnabled)
-                        R.drawable.tag_24dp
-                    else
-                        R.drawable.hourglass_bottom_24dp
-                ),
+                painter = painterResource(gameMode.icon),
                 contentDescription = tooltipText,
                 modifier = Modifier.size(iconSize),
                 tint = MaterialTheme.colorScheme.onPrimary
@@ -93,7 +89,11 @@ fun ModeColumn(
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = if (modeEnabled) "${limit * 10}" else "${limit}:00",
+            text = when (gameMode) {
+                GameMode.PROBLEMS -> "${limit * 10}"
+                GameMode.TIMED -> "${limit}:00"
+                GameMode.SURVIVAL -> "${limit * 10}${stringResource(R.string.second)}"
+            },
             fontSize = fontSize,
             color = MaterialTheme.colorScheme.onPrimary
         )

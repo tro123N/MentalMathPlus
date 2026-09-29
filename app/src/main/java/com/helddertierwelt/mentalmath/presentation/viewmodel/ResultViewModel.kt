@@ -107,7 +107,7 @@ class ResultViewModel @Inject constructor(
         val gameRecord = if (_showLoadedGameRecord.value) loadedGameRecord.value else lastGameRecord.value
         viewModelScope.launch(Dispatchers.IO) {
             val resultBestGameScores = gameRecordRepository.findBestGameScores(
-                gameRecord.isModeEnabled,
+                gameRecord.gameMode,
                 gameRecord.modeLimit,
                 gameRecord.additionRangeStart,
                 gameRecord.additionRangeEnd,

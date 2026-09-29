@@ -176,11 +176,9 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         ModeButton(
-                            iconId1 = R.drawable.tag_24dp,
-                            iconId2 = R.drawable.hourglass_bottom_24dp,
-                            isToggled = settingsState.isModeEnabled,
-                            onClick = {
-                                settingsViewModel.toggleMode()
+                            gameMode = settingsState.gameMode,
+                            onClick = { nextGameMode ->
+                                settingsViewModel.setGameMode(nextGameMode)
                                 settingsViewModel.checkForGamesWithScore()
                             },
                             iconSize = modeIconSize,
@@ -198,7 +196,7 @@ fun SettingsScreen(
                                 settingsViewModel.setIsSliderActive(false)
                                 settingsViewModel.checkForGamesWithScore()
                             },
-                            isToggled = settingsState.isModeEnabled,
+                            gameMode = settingsState.gameMode,
                             activeTrackColor = MaterialTheme.colorScheme.onPrimary,
                             size = sliderSize,
                             thumbnailFontSize = thumbnailFontSize

@@ -43,20 +43,21 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatsProgressColumn(
-    modeEnabled: Boolean,
+    gameMode: GameMode,
     fontSize: TextUnit,
     iconSize: Dp,
     totalAnswers: Int,
     activeTime: Long,
 ) {
-    val tooltipText = if (modeEnabled) {
-        stringResource(R.string.time_spent)
-    } else {
-        stringResource(R.string.problems_completed)
+    val tooltipText = when (gameMode) {
+        GameMode.TIMED -> stringResource(R.string.time_spent)
+        GameMode.PROBLEMS -> stringResource(R.string.problems_completed)
+        GameMode.SURVIVAL -> stringResource(R.string.problems_completed)
     }
     val tooltipState = rememberTooltipState()
     Column(
@@ -79,7 +80,11 @@ fun StatsProgressColumn(
             }
         ) {
             Icon(
-                painter = painterResource(if (modeEnabled) R.drawable.timer_24dp else R.drawable.tag_24dp),
+                painter = when (gameMode) {
+                    GameMode.TIMED -> painterResource(R.drawable.tag_24dp)
+                    GameMode.PROBLEMS -> painterResource(R.drawable.timer_24dp)
+                    GameMode.SURVIVAL -> painterResource(R.drawable.tag_24dp)
+                },
                 contentDescription = tooltipText,
                 modifier = Modifier.size(iconSize),
                 tint = MaterialTheme.colorScheme.onPrimary
@@ -87,7 +92,11 @@ fun StatsProgressColumn(
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = if (modeEnabled) formatTimeWithDecimalSeconds(activeTime) else "$totalAnswers",
+            text = when (gameMode) {
+                GameMode.TIMED -> "$totalAnswers"
+                GameMode.PROBLEMS -> formatTimeWithDecimalSeconds(activeTime)
+                GameMode.SURVIVAL -> "$totalAnswers"
+            },
             fontSize = fontSize,
             color = MaterialTheme.colorScheme.onPrimary
         )

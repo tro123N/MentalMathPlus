@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 import com.helddertierwelt.mentalmath.presentation.component.result.summary.formatScore
 
 @Composable
@@ -52,7 +53,7 @@ fun HistoryEntriesCard(
         return records.sortedWith { record1, record2 ->
             compareValuesBy(
                 record1, record2,
-                GameRecord::isModeEnabled,
+                GameRecord::gameMode,
                 GameRecord::modeLimit,
                 GameRecord::additionRangeStart,
                 GameRecord::additionRangeEnd,
@@ -106,7 +107,11 @@ fun HistoryEntriesCard(
                 }
             } else {
                 gameRecordsForHistory.forEachIndexed { index, game ->
-                    val limit = if (game.isModeEnabled) "${game.modeLimit}0" else "${game.modeLimit}:00"
+                    val limit = when (game.gameMode) {
+                        GameMode.PROBLEMS -> "${game.modeLimit}0"
+                        GameMode.TIMED -> "${game.modeLimit}:00"
+                        GameMode.SURVIVAL -> "${game.modeLimit}${stringResource(R.string.second)}"
+                    }
                     val rangeStrings = listOf(
                         formatRange(game.additionRangeStart, game.additionRangeEnd),
                         formatRange(game.subtractionRangeStart, game.subtractionRangeEnd),

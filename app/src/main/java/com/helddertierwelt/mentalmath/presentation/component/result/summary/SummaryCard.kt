@@ -120,7 +120,7 @@ fun SummaryCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 ModeColumn(
-                    modeEnabled = statisticsGameRecord.isModeEnabled,
+                    gameMode = statisticsGameRecord.gameMode,
                     fontSize = statsFontSize,
                     iconSize = statsIconSize,
                     limit = statisticsGameRecord.modeLimit
@@ -197,7 +197,7 @@ fun SummaryCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 StatsProgressColumn(
-                    modeEnabled = statisticsGameRecord.isModeEnabled,
+                    gameMode = statisticsGameRecord.gameMode,
                     fontSize = statsFontSize,
                     iconSize = statsIconSize,
                     totalAnswers = statisticsGameRecord.totalAnswers,

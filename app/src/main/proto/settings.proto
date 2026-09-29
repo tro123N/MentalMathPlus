@@ -21,7 +21,13 @@ option java_package = "com.helddertierwelt.mentalmath";
 option java_multiple_files = true;
 
 message SettingsStateProto {
-  bool is_mode_enabled = 1;
+  enum GameMode {
+    TIMED = 0;
+    PROBLEMS = 1;
+    SURVIVAL = 2;
+  }
+
+  GameMode game_mode = 1;
   float limit = 2;
 
   float plus_min = 3;

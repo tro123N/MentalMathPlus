@@ -3,6 +3,8 @@
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Выберите режим и лимит</string>
+    <string name="second">с</string>
+    <string name="minute">мин</string>
     <string name="operator_instruction">Выберите операции и сложность</string>
     <string name="start">Начать</string>
     <!-- Settings Screen: Menu -->
@@ -52,26 +54,27 @@
     <!-- Statistics Screen -->
     <string name="result">Результат</string>
     <string name="seed">Сид: %d</string>
-    <string name="problem_limit">Лимит заданий</string>
     <string name="time_limit">Лимит времени</string>
+    <string name="survival_initial_time">Начальное время на задачу</string>
     <string name="difficulty_addition">Сложность сложения</string>
     <string name="difficulty_subtraction">Сложность вычитания</string>
     <string name="difficulty_multiplication">Сложность умножения</string>
     <string name="difficulty_division">Сложность деления</string>
     <string name="time_spent">Затраченное время</string>
-    <string name="problems_completed">Решено заданий</string>
     <string name="correct_answers">Правильные ответы</string>
     <string name="incorrect_answers">Неправильные ответы</string>
     <string name="accuracy">Точность</string>
     <string name="avg_time_per_correct_answer">Время на правильный ответ</string>
     <string name="score">Счёт</string>
-    <string name="problem">Задача</string>
     <string name="status">Статус</string>
     <string name="status_correct">Правильно</string>
     <string name="status_incorrect">Неправильно</string>
     <string name="status_skipped">Пропущено</string>
-    <string name="no_problems">Ни одно задание не решено</string>
     <string name="done">OK</string>
+    <string name="problem_limit">Лимит задач</string>
+    <string name="problems_completed">Решено задач</string>
+    <string name="problem">Задача</string>
+    <string name="no_problems">Ни одной задачи не решено</string>
     <!-- History Screen -->
     <string name="no_games">Пока нет сыгранных игр с результатами</string>
     <!-- Pop-ups -->

@@ -21,13 +21,18 @@ package com.helddertierwelt.mentalmath.domain.settings
 import android.util.Base64
 import android.util.Log
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 import java.math.BigInteger
 import java.util.Locale
 
 object SettingsLinkUtil {
     fun serialize(record: GameRecord): String {
         val settingsStringByteArray = listOf(
-            if (record.isModeEnabled) "1" else "0",
+            when (record.gameMode) {
+                GameMode.TIMED -> "0"
+                GameMode.PROBLEMS -> "1"
+                GameMode.SURVIVAL -> "2"
+            },
             record.modeLimit.toString(),
             record.additionRangeStart.toString(),
             record.additionRangeEnd.toString(),
@@ -58,7 +63,12 @@ object SettingsLinkUtil {
 
         return GameRecord(
             id = 0,
-            isModeEnabled = bigIntString[0] == '1',
+            gameMode = when (bigIntString[0]) {
+                '0' -> GameMode.TIMED
+                '1' -> GameMode.PROBLEMS
+                '2' -> GameMode.SURVIVAL
+                else -> GameMode.PROBLEMS
+            },
             modeLimit = bigIntString[1].digitToInt(),
             additionRangeStart = bigIntString[2].digitToInt(),
             additionRangeEnd = bigIntString[3].digitToInt(),
@@ -91,9 +101,9 @@ object SettingsLinkUtil {
             }
             Log.d("SettingsLinkUtil", "bigIntString: $bigIntString")
 
-            val isModeEnabled = bigIntString.take(1)
-            Log.d("SettingsLinkUtil", "isModeEnabled: $isModeEnabled")
-            if (isModeEnabled != "0" && isModeEnabled != "1") return false
+            val gameMode = bigIntString.take(1)
+            Log.d("SettingsLinkUtil", "gameMode: $gameMode")
+            if (gameMode !in setOf("0", "1", "2")) return false
 
             val modeLimit = bigIntString[1].digitToInt()
             Log.d("SettingsLinkUtil", "modeLimit: $modeLimit")

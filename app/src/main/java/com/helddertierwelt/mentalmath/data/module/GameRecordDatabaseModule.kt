@@ -23,6 +23,7 @@ import androidx.room.Room
 import com.helddertierwelt.mentalmath.data.dao.GameRecordDao
 import com.helddertierwelt.mentalmath.data.db.GameRecordDatabase
 import com.helddertierwelt.mentalmath.data.module.GameRecordMigrations.MIGRATION_1_2
+import com.helddertierwelt.mentalmath.data.module.GameRecordMigrations.MIGRATION_2_3
 import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
 import dagger.Module
 import dagger.Provides
@@ -44,7 +45,10 @@ object GameRecordDatabaseModule {
             context,
             GameRecordDatabase::class.java,
             "game_record.db"
-        ).addMigrations(MIGRATION_1_2).build()
+        ).addMigrations(
+            MIGRATION_1_2,
+            MIGRATION_2_3
+        ).build()
     }
 
     @Provides

@@ -3,6 +3,8 @@
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Odaberite način rada i ograničenje</string>
+    <string name="second">s</string>
+    <string name="minute">min</string>
     <string name="operator_instruction">Odaberite računske operacije i težinu</string>
     <string name="start">Započni</string>
     <!-- Settings Screen: Menu -->
@@ -54,6 +56,7 @@
     <string name="seed">Seed: %d</string>
     <string name="problem_limit">Broj zadataka</string>
     <string name="time_limit">Vremensko ograničenje</string>
+    <string name="survival_initial_time">Početno vrijeme po zadatku</string>
     <string name="difficulty_addition">Težina zbrajanja</string>
     <string name="difficulty_subtraction">Težina oduzimanja</string>
     <string name="difficulty_multiplication">Težina množenja</string>

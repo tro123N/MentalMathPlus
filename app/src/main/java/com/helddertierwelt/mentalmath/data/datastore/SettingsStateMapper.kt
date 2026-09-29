@@ -36,8 +36,12 @@ import com.helddertierwelt.mentalmath.SettingsStateProto.InputDirectionMode.LEFT
 import com.helddertierwelt.mentalmath.SettingsStateProto.InputDirectionMode.RIGHT_TO_LEFT
 import com.helddertierwelt.mentalmath.SettingsStateProto.FormMode.HORIZONTAL
 import com.helddertierwelt.mentalmath.SettingsStateProto.FormMode.VERTICAL
+import com.helddertierwelt.mentalmath.SettingsStateProto.GameMode.PROBLEMS
+import com.helddertierwelt.mentalmath.SettingsStateProto.GameMode.TIMED
+import com.helddertierwelt.mentalmath.SettingsStateProto.GameMode.SURVIVAL
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
 import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.NotificationMode
@@ -47,7 +51,13 @@ import com.helddertierwelt.mentalmath.domain.settings.enums.VibrationMode
 
 fun SettingsState.toProto(): SettingsStateProto {
     return SettingsStateProto.newBuilder()
-        .setIsModeEnabled(isModeEnabled)
+        .setGameMode(
+            when (gameMode) {
+                GameMode.TIMED -> TIMED
+                GameMode.PROBLEMS -> PROBLEMS
+                GameMode.SURVIVAL -> SURVIVAL
+            }
+        )
         .setLimit(limit)
         .setPlusMin(additionRange.first)
         .setPlusMax(additionRange.second)
@@ -111,7 +121,12 @@ fun SettingsState.toProto(): SettingsStateProto {
 
 fun SettingsStateProto.toSettingsState(): SettingsState {
     return SettingsState(
-        isModeEnabled = isModeEnabled,
+        gameMode = when (gameMode) {
+            TIMED -> GameMode.TIMED
+            PROBLEMS -> GameMode.PROBLEMS
+            SURVIVAL -> GameMode.SURVIVAL
+            SettingsStateProto.GameMode.UNRECOGNIZED -> GameMode.PROBLEMS
+        },
         limit = limit,
         additionRange = plusMin to plusMax,
         subtractionRange = minusMin to minusMax,

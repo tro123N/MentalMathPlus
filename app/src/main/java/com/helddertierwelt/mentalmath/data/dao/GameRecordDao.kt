@@ -24,6 +24,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.data.entity.GameScore
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 
 @Dao
 interface GameRecordDao {
@@ -36,7 +37,7 @@ interface GameRecordDao {
 
     @Query(
         """SELECT EXISTS(SELECT 1 FROM game_records WHERE
-        isModeEnabled = :isModeEnabled AND
+        gameMode = :gameMode AND
         modeLimit = :modeLimit AND
         additionRangeStart = :additionRangeStart AND
         additionRangeEnd = :additionRangeEnd AND
@@ -50,7 +51,7 @@ interface GameRecordDao {
         LIMIT 1)"""
     )
     suspend fun wasAlreadyPlayed(
-        isModeEnabled: Boolean,
+        gameMode: GameMode,
         modeLimit: Int,
         additionRangeStart: Int,
         additionRangeEnd: Int,
@@ -68,7 +69,7 @@ interface GameRecordDao {
         SELECT 1
         FROM game_records
         WHERE
-            isModeEnabled = :isModeEnabled AND
+            gameMode = :gameMode AND
             modeLimit = :modeLimit AND
             additionRangeStart = :additionRangeStart AND
             additionRangeEnd = :additionRangeEnd AND
@@ -82,7 +83,7 @@ interface GameRecordDao {
         )"""
     )
     suspend fun hasGamesWithScore(
-        isModeEnabled: Boolean,
+        gameMode: GameMode,
         modeLimit: Int,
         additionRangeStart: Int,
         additionRangeEnd: Int,
@@ -99,7 +100,7 @@ interface GameRecordDao {
     SELECT id, activeScore
     FROM game_records
     WHERE
-        isModeEnabled = :isModeEnabled AND
+        gameMode = :gameMode AND
         modeLimit = :modeLimit AND
         additionRangeStart = :additionRangeStart AND
         additionRangeEnd = :additionRangeEnd AND
@@ -115,7 +116,7 @@ interface GameRecordDao {
     """
     )
     suspend fun findBestGameScores(
-        isModeEnabled: Boolean,
+        gameMode: GameMode,
         modeLimit: Int,
         additionRangeStart: Int,
         additionRangeEnd: Int,

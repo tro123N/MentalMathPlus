@@ -3,6 +3,8 @@
     <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Επιλογή λειτουργίας και ορίου</string>
+    <string name="second">δευτ.</string>
+    <string name="minute">λεπ.</string>
     <string name="operator_instruction">Επιλογή τελεστών και δυσκολίας</string>
     <string name="start">Εναρξη</string>
 
@@ -54,26 +56,27 @@
     <!-- Statistics Screen -->
     <string name="result">Αποτέλεσμα</string>
     <string name="seed">Seed: %d</string>
-    <string name="problem_limit">Οριο Προβλήματος</string>
     <string name="time_limit">Χρονικό Οριο</string>
+    <string name="survival_initial_time">Αρχικός χρόνος ανά άσκηση</string>
     <string name="difficulty_addition">Δυσκολία Πρόσθεσης</string>
     <string name="difficulty_subtraction">Δυσκολία Αφαίρεσης</string>
     <string name="difficulty_multiplication">Δυσκολία Πολλαπλασιασμού</string>
     <string name="difficulty_division">Δυσκολία Διαίρεσης</string>
     <string name="time_spent">Χρόνος που αφιερώθηκε</string>
-    <string name="problems_completed">Προβλήματα που απαντήθηκαν</string>
     <string name="correct_answers">Σωστές Απαντήσεις</string>
     <string name="incorrect_answers">Λανθασμένες Απαντήσεις</string>
     <string name="accuracy">Ακρίβεια</string>
     <string name="avg_time_per_correct_answer">Χρόνος που αφιερώθηκε/Σωστές απαντήσεις</string>
     <string name="score">Βαθμολογία</string>
-    <string name="problem">Πρόβλημα</string>
     <string name="status">Κατάσταση</string>
-    <string name="no_problems">Δε λύθηκαν προβλήματα</string>
     <string name="status_correct">Σωστό</string>
     <string name="status_incorrect">Λάθος</string>
     <string name="status_skipped">Παραλείφθηκε</string>
     <string name="done">Ολοκλήρωση</string>
+    <string name="problem_limit">Όριο ασκήσεων</string>
+    <string name="problems_completed">Λυμένες ασκήσεις</string>
+    <string name="problem">Άσκηση</string>
+    <string name="no_problems">Δεν λύθηκαν ασκήσεις</string>
 
     <!-- History Screen -->
     <string name="no_games">Δεν υπάρχουν παρτίδες με βαθμολογία</string>

@@ -27,7 +27,7 @@ class SettingsLinkUtilTest {
     fun testGameStringSerializerAndDeserializer() {
         val original = GameRecord(
             id = 42,
-            isModeEnabled = false,
+            gameMode = false,
             modeLimit = 5,
             additionRangeStart = 2,
             additionRangeEnd = 7,
@@ -49,7 +49,7 @@ class SettingsLinkUtilTest {
         val serialized = SettingsLinkUtil.serialize(original)
         val deserialized = SettingsLinkUtil.deserialize(serialized)
 
-        assertEquals(original.isModeEnabled, deserialized.isModeEnabled)
+        assertEquals(original.gameMode, deserialized.gameMode)
         assertEquals(original.modeLimit, deserialized.modeLimit)
         assertEquals(original.additionRangeStart, deserialized.additionRangeStart)
         assertEquals(original.additionRangeEnd, deserialized.additionRangeEnd)

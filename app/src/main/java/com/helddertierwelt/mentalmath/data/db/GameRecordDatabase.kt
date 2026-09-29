@@ -23,14 +23,18 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.helddertierwelt.mentalmath.data.dao.GameRecordDao
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
+import com.helddertierwelt.mentalmath.data.mapper.GameModeConverter
 import com.helddertierwelt.mentalmath.data.mapper.SolvedProblemConverter
 
 @Database(
     entities = [GameRecord::class],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
-@TypeConverters(SolvedProblemConverter::class)
+@TypeConverters(
+    SolvedProblemConverter::class,
+    GameModeConverter::class
+)
 abstract class GameRecordDatabase : RoomDatabase() {
     abstract fun gameRecordDao(): GameRecordDao
 }

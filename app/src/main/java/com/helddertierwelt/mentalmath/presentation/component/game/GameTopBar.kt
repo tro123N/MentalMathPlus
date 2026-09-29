@@ -39,6 +39,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 
@@ -78,21 +79,31 @@ fun GameTopBar(
             }
         },
         actions = {
-            if (gameViewModel.gameState.collectAsState().value.isModeEnabled) {
-                val totalTasks = (gameViewModel.gameState.collectAsState().value.modeLimit * 10)
-                val answeredTasks = gameViewModel.gameState.collectAsState().value.totalAnswers
-                Text(
-                    text = "$answeredTasks/$totalTasks",
-                    fontSize = fontSize,
-                    modifier = Modifier.padding(end = 24.dp),
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-            } else {
-                CountdownTimer(
-                    fontSize = fontSize,
-                    navController = navController,
-                    time = gameViewModel.gameState.collectAsState().value.modeLimit.toLong() * 60000L,
-                )
+            val gameState = gameViewModel.gameState.collectAsState().value
+            when (gameState.gameMode) {
+                GameMode.PROBLEMS -> {
+                    val totalTasks = gameState.modeLimit * 10
+                    val answeredTasks = gameState.totalAnswers
+
+                    Text(
+                        text = "$answeredTasks/$totalTasks",
+                        fontSize = fontSize,
+                        modifier = Modifier.padding(end = 24.dp),
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+
+                GameMode.TIMED -> {
+                    CountdownTimer(
+                        fontSize = fontSize,
+                        navController = navController,
+                        time = gameState.modeLimit.toLong() * 60000L,
+                    )
+                }
+
+                GameMode.SURVIVAL -> {
+                    // TODO
+                }
             }
         },
     )

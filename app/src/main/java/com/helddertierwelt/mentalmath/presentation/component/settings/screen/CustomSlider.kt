@@ -41,10 +41,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 
 @Composable
 fun CustomSlider(
@@ -52,7 +55,7 @@ fun CustomSlider(
     value: Float,
     onValueChange: (Float) -> Unit,
     onValueChangeFinished: () -> Unit,
-    isToggled: Boolean,
+    gameMode: GameMode,
     activeTrackColor: Color,
     size: Dp,
     thumbnailFontSize: TextUnit,
@@ -90,7 +93,11 @@ fun CustomSlider(
                     activeTrackColor, shape = RoundedCornerShape(16.dp)
                 )
                 .padding(horizontal = 6.dp),
-            text = if (isToggled) "${value.toInt() * 10}" else "${value.toInt()}min",
+            text = when (gameMode) {
+                GameMode.TIMED -> "${value.toInt()}${stringResource(R.string.minute)}"
+                GameMode.PROBLEMS -> "${value.toInt() * 10}"
+                GameMode.SURVIVAL -> "${value.toInt() * 10}${stringResource(R.string.second)} / ${stringResource(R.string.problem)}"
+            },
             color = MaterialTheme.colorScheme.surface,
             fontSize = thumbnailFontSize
         )

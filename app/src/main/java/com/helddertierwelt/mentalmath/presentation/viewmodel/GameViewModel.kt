@@ -35,6 +35,7 @@ import com.helddertierwelt.mentalmath.domain.game.ProblemStatus
 import com.helddertierwelt.mentalmath.domain.game.SolvedProblem
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
 import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -290,7 +291,7 @@ class GameViewModel @Inject constructor(
         saveState(
             _gameState.value.copy(
                 enabledOperators = enabledOperators,
-                isModeEnabled = settingsState.isModeEnabled,
+                gameMode = settingsState.gameMode,
                 modeLimit = settingsState.limit.toInt(),
                 inputDirectionMode = settingsState.inputDirectionMode,
                 formMode = settingsState.formMode
@@ -302,7 +303,7 @@ class GameViewModel @Inject constructor(
     fun setRandomSettings(settingsState: SettingsState) {
 
         // random mode and limit
-        val isModeEnabled = listOf(true, false).random()
+        val gameMode = GameMode.entries.toTypedArray().random()
         val limit = (1..5).random().toFloat()
 
         // random difficultyRanges
@@ -341,7 +342,7 @@ class GameViewModel @Inject constructor(
         saveState(
             _gameState.value.copy(
                 enabledOperators = enabledOperators,
-                isModeEnabled = isModeEnabled,
+                gameMode = gameMode,
                 modeLimit = limit.toInt(),
                 inputDirectionMode = settingsState.inputDirectionMode,
                 formMode = settingsState.formMode
@@ -376,7 +377,7 @@ class GameViewModel @Inject constructor(
         saveState(
             _gameState.value.copy(
                 enabledOperators = enabledOperators,
-                isModeEnabled = gameRecord.isModeEnabled,
+                gameMode = gameRecord.gameMode,
                 modeLimit = gameRecord.modeLimit,
                 inputDirectionMode = settingsState.inputDirectionMode,
                 formMode = settingsState.formMode
@@ -414,7 +415,7 @@ class GameViewModel @Inject constructor(
         val totalScore = 10f * correctAnswers.pow(2f) / (totalMinutes * totalAnswers)
 
         val lastGame = GameRecord(
-            isModeEnabled = _gameState.value.isModeEnabled,
+            gameMode = _gameState.value.gameMode,
             modeLimit = _gameState.value.modeLimit,
             additionRangeStart = _gameState.value.enabledOperators[Operation.ADDITION]?.first?.toInt() ?: 0,
             additionRangeEnd = _gameState.value.enabledOperators[Operation.ADDITION]?.second?.toInt() ?: 0,
@@ -442,7 +443,7 @@ class GameViewModel @Inject constructor(
 
     fun saveCancelledGameRecord() {
         val cancelledGame = GameRecord(
-            isModeEnabled = _gameState.value.isModeEnabled,
+            gameMode = _gameState.value.gameMode,
             modeLimit = _gameState.value.modeLimit,
             additionRangeStart = _gameState.value.enabledOperators[Operation.ADDITION]?.first?.toInt() ?: 0,
             additionRangeEnd = _gameState.value.enabledOperators[Operation.ADDITION]?.second?.toInt() ?: 0,

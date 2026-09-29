@@ -26,7 +26,8 @@ object GameRecordMigrations {
     val MIGRATION_1_2 = object : Migration(1, 2) {
         override fun migrate(db: SupportSQLiteDatabase) {
 
-            db.execSQL("""
+            db.execSQL(
+                """
                 CREATE TABLE game_records_new (
                     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                     isModeEnabled INTEGER NOT NULL,
@@ -48,9 +49,11 @@ object GameRecordMigrations {
                     seed INTEGER NOT NULL,
                     solvedProblems TEXT NOT NULL
                 )
-            """)
+            """.trimIndent()
+            )
 
-            db.execSQL("""
+            db.execSQL(
+                """
                 INSERT INTO game_records_new (
                     id, isModeEnabled, modeLimit,
                     additionRangeStart, additionRangeEnd,
@@ -75,12 +78,14 @@ object GameRecordMigrations {
                     seed,
                     taskResults
                 FROM game_records
-            """)
+            """.trimIndent()
+            )
 
             db.execSQL("DROP TABLE game_records")
             db.execSQL("ALTER TABLE game_records_new RENAME TO game_records")
 
-            db.execSQL("""
+            db.execSQL(
+                """
                 CREATE INDEX index_game_records_isModeEnabled_modeLimit_additionRangeStart_additionRangeEnd_subtractionRangeStart_subtractionRangeEnd_multiplicationRangeStart_multiplicationRangeEnd_divisionRangeStart_divisionRangeEnd ON game_records (
                     isModeEnabled,
                     modeLimit,
@@ -93,7 +98,109 @@ object GameRecordMigrations {
                     divisionRangeStart,
                     divisionRangeEnd
                 )
-            """)
+            """.trimIndent()
+            )
+        }
+    }
+
+    val MIGRATION_2_3 = object : Migration(2, 3) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+
+            db.execSQL(
+                """
+                CREATE TABLE game_records_new (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    gameMode TEXT NOT NULL,
+                    modeLimit INTEGER NOT NULL,
+                    additionRangeStart INTEGER NOT NULL,
+                    additionRangeEnd INTEGER NOT NULL,
+                    subtractionRangeStart INTEGER NOT NULL,
+                    subtractionRangeEnd INTEGER NOT NULL,         
+                    multiplicationRangeStart INTEGER NOT NULL,
+                    multiplicationRangeEnd INTEGER NOT NULL,       
+                    divisionRangeStart INTEGER NOT NULL,
+                    divisionRangeEnd INTEGER NOT NULL,
+                    totalAnswers INTEGER NOT NULL,
+                    correctAnswers INTEGER NOT NULL,
+                    activeTime INTEGER NOT NULL,
+                    totalTime INTEGER NOT NULL,
+                    activeScore REAL NOT NULL,
+                    totalScore REAL NOT NULL,
+                    seed INTEGER NOT NULL,
+                    solvedProblems TEXT NOT NULL
+                )
+            """.trimIndent()
+            )
+
+            db.execSQL(
+                """
+                INSERT INTO game_records_new (
+                    id,
+                    gameMode,
+                    modeLimit,
+                    additionRangeStart,
+                    additionRangeEnd,
+                    subtractionRangeStart,
+                    subtractionRangeEnd,
+                    multiplicationRangeStart,
+                    multiplicationRangeEnd,
+                    divisionRangeStart,
+                    divisionRangeEnd,
+                    totalAnswers,
+                    correctAnswers,
+                    activeTime,
+                    totalTime,
+                    activeScore,
+                    totalScore,
+                    seed,
+                    solvedProblems
+                )
+                SELECT
+                    id,
+                    CASE
+                        WHEN isModeEnabled = 1 THEN 'PROBLEMS'
+                        ELSE 'TIMED'
+                    END,
+                    modeLimit,
+                    additionRangeStart,
+                    additionRangeEnd,
+                    subtractionRangeStart,
+                    subtractionRangeEnd,
+                    multiplicationRangeStart,
+                    multiplicationRangeEnd,
+                    divisionRangeStart,
+                    divisionRangeEnd,
+                    totalAnswers,
+                    correctAnswers,
+                    activeTime,
+                    totalTime,
+                    activeScore,
+                    totalScore,
+                    seed,
+                    solvedProblems
+                FROM game_records
+            """.trimIndent()
+            )
+
+            db.execSQL("DROP TABLE game_records")
+            db.execSQL("ALTER TABLE game_records_new RENAME TO game_records")
+
+            db.execSQL(
+                """
+                CREATE INDEX index_game_records_gameMode_modeLimit_additionRangeStart_additionRangeEnd_subtractionRangeStart_subtractionRangeEnd_multiplicationRangeStart_multiplicationRangeEnd_divisionRangeStart_divisionRangeEnd ON game_records (
+                gameMode,
+                modeLimit,
+                additionRangeStart,
+                additionRangeEnd,
+                subtractionRangeStart,
+                subtractionRangeEnd,
+                multiplicationRangeStart,
+                multiplicationRangeEnd,
+                divisionRangeStart,
+                divisionRangeEnd
+            )
+            """.trimIndent()
+            )
         }
     }
 }

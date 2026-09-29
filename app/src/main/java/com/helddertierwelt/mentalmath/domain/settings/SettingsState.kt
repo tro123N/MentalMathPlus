@@ -19,6 +19,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.domain.settings
 
 import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.NotificationMode
@@ -27,7 +28,7 @@ import com.helddertierwelt.mentalmath.domain.settings.enums.ThemeMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.VibrationMode
 
 data class SettingsState(
-    val isModeEnabled: Boolean = true,
+    val gameMode: GameMode = GameMode.PROBLEMS,
     val limit: Float = 2f,
 
     val additionRange: Pair<Float, Float> = 2f to 4f,
