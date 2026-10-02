@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun QuickToastHost(
@@ -47,7 +48,7 @@ fun QuickToastHost(
     LaunchedEffect(event?.id) {
         if (event != null) {
             visible = true
-            delay(durationMs)
+            delay(durationMs.milliseconds)
             visible = false
         }
     }

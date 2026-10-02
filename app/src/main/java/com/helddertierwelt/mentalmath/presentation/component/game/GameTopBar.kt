@@ -47,7 +47,8 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 @Composable
 fun GameTopBar(
     navController: NavController,
-    iconSize: Dp,
+    closeIconSize: Dp,
+    heartIconSize: Dp,
     fontSize: TextUnit
 ) {
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
@@ -73,7 +74,7 @@ fun GameTopBar(
                 Icon(
                     painter = painterResource(R.drawable.close_24dp),
                     contentDescription = "close",
-                    modifier = Modifier.size(iconSize),
+                    modifier = Modifier.size(closeIconSize),
                     tint = red
                 )
             }
@@ -102,7 +103,10 @@ fun GameTopBar(
                 }
 
                 GameMode.SURVIVAL -> {
-                    // TODO
+                    SurvivalDisplay(
+                        fontSize = fontSize,
+                        heartIconSize = heartIconSize
+                    )
                 }
             }
         },

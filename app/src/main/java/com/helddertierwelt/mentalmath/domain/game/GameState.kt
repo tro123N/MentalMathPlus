@@ -40,6 +40,7 @@ data class GameState(
     val correctAnswers: Int = 0,
     val wrongAnswers: Int = 0,
     val skippedAnswers: Int = 0,
+    val timeoutAnswers: Int = 0,
     val totalAnswers: Int = 0,
 
     val isGameStarted: Boolean = false,
@@ -49,6 +50,9 @@ data class GameState(
     val startTimeStamp: Long = 0,
     val pausedAt: Long = Long.MAX_VALUE,
     val totalPauseDuration: Long = 0L,
+    val lives: Int = 3,
+    val survivalProblemStartTime: Long = 0L,
+    val survivalTimeLeft: Long = 0L,
     val seed: Long = 0L,
     val isLinkGame: Boolean = false,
     val inputDirectionMode: InputDirectionMode = InputDirectionMode.LEFT_TO_RIGHT,

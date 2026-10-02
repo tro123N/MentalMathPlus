@@ -45,7 +45,6 @@
     <string name="support">Sostieni</string>
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10</string>
-    <string name="new_score">nuovo</string>
     <!-- Game Screen -->
     <string name="rtl_toast">Input da destra a sinistra</string>
     <string name="ltr_toast">Input da sinistra a destra</string>
@@ -73,6 +72,7 @@
     <string name="status_correct">Corretto</string>
     <string name="status_incorrect">Errato</string>
     <string name="status_skipped">Saltato</string>
+    <string name="status_timeout">Tempo scaduto</string>
     <string name="no_problems">Nessun problema risolto</string>
     <string name="done">Fatto</string>
     <!-- History Screen -->

@@ -1,4 +1,4 @@
-- disabled "random game"-button after clicking to prevent starting a two games in a row when clicking too fast
+- disabled "random game"-button after clicking to prevent starting two games in a row when clicking too fast
 - changed padding for menu side sheet
 - renamed "share seed" to "share game" to make the purpose more clear
 - made the logo clickable to navigate to the "Mental Math"-Website

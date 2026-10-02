@@ -160,6 +160,7 @@ fun ProblemInput(
                     ProblemStatus.CORRECT -> green
                     ProblemStatus.INCORRECT -> red
                     ProblemStatus.SKIPPED -> onPrimary
+                    ProblemStatus.TIMEOUT -> onPrimary
                 }
                 Text(
                     text = input,

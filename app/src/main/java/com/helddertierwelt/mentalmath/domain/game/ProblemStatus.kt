@@ -18,8 +18,12 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.domain.game
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class ProblemStatus {
     CORRECT,
     INCORRECT,
-    SKIPPED
+    SKIPPED,
+    TIMEOUT
 }

@@ -28,6 +28,7 @@ enum class FeedbackType {
     BACKSPACE,
     CORRECT,
     SKIPPED,
+    TIMEOUT,
     WRONG,
     STOP,
     LINK_GAME_NEUTRAL,

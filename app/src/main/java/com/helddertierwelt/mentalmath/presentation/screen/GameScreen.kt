@@ -88,6 +88,7 @@ fun GameScreen(
     val resultLineWidth = (0.32f * screenHeight.value).dp
     val columnPadding = (0.028f * screenHeight.value).dp
     val closeIconSize = (0.057f * screenHeight.value).dp
+    val heartIconSize = (0.042f * screenHeight.value).dp
     val doubleArrowIconSize = (0.052f * screenHeight.value).dp
     val backSpaceIconSize = (0.038f * screenHeight.value).dp
     val titleFontSize = (0.031f * screenHeight.value).sp
@@ -142,7 +143,8 @@ fun GameScreen(
             Column {
                 GameTopBar(
                     navController = navController,
-                    iconSize = closeIconSize,
+                    closeIconSize = closeIconSize,
+                    heartIconSize = heartIconSize,
                     fontSize = numberFontSize
                 )
                 LinearProgressIndicator(
@@ -150,7 +152,7 @@ fun GameScreen(
                         when (gameState.gameMode) {
                             GameMode.PROBLEMS -> gameState.totalAnswers / (gameState.modeLimit * 10f)
                             GameMode.TIMED -> gameState.activeTime / (gameState.modeLimit.toFloat() * 60000L)
-                            GameMode.SURVIVAL -> 0f// Todo
+                            GameMode.SURVIVAL -> gameViewModel.getSurvivalProgress()
                         }
                     },
                     modifier = Modifier

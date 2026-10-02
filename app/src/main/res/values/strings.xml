@@ -95,7 +95,6 @@ Thank you for contributing!
 
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10</string>
-    <string name="new_score">new</string>
 
     <!-- Game Screen -->
     <string name="rtl_toast">Right-To-Left Input</string>
@@ -125,6 +124,8 @@ Thank you for contributing!
     <string name="status_correct">Correct</string>
     <string name="status_incorrect">Incorrect</string>
     <string name="status_skipped">Skipped</string>
+    <string name="status_timeout">Timeout</string>
+
     <string name="no_problems">No problems solved</string>
     <string name="done">Done</string>
 

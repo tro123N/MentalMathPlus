@@ -31,7 +31,6 @@
     <string name="right_to_left">من اليمين إلى اليسار</string>
     <string name="history">السجلّ</string>
     <string name="avg_time_per_correct_answer">الوقت المُستغرَق لكل إجابة صحيحة</string>
-    <string name="new_score">جديد</string>
     <string name="vertical">رأسي</string>
     <string name="vibration_on">الاهتزاز مفعّل</string>
     <string name="vibration_off">الاهتزاز معطّل</string>
@@ -62,6 +61,7 @@
     <string name="score">العلامة</string>
     <string name="problem">مسألة</string>
     <string name="status">الحالة</string>
+    <string name="status_timeout">انتهى الوقت</string>
     <string name="no_problems">لم تُحَلّ أية مسائل</string>
     <string name="done">تم</string>
     <string name="no_games">لا توجد لعبات ذات علامة</string>

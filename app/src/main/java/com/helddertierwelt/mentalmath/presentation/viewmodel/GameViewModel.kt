@@ -146,7 +146,7 @@ class GameViewModel @Inject constructor(
     fun startGame(seed: Long) {
         random = Random(seed)
         generateNewProblem()
-        setStartTimestamp()
+        setStartTimestamps()
         saveState(
             _gameState.value.copy(
                 isGameStarted = true,
@@ -156,39 +156,50 @@ class GameViewModel @Inject constructor(
         startTimer()
     }
 
-    fun submitAnswer() {
+    private fun finishProblem(
+        problemStatus: ProblemStatus,
+        userInput: String
+    ) {
         val state = _gameState.value
-        val newState: GameState
 
-        val userInput = state.input.toIntOrNull()
-        val correctResult = calculateResult()
-
-        when (userInput) {
-            null -> {
-                playFeedback(FeedbackType.SKIPPED)
-
-                newState = state.copy(
-                    skippedAnswers = state.skippedAnswers + 1,
-                    totalAnswers = state.totalAnswers + 1,
-                    problemStatus = ProblemStatus.SKIPPED
-                )
-            }
-
-            correctResult -> {
+        val newState = when (problemStatus) {
+            ProblemStatus.CORRECT -> {
                 playFeedback(FeedbackType.CORRECT)
-                newState = state.copy(
+
+                state.copy(
                     correctAnswers = state.correctAnswers + 1,
                     totalAnswers = state.totalAnswers + 1,
-                    problemStatus = ProblemStatus.CORRECT
+                    problemStatus = problemStatus
                 )
             }
 
-            else -> {
+            ProblemStatus.INCORRECT -> {
                 playFeedback(FeedbackType.WRONG)
-                newState = state.copy(
+
+                state.copy(
                     wrongAnswers = state.wrongAnswers + 1,
                     totalAnswers = state.totalAnswers + 1,
-                    problemStatus = ProblemStatus.INCORRECT
+                    problemStatus = problemStatus
+                )
+            }
+
+            ProblemStatus.SKIPPED -> {
+                playFeedback(FeedbackType.SKIPPED)
+
+                state.copy(
+                    skippedAnswers = state.skippedAnswers + 1,
+                    totalAnswers = state.totalAnswers + 1,
+                    problemStatus = problemStatus
+                )
+            }
+
+            ProblemStatus.TIMEOUT -> {
+                playFeedback(FeedbackType.TIMEOUT)
+
+                state.copy(
+                    timeoutAnswers = state.timeoutAnswers + 1,
+                    totalAnswers = state.totalAnswers + 1,
+                    problemStatus = problemStatus
                 )
             }
         }
@@ -197,12 +208,8 @@ class GameViewModel @Inject constructor(
             operand1 = state.operand1,
             operand2 = state.operand2,
             operator = state.operator,
-            correctResult = correctResult,
-            userInput = if (state.input.isNotEmpty()) {
-                state.input.trimStart('0').ifEmpty { "0" }
-            } else {
-                ""
-            }
+            userInput = userInput,
+            status = problemStatus
         )
 
         saveState(
@@ -210,6 +217,37 @@ class GameViewModel @Inject constructor(
                 solvedProblems = state.solvedProblems + solvedProblem
             )
         )
+        resetSurvivalProblemStart()
+    }
+
+    fun submitAnswer() {
+        val state = _gameState.value
+        val userInput = state.input.toIntOrNull()
+        val correctResult = calculateResult()
+
+        val status = when (userInput) {
+            null -> ProblemStatus.SKIPPED
+            correctResult -> ProblemStatus.CORRECT
+            else -> ProblemStatus.INCORRECT
+        }
+
+        val formattedInput = if (state.input.isNotEmpty()) {
+            state.input.trimStart('0').ifEmpty { "0" }
+        } else {
+            ""
+        }
+
+        finishProblem(
+            problemStatus = status,
+            userInput = formattedInput
+        )
+
+        if (
+            state.gameMode == GameMode.SURVIVAL &&
+            status != ProblemStatus.CORRECT
+        ) {
+            loseLife()
+        }
 
         if (shouldEndGame()) {
             endGame()
@@ -241,7 +279,7 @@ class GameViewModel @Inject constructor(
                 state.activeTime >= totalTime
             }
 
-            else -> false
+            GameMode.SURVIVAL -> state.lives <= 0
         }
     }
 
@@ -358,6 +396,8 @@ class GameViewModel @Inject constructor(
         val activeScore = 10f * correctAnswers.pow(2f) / (activeMinutes * totalAnswers)
         val totalScore = 10f * correctAnswers.pow(2f) / (totalMinutes * totalAnswers)
 
+        //ToDo change Score for Survival Mode
+
         val gameRecord = createGameRecord(
             state = state,
             activeScore = activeScore,
@@ -379,11 +419,7 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    private fun createGameRecord(
-        state: GameState,
-        activeScore: Float = 0f,
-        totalScore: Float = 0f
-    ): GameRecord {
+    private fun createGameRecord(state: GameState, activeScore: Float = 0f, totalScore: Float = 0f): GameRecord {
         return GameRecord(
             gameMode = state.gameMode,
             modeLimit = state.modeLimit,
@@ -547,8 +583,29 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    private fun setStartTimestamp() {
-        saveState(_gameState.value.copy(startTimeStamp = System.currentTimeMillis()))
+    private fun setStartTimestamps() {
+        saveState(_gameState.value.copy(
+            startTimeStamp = System.currentTimeMillis(),
+            survivalProblemStartTime = System.currentTimeMillis()
+        ))
+    }
+
+    private fun startTimer() {
+        if (!_gameState.value.isGameStarted) return
+        saveState(_gameState.value.copy(isTimerRunning = true))
+
+        timerJob = viewModelScope.launch(Dispatchers.Default) {
+            while (_gameState.value.isTimerRunning) {
+                updateGameTime()
+                delay(100.milliseconds)
+            }
+        }
+    }
+
+    fun startTimerIfNeeded() {
+        if (_gameState.value.isTimerRunning && (timerJob == null || timerJob?.isCompleted == true)) {
+            startTimer()
+        }
     }
 
     private fun updateGameTime() {
@@ -564,21 +621,86 @@ class GameViewModel @Inject constructor(
             )
         )
 
+        if (state.gameMode == GameMode.SURVIVAL) {
+            updateSurvivalTimer()
+            return
+        }
+
         if (shouldEndGame()) {
             endGame()
         }
     }
 
-    private fun startTimer() {
-        if (!_gameState.value.isGameStarted) return
-        saveState(_gameState.value.copy(isTimerRunning = true))
+    private fun loseLife() {
+        saveState(
+            _gameState.value.copy(
+                lives = (_gameState.value.lives - 1).coerceAtLeast(0)
+            )
+        )
+    }
 
-        timerJob = viewModelScope.launch(Dispatchers.Default) {
-            while (_gameState.value.isTimerRunning) {
-                updateGameTime()
-                delay(100.milliseconds)
+    private fun updateSurvivalTimer() {
+        if (getSurvivalTimeLeft() <= 0L) {
+            finishProblem(
+                problemStatus = ProblemStatus.TIMEOUT,
+                userInput = ""
+            )
+            loseLife()
+
+            if (shouldEndGame()) {
+                endGame()
+            } else {
+                generateNewProblem()
             }
         }
+    }
+
+    private fun resetSurvivalProblemStart() {
+        if (_gameState.value.gameMode != GameMode.SURVIVAL) return
+
+        saveState(
+            _gameState.value.copy(
+                survivalProblemStartTime = System.currentTimeMillis()
+            )
+        )
+    }
+
+    private fun getSurvivalTimeLimit(state: GameState): Int {
+        val startSeconds = state.modeLimit*10
+        val groups = state.totalAnswers / 5
+
+        val reduction = startSeconds / 10
+        val minimumTime = startSeconds / 5
+
+        val percentageTime = startSeconds - groups * reduction
+
+        return if (percentageTime >= minimumTime) {
+            percentageTime
+        } else {
+            val groupsUntilMinimum = (startSeconds - minimumTime) / reduction
+            (minimumTime - (groups - groupsUntilMinimum)).coerceAtLeast(1)
+        }
+    }
+
+    fun getSurvivalTimeLeft(): Long {
+        val state = _gameState.value
+
+        val elapsedTime =
+            System.currentTimeMillis() - state.survivalProblemStartTime
+
+        val timeLimit =
+            getSurvivalTimeLimit(state) * 1000L
+
+        return (timeLimit - elapsedTime).coerceAtLeast(0L)
+    }
+
+    fun getSurvivalProgress(): Float {
+
+        val timeLimit = getSurvivalTimeLimit(_gameState.value) * 1000L
+        val timeLeft = getSurvivalTimeLeft()
+
+        return (1f - timeLeft.toFloat() / timeLimit)
+            .coerceIn(0f, 1f)
     }
 
     private fun pauseTimer() {
@@ -593,19 +715,26 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun startTimerIfNeeded() {
-        if (_gameState.value.isTimerRunning && (timerJob == null || timerJob?.isCompleted == true)) {
-            startTimer()
-        }
-    }
-
     private fun resumeTimer() {
-        if (_gameState.value.isGameStarted && !_gameState.value.isTimerRunning) {
-            val totalPauseDuration =
-                _gameState.value.totalPauseDuration + (System.currentTimeMillis() - _gameState.value.pausedAt)
-            saveState(_gameState.value.copy(totalPauseDuration = totalPauseDuration))
-            startTimer()
-        }
+        if (!_gameState.value.isGameStarted ||
+            _gameState.value.isTimerRunning
+        ) return
+
+        val state = _gameState.value
+        val now = System.currentTimeMillis()
+        val pauseDuration = now - state.pausedAt
+
+        val newState = state.copy(
+            totalPauseDuration = state.totalPauseDuration + pauseDuration,
+            survivalProblemStartTime = if (state.gameMode == GameMode.SURVIVAL) {
+                state.survivalProblemStartTime + pauseDuration
+            } else {
+                state.survivalProblemStartTime
+            }
+        )
+
+        saveState(newState)
+        startTimer()
     }
 
     override fun onPause(owner: LifecycleOwner) {

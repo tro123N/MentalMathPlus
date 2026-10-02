@@ -39,14 +39,13 @@ import com.helddertierwelt.mentalmath.presentation.theme.yellow
 @Composable
 fun ProblemResult(
     problem: SolvedProblem,
-    status: ProblemStatus,
     fontSize: TextUnit,
     modifier: Modifier = Modifier
 ) {
     val text = buildAnnotatedString {
         append("${problem.operand1} ${problem.operator.symbol} ${problem.operand2} = ")
 
-        when (status) {
+        when (problem.status) {
             ProblemStatus.CORRECT -> {
                 append(problem.correctResult.toString())
             }
@@ -69,6 +68,14 @@ fun ProblemResult(
                 }
                 append(problem.correctResult.toString())
             }
+
+            ProblemStatus.TIMEOUT -> {
+                withStyle(SpanStyle(color = yellow)) {
+                    append("? ")
+                }
+                append(problem.correctResult.toString())
+            }
+
         }
     }
 

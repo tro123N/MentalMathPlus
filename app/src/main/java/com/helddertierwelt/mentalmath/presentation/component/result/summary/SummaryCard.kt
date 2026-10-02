@@ -220,12 +220,15 @@ fun SummaryCard(
                     tooltipText = stringResource(R.string.incorrect_answers)
                 )
 
-                val percentage = correctAnswers.toFloat() / statisticsGameRecord.totalAnswers * 100f
-                val rounded = percentage.roundToInt()
-                val percentageString = when {
-                    percentage.isNaN() -> "-"
-                    kotlin.math.abs(percentage - rounded) < 0.0001f -> "$rounded%"
-                    else -> AppLocale.format("%.1f", percentage) + "%"
+                val percentageString = if (statisticsGameRecord.totalAnswers > 0) {
+                    val percentage = correctAnswers.toFloat() / statisticsGameRecord.totalAnswers * 100f
+                    val rounded = percentage.roundToInt()
+                    if (kotlin.math.abs(percentage - rounded) < 0.0001f) { "$rounded%"
+                    } else {
+                        AppLocale.format("%.1f", percentage) + "%"
+                    }
+                } else {
+                    "-"
                 }
                 IconTextColumn(
                     fontSize = statsFontSize,

@@ -16,20 +16,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 */
 
-package com.helddertierwelt.mentalmath.data.mapper
+package com.helddertierwelt.mentalmath.data.converter
 
 import androidx.room.TypeConverter
-import com.helddertierwelt.mentalmath.domain.game.SolvedProblem
-import kotlinx.serialization.json.Json
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 
-class SolvedProblemConverter {
+class GameModeConverter {
+
     @TypeConverter
-    fun fromSolvedProblemList(value: List<SolvedProblem>): String {
-        return Json.Default.encodeToString(value)
+    fun fromGameMode(value: GameMode): String {
+        return value.name
     }
 
     @TypeConverter
-    fun toSolvedProblemList(value: String): List<SolvedProblem> {
-        return Json.Default.decodeFromString(value)
+    fun toGameMode(value: String): GameMode {
+        return GameMode.valueOf(value)
     }
 }

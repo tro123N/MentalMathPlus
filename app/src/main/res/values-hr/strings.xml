@@ -45,7 +45,6 @@
     <string name="support">Podrži</string>
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Najboljih 10</string>
-    <string name="new_score">novo</string>
     <!-- Game Screen -->
     <string name="rtl_toast">Unos zdesna nalijevo</string>
     <string name="ltr_toast">Unos slijeva nadesno</string>
@@ -73,6 +72,7 @@
     <string name="status_correct">Točno</string>
     <string name="status_incorrect">Netočno</string>
     <string name="status_skipped">Preskočeno</string>
+    <string name="status_timeout">Vrijeme isteklo</string>
     <string name="no_problems">Nema riješenih zadataka</string>
     <string name="done">Gotovo</string>
     <!-- History Screen -->

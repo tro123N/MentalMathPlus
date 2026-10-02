@@ -83,6 +83,7 @@ class VibrationManager @Inject constructor(
             FeedbackType.BACKSPACE -> oneShot(10, 60)
 
             FeedbackType.SKIPPED,
+            FeedbackType.TIMEOUT,
             FeedbackType.STOP,
             FeedbackType.START,
             FeedbackType.ENABLE,
@@ -136,6 +137,7 @@ class VibrationManager @Inject constructor(
             FeedbackType.BACKSPACE -> 10L
 
             FeedbackType.SKIPPED,
+            FeedbackType.TIMEOUT,
             FeedbackType.STOP,
             FeedbackType.START,
             FeedbackType.ENABLE,

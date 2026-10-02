@@ -28,15 +28,24 @@ import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
     tableName = "game_records",
     indices = [
         Index(
-            value = ["gameMode", "modeLimit", "additionRangeStart", "additionRangeEnd",
-                "subtractionRangeStart", "subtractionRangeEnd",
-                "multiplicationRangeStart", "multiplicationRangeEnd",
-                "divisionRangeStart", "divisionRangeEnd"]
+            value = [
+                "gameMode",
+                "modeLimit",
+                "additionRangeStart",
+                "additionRangeEnd",
+                "subtractionRangeStart",
+                "subtractionRangeEnd",
+                "multiplicationRangeStart",
+                "multiplicationRangeEnd",
+                "divisionRangeStart",
+                "divisionRangeEnd"
+            ]
         )
     ]
 )
 data class GameRecord(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
 
     val gameMode: GameMode = GameMode.TIMED,
     val modeLimit: Int = 0,

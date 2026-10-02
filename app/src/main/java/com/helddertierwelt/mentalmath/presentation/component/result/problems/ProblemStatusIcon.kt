@@ -75,6 +75,13 @@ fun ProblemStatusIcon(
             tooltip = stringResource(R.string.status_skipped),
             tint = yellow
         )
+
+        ProblemStatus.TIMEOUT -> StatusIcon(
+            icon = R.drawable.hourglass_circle_24dp,
+            contentDescription = "timeout",
+            tooltip = stringResource(R.string.status_timeout),
+            tint = yellow
+        )
     }
 
     TooltipBox(

@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.R
-import com.helddertierwelt.mentalmath.domain.game.ProblemStatus
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 
@@ -111,12 +110,6 @@ fun ProblemsCard(
             }
             solvedProblems.forEach { problem ->
 
-                val status = when {
-                    problem.userInput.isEmpty() -> ProblemStatus.SKIPPED
-                    problem.correctResult == problem.userInput.toInt() -> ProblemStatus.CORRECT
-                    else -> ProblemStatus.INCORRECT
-                }
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -125,13 +118,12 @@ fun ProblemsCard(
                 ) {
                     ProblemResult(
                         problem = problem,
-                        status = status,
                         fontSize = resultFontSize,
                         modifier = Modifier.weight(1f)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     ProblemStatusIcon(
-                        status = status,
+                        status = problem.status,
                         iconSize = resultIconSize
                     )
                 }

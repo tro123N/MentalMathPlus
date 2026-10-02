@@ -30,7 +30,6 @@
     <string name="reset_app">Reset App</string>
     <string name="result">Hasil</string>
     <string name="seed">Benih: %d</string>
-    <string name="new_score">Baru</string>
     <string name="rtl_toast">Tombol Kanan-Kiri</string>
     <string name="ltr_toast">Tombol Kiri-Kanan</string>
     <string name="horizontal_toast">Tata letak Horizontal</string>

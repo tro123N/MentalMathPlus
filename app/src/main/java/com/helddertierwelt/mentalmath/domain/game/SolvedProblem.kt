@@ -26,8 +26,16 @@ import kotlinx.serialization.Serializable
 @Parcelize
 data class SolvedProblem(
     val operand1: Int,
-    val operand2: Int,
     val operator: Operation,
-    val correctResult: Int,
+    val operand2: Int,
     val userInput: String,
-) : Parcelable
+    val status: ProblemStatus
+) : Parcelable {
+    val correctResult: Int
+        get() = when (operator) {
+            Operation.ADDITION -> operand1 + operand2
+            Operation.SUBTRACTION -> operand1 - operand2
+            Operation.MULTIPLICATION -> operand1 * operand2
+            Operation.DIVISION -> operand1 / operand2
+        }
+}

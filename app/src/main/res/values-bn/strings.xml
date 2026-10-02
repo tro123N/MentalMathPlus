@@ -47,7 +47,6 @@
 
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">শীর্ষ ১০</string>
-    <string name="new_score">নতুন</string>
 
     <!-- Game Screen -->
     <string name="rtl_toast">ডান-থেকে-বাম ইনপুট</string>
@@ -77,6 +76,7 @@
     <string name="status_correct">সঠিক</string>
     <string name="status_incorrect">ভুল</string>
     <string name="status_skipped">এড়িয়ে যাওয়া হয়েছে</string>
+    <string name="status_timeout">সময় শেষ</string>
     <string name="no_problems">কোনো অঙ্ক সমাধান করা হয়নি</string>
     <string name="done">সম্পন্ন করুন</string>
 

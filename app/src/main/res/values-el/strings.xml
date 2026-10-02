@@ -46,7 +46,6 @@
     <string name="support">Υποστήριξη</string>
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10</string>
-    <string name="new_score">νέα</string>
     <!-- Game Screen -->
     <string name="rtl_toast">Εισαγωγή από δεξιά προς τα αριστερά</string>
     <string name="ltr_toast">Εισαγωγή από αριστερά προς τα δεξιά</string>
@@ -76,6 +75,7 @@
     <string name="problem_limit">Όριο ασκήσεων</string>
     <string name="problems_completed">Λυμένες ασκήσεις</string>
     <string name="problem">Άσκηση</string>
+    <string name="status_timeout">Ο χρόνος έληξε</string>
     <string name="no_problems">Δεν λύθηκαν ασκήσεις</string>
 
     <!-- History Screen -->

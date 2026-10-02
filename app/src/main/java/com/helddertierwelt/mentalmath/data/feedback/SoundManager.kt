@@ -50,6 +50,7 @@ class SoundManager @Inject constructor(
         FeedbackType.BACKSPACE to Sound(soundPool.load(context, R.raw.backspace, 1), volume = 1f),
         FeedbackType.CORRECT to Sound(soundPool.load(context, R.raw.correct, 1), volume = 1f),
         FeedbackType.SKIPPED to Sound(soundPool.load(context, R.raw.skip, 1), volume = 1f),
+        FeedbackType.TIMEOUT to Sound(soundPool.load(context, R.raw.skip, 1), volume = 1f),
         FeedbackType.WRONG to Sound(soundPool.load(context, R.raw.wrong, 1), volume = 1f),
         FeedbackType.STOP to Sound(soundPool.load(context, R.raw.stop, 1), volume = 1f),
         FeedbackType.LINK_GAME_NEUTRAL to Sound(soundPool.load(context, R.raw.link_game_neutral, 1), volume = 1f),

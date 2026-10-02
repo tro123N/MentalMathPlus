@@ -23,8 +23,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.helddertierwelt.mentalmath.data.dao.GameRecordDao
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
-import com.helddertierwelt.mentalmath.data.mapper.GameModeConverter
-import com.helddertierwelt.mentalmath.data.mapper.SolvedProblemConverter
+import com.helddertierwelt.mentalmath.data.converter.GameModeConverter
+import com.helddertierwelt.mentalmath.data.converter.SolvedProblemConverter
 
 @Database(
     entities = [GameRecord::class],
