@@ -38,7 +38,6 @@
     <string name="app_settings">Nastavení aplikace</string>
     <string name="support">Podpora</string>
     <string name="top_ten_scores">Top 10</string>
-    <string name="new_score">nový</string>
     <string name="rtl_toast">Zprava doleva vstup</string>
     <string name="ltr_toast">Zleva doprava vstup</string>
     <string name="horizontal_toast">Horizontální rozvržení</string>

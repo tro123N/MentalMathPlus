@@ -40,7 +40,6 @@
     <string name="app_settings">Uygulama Ayarları</string>
     <string name="support">Destek</string>
     <string name="top_ten_scores">İlk 10</string>
-    <string name="new_score">yeni</string>
     <string name="rtl_toast">Sağdan Sola Giriş</string>
     <string name="ltr_toast">Soldan Sağa Giriş</string>
     <string name="horizontal_toast">Yatay Düzen</string>
