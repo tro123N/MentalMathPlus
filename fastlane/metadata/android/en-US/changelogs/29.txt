@@ -1,5 +1,8 @@
-- Introduced the new Survival mode
-- Major refactoring and cleanup of the internal game logic
+- Introduced the new Survival Mode with up to 100 problems
 - Migrated the game database to a new data structure, significantly reducing storage usage
-- Fixed a crash that occurred when no problems were solved in Timed mode
+- Added Turkish translation contributed by Barış Selayet. Thank you! :)
+- Improved input handling to prevent accidental double presses
+- Scores are now calculated to tenths of a second to match the timer’s 100 ms update interval
+- Added a red pulsating countdown for the final 10 seconds in Timed Mode
+- Fixed a crash in Timed Mode when no problems were solved
 - Help improve translations on https://hosted.weblate.org/projects/mental-math/
