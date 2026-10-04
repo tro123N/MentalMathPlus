@@ -106,6 +106,8 @@
     <string name="already_played_popup_title">গেমটি আগেই খেলা হয়েছে</string>
     <string name="already_played_popup_description">আপনি ইতিমধ্যেই একই সেটিংস এবং সিড দিয়ে একটি গেম খেলেছেন।\n\nঅনুগ্রহ করে অন্য একটি লিঙ্ক চেষ্টা করুন বা নতুন গেম শুরু করুন।</string>
 
+    <string name="survival_completed_popup_title">বেঁচে থাকার রাজা</string>
+    <string name="survival_completed_popup_description">তুমি ১০০টি সমস্যাই সফলভাবে সমাধান করেছ</string>
     <string name="cancel">বাতিল করুন</string>
     <string name="ok">ঠিক আছে</string>
 

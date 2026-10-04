@@ -95,6 +95,8 @@
     <string name="app_link_popup_confirmation_text">Starten</string>
     <string name="already_played_popup_title">Spiel bereits gespielt</string>
     <string name="already_played_popup_description">Du hast bereits ein Spiel mit den gleichen Einstellungen und Seed gespielt.\n\nProbiere einen anderen Link oder starte ein neues Spiel.</string>
+    <string name="survival_completed_popup_title">Überlebenskönig*in</string>
+    <string name="survival_completed_popup_description">Du hast alle 100 Aufgaben geschafft!</string>
     <string name="cancel">Abbrechen</string>
     <string name="ok">OK</string>
     <!-- Result pop-up messages -->

@@ -95,6 +95,8 @@
     <string name="app_link_popup_confirmation_text">Начать</string>
     <string name="already_played_popup_title">Игра уже сыграна</string>
     <string name="already_played_popup_description">Вы уже сыграли игру с такими же настройками и сидом.\n\nПопробуйте другую ссылку или начните новую игру.</string>
+    <string name="survival_completed_popup_title">Король выживания</string>
+    <string name="survival_completed_popup_description">Ты решил все 100 заданий!</string>
     <string name="cancel">Отмена</string>
     <string name="ok">OK</string>
     <!-- Result pop-up messages -->

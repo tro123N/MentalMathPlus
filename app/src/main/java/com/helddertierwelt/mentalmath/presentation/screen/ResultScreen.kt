@@ -78,6 +78,7 @@ import com.helddertierwelt.mentalmath.presentation.component.result.problems.Pro
 import com.helddertierwelt.mentalmath.presentation.component.result.summary.SummaryCard
 import com.helddertierwelt.mentalmath.presentation.component.result.summary.formatScore
 import com.helddertierwelt.mentalmath.presentation.theme.green
+import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import kotlinx.coroutines.launch
 import java.io.File
@@ -118,6 +119,13 @@ fun ResultScreen(
         } else {
             resultViewModel.lastGameRecord.collectAsState().value
         }
+
+    // variables for PopUps
+    val showLinkGamePopUp by resultViewModel.showLinkGamePopUp.collectAsState()
+    val showSurvivalCompletedPopUp by resultViewModel.showSurvivalCompletedPopUp.collectAsState()
+    val seed by resultViewModel.seedFromLink.collectAsState()
+    val linkScore by resultViewModel.scoreFromLink.collectAsState()
+    val currentScore = resultViewModel.lastGameRecord.collectAsState().value.activeScore
 
     fun captureSettingsCardBitmap(): Bitmap? {
         val coordinates = statsCardCoordinates ?: return null
@@ -274,16 +282,40 @@ fun ResultScreen(
         }
     )
 
-    val showLinkGamePopUp by resultViewModel.showLinkGamePopUp.collectAsState()
-    val seed by resultViewModel.seedFromLink.collectAsState()
-    val linkScore by resultViewModel.scoreFromLink.collectAsState()
-    val currentScore = resultViewModel.lastGameRecord.collectAsState().value.activeScore
-    if (showLinkGamePopUp) {
+    if (showSurvivalCompletedPopUp) {
+        resultViewModel.playDelayedFeedback(FeedbackType.RESULT_PERFECT)
+        PopUp(
+            onDismissRequest = { resultViewModel.setShowSurvivalCompletedPopUp(false) },
+            onConfirm = {
+                resultViewModel.playFeedback(FeedbackType.TAP)
+                resultViewModel.setShowSurvivalCompletedPopUp(false)
+            },
+            titleSize = titleFontSize,
+            descriptionSize = (0.018f * screenHeight.value).sp,
+            title = stringResource(R.string.survival_completed_popup_title),
+            icon = {
+                Icon(
+                    painter = painterResource(R.drawable.crown_24dp),
+                    contentDescription = "Survival Completed",
+                    tint = yellow,
+                    modifier = Modifier.size((0.1f * screenHeight.value).dp)
+                )
+            },
+            description = stringResource(R.string.survival_completed_popup_description),
+            confirmationText = stringResource(R.string.ok),
+            confirmColor = green
+        )
+    } else if (showLinkGamePopUp) {
         val gamePopUpInfo = getGamePopUpInfo(currentScore, linkScore, seed)
         val shareMessage = if (linkScore < 0f) {
             AppLocale.format(stringResource(R.string.result_share_message_waiting), formatScore(currentScore), seed)
         } else {
-            AppLocale.format(stringResource(R.string.result_share_message), formatScore(currentScore), formatScore(linkScore), seed)
+            AppLocale.format(
+                stringResource(R.string.result_share_message),
+                formatScore(currentScore),
+                formatScore(linkScore),
+                seed
+            )
         }
         resultViewModel.playDelayedFeedback(gamePopUpInfo.feedbackType)
         PopUp(
@@ -306,7 +338,8 @@ fun ResultScreen(
             onDismissRequest = { resultViewModel.setShowLinkGamePopUp(false) },
             onCancel = {
                 resultViewModel.playFeedback(FeedbackType.TAP)
-                resultViewModel.setShowLinkGamePopUp(false) },
+                resultViewModel.setShowLinkGamePopUp(false)
+            },
             onConfirm = {
                 resultViewModel.playFeedback(FeedbackType.TAP)
                 coroutineScope.launch {
@@ -325,7 +358,9 @@ fun ResultScreen(
     val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     DisposableEffect(Unit) {
         val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() { navigateBack() }
+            override fun handleOnBackPressed() {
+                navigateBack()
+            }
         }
         backPressedDispatcher?.addCallback(callback)
         onDispose { callback.remove() }

@@ -84,6 +84,8 @@
     <string name="app_link_popup_confirmation_text">Başla</string>
     <string name="already_played_popup_title">Bu oyun zaten oynandı</string>
     <string name="already_played_popup_description">Aynı ayarlar ve seed ile bir oyunu zaten oynadınız.\n\nFarklı bir bağlantı deneyin veya yeni bir oyun başlatın.</string>
+    <string name="survival_completed_popup_title">Hayatta Kalma Kralı</string>
+    <string name="survival_completed_popup_description">100 sorunun tamamını başarıyla çözdün!</string>
     <string name="cancel">İptal</string>
     <string name="ok">Tamam</string>
     <string name="waiting_title">Rakibin bekleniyor…</string>

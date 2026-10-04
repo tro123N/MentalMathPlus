@@ -82,6 +82,8 @@
     <string name="app_link_popup_confirmation_text">بدء</string>
     <string name="already_played_popup_title">لُعِبَت اللعبة فعلًا</string>
     <string name="already_played_popup_description">لقد لعبت بالفعل لعبةً بنفس الإعدادات ونفس البذرة.\n\nيرجى تجربة رابط مختلف أو بدء لعبة جديدة.</string>
+    <string name="survival_completed_popup_title">ملك البقاء</string>
+    <string name="survival_completed_popup_description">لقد أنجزت جميع المهام المئة!</string>
     <string name="cancel">إلغاء</string>
     <string name="ok">حسنًا</string>
     <string name="waiting_title">في انتظار خصمك…</string>

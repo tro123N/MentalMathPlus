@@ -96,6 +96,8 @@
     <string name="already_played_popup_title">Partie déjà jouée</string>
     <string name="already_played_popup_description">Tu as déjà joué une partie avec le même seed et les mêmes paramètres.\n\nEssaye un autre lien, ou démarre une nouvelle partie.</string>
 
+    <string name="survival_completed_popup_title">Roi de la survie</string>
+    <string name="survival_completed_popup_description">Tu as réussi les 100 exercices !</string>
     <string name="cancel">Abandonner</string>
     <string name="ok">OK</string>
     <!-- Result pop-up messages -->

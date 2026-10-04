@@ -44,12 +44,19 @@ fun CountdownDisplay(
     val gameState by gameViewModel.gameState.collectAsState()
     val timeLeft = time - gameState.activeTime
 
-    Text(
-        text = formatTime(timeLeft.coerceAtLeast(0)),
-        color = MaterialTheme.colorScheme.onPrimary,
-        fontSize = fontSize,
-        modifier = Modifier.padding(end = 24.dp)
-    )
+    if (timeLeft <= 10_000) {
+        PulsatingCountdown(
+            fontSize = fontSize,
+            timeLeft = timeLeft
+        )
+    } else {
+        Text(
+            text = formatTime(timeLeft),
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontSize = fontSize,
+            modifier = Modifier.padding(end = 24.dp)
+        )
+    }
 }
 
 fun formatTime(milliseconds: Long): String {

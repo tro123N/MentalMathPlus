@@ -44,6 +44,9 @@ class ResultViewModel @Inject constructor(
     private val _showLoadedGameRecord = MutableStateFlow(false)
     val showLoadedGameRecord = _showLoadedGameRecord.asStateFlow()
 
+    private val _showSurvivalCompletedPopUp = MutableStateFlow(false)
+    val showSurvivalCompletedPopUp = _showSurvivalCompletedPopUp.asStateFlow()
+
     private val _showLinkGamePopUp = MutableStateFlow(false)
     val showLinkGamePopUp = _showLinkGamePopUp.asStateFlow()
 
@@ -70,6 +73,10 @@ class ResultViewModel @Inject constructor(
         _showLinkGamePopUp.value = value
     }
 
+    fun setShowSurvivalCompletedPopUp(value: Boolean) {
+        _showSurvivalCompletedPopUp.value = value
+    }
+
     fun setScoreFromLink(value: Float) {
         _scoreFromLink.value = value
     }
@@ -88,9 +95,14 @@ class ResultViewModel @Inject constructor(
         }
     }
 
+    fun closeAllPopUps() {
+        _showLinkGamePopUp.value = false
+        _showSurvivalCompletedPopUp.value = false
+    }
+
     fun resetStatistics() {
         setNavigatedFromHistory(false)
-        setShowLinkGamePopUp(false)
+        closeAllPopUps()
         setShowLoadedGameRecord(false)
         setScoreFromLink(0.00f)
         setSeedFromLink(0L)
@@ -98,7 +110,6 @@ class ResultViewModel @Inject constructor(
 
     fun prepareGameFromLink(gameRecord: GameRecord) {
         setNavigatedFromHistory(false)
-        setShowLinkGamePopUp(false)
         setScoreFromLink(gameRecord.activeScore)
         setSeedFromLink(gameRecord.seed)
     }

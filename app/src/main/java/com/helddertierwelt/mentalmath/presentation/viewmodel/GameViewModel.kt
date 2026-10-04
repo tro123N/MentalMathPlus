@@ -81,8 +81,8 @@ class GameViewModel @Inject constructor(
     private var random: Random = Random(System.currentTimeMillis())
     private val randomMutex = Mutex()
 
-    private val _isGeneratingProblem = MutableStateFlow(false)
-    val isGeneratingProblem = _isGeneratingProblem.asStateFlow()
+    private val _disableEnterButton = MutableStateFlow(false)
+    val disableEnterButton = _disableEnterButton.asStateFlow()
 
     fun addLastDigit(number: Int) {
         if (_gameState.value.input.length < 7) {
@@ -144,6 +144,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun startGame(seed: Long) {
+        _disableEnterButton.value = false
         random = Random(seed)
         generateNewProblem()
         setStartTimestamps()
@@ -160,8 +161,9 @@ class GameViewModel @Inject constructor(
         problemStatus: ProblemStatus,
         userInput: String
     ) {
-        val state = _gameState.value
+        _disableEnterButton.value = true
 
+        val state = _gameState.value
         val newState = when (problemStatus) {
             ProblemStatus.CORRECT -> {
                 playFeedback(FeedbackType.CORRECT)
@@ -279,14 +281,14 @@ class GameViewModel @Inject constructor(
                 state.activeTime >= totalTime
             }
 
-            GameMode.SURVIVAL -> state.lives <= 0
+            GameMode.SURVIVAL -> state.lives <= 0 || state.totalAnswers >= 100
+
         }
     }
 
     private fun generateNewProblem() {
 
         viewModelScope.launch(Dispatchers.IO) {
-            _isGeneratingProblem.value = true
 
             // lock all calls with the random-object to keep the order of problems deterministic
             val (operation, operands) = randomMutex.withLock {
@@ -352,7 +354,11 @@ class GameViewModel @Inject constructor(
                         problemStatus = ProblemStatus.SKIPPED
                     )
                 )
-                _isGeneratingProblem.value = false
+            }
+
+            delay(170.milliseconds)
+            withContext(Dispatchers.Main) {
+                _disableEnterButton.value = false
             }
         }
     }
@@ -387,16 +393,41 @@ class GameViewModel @Inject constructor(
         saveState(_gameState.value.copy(isGameStarted = false))
     }
 
+    private fun Long.toTenths(): Float {
+        return (this / 100L) / 10f
+    }
+
     private fun saveGameRecord() {
         val state = _gameState.value
-        val activeMinutes = max(1f / 60f, state.activeTime / 60000f)
-        val totalMinutes = max(1f / 60f, state.totalTime / 60000f)
+
+        val activeSeconds = max(0.1f, state.activeTime.toTenths())
+        val totalSeconds = max(0.1f, state.totalTime.toTenths())
+        val activeMinutes = activeSeconds / 60f
+        val totalMinutes = totalSeconds / 60f
+
         val correctAnswers = state.correctAnswers.toFloat()
         val totalAnswers = max(1, state.totalAnswers).toFloat()
-        val activeScore = 10f * correctAnswers.pow(2f) / (activeMinutes * totalAnswers)
-        val totalScore = 10f * correctAnswers.pow(2f) / (totalMinutes * totalAnswers)
 
-        //ToDo change Score for Survival Mode
+        fun standardScore(minutes: Float): Float {
+            if (minutes <= 0f || totalAnswers <= 0f) return 0f
+
+            return 10f * correctAnswers.pow(2f) / (minutes * totalAnswers)
+        }
+
+        fun survivalScore(seconds: Float): Float {
+            if (totalAnswers <= 0f) return 0f
+
+            val timeLimit = gameState.value.modeLimit * 10f
+            val timeRatio = seconds / (totalAnswers * timeLimit)
+
+            return (correctAnswers * 10f - timeRatio * 10f).coerceAtLeast(0f)
+        }
+
+        val (activeScore, totalScore) = if (state.gameMode == GameMode.SURVIVAL) {
+            survivalScore(activeSeconds) to survivalScore(totalSeconds)
+        } else {
+            standardScore(activeMinutes) to standardScore(totalMinutes)
+        }
 
         val gameRecord = createGameRecord(
             state = state,
@@ -666,7 +697,7 @@ class GameViewModel @Inject constructor(
     }
 
     private fun getSurvivalTimeLimit(state: GameState): Int {
-        val startSeconds = state.modeLimit*10
+        val startSeconds = state.modeLimit * 10
         val groups = state.totalAnswers / 5
 
         val reduction = startSeconds / 10
@@ -674,12 +705,7 @@ class GameViewModel @Inject constructor(
 
         val percentageTime = startSeconds - groups * reduction
 
-        return if (percentageTime >= minimumTime) {
-            percentageTime
-        } else {
-            val groupsUntilMinimum = (startSeconds - minimumTime) / reduction
-            (minimumTime - (groups - groupsUntilMinimum)).coerceAtLeast(1)
-        }
+        return percentageTime.coerceAtLeast(minimumTime)
     }
 
     fun getSurvivalTimeLeft(): Long {

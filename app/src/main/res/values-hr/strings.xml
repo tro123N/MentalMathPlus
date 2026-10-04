@@ -95,6 +95,8 @@
     <string name="app_link_popup_confirmation_text">Započni</string>
     <string name="already_played_popup_title">Igra je već odigrana</string>
     <string name="already_played_popup_description">Već ste igrali igru s istim postavkama i sjemenom.\n\nPokušajte s drugom poveznicom ili započnite novu igru.</string>
+    <string name="survival_completed_popup_title">Kralj preživljavanja</string>
+    <string name="survival_completed_popup_description">Uspješno si riješio svih 100 zadataka!</string>
     <string name="cancel">Odustani</string>
     <string name="ok">U redu</string>
     <!-- Result pop-up messages -->

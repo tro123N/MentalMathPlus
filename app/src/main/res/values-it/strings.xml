@@ -95,6 +95,8 @@
     <string name="app_link_popup_confirmation_text">Inizia</string>
     <string name="already_played_popup_title">Partita già giocata</string>
     <string name="already_played_popup_description">Hai già giocato una partita con le stesse impostazioni e lo stesso seed.\n\nProva un altro link o avvia una nuova partita.</string>
+    <string name="survival_completed_popup_title">Re della sopravvivenza</string>
+    <string name="survival_completed_popup_description">Hai risolto tutti e 100 gli esercizi!</string>
     <string name="cancel">Annulla</string>
     <string name="ok">OK</string>
     <!-- Result pop-up messages -->

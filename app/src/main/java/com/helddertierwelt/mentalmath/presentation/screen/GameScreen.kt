@@ -109,7 +109,7 @@ fun GameScreen(
     val gameState = gameViewModel.gameState.collectAsState().value
     val inputDirectionMode = gameState.inputDirectionMode
     val formMode = gameState.formMode
-    val isGeneratingProblem by gameViewModel.isGeneratingProblem.collectAsState()
+    val disableEnterButton by gameViewModel.disableEnterButton.collectAsState()
     var toastEvent by remember { mutableStateOf<ToastEvent?>(null) }
     val rtlMessage = stringResource(R.string.rtl_toast)
     val ltrMessage = stringResource(R.string.ltr_toast)
@@ -128,6 +128,9 @@ fun GameScreen(
 
                     resultViewModel.setShowLoadedGameRecord(false)
                     resultViewModel.setShowLinkGamePopUp(gameViewModel.gameState.value.isLinkGame)
+                    resultViewModel.setShowSurvivalCompletedPopUp(
+                        gameState.gameMode == GameMode.SURVIVAL && gameState.totalAnswers >= 100
+                    )
 
                     navController.navigate("result") {
                         popUpTo(0) { inclusive = true }
@@ -320,7 +323,7 @@ fun GameScreen(
                         )
                         EnterButton(
                             onClick = { gameViewModel.submitAnswer() },
-                            enabled = !isGeneratingProblem,
+                            enabled = !disableEnterButton,
                             isToggled = gameState.input.isEmpty(),
                             size = roundButtonSize,
                             iconId1 = R.drawable.keyboard_double_arrow_right_24dp,

@@ -95,6 +95,8 @@
     <string name="app_link_popup_confirmation_text">Indítás</string>
     <string name="already_played_popup_title">A játékot már játszottad</string>
     <string name="already_played_popup_description">Már játszottál egy játékot ugyanezekkel a beállításokkal és seeddel.\n\nPróbálj ki egy másik hivatkozást, vagy indíts új játékot.</string>
+    <string name="survival_completed_popup_title">A túlélés királya</string>
+    <string name="survival_completed_popup_description">Sikeresen megoldottad mind a 100 feladatot!</string>
     <string name="cancel">Mégse</string>
     <string name="ok">OK</string>
     <!-- Result pop-up messages -->

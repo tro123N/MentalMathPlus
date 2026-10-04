@@ -268,7 +268,7 @@ fun MenuSideSheet(
                         // Random Game
                         fun startRandomGame() {
                             settingsViewModel.setIsRandomGameButtonClicked(true)
-                            resultViewModel.setShowLinkGamePopUp(false)
+                            resultViewModel.closeAllPopUps()
                             gameViewModel.resetGameState()
                             gameViewModel.setRandomSettings(settingsViewModel.settingsState.value)
                             settingsViewModel.playFeedback(FeedbackType.START)

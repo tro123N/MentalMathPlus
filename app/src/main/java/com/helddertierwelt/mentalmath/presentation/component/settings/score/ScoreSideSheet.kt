@@ -213,7 +213,7 @@ fun ScoreSideSheet(
                             settingsViewModel.setIsScoreClicked(true)
                             resultViewModel.setLoadedGameRecord(gameRecord.id)
                             resultViewModel.setShowLoadedGameRecord(true)
-                            resultViewModel.setShowLinkGamePopUp(false)
+                            resultViewModel.closeAllPopUps()
 
                             navController.navigate("result") {
                                 popUpTo(0) { inclusive = true }

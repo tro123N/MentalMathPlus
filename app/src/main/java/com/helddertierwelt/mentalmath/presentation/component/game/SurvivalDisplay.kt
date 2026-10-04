@@ -63,7 +63,7 @@ fun SurvivalDisplay(
     LaunchedEffect(gameState.totalAnswers) {
         if (gameState.totalAnswers > 0 && gameState.totalAnswers % 5 == 0) {
             highlightTimer = true
-            delay(800.milliseconds)
+            delay(1000.milliseconds)
             highlightTimer = false
         }
     }

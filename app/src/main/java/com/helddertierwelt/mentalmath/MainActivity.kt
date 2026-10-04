@@ -125,6 +125,7 @@ class MainActivity : ComponentActivity() {
                             gameViewModel.resetGameState()
                             gameViewModel.setIsLinkGame(true)
                             gameViewModel.setSettingsFromLink(gameRecordFromAppLink.value, settingsViewModel.settingsState.value)
+                            resultViewModel.closeAllPopUps()
                             resultViewModel.prepareGameFromLink(gameRecordFromAppLink.value)
                             mainActivityViewModel.playFeedback(FeedbackType.START)
                             navController.navigate("game") {

@@ -98,6 +98,8 @@
     <string name="app_link_popup_confirmation_text">Εναρξη</string>
     <string name="already_played_popup_title">Η παρτίδα έχει ήδη παιχτεί</string>
     <string name="already_played_popup_description">Έχετε ήδη παίξει μια παρτίδα με τις ίδιες ρυθμίσεις και το ίδιο Seed.\n\nΠαρακαλούμε δοκιμάστε ένα διαφορετικό link ή αρχίστε νέα παρτίδα.</string>
+    <string name="survival_completed_popup_title">Βασιλιάς της επιβίωσης</string>
+    <string name="survival_completed_popup_description">Έλυσες και τις 100 ασκήσεις!</string>
     <string name="cancel">Ακύρωση</string>
     <string name="ok">OK</string>
     <!-- Result pop-up messages -->

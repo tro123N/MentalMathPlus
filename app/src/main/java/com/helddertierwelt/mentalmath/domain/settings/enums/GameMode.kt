@@ -27,5 +27,8 @@ enum class GameMode(
     PROBLEMS(R.drawable.tag_24dp),
     SURVIVAL(R.drawable.heart_24dp);
 
-    fun next() = entries[(ordinal + 1) % entries.size]
-}
+    fun next() = when (this) {
+        PROBLEMS -> TIMED
+        TIMED -> SURVIVAL
+        SURVIVAL -> PROBLEMS
+    }}

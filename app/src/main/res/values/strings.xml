@@ -102,7 +102,7 @@ Thank you for contributing!
     <string name="horizontal_toast">Horizontal Layout</string>
     <string name="vertical_toast">Vertical Layout</string>
 
-    <!-- Statistics Screen -->
+    <!-- Result Screen -->
     <string name="result">Result</string>
     <string name="seed">Seed: %d</string>
     <string name="problem_limit">Problem Limit</string>
@@ -154,6 +154,9 @@ Thank you for contributing!
 
     <string name="already_played_popup_title">Game already played</string>
     <string name="already_played_popup_description">You’ve already played a game with the same settings and seed.\n\nPlease try a different link or start a new game.</string>
+
+    <string name="survival_completed_popup_title">Survival King</string>
+    <string name="survival_completed_popup_description">You conquered all 100 problems!</string>
 
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
