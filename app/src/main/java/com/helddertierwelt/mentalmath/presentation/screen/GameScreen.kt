@@ -126,10 +126,12 @@ fun GameScreen(
             when (event) {
                 GameViewModel.GameEvent.GameFinished -> {
 
+                    val currentGameState = gameViewModel.gameState.value
+
                     resultViewModel.setShowLoadedGameRecord(false)
-                    resultViewModel.setShowLinkGamePopUp(gameViewModel.gameState.value.isLinkGame)
+                    resultViewModel.setShowLinkGamePopUp(currentGameState.isLinkGame)
                     resultViewModel.setShowSurvivalCompletedPopUp(
-                        gameState.gameMode == GameMode.SURVIVAL && gameState.totalAnswers >= 100
+                        currentGameState.gameMode == GameMode.SURVIVAL && currentGameState.totalAnswers >= 100
                     )
 
                     navController.navigate("result") {

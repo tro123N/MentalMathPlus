@@ -61,7 +61,7 @@ fun SurvivalDisplay(
     var highlightTimer by remember { mutableStateOf(false) }
 
     LaunchedEffect(gameState.totalAnswers) {
-        if (gameState.totalAnswers > 0 && gameState.totalAnswers % 5 == 0) {
+        if (gameState.totalAnswers in 1..40 && gameState.totalAnswers % 5 == 0 ) {
             highlightTimer = true
             delay(1000.milliseconds)
             highlightTimer = false
