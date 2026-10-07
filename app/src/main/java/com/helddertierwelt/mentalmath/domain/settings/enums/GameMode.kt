@@ -31,4 +31,5 @@ enum class GameMode(
         PROBLEMS -> TIMED
         TIMED -> SURVIVAL
         SURVIVAL -> PROBLEMS
-    }}
+    }
+}

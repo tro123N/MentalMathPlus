@@ -697,7 +697,7 @@ class GameViewModel @Inject constructor(
     }
 
     private fun getSurvivalTimeLimit(state: GameState): Int {
-        val startSeconds = state.modeLimit * 10
+        val startSeconds = state.modeLimit * 20
         val groups = state.totalAnswers / 5
 
         val reduction = startSeconds / 10
@@ -711,11 +711,8 @@ class GameViewModel @Inject constructor(
     fun getSurvivalTimeLeft(): Long {
         val state = _gameState.value
 
-        val elapsedTime =
-            System.currentTimeMillis() - state.survivalProblemStartTime
-
-        val timeLimit =
-            getSurvivalTimeLimit(state) * 1000L
+        val elapsedTime = System.currentTimeMillis() - state.survivalProblemStartTime
+        val timeLimit = getSurvivalTimeLimit(state) * 1000L
 
         return (timeLimit - elapsedTime).coerceAtLeast(0L)
     }

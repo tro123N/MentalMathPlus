@@ -141,7 +141,8 @@ fun SummaryCard(
                     tooltipText = stringResource(R.string.difficulty_addition)
                 )
 
-                val subtractionRange = statisticsGameRecord.subtractionRangeStart to statisticsGameRecord.subtractionRangeEnd
+                val subtractionRange =
+                    statisticsGameRecord.subtractionRangeStart to statisticsGameRecord.subtractionRangeEnd
                 val subtractionRangeString = when {
                     subtractionRange.first <= 0 || subtractionRange.second <= 0 -> "-"
                     subtractionRange.first == subtractionRange.second -> subtractionRange.first.toString()
@@ -156,7 +157,8 @@ fun SummaryCard(
                     tooltipText = stringResource(R.string.difficulty_subtraction)
                 )
 
-                val multiplicationRange = statisticsGameRecord.multiplicationRangeStart to statisticsGameRecord.multiplicationRangeEnd
+                val multiplicationRange =
+                    statisticsGameRecord.multiplicationRangeStart to statisticsGameRecord.multiplicationRangeEnd
                 val multiplicationRangeString = when {
                     multiplicationRange.first <= 0 || multiplicationRange.second <= 0 -> "-"
                     multiplicationRange.first == multiplicationRange.second -> multiplicationRange.first.toString()
@@ -196,7 +198,7 @@ fun SummaryCard(
                     .padding(16.dp, 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                StatsProgressColumn(
+                ProgressColumn(
                     gameMode = statisticsGameRecord.gameMode,
                     fontSize = statsFontSize,
                     iconSize = statsIconSize,
@@ -223,7 +225,8 @@ fun SummaryCard(
                 val percentageString = if (statisticsGameRecord.totalAnswers > 0) {
                     val percentage = correctAnswers.toFloat() / statisticsGameRecord.totalAnswers * 100f
                     val rounded = percentage.roundToInt()
-                    if (kotlin.math.abs(percentage - rounded) < 0.0001f) { "$rounded%"
+                    if (kotlin.math.abs(percentage - rounded) < 0.0001f) {
+                        "$rounded%"
                     } else {
                         AppLocale.format("%.1f", percentage) + "%"
                     }
@@ -239,7 +242,7 @@ fun SummaryCard(
                     tooltipText = stringResource(R.string.accuracy)
                 )
 
-                val timePerCorrectAnswer = if (correctAnswers==0) "-" else formatTimeWithDecimalSeconds(statisticsGameRecord.activeTime / correctAnswers)
+                val timePerCorrectAnswer = if (correctAnswers == 0) "-" else formatTimeWithDecimalSeconds(statisticsGameRecord.activeTime / correctAnswers, stringResource(R.string.second))
                 val darkTheme = when (themeMode) {
                     ThemeMode.DARK -> true
                     ThemeMode.LIGHT -> false
@@ -275,7 +278,10 @@ fun SummaryCard(
     }
 }
 
-fun formatTimeWithDecimalSeconds(ms: Long): String {
+fun formatTimeWithDecimalSeconds(
+    ms: Long,
+    secondUnit: String
+): String {
     val seconds = ms / 1000
     val hours = seconds / 3600
     val minutes = (seconds % 3600) / 60
@@ -293,9 +299,9 @@ fun formatTimeWithDecimalSeconds(ms: Long): String {
         } else {
             val secondsWithDecimal = ms / 1000.0
             if (secondsWithDecimal % 1.0 == 0.0) {
-                append("${secondsWithDecimal.toInt()}s")
+                append("${secondsWithDecimal.toInt()}$secondUnit")
             } else {
-                append(AppLocale.format("%.1fs", secondsWithDecimal))
+                append(AppLocale.format("%.1f$secondUnit", secondsWithDecimal))
             }
         }
     }

@@ -92,7 +92,7 @@ fun ModeColumn(
             text = when (gameMode) {
                 GameMode.PROBLEMS -> "${limit * 10}"
                 GameMode.TIMED -> "${limit}:00"
-                GameMode.SURVIVAL -> "${limit * 10}${stringResource(R.string.second)}"
+                GameMode.SURVIVAL -> "${limit * 20}${stringResource(R.string.second)}"
             },
             fontSize = fontSize,
             color = MaterialTheme.colorScheme.onPrimary

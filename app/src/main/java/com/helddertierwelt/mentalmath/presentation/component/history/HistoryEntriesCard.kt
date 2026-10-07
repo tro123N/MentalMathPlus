@@ -110,7 +110,7 @@ fun HistoryEntriesCard(
                     val limit = when (game.gameMode) {
                         GameMode.PROBLEMS -> "${game.modeLimit}0"
                         GameMode.TIMED -> "${game.modeLimit}:00"
-                        GameMode.SURVIVAL -> "${game.modeLimit*10}${stringResource(R.string.second)}"
+                        GameMode.SURVIVAL -> "${game.modeLimit*20}${stringResource(R.string.second)}"
                     }
                     val rangeStrings = listOf(
                         formatRange(game.additionRangeStart, game.additionRangeEnd),

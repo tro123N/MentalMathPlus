@@ -47,6 +47,7 @@ import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import kotlinx.coroutines.delay
+import kotlin.math.ceil
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
@@ -79,11 +80,20 @@ fun SurvivalDisplay(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.padding(end = 24.dp)
     ) {
-        Text(
-            text = formatTime(timeLeft),
-            fontSize = fontSize,
-            color = timerColor
-        )
+
+        if (timeLeft <= 3_000) {
+            PulsatingCountdown(
+                fontSize = fontSize,
+                time = ceil(timeLeft / 1000.0).toLong().toString(),
+                paddingEnd = 0.dp
+            )
+        } else {
+            Text(
+                text = ceil(timeLeft / 1000.0).toLong().toString(),
+                color = timerColor,
+                fontSize = fontSize,
+            )
+        }
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(2.dp)

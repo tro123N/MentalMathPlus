@@ -47,7 +47,7 @@ import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StatsProgressColumn(
+fun ProgressColumn(
     gameMode: GameMode,
     fontSize: TextUnit,
     iconSize: Dp,
@@ -94,7 +94,7 @@ fun StatsProgressColumn(
         Text(
             text = when (gameMode) {
                 GameMode.TIMED -> "$totalAnswers"
-                GameMode.PROBLEMS -> formatTimeWithDecimalSeconds(activeTime)
+                GameMode.PROBLEMS -> formatTimeWithDecimalSeconds(activeTime, stringResource(R.string.second))
                 GameMode.SURVIVAL -> "$totalAnswers"
             },
             fontSize = fontSize,

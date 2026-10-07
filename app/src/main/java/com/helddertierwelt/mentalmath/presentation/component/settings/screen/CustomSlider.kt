@@ -96,7 +96,7 @@ fun CustomSlider(
             text = when (gameMode) {
                 GameMode.TIMED -> "${value.toInt()}${stringResource(R.string.minute)}"
                 GameMode.PROBLEMS -> "${value.toInt() * 10}"
-                GameMode.SURVIVAL -> "${value.toInt() * 10}${stringResource(R.string.second)} / ${stringResource(R.string.problem)}"
+                GameMode.SURVIVAL -> "${value.toInt() * 20}${stringResource(R.string.second)} / ${stringResource(R.string.problem)}"
             },
             color = MaterialTheme.colorScheme.surface,
             fontSize = thumbnailFontSize

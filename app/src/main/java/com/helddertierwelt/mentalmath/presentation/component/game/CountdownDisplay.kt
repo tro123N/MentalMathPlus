@@ -47,7 +47,8 @@ fun CountdownDisplay(
     if (timeLeft <= 10_000) {
         PulsatingCountdown(
             fontSize = fontSize,
-            timeLeft = timeLeft
+            time = formatTime(timeLeft),
+            paddingEnd = 24.dp
         )
     } else {
         Text(
