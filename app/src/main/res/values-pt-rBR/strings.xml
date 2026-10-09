@@ -133,4 +133,5 @@
     <string name="share_challenge">Tente bater minha pontuação de %1$s no Mental Math.\nJogue o meu jogo com a semente %2$d:\n\n%3$s</string>
     <string name="share_new_game">Vamos jogar uma rodada de Matemática Mental!\nClique no link abaixo para começar um novo jogo com minhas configurações e semente:\n%1$d\n\n%2$s</string>
     <string name="close_defeat_title">Foi por pouco</string>
+    <string name="anyone_here_message_1">Você: %1$s | Oponente: %2$s\nSemente: %3$d\n\nQue jogo sem sentido!</string>
 </resources>
