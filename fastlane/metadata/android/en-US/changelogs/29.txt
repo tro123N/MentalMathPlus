@@ -1,6 +1,7 @@
 - Introduced the new Survival Mode with up to 100 problems
 - Migrated the game database to a new data structure, significantly reducing storage usage
 - Added Turkish translation contributed by Barış Selayet. Thank you! :)
+- Added Brazil translation contributed by Bruno de Paula. Thank you! :)
 - Improved input handling to prevent accidental double presses
 - Scores are now calculated to tenths of a second to match the timer’s 100 ms update interval
 - Added a red pulsating countdown for the final 10 seconds in Timed Mode

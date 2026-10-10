@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">Matemática Mental</string>
     <string name="mode_instruction">Selecionar modo e limite</string>
+    <string name="second">s</string>
+    <string name="minute">min</string>
     <string name="operator_instruction">Selecionar operações e dificuldade</string>
     <string name="start">Começar</string>
     <string name="share_game">Compartilhar Jogo</string>
@@ -40,7 +42,6 @@
     <string name="app_settings">Configurações do App</string>
     <string name="support">Suporte</string>
     <string name="top_ten_scores">Top 10</string>
-    <string name="new_score">novo</string>
     <string name="rtl_toast">Entrada da Direita pra Esquerda</string>
     <string name="ltr_toast">Entrada da Esquerda pra Direita</string>
     <string name="horizontal_toast">Layout Horizontal</string>
@@ -49,6 +50,7 @@
     <string name="seed">Semente: %d</string>
     <string name="problem_limit">Limite do Problema</string>
     <string name="time_limit">Limite de Tempo</string>
+    <string name="survival_initial_time">Tempo inicial por problema</string>
     <string name="difficulty_addition">Dificuldade da Adição</string>
     <string name="difficulty_subtraction">Dificuldade da Subtração</string>
     <string name="difficulty_multiplication">Dificuldade da Multiplicação</string>
@@ -65,6 +67,7 @@
     <string name="status_correct">Correto</string>
     <string name="status_incorrect">Incorreto</string>
     <string name="status_skipped">Pulado</string>
+    <string name="status_timeout">Tempo limite</string>
     <string name="no_problems">Nenhum problema resolvido</string>
     <string name="done">Feito</string>
     <string name="no_games">Não há jogos com pontuação</string>
@@ -86,16 +89,18 @@
     <string name="already_played_popup_title">Jogo já jogado</string>
     <string name="already_played_popup_description">Você já jogou um jogo com as mesmas configurações e semente.\n\nPor favor, tente um link diferente ou comece um novo jogo.</string>
     <string name="ok">Ok</string>
+    <string name="survival_completed_popup_title">Rei da Sobrevivência</string>
+    <string name="survival_completed_popup_description">Você conquistou todos os 100 problemas!</string>
     <string name="cancel">Cancelar</string>
     <string name="waiting_title">Esperando pelo seu oponente…</string>
     <string name="waiting_message_1">Você: %1$s | Oponente: ??\nSemente: %2$d\n\nVocê definiu o recorde! Vamos ver se o seu oponente consegue te alcançar!</string>
     <string name="waiting_message_2">Você: %1$s | Oponente: ??\nSemente: %2$d\n\nSua pontuação está bloqueada - aguarde o seu oponente responder!</string>
     <string name="waiting_message_3">Você: %1$s | Oponente: ??\nSemente: %2$d\n\nTodos os olhos no seu Oponente agora!</string>
-    <string name="waiting_message_4">Você: %1$s | Oponente: ??\nSemente: %2$d\n\nVocê tomou a frente... ou será que não?</string>
+    <string name="waiting_message_4">Você: %1$s | Oponente: ??\nSemente: %2$d\n\nVocê tomou a frente… ou será que não?</string>
     <string name="waiting_message_5">Você: %1$s | Oponente: ??\nSemente: %2$d\n\nSua pontuação é tão boa que eles provavelmente vão desinstalar o jogo.</string>
     <string name="easy_win_title">Vitória fácil</string>
     <string name="easy_win_message_1">Você: %1$s | Oponente: %2$s\nSemente: %3$d\n\nUma vitória, mas sem uma competição real!</string>
-    <string name="easy_win_message_2">Você: %1$s | Oponente: %2$s\nSemente: %3$d\n\nSeu oponente não fez sua melhor jogada... Ou nenhuma jogada!</string>
+    <string name="easy_win_message_2">Você: %1$s | Oponente: %2$s\nSemente: %3$d\n\nSeu oponente não fez sua melhor jogada… Ou nenhuma jogada!</string>
     <string name="easy_win_message_3">Você: %1$s | Oponente: %2$s\nSemente: %3$d\n\nVocê venceu enquanto seu oponente ainda descobria as regras do jogo.</string>
     <string name="anyone_here_title">Tem alguém aqui?</string>
     <string name="anyone_here_message_2">Você: %1$s | Oponente: %2$s\nSemente: %3$d\n\nAlô… alô… tem alguém jogando esse jogo?</string>
@@ -110,7 +115,7 @@
     <string name="close_win_message_1">Você: %1$s | Oponente: %2$s\nSemente: %3$d\n\nEssa foi acirrada! Bom que você nem piscou.</string>
     <string name="close_win_message_2">Você: %1$s | Oponente: %2$s\nSemente: %3$d\n\nFoi por pouco! Mas a vitória ainda é deliciosa.</string>
     <string name="close_win_message_3">Você: %1$s | Oponente: %2$s\nSemente: %3$d\n\nSeu oponente foi bom, mas o placar não mente!</string>
-    <string name="close_win_message_4">Você: %1$s | Oponente: %2$s\nSemente: %3$d\n\nFoi um verdadeiro suspense... que acabou com seu nome no topo!</string>
+    <string name="close_win_message_4">Você: %1$s | Oponente: %2$s\nSemente: %3$d\n\nFoi um verdadeiro suspense… que acabou com seu nome no topo!</string>
     <string name="close_win_message_5">Você: %1$s | Oponente: %2$s\nSemente: %3$d\n\nRespeito ao seu oponente, mas uma vitória é uma vitória.</string>
     <string name="draw_title">Desenho</string>
     <string name="draw_message_1">Você: %1$s | Oponente: %2$s\nSemente: %3$d\n\nSem ganhadores, sem perdedores - apenas campeões.</string>
