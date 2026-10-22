@@ -25,6 +25,7 @@ Select which arithmetic operations to include (+, −, ×, ÷). For each operati
 #### Two Game Modes
 • Practice Mode lets you complete a fixed number of problems (10, 20, 30, 40, or 50).  
 • Timed Mode challenges you to solve as many problems as possible within a time limit (1, 2, 3, 4, or 5 minutes).
+• Survival Mode challenges you to survive 100 problems with 3 lives and a decreasing time limit for each problem.
 
 #### Challenge your Friends
 You can share a game link to:  

@@ -3,9 +3,10 @@ Mit „Mental Math“ kannst du deine Kopfrechenfähigkeiten verbessern. Trainie
 Anpassbares Training
 Entscheide welche Rechenoperationen du einbeziehen möchtest (+, −, ×, ÷). Für jede Operation kannst du aus neun Schwierigkeitsstufen wählen, um dein Training genau auf dein Können abzustimmen.
 
-Zwei Spielmodi
+Drei Spielmodi
 • Im Anzahl-Modus musst du eine feste Anzahl von Aufgaben (10, 20, 30, 40 oder 50) lösen.
 • Im Zeitmodus musst du innerhalb einer bestimmten Zeit (1, 2, 3, 4 oder 5 Minuten) so viele Aufgaben wie möglich lösen.
+• Im Survival-Modus musst du mit 3 Leben 100 Aufgaben überstehen, wobei die Zeit pro Aufgabe immer knapper wird.
 
 Fordere deine Freunde heraus
 Du kannst einen Game-Link auf zwei Arten teilen:
