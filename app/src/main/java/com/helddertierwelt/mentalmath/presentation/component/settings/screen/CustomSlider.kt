@@ -42,12 +42,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @Composable
 fun CustomSlider(
@@ -57,9 +56,8 @@ fun CustomSlider(
     onValueChangeFinished: () -> Unit,
     gameMode: GameMode,
     activeTrackColor: Color,
-    size: Dp,
-    thumbnailFontSize: TextUnit,
 ) {
+    val dimens = MentalMathTheme.dimens
     val interactionSource = remember { MutableInteractionSource() }
     val isDragging by interactionSource.collectIsDraggedAsState()
     var sliderWidth by remember { mutableIntStateOf(0) }
@@ -85,7 +83,7 @@ fun CustomSlider(
                 .offset {
                     IntOffset(
                         x = thumbOffset(value),
-                        y = (-size.roundToPx() / 1.25f).toInt()
+                        y = (-dimens.components.sliderHeight.roundToPx() / 1.25f).toInt()
                     )
                 }
                 .alpha(if (isDragging) 1f else 0f)
@@ -99,7 +97,7 @@ fun CustomSlider(
                 GameMode.SURVIVAL -> "${value.toInt() * 20}${stringResource(R.string.second)} / ${stringResource(R.string.problem)}"
             },
             color = MaterialTheme.colorScheme.surface,
-            fontSize = thumbnailFontSize
+            fontSize = dimens.fonts.caption
         )
 
         val sliderColors = SliderDefaults.colors(
@@ -117,7 +115,7 @@ fun CustomSlider(
             steps = valueRange.endInclusive.toInt() - valueRange.start.toInt() - 1,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(size),
+                .height(dimens.components.sliderHeight),
             colors = sliderColors,
             interactionSource = interactionSource,
             onValueChangeFinished = onValueChangeFinished,

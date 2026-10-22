@@ -32,10 +32,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
@@ -110,10 +107,6 @@ class MainActivity : ComponentActivity() {
                 Navigation(
                     navController = navController
                 )
-                val screenHeight = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
-                val titleFontSize = (0.031f * screenHeight.value).sp
-                val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
-
                 val showAlreadyPlayedPopUp = mainActivityViewModel.showAlreadyPlayedPopUp.collectAsState().value
                 val showDeepLinkPopUp = mainActivityViewModel.showDeepLinkPopUp.collectAsState().value
 
@@ -140,8 +133,6 @@ class MainActivity : ComponentActivity() {
                             mainActivityViewModel.playFeedback(FeedbackType.TAP)
                             mainActivityViewModel.setShowDeepLinkPopUp(false)
                         },
-                        titleSize = titleFontSize,
-                        descriptionSize = popUpDescriptionFontSize,
                         title = stringResource(R.string.app_link_game_popup_title),
                         description = if (gameRecordFromAppLink.value.activeScore < 0f) {
                             stringResource(R.string.app_link_popup_description_new_game)
@@ -163,8 +154,6 @@ class MainActivity : ComponentActivity() {
                             mainActivityViewModel.playFeedback(FeedbackType.TAP)
                             mainActivityViewModel.setShowAlreadyPlayedPopUp(false)
                         },
-                        titleSize = titleFontSize,
-                        descriptionSize = popUpDescriptionFontSize,
                         title = stringResource(R.string.already_played_popup_title),
                         description = stringResource(R.string.already_played_popup_description),
                         confirmationText = stringResource(R.string.ok),

@@ -63,11 +63,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
@@ -87,6 +86,7 @@ import com.helddertierwelt.mentalmath.domain.settings.enums.NotificationMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.SoundMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.ThemeMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.VibrationMode
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.HistoryViewModel
@@ -97,10 +97,9 @@ import java.security.SecureRandom
 
 @Composable
 fun MenuSideSheet(
-    screenWidth: Dp,
-    screenHeight: Dp,
     navController: NavController
 ) {
+    val dimens = MentalMathTheme.dimens
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
     val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
     val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
@@ -109,16 +108,13 @@ fun MenuSideSheet(
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
+    val screenWidth = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.width.toDp() }
     val screenWidthPx = with(LocalDensity.current) { screenWidth.toPx() }
     val sheetWidthFactor = 0.6f
     val minOffset = -screenWidthPx * sheetWidthFactor
     val maxOffset = 0f
     val offsetX = remember { Animatable(minOffset) }
     val overlayAlpha = 0.38f * (offsetX.value - minOffset) / (maxOffset - minOffset)
-
-    val fontSize = (0.020f * screenHeight.value).sp
-    val iconSize = (0.032f * screenHeight.value).dp
-    val logoSize = (0.11f * screenHeight.value).dp
 
     val isSheetOpen = settingsViewModel.isMenuOpen.collectAsState().value
     val expandedGroup = settingsViewModel.expandedGroup.collectAsState().value
@@ -224,7 +220,6 @@ fun MenuSideSheet(
                         // App Logo
                         Spacer(modifier = Modifier.height(8.dp))
                         LogoRow(
-                            size = logoSize,
                             imageId = R.drawable.mental_math,
                             intentProvider = {
                                 Intent(
@@ -242,8 +237,6 @@ fun MenuSideSheet(
                             iconResId = R.drawable.swords_24dp,
                             contentDescription = "Share Game",
                             text = stringResource(R.string.share_game),
-                            fontSize = fontSize,
-                            iconSize = iconSize,
                             isEnabled = settingsViewModel.isAnyOperationEnabled(),
                             intentProvider = {
                                 Intent.createChooser(
@@ -286,8 +279,6 @@ fun MenuSideSheet(
                             iconResId = R.drawable.casino_24dp,
                             contentDescription = "Random Game",
                             text = stringResource(R.string.random_game),
-                            fontSize = fontSize,
-                            iconSize = iconSize,
                             isEnabled = !isRandomGameButtonClicked,
                             onClick = { startRandomGame() }
                         )
@@ -305,23 +296,17 @@ fun MenuSideSheet(
                             iconResId = R.drawable.history_24dp,
                             contentDescription = "History",
                             text = stringResource(R.string.history),
-                            fontSize = fontSize,
-                            iconSize = iconSize,
                             onClick = { openHistory() }
                         )
 
                         ExpandableMenuGroup(
                             title = stringResource(R.string.game_settings),
-                            fontSize = fontSize,
                             iconResId = R.drawable.gamepad_24dp,
-                            iconSize = iconSize,
                             isExpanded = expandedGroup == SettingsGroup.GAME,
                             onToggle = { settingsViewModel.toggleGroup(SettingsGroup.GAME) },
                             content = {
                                 // Horizontal/Vertical Form
                                 CycleToggleRow(
-                                    fontSize = fontSize,
-                                    iconSize = iconSize,
                                     currentValue = settingsViewModel.settingsState.collectAsState().value.formMode,
                                     onValueChange = { settingsViewModel.setFormMode(it) },
                                     options = listOf(
@@ -340,8 +325,6 @@ fun MenuSideSheet(
 
                                 // Input Method
                                 CycleToggleRow(
-                                    fontSize = fontSize,
-                                    iconSize = iconSize,
                                     currentValue = settingsViewModel.settingsState.collectAsState().value.inputDirectionMode,
                                     onValueChange = { settingsViewModel.setInputDirectionMode(it) },
                                     options = listOf(
@@ -360,8 +343,6 @@ fun MenuSideSheet(
 
                                 // Input Layout
                                 CycleToggleRow(
-                                    fontSize = fontSize,
-                                    iconSize = iconSize,
                                     currentValue = settingsViewModel.settingsState.collectAsState().value.inputMode,
                                     onValueChange = { settingsViewModel.setInputMode(it) },
                                     options = listOf(
@@ -382,16 +363,12 @@ fun MenuSideSheet(
 
                         ExpandableMenuGroup(
                             title = stringResource(R.string.app_settings),
-                            fontSize = fontSize,
                             iconResId = R.drawable.settings_24dp,
-                            iconSize = iconSize,
                             isExpanded = expandedGroup == SettingsGroup.APP,
                             onToggle = { settingsViewModel.toggleGroup(SettingsGroup.APP) },
                             content = {
                                 // Theme
                                 CycleToggleRow(
-                                    fontSize = fontSize,
-                                    iconSize = iconSize,
                                     currentValue = settingsViewModel.settingsState.collectAsState().value.themeMode,
                                     onValueChange = { settingsViewModel.setThemeMode(it) },
                                     options = listOf(
@@ -415,8 +392,6 @@ fun MenuSideSheet(
 
                                 // Sound
                                 CycleToggleRow(
-                                    fontSize = fontSize,
-                                    iconSize = iconSize,
                                     currentValue = settingsViewModel.settingsState.collectAsState().value.soundMode,
                                     onValueChange = { settingsViewModel.setSoundMode(it) },
                                     options = listOf(
@@ -435,8 +410,6 @@ fun MenuSideSheet(
 
                                 // Vibration
                                 CycleToggleRow(
-                                    fontSize = fontSize,
-                                    iconSize = iconSize,
                                     currentValue = settingsViewModel.settingsState.collectAsState().value.vibrationMode,
                                     onValueChange = {
                                         settingsViewModel.setVibrationMode(it)
@@ -464,8 +437,6 @@ fun MenuSideSheet(
 
                                 // Notifications
                                 CycleToggleRow(
-                                    fontSize = fontSize,
-                                    iconSize = iconSize,
                                     currentValue = settingsViewModel.settingsState.collectAsState().value.notificationMode,
                                     onValueChange = {
                                         settingsViewModel.playFeedback(FeedbackType.TAP)
@@ -517,8 +488,6 @@ fun MenuSideSheet(
                                         iconResId = R.drawable.translate_24dp,
                                         contentDescription = "Language",
                                         text = stringResource(R.string.language),
-                                        fontSize = fontSize,
-                                        iconSize = iconSize,
                                         intentProvider = {
                                             Intent(Settings.ACTION_APP_LOCALE_SETTINGS).apply {
                                                 data = Uri.fromParts("package", context.packageName, null)
@@ -533,9 +502,7 @@ fun MenuSideSheet(
 
                         ExpandableMenuGroup(
                             title = stringResource(R.string.support),
-                            fontSize = fontSize,
                             iconResId = R.drawable.partner_heart_24dp,
-                            iconSize = iconSize,
                             isExpanded = expandedGroup == SettingsGroup.SUPPORT,
                             onToggle = { settingsViewModel.toggleGroup(SettingsGroup.SUPPORT) },
                             content = {
@@ -544,8 +511,6 @@ fun MenuSideSheet(
                                     iconResId = R.drawable.feedback_24dp,
                                     contentDescription = "Feedback",
                                     text = stringResource(R.string.feedback),
-                                    fontSize = fontSize,
-                                    iconSize = iconSize,
                                     intentProvider = {
                                         Intent(Intent.ACTION_SEND).apply {
                                             selector = Intent(Intent.ACTION_SENDTO, "mailto:".toUri())
@@ -562,8 +527,6 @@ fun MenuSideSheet(
                                     iconResId = R.drawable.thumb_up_24dp,
                                     contentDescription = "Recommend",
                                     text = stringResource(R.string.recommend),
-                                    fontSize = fontSize,
-                                    iconSize = iconSize,
                                     intentProvider = {
                                         Intent(
                                             Intent.ACTION_VIEW,
@@ -579,8 +542,6 @@ fun MenuSideSheet(
                                     iconResId = R.drawable.volunteer_activism_24dp,
                                     contentDescription = "Donate",
                                     text = stringResource(R.string.donate),
-                                    fontSize = fontSize,
-                                    iconSize = iconSize,
                                     intentProvider = {
                                         Intent(
                                             Intent.ACTION_VIEW,
@@ -598,8 +559,6 @@ fun MenuSideSheet(
                             iconResId = R.drawable.info_24dp,
                             contentDescription = "About",
                             text = stringResource(R.string.about),
-                            fontSize = fontSize,
-                            iconSize = iconSize,
                             intentProvider = {
                                 Intent(
                                     Intent.ACTION_VIEW,
@@ -647,8 +606,6 @@ fun MenuSideSheet(
                     iconResId = R.drawable.delete_24dp,
                     contentDescription = "Reset",
                     text = stringResource(R.string.reset_app),
-                    fontSize = fontSize,
-                    iconSize = iconSize,
                     color = red,
                     onClick = {
                         settingsViewModel.playFeedback(FeedbackType.TAP)

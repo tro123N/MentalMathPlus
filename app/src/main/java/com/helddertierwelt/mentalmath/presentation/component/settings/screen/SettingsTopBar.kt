@@ -31,24 +31,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsTopBar(
-    titleFontSize: TextUnit,
     onMenuClick: () -> Unit,
     onScoreClick: () -> Unit,
-    iconSize: Dp,
     scoreEnabled: Boolean,
     isGreyedOut: Boolean,
 ) {
+    val dimens = MentalMathTheme.dimens
     TopAppBar(
         title = {
-            Text(text = stringResource(R.string.app_name), fontSize = titleFontSize)
+            Text(text = stringResource(R.string.app_name), fontSize = dimens.fonts.title)
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
@@ -63,7 +61,7 @@ fun SettingsTopBar(
                     painterResource(R.drawable.menu_24dp),
                     contentDescription = "menu",
                     tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(iconSize),
+                    modifier = Modifier.size(dimens.icons.topBarAction),
                 )
             }
         },
@@ -77,7 +75,7 @@ fun SettingsTopBar(
                     painterResource(R.drawable.leaderboard_24dp),
                     contentDescription = "share",
                     tint = if (!isGreyedOut) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f),
-                    modifier = Modifier.size(iconSize),
+                    modifier = Modifier.size(dimens.icons.topBarAction),
                 )
             }
         }

@@ -54,13 +54,10 @@ import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.core.view.drawToBitmap
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -77,6 +74,7 @@ import com.helddertierwelt.mentalmath.presentation.component.result.ResultTopBar
 import com.helddertierwelt.mentalmath.presentation.component.result.problems.ProblemsCard
 import com.helddertierwelt.mentalmath.presentation.component.result.summary.SummaryCard
 import com.helddertierwelt.mentalmath.presentation.component.result.summary.formatScore
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
@@ -90,18 +88,9 @@ fun ResultScreen(
 ) {
     val context = LocalContext.current
     val localView = LocalView.current
-    val screenHeight = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
     val coroutineScope = rememberCoroutineScope()
 
-    // font and icon sizes
-    val roundButtonSize = (0.09f * screenHeight.value).dp
-    val doneIconSize = (0.057f * screenHeight.value).dp
-    val modeIconSize = (0.046f * screenHeight.value).dp
-    val shareIconSize = (0.038f * screenHeight.value).dp
-    val resultIconSize = (0.032f * screenHeight.value).dp
-    val fontSize = (0.038f * screenHeight.value).sp
-    val titleFontSize = (0.032f * screenHeight.value).sp
-    val resultFontSize = (0.024f * screenHeight.value).sp
+    val dimens = MentalMathTheme.dimens
 
     // viewModels
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
@@ -198,8 +187,6 @@ fun ResultScreen(
         topBar = {
             ResultTopBar(
                 R.string.result,
-                titleFontSize = titleFontSize,
-                iconSize = shareIconSize,
                 onShareClick = {
                     resultViewModel.playFeedback(FeedbackType.TAP)
                     coroutineScope.launch {
@@ -244,10 +231,6 @@ fun ResultScreen(
                         horizontalAlignment = Alignment.Start
                     ) {
                         SummaryCard(
-                            scoreFontSize = titleFontSize,
-                            statsFontSize = resultFontSize,
-                            scoreIconSize = doneIconSize,
-                            statsIconSize = modeIconSize,
                             modifier = Modifier.onGloballyPositioned { coordinates ->
                                 if (!hasCapturedCoordinates) {
                                     val size = coordinates.size
@@ -259,18 +242,11 @@ fun ResultScreen(
                             }
                         )
                         Spacer(modifier = Modifier.height(24.dp))
-                        ProblemsCard(
-                            resultFontSize = resultFontSize,
-                            resultIconSize = resultIconSize,
-                            iconSize = shareIconSize
-                        )
+                        ProblemsCard()
                     }
                     Spacer(modifier = Modifier.height(24.dp))
                     DoneButton(
                         buttonTextId = R.string.done,
-                        size = roundButtonSize,
-                        fontSize = fontSize,
-                        iconSize = doneIconSize,
                         modifier = Modifier,
                         onClick = {
                             resultViewModel.playFeedback(FeedbackType.TAP)
@@ -290,15 +266,13 @@ fun ResultScreen(
                 resultViewModel.playFeedback(FeedbackType.TAP)
                 resultViewModel.setShowSurvivalCompletedPopUp(false)
             },
-            titleSize = titleFontSize,
-            descriptionSize = (0.018f * screenHeight.value).sp,
             title = stringResource(R.string.survival_completed_popup_title),
             icon = {
                 Icon(
                     painter = painterResource(R.drawable.crown_24dp),
                     contentDescription = "Survival Completed",
                     tint = yellow,
-                    modifier = Modifier.size((0.1f * screenHeight.value).dp)
+                    modifier = Modifier.size(dimens.icons.popUp)
                 )
             },
             description = stringResource(R.string.survival_completed_popup_description),
@@ -319,8 +293,6 @@ fun ResultScreen(
         }
         resultViewModel.playDelayedFeedback(gamePopUpInfo.feedbackType)
         PopUp(
-            titleSize = titleFontSize,
-            descriptionSize = (0.018f * screenHeight.value).sp,
             title = gamePopUpInfo.title,
             description = gamePopUpInfo.description,
             confirmationText = stringResource(R.string.result_popup_confirmation_text),
@@ -330,7 +302,7 @@ fun ResultScreen(
                     painter = painterResource(gamePopUpInfo.icon),
                     contentDescription = "challenge result",
                     tint = gamePopUpInfo.color,
-                    modifier = Modifier.size((0.1f * screenHeight.value).dp)
+                    modifier = Modifier.size(dimens.icons.popUp)
                 )
             },
             confirmColor = green,

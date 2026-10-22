@@ -33,20 +33,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.green
 
 @Composable
 fun StartButton(
     onClick: () -> Unit,
-    iconSize: Dp,
-    size: Dp,
-    fontSize: TextUnit,
     isEnabled: Boolean,
     isClicked: Boolean
 ) {
+    val dimens = MentalMathTheme.dimens
     Button(
         enabled = isEnabled && !isClicked,
         onClick = onClick,
@@ -62,7 +59,7 @@ fun StartButton(
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .height(size)
+            .height(dimens.components.button)
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -71,12 +68,12 @@ fun StartButton(
             Icon(
                 painter = painterResource(R.drawable.play_arrow_24dp),
                 contentDescription = "Play",
-                modifier = Modifier.size(iconSize),
+                modifier = Modifier.size(dimens.icons.actionButton),
                 tint = if (!isEnabled) MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f) else green
             )
             Text(
                 text = stringResource(R.string.start),
-                fontSize = fontSize,
+                fontSize = dimens.fonts.actionButton,
                 modifier = Modifier.align(Alignment.Center),
                 color = if (!isEnabled) MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f) else MaterialTheme.colorScheme.onPrimary
             )

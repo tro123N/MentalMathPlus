@@ -41,19 +41,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @Composable
 fun LogoRow(
-    size: Dp,
     imageId: Int,
     intentProvider: () -> Intent,
     onClickSound: () -> Unit,
     text: String,
     errorMessage: String,
 ) {
+    val dimens = MentalMathTheme.dimens
     val context = LocalContext.current
     Row(
         modifier = Modifier
@@ -81,11 +80,11 @@ fun LogoRow(
             Image(
                 painter = painterResource(id = imageId),
                 contentDescription = "App Logo",
-                modifier = Modifier.size(size),
+                modifier = Modifier.size(dimens.components.menuLogo),
             )
             Text(
                 text = text,
-                fontSize = 12.sp,
+                fontSize = dimens.fonts.caption,
                 color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f)
             )
         }

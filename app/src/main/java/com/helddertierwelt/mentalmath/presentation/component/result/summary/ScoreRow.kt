@@ -38,22 +38,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScoreRow(
     score: String,
     rank: Int?,
-    scoreFontSize: TextUnit,
-    scoreIconSize: Dp,
     modifier: Modifier = Modifier,
     iconColor: Color = Color.Unspecified,
     tooltipText: String = "Score"
 ) {
+    val dimens = MentalMathTheme.dimens
     val tooltipState = rememberTooltipState()
     val isTop10 = rank != null
     Row(
@@ -79,20 +77,20 @@ fun ScoreRow(
             Icon(
                 painter = painterResource(R.drawable.star_24dp),
                 contentDescription = tooltipText,
-                modifier = Modifier.size(scoreIconSize),
+                modifier = Modifier.size(dimens.icons.summaryScore),
                 tint = iconColor
             )
         }
         Text(
             text = score,
-            fontSize = scoreFontSize,
+            fontSize = dimens.fonts.summaryScore,
             modifier = Modifier.padding(start = 8.dp, end = 8.dp),
             color = MaterialTheme.colorScheme.onPrimary
         )
         if (isTop10) {
             Text(
                 text = "#$rank",
-                fontSize = scoreFontSize * 0.7f,
+                fontSize = dimens.fonts.summaryScore * 0.7f,
                 color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f),
                 modifier = Modifier.padding(start = 8.dp)
             )

@@ -44,10 +44,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,9 +57,8 @@ fun CustomRangeSlider(
     onValueChangeFinished: () -> Unit,
     isEnabled: Boolean,
     activeTrackColor: Color,
-    size: Dp,
-    thumbnailFontSize: TextUnit,
 ) {
+    val dimens = MentalMathTheme.dimens
     key(isEnabled) {
 
         val startInteractionSource = remember { MutableInteractionSource() }
@@ -91,7 +89,7 @@ fun CustomRangeSlider(
                     .offset {
                         IntOffset(
                             x = thumbOffset(value.start),
-                            y = (-size.roundToPx() / 1.25f).toInt()
+                            y = (-dimens.components.sliderHeight.roundToPx() / 1.25f).toInt()
                         )
                     }
                     .alpha(if (isDraggingStart) 1f else 0f)
@@ -102,7 +100,7 @@ fun CustomRangeSlider(
                     .padding(horizontal = 6.dp),
                 text = "${value.start.toInt()}",
                 color = MaterialTheme.colorScheme.surface,
-                fontSize = thumbnailFontSize
+                fontSize = dimens.fonts.caption
             )
 
             Text(
@@ -110,7 +108,7 @@ fun CustomRangeSlider(
                     .offset {
                         IntOffset(
                             x = thumbOffset(value.endInclusive),
-                            y = (-size.roundToPx() / 1.25f).toInt()
+                            y = (-dimens.components.sliderHeight.roundToPx() / 1.25f).toInt()
                         )
                     }
                     .alpha(if (isDraggingEnd) 1f else 0f)
@@ -121,7 +119,7 @@ fun CustomRangeSlider(
                     .padding(horizontal = 6.dp),
                 text = "${value.endInclusive.toInt()}",
                 color = MaterialTheme.colorScheme.surface,
-                fontSize = thumbnailFontSize
+                fontSize = dimens.fonts.caption
             )
 
             val sliderColors: SliderColors
@@ -149,7 +147,7 @@ fun CustomRangeSlider(
                 steps = valueRange.endInclusive.toInt() - valueRange.start.toInt() - 1,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(size),
+                    .height(dimens.components.sliderHeight),
                 colors = sliderColors,
                 enabled = isEnabled,
                 startInteractionSource = startInteractionSource,

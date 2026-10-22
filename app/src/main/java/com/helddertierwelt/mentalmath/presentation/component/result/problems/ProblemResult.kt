@@ -29,9 +29,9 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.TextUnit
 import com.helddertierwelt.mentalmath.domain.game.ProblemStatus
 import com.helddertierwelt.mentalmath.domain.game.SolvedProblem
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 
@@ -39,9 +39,9 @@ import com.helddertierwelt.mentalmath.presentation.theme.yellow
 @Composable
 fun ProblemResult(
     problem: SolvedProblem,
-    fontSize: TextUnit,
     modifier: Modifier = Modifier
 ) {
+    val dimens = MentalMathTheme.dimens
     val text = buildAnnotatedString {
         append("${problem.operand1} ${problem.operator.symbol} ${problem.operand2} = ")
 
@@ -85,7 +85,7 @@ fun ProblemResult(
         Text(
             text = text,
             modifier = modifier,
-            fontSize = fontSize,
+            fontSize = dimens.fonts.resultText,
             color = MaterialTheme.colorScheme.onPrimary
         )
     }

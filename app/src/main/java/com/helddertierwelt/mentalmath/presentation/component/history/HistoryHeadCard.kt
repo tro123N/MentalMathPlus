@@ -31,9 +31,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
@@ -41,8 +41,8 @@ import com.helddertierwelt.mentalmath.presentation.theme.yellow
 
 @Composable
 fun HistoryHeadCard(
-    iconSize: Dp
 ) {
+    val dimens = MentalMathTheme.dimens
     Card(
         shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
         modifier = Modifier.fillMaxWidth(),
@@ -60,37 +60,37 @@ fun HistoryHeadCard(
             Icon(
                 painter = painterResource(R.drawable.tune_24dp),
                 contentDescription = "modeIcon",
-                modifier = Modifier.size(iconSize),
+                modifier = Modifier.size(dimens.icons.cardHeader),
                 tint = MaterialTheme.colorScheme.onPrimary
             )
             Icon(
                 painter = painterResource(R.drawable.addition_24dp),
                 contentDescription = "modeIcon",
-                modifier = Modifier.size(iconSize),
+                modifier = Modifier.size(dimens.icons.cardHeader),
                 tint = green
             )
             Icon(
                 painter = painterResource(R.drawable.subtraction_24dp),
                 contentDescription = "modeIcon",
-                modifier = Modifier.size(iconSize),
+                modifier = Modifier.size(dimens.icons.cardHeader),
                 tint = red
             )
             Icon(
                 painter = painterResource(R.drawable.multiplication_24dp),
                 contentDescription = "modeIcon",
-                modifier = Modifier.size(iconSize),
+                modifier = Modifier.size(dimens.icons.cardHeader),
                 tint = yellow
             )
             Icon(
                 painter = painterResource(R.drawable.division_24dp),
                 contentDescription = "modeIcon",
-                modifier = Modifier.size(iconSize),
+                modifier = Modifier.size(dimens.icons.cardHeader),
                 tint = blue
             )
             Icon(
                 painter = painterResource(R.drawable.star_24dp),
                 contentDescription = "modeIcon",
-                modifier = Modifier.size(iconSize),
+                modifier = Modifier.size(dimens.icons.cardHeader),
                 tint = yellow
             )
         }

@@ -40,13 +40,12 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.game.ProblemStatus
 import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 
@@ -56,14 +55,13 @@ fun ProblemInput(
     operand2: Int,
     operator: String,
     input: String,
-    fontSize: TextUnit,
-    width: Dp,
     problemStatus: ProblemStatus,
     inputDirectionMode: InputDirectionMode,
     formMode: FormMode,
     onInputClick: () -> Unit,
     onProblemClick: () -> Unit
 ) {
+    val dimens = MentalMathTheme.dimens
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -85,14 +83,14 @@ fun ProblemInput(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .height(fontSize.value.dp * 2.5f)
+                .height(dimens.fonts.problem.value.dp * 2.5f)
                 .clip(RoundedCornerShape(16.dp))
                 .clickable { onProblemClick() }
         ) {
             Text(
                 text = horizontalText,
-                fontSize = fontSize,
-                lineHeight = fontSize,
+                fontSize = dimens.fonts.problem,
+                lineHeight = dimens.fonts.problem,
                 textAlign = TextAlign.Center,
                 color = onPrimary,
                 modifier = Modifier.alpha(if (formMode == FormMode.VERTICAL) 0f else 1f)
@@ -101,20 +99,20 @@ fun ProblemInput(
             Text(
                 text = verticalText,
                 fontFamily = robotoMono,
-                fontSize = fontSize,
-                lineHeight = fontSize,
+                fontSize = dimens.fonts.problem,
+                lineHeight = dimens.fonts.problem,
                 textAlign = TextAlign.Center,
                 color = onPrimary,
                 modifier = Modifier.alpha(if (formMode == FormMode.VERTICAL) 1f else 0f)
             )
         }
         Box(
-            modifier = Modifier.width(width + (1.2 * fontSize.value).dp),
+            modifier = Modifier.width(dimens.components.answerLineWidth + (1.2 * dimens.fonts.problem.value).dp),
             contentAlignment = Alignment.CenterStart
         ) {
             Text(
                 text = "=",
-                fontSize = fontSize,
+                fontSize = dimens.fonts.problem,
                 color = onPrimary
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -122,8 +120,8 @@ fun ProblemInput(
                 contentAlignment = Alignment.CenterStart,
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .width(width)
-                    .height((fontSize * 1.6f).value.dp)
+                    .width(dimens.components.answerLineWidth)
+                    .height((dimens.fonts.problem * 1.6f).value.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .clickable { onInputClick() }
                     .drawBehind {
@@ -164,7 +162,7 @@ fun ProblemInput(
                 }
                 Text(
                     text = input,
-                    fontSize = fontSize,
+                    fontSize = dimens.fonts.problem,
                     modifier = Modifier.align(Alignment.Center),
                     color = color
                 )

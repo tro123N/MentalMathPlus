@@ -22,19 +22,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import com.helddertierwelt.mentalmath.domain.settings.ToggleOption
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @Composable
 fun <T> CycleToggleRow(
-    fontSize: TextUnit,
-    iconSize: Dp,
     currentValue: T,
     options: List<ToggleOption<T>>,
     color: Color = MaterialTheme.colorScheme.onPrimary,
     onValueChange: (T) -> Unit
 ) {
+    val dimens = MentalMathTheme.dimens
     require(options.isNotEmpty())
 
     val currentIndex =
@@ -45,8 +43,6 @@ fun <T> CycleToggleRow(
     val currentOption = options[currentIndex]
 
     SettingsRow(
-        fontSize = fontSize,
-        iconSize = iconSize,
         iconRes = currentOption.iconRes,
         text = stringResource(currentOption.textRes),
         color = color,

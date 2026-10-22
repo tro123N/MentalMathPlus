@@ -32,20 +32,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.red
 
 @Composable
 fun BackspaceButton(
     onClick: () -> Unit,
     onPress: () -> Unit,
-    iconSize: Dp,
-    size: Dp,
     inputDirectionMode: InputDirectionMode,
 ) {
+    val dimens = MentalMathTheme.dimens
     val interactionSource = remember { MutableInteractionSource() }
 
     LaunchedEffect(interactionSource) {
@@ -60,7 +59,7 @@ fun BackspaceButton(
         onClick = onClick,
         interactionSource = interactionSource,
         shape = CircleShape,
-        modifier = Modifier.size(size),
+        modifier = Modifier.size(dimens.components.numPadKey),
         contentPadding = PaddingValues(0.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = red,
@@ -75,7 +74,7 @@ fun BackspaceButton(
                 }
             ),
             contentDescription = "Backspace",
-            modifier = Modifier.size(iconSize),
+            modifier = Modifier.size(dimens.icons.backspaceKey),
             tint = MaterialTheme.colorScheme.onSecondary
         )
     }

@@ -30,9 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 
@@ -41,11 +41,10 @@ fun EnterButton(
     iconId1: Int,
     iconId2: Int,
     onClick: () -> Unit,
-    iconSize: Dp,
     isToggled: Boolean,
     enabled: Boolean,
-    size: Dp,
 ) {
+    val dimens = MentalMathTheme.dimens
 
     val skipColor = yellow
     val enterColor = green
@@ -56,7 +55,7 @@ fun EnterButton(
         onClick = onClick,
         enabled = enabled,
         shape = CircleShape,
-        modifier = Modifier.size(size),
+        modifier = Modifier.size(dimens.components.numPadKey),
         contentPadding = PaddingValues(0.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
@@ -68,7 +67,7 @@ fun EnterButton(
         Icon(
             painter = painterResource(icon),
             contentDescription = "Enter",
-            modifier = Modifier.size(iconSize).scale(
+            modifier = Modifier.size(dimens.icons.enterKey).scale(
                 scaleX = if (LocalLayoutDirection.current == LayoutDirection.Rtl) -1f else 1f,
                 scaleY = 1f
             ),

@@ -30,15 +30,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.red
 
 @Composable
 fun PulsatingCountdown(
-    fontSize: TextUnit,
     time: String,
     paddingEnd: Dp,
 ) {
+    val dimens = MentalMathTheme.dimens
     val normalColor = MaterialTheme.colorScheme.onPrimary
     val darkRed = red.copy(
         red = red.red * 0.8f,
@@ -77,7 +77,7 @@ fun PulsatingCountdown(
     Text(
         text = time,
         color = color.value,
-        fontSize = fontSize,
+        fontSize = dimens.fonts.gameProgress,
         modifier = Modifier.padding(end = paddingEnd)
     )
 }

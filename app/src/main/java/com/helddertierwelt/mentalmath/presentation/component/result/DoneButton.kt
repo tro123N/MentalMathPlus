@@ -32,26 +32,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.green
 
 @Composable
 fun DoneButton(
     buttonTextId: Int,
     onClick: () -> Unit,
-    iconSize: Dp,
-    size: Dp,
-    fontSize: TextUnit,
     modifier: Modifier
 ) {
+    val dimens = MentalMathTheme.dimens
 
     Button(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
-            .height(size)
+            .height(dimens.components.button)
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -60,12 +57,12 @@ fun DoneButton(
             Icon(
                 painter = painterResource(R.drawable.check_24dp),
                 contentDescription = "Done",
-                modifier = Modifier.size(iconSize),
+                modifier = Modifier.size(dimens.icons.actionButton),
                 tint = green
             )
             Text(
                 text = stringResource(buttonTextId),
-                fontSize = fontSize,
+                fontSize = dimens.fonts.actionButton,
                 modifier = Modifier.align(Alignment.Center),
                 color = MaterialTheme.colorScheme.onPrimary
             )

@@ -27,27 +27,26 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @Composable
 fun ModeButton(
     gameMode: GameMode,
     onClick: (GameMode) -> Unit,
-    iconSize: Dp,
-    size: Dp,
 ) {
+    val dimens = MentalMathTheme.dimens
     Button(
         onClick = { onClick(gameMode.next()) },
         shape = CircleShape,
-        modifier = Modifier.size(size),
+        modifier = Modifier.size(dimens.components.button),
         contentPadding = PaddingValues(0.dp)
     ) {
         Icon(
             painter = painterResource(gameMode.icon),
             contentDescription = "Mode",
-            modifier = Modifier.size(iconSize),
+            modifier = Modifier.size(dimens.icons.modeButton),
             tint = MaterialTheme.colorScheme.onPrimary
         )
     }

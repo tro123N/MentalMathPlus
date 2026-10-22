@@ -37,20 +37,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryTopBar(
     titleId: Int,
-    titleFontSize: TextUnit,
-    iconSize: Dp,
     onClick: (SortMode) -> Unit,
     currentSortMode: SortMode
 ) {
+    val dimens = MentalMathTheme.dimens
     val modeIconPairs = listOf(
         R.drawable.calendar_clock_24dp to R.drawable.arrow_downward_24dp,
         R.drawable.calendar_clock_24dp to R.drawable.arrow_upward_24dp,
@@ -68,7 +66,7 @@ fun HistoryTopBar(
             ) {
                 Text(
                     text = stringResource(id = titleId),
-                    fontSize = titleFontSize,
+                    fontSize = dimens.fonts.title,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             }
@@ -87,13 +85,13 @@ fun HistoryTopBar(
                 Icon(
                     painter = painterResource(modeIconPairs[currentIndex].first),
                     contentDescription = "Share",
-                    modifier = Modifier.size(iconSize),
+                    modifier = Modifier.size(dimens.icons.topBarAction),
                     tint = MaterialTheme.colorScheme.onPrimary,
                 )
                 Icon(
                     painter = painterResource(modeIconPairs[currentIndex].second),
                     contentDescription = "Share",
-                    modifier = Modifier.size(iconSize),
+                    modifier = Modifier.size(dimens.icons.topBarAction),
                     tint = MaterialTheme.colorScheme.onPrimary,
                 )
             }

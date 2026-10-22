@@ -26,30 +26,26 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @Composable
 fun IntentRow(
     @DrawableRes iconResId: Int,
     contentDescription: String,
     text: String,
-    fontSize: TextUnit,
-    iconSize: Dp,
     intentProvider: () -> Intent,
     onClickSound: () -> Unit,
     errorMessage: String,
     color: Color = MaterialTheme.colorScheme.onPrimary,
     isEnabled: Boolean = true
 ) {
+    val dimens = MentalMathTheme.dimens
     val context = LocalContext.current
 
     ActionRow(
         iconResId = iconResId,
         contentDescription = contentDescription,
         text = text,
-        fontSize = fontSize,
-        iconSize = iconSize,
         color = color,
         isEnabled = isEnabled
     ) {

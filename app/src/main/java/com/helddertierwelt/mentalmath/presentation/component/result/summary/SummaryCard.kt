@@ -40,14 +40,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.settings.AppLocale
 import com.helddertierwelt.mentalmath.domain.settings.enums.ThemeMode
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
@@ -58,16 +57,13 @@ import kotlin.math.roundToInt
 
 @Composable
 fun SummaryCard(
-    scoreFontSize: TextUnit,
-    statsFontSize: TextUnit,
-    scoreIconSize: Dp,
-    statsIconSize: Dp,
     modifier: Modifier
 ) {
+    val dimens = MentalMathTheme.dimens
     val activity = LocalActivity.current as ViewModelStoreOwner
     val resultViewModel: ResultViewModel = hiltViewModel(activity)
     val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
-    val lineHeight = statsFontSize / 1.6f
+    val lineHeight = dimens.fonts.resultText / 1.6f
     val themeMode = settingsViewModel.settingsState.collectAsState().value.themeMode
 
     val statisticsGameRecord =
@@ -121,8 +117,6 @@ fun SummaryCard(
             ) {
                 ModeColumn(
                     gameMode = statisticsGameRecord.gameMode,
-                    fontSize = statsFontSize,
-                    iconSize = statsIconSize,
                     limit = statisticsGameRecord.modeLimit
                 )
 
@@ -133,10 +127,8 @@ fun SummaryCard(
                     else -> "${additionRange.first}-${additionRange.second}"
                 }
                 IconTextColumn(
-                    fontSize = statsFontSize,
                     statsText = additionRangeString,
                     iconId = R.drawable.addition_24dp,
-                    iconSize = statsIconSize,
                     iconColor = green,
                     tooltipText = stringResource(R.string.difficulty_addition)
                 )
@@ -149,10 +141,8 @@ fun SummaryCard(
                     else -> "${subtractionRange.first}-${subtractionRange.second}"
                 }
                 IconTextColumn(
-                    fontSize = statsFontSize,
                     statsText = subtractionRangeString,
                     iconId = R.drawable.subtraction_24dp,
-                    iconSize = statsIconSize,
                     iconColor = red,
                     tooltipText = stringResource(R.string.difficulty_subtraction)
                 )
@@ -165,10 +155,8 @@ fun SummaryCard(
                     else -> "${multiplicationRange.first}-${multiplicationRange.second}"
                 }
                 IconTextColumn(
-                    fontSize = statsFontSize,
                     statsText = multiplicationRangeString,
                     iconId = R.drawable.multiplication_24dp,
-                    iconSize = statsIconSize,
                     iconColor = yellow,
                     tooltipText = stringResource(R.string.difficulty_multiplication)
                 )
@@ -180,10 +168,8 @@ fun SummaryCard(
                     else -> "${divisionRange.first}-${divisionRange.second}"
                 }
                 IconTextColumn(
-                    fontSize = statsFontSize,
                     statsText = divisionRangeString,
                     iconId = R.drawable.division_24dp,
-                    iconSize = statsIconSize,
                     iconColor = blue,
                     tooltipText = stringResource(R.string.difficulty_division)
                 )
@@ -200,24 +186,18 @@ fun SummaryCard(
             ) {
                 ProgressColumn(
                     gameMode = statisticsGameRecord.gameMode,
-                    fontSize = statsFontSize,
-                    iconSize = statsIconSize,
                     totalAnswers = statisticsGameRecord.totalAnswers,
                     activeTime = statisticsGameRecord.activeTime
                 )
                 IconTextColumn(
-                    fontSize = statsFontSize,
                     statsText = correctAnswers.toString(),
                     iconId = R.drawable.check_24dp,
-                    iconSize = statsIconSize,
                     iconColor = green,
                     tooltipText = stringResource(R.string.correct_answers)
                 )
                 IconTextColumn(
-                    fontSize = statsFontSize,
                     statsText = (statisticsGameRecord.totalAnswers - correctAnswers).toString(),
                     iconId = R.drawable.close_24dp,
-                    iconSize = statsIconSize,
                     iconColor = red,
                     tooltipText = stringResource(R.string.incorrect_answers)
                 )
@@ -234,10 +214,8 @@ fun SummaryCard(
                     "-"
                 }
                 IconTextColumn(
-                    fontSize = statsFontSize,
                     statsText = percentageString,
                     iconId = R.drawable.percent_24dp,
-                    iconSize = statsIconSize,
                     iconColor = green,
                     tooltipText = stringResource(R.string.accuracy)
                 )
@@ -249,10 +227,8 @@ fun SummaryCard(
                     ThemeMode.SYSTEM -> isSystemInDarkTheme()
                 }
                 IconTextColumn(
-                    fontSize = statsFontSize,
                     statsText = timePerCorrectAnswer,
                     iconId = if (darkTheme) R.drawable.timer_dark_24dp else R.drawable.timer_light_24dp,
-                    iconSize = statsIconSize,
                     tooltipText = stringResource(R.string.avg_time_per_correct_answer)
                 )
             }
@@ -269,8 +245,6 @@ fun SummaryCard(
             ScoreRow(
                 score = activeScore,
                 rank = top10Rank,
-                scoreFontSize = scoreFontSize,
-                scoreIconSize = scoreIconSize,
                 iconColor = yellow,
                 tooltipText = stringResource(R.string.score)
             )

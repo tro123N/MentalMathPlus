@@ -26,15 +26,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.TextUnit
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @Composable
 fun PopUp(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     onCancel: (() -> Unit)? = null,
-    titleSize: TextUnit,
-    descriptionSize: TextUnit,
     title: String,
     description: String,
     confirmationText: String,
@@ -43,19 +41,20 @@ fun PopUp(
     confirmColor: Color,
     icon: @Composable (() -> Unit)? = null
 ) {
+    val dimens = MentalMathTheme.dimens
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
             Text(
                 text = title,
-                fontSize = titleSize,
+                fontSize = dimens.fonts.title,
                 color = MaterialTheme.colorScheme.onPrimary
             )
         },
         text = {
             Text(
                 text = description,
-                fontSize = descriptionSize,
+                fontSize = dimens.fonts.popUpDescription,
                 color = MaterialTheme.colorScheme.onPrimary
             )
         },
@@ -69,7 +68,7 @@ fun PopUp(
             ) {
                 Text(
                     text = confirmationText,
-                    fontSize = descriptionSize
+                    fontSize = dimens.fonts.popUpDescription
                 )
             }
         },
@@ -84,7 +83,7 @@ fun PopUp(
                 ) {
                     Text(
                         text = cancelText,
-                        fontSize = descriptionSize
+                        fontSize = dimens.fonts.popUpDescription
                     )
                 }
             }

@@ -32,14 +32,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 
@@ -47,10 +46,8 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 @Composable
 fun GameTopBar(
     navController: NavController,
-    closeIconSize: Dp,
-    heartIconSize: Dp,
-    fontSize: TextUnit
 ) {
+    val dimens = MentalMathTheme.dimens
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
     val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
 
@@ -74,7 +71,7 @@ fun GameTopBar(
                 Icon(
                     painter = painterResource(R.drawable.close_24dp),
                     contentDescription = "close",
-                    modifier = Modifier.size(closeIconSize),
+                    modifier = Modifier.size(dimens.icons.quitGame),
                     tint = red
                 )
             }
@@ -89,7 +86,7 @@ fun GameTopBar(
 
                     Text(
                         text = "$answeredTasks/$totalTasks",
-                        fontSize = fontSize,
+                        fontSize = dimens.fonts.gameProgress,
                         modifier = Modifier.padding(end = 24.dp),
                         color = MaterialTheme.colorScheme.onPrimary
                     )
@@ -97,16 +94,12 @@ fun GameTopBar(
 
                 GameMode.TIMED -> {
                     CountdownDisplay(
-                        fontSize = fontSize,
                         time = gameState.modeLimit.toLong() * 60000L,
                     )
                 }
 
                 GameMode.SURVIVAL -> {
-                    SurvivalDisplay(
-                        fontSize = fontSize,
-                        heartIconSize = heartIconSize
-                    )
+                    SurvivalDisplay()
                 }
             }
         },

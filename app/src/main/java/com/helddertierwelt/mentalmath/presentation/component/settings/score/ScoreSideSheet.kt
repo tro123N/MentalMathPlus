@@ -59,18 +59,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
@@ -78,15 +78,15 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ScoreSideSheet(
-    screenWidth: Dp,
-    screenHeight: Dp,
     navController: NavController,
 ) {
+    val dimens = MentalMathTheme.dimens
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
     val resultViewModel: ResultViewModel = hiltViewModel(viewModelStoreOwner)
     val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner)
 
     val coroutineScope = rememberCoroutineScope()
+    val screenWidth = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.width.toDp() }
     val screenWidthPx = with(LocalDensity.current) { screenWidth.toPx() }
     val sheetWidthFactor = 0.5f
     var isFirstRender by remember { mutableStateOf(true) }
@@ -94,9 +94,6 @@ fun ScoreSideSheet(
     val maxOffset = screenWidthPx
     val offsetX = remember { Animatable(maxOffset) }
     val overlayAlpha = 0.38f * (1 - (offsetX.value - minOffset) / (maxOffset - minOffset))
-
-    val fontSizeTitle = (0.031f * screenHeight.value).sp
-    val fontSizeScore = (0.020f * screenHeight.value).sp
 
     val isSheetOpen = settingsViewModel.isScoreOpen.collectAsState().value
     var isInteractionEnabled by remember { mutableStateOf(true) }
@@ -194,7 +191,7 @@ fun ScoreSideSheet(
                         Text(
                             text = stringResource(R.string.top_ten_scores),
                             color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = fontSizeTitle,
+                            fontSize = dimens.fonts.title,
                             textAlign = TextAlign.Start,
                         )
                     }
@@ -205,7 +202,6 @@ fun ScoreSideSheet(
 
                     ScoreList(
                         gameScores = bestGameScores,
-                        fontSizeScore = fontSizeScore,
                         lastGameId = lastGameId,
                         isEnabled = !isScoreClicked,
                         onClick = { gameRecord ->

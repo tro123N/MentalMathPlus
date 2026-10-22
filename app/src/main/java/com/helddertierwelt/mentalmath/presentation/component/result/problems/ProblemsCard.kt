@@ -38,21 +38,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 
 @Composable
 fun ProblemsCard(
-    resultFontSize: TextUnit,
-    resultIconSize: Dp,
-    iconSize: Dp
 ) {
+    val dimens = MentalMathTheme.dimens
 
     val activity = LocalActivity.current as ViewModelStoreOwner
     val resultViewModel: ResultViewModel = hiltViewModel(activity)
@@ -79,7 +76,7 @@ fun ProblemsCard(
             ) {
                 Text(
                     text = stringResource(R.string.no_problems),
-                    fontSize = resultFontSize,
+                    fontSize = dimens.fonts.resultText,
                     color = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
                         .weight(1f)
@@ -90,7 +87,7 @@ fun ProblemsCard(
                     contentDescription = "time is up",
                     tint = blue,
                     modifier = Modifier
-                        .size(iconSize)
+                        .size(dimens.icons.cardHeader)
                         .align(Alignment.CenterVertically)
                 )
             }
@@ -101,11 +98,11 @@ fun ProblemsCard(
             ) {
                 Text(
                     text = stringResource(R.string.problem),
-                    fontSize = resultFontSize,
+                    fontSize = dimens.fonts.resultText,
                 )
                 Text(
                     text = stringResource(R.string.status),
-                    fontSize = resultFontSize,
+                    fontSize = dimens.fonts.resultText,
                 )
             }
             solvedProblems.forEach { problem ->
@@ -118,13 +115,11 @@ fun ProblemsCard(
                 ) {
                     ProblemResult(
                         problem = problem,
-                        fontSize = resultFontSize,
                         modifier = Modifier.weight(1f)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     ProblemStatusIcon(
                         status = problem.status,
-                        iconSize = resultIconSize
                     )
                 }
             }

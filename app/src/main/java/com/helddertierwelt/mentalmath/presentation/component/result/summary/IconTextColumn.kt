@@ -38,20 +38,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IconTextColumn(
-    fontSize: TextUnit,
     statsText: String,
     iconId: Int,
-    iconSize: Dp,
     tooltipText: String? = null,
     iconColor: Color? = null,
 ) {
+    val dimens = MentalMathTheme.dimens
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -62,7 +60,7 @@ fun IconTextColumn(
             Icon(
                 painter = painterResource(iconId),
                 contentDescription = tooltipText ?: "icon",
-                modifier = Modifier.size(iconSize),
+                modifier = Modifier.size(dimens.icons.summaryStat),
                 tint = iconColor ?: Color.Unspecified
             )
         }
@@ -89,7 +87,7 @@ fun IconTextColumn(
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = statsText,
-            fontSize = fontSize,
+            fontSize = dimens.fonts.resultText,
             color = MaterialTheme.colorScheme.onPrimary
         )
         Spacer(modifier = Modifier.height(8.dp))

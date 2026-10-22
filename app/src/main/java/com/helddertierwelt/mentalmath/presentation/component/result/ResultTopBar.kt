@@ -35,20 +35,18 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResultTopBar(
     titleId: Int,
-    titleFontSize: TextUnit,
-    iconSize: Dp,
     onShareClick: () -> Unit
 ) {
+    val dimens = MentalMathTheme.dimens
 
     TopAppBar(
         title = {
@@ -58,7 +56,7 @@ fun ResultTopBar(
             ) {
                 Text(
                     text = stringResource(id = titleId),
-                    fontSize = titleFontSize,
+                    fontSize = dimens.fonts.title,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             }
@@ -77,7 +75,7 @@ fun ResultTopBar(
                     contentDescription = "Share",
                     tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
-                        .size(iconSize)
+                        .size(dimens.icons.topBarAction)
                         .scale(
                             scaleX = if (LocalLayoutDirection.current == LayoutDirection.Rtl) -1f else 1f,
                             scaleY = 1f

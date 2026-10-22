@@ -26,18 +26,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import kotlin.math.ceil
 
 @Composable
 fun CountdownDisplay(
-    fontSize: TextUnit,
     time: Long,
 ) {
+    val dimens = MentalMathTheme.dimens
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
     val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
 
@@ -46,7 +46,6 @@ fun CountdownDisplay(
 
     if (timeLeft <= 10_000) {
         PulsatingCountdown(
-            fontSize = fontSize,
             time = formatTime(timeLeft),
             paddingEnd = 24.dp
         )
@@ -54,7 +53,7 @@ fun CountdownDisplay(
         Text(
             text = formatTime(timeLeft),
             color = MaterialTheme.colorScheme.onPrimary,
-            fontSize = fontSize,
+            fontSize = dimens.fonts.gameProgress,
             modifier = Modifier.padding(end = 24.dp)
         )
     }

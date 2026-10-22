@@ -42,22 +42,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @Composable
 fun ExpandableMenuGroup(
     title: String,
-    fontSize: TextUnit,
     iconResId: Int,
     isExpanded: Boolean,
     onToggle: () -> Unit,
     content: @Composable () -> Unit,
-    iconSize: Dp,
     color: Color = MaterialTheme.colorScheme.onPrimary,
 ) {
+    val dimens = MentalMathTheme.dimens
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -75,7 +73,7 @@ fun ExpandableMenuGroup(
             Icon(
                 painter = painterResource(iconResId),
                 contentDescription = null,
-                modifier = Modifier.size(iconSize),
+                modifier = Modifier.size(dimens.icons.menuItem),
                 tint = color
             )
 
@@ -83,8 +81,8 @@ fun ExpandableMenuGroup(
 
             Text(
                 text = title,
-                fontSize = fontSize,
-                lineHeight = fontSize,
+                fontSize = dimens.fonts.sideSheetEntry,
+                lineHeight = dimens.fonts.sideSheetEntry,
                 color = color,
                 modifier = Modifier.weight(1f)
             )
@@ -92,7 +90,7 @@ fun ExpandableMenuGroup(
             Icon(
                 painter = painterResource(if (isExpanded) R.drawable.keyboard_arrow_up_24dp else R.drawable.keyboard_arrow_down_24dp),
                 contentDescription = "isExpanded",
-                modifier = Modifier.size(iconSize),
+                modifier = Modifier.size(dimens.icons.menuItem),
                 tint = color
             )
         }

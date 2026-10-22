@@ -39,21 +39,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProgressColumn(
     gameMode: GameMode,
-    fontSize: TextUnit,
-    iconSize: Dp,
     totalAnswers: Int,
     activeTime: Long,
 ) {
+    val dimens = MentalMathTheme.dimens
     val tooltipText = when (gameMode) {
         GameMode.TIMED -> stringResource(R.string.time_spent)
         GameMode.PROBLEMS -> stringResource(R.string.problems_completed)
@@ -86,7 +84,7 @@ fun ProgressColumn(
                     GameMode.SURVIVAL -> painterResource(R.drawable.tag_24dp)
                 },
                 contentDescription = tooltipText,
-                modifier = Modifier.size(iconSize),
+                modifier = Modifier.size(dimens.icons.summaryStat),
                 tint = MaterialTheme.colorScheme.onPrimary
             )
         }
@@ -97,7 +95,7 @@ fun ProgressColumn(
                 GameMode.PROBLEMS -> formatTimeWithDecimalSeconds(activeTime, stringResource(R.string.second))
                 GameMode.SURVIVAL -> "$totalAnswers"
             },
-            fontSize = fontSize,
+            fontSize = dimens.fonts.resultText,
             color = MaterialTheme.colorScheme.onPrimary
         )
         Spacer(modifier = Modifier.height(8.dp))

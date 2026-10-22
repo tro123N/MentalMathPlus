@@ -34,21 +34,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 import com.helddertierwelt.mentalmath.presentation.component.result.summary.formatScore
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @Composable
 fun HistoryEntriesCard(
     gameRecords: List<GameRecord>,
-    fontSize: TextUnit,
     onClick: (Int) -> Unit,
     isEnabled: Boolean = true,
     currentSortMode: SortMode,
 ) {
+    val dimens = MentalMathTheme.dimens
     fun sortGameRecords(records: List<GameRecord>, ascending: Boolean): List<GameRecord> {
         return records.sortedWith { record1, record2 ->
             compareValuesBy(
@@ -99,7 +99,7 @@ fun HistoryEntriesCard(
                 ) {
                     Text(
                         text = stringResource(R.string.no_games),
-                        fontSize = fontSize,
+                        fontSize = dimens.fonts.historyEntry,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.weight(1f),
                         color = MaterialTheme.colorScheme.onPrimary
@@ -138,7 +138,7 @@ fun HistoryEntriesCard(
                             Text(
                                 text = textContent,
                                 modifier = Modifier.weight(1f),
-                                fontSize = fontSize,
+                                fontSize = dimens.fonts.historyEntry,
                                 textAlign = TextAlign.Center,
                                 color = MaterialTheme.colorScheme.onPrimary
                             )

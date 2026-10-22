@@ -28,8 +28,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @Composable
 fun OperatorButton(
@@ -37,20 +37,19 @@ fun OperatorButton(
     textColor: Color,
     isSelected: Boolean,
     onClick: () -> Unit,
-    size: Dp,
-    iconSize: Dp
 ) {
+    val dimens = MentalMathTheme.dimens
 
     Button(
         onClick = onClick,
         shape = CircleShape,
-        modifier = Modifier.size(size),
+        modifier = Modifier.size(dimens.components.button),
         contentPadding = PaddingValues(0.dp),
     ) {
         Icon(
             painter = painterResource(icon),
             contentDescription = "Mode",
-            modifier = Modifier.size(iconSize),
+            modifier = Modifier.size(dimens.icons.operatorButton),
             tint = if (isSelected) textColor else MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f)
         )
     }

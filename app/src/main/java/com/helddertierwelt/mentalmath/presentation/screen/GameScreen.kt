@@ -45,13 +45,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
@@ -68,6 +65,7 @@ import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.component.game.ProblemInput
 import com.helddertierwelt.mentalmath.presentation.component.game.QuickToastHost
 import com.helddertierwelt.mentalmath.presentation.component.game.ToastEvent
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
@@ -80,21 +78,7 @@ fun GameScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    val screenHeight =
-        with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
-
-    // font and icon sizes
-    val roundButtonSize = (0.10f * screenHeight.value).dp
-    val resultLineWidth = (0.32f * screenHeight.value).dp
-    val columnPadding = (0.028f * screenHeight.value).dp
-    val closeIconSize = (0.057f * screenHeight.value).dp
-    val heartIconSize = (0.042f * screenHeight.value).dp
-    val doubleArrowIconSize = (0.052f * screenHeight.value).dp
-    val backSpaceIconSize = (0.038f * screenHeight.value).dp
-    val titleFontSize = (0.031f * screenHeight.value).sp
-    val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
-    val numberFontSize = (0.040f * screenHeight.value).sp
-    val problemFontSize = (0.057f * screenHeight.value).sp
+    val dimens = MentalMathTheme.dimens
 
     // viewModels
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
@@ -148,9 +132,6 @@ fun GameScreen(
             Column {
                 GameTopBar(
                     navController = navController,
-                    closeIconSize = closeIconSize,
-                    heartIconSize = heartIconSize,
-                    fontSize = numberFontSize
                 )
                 LinearProgressIndicator(
                     progress = {
@@ -180,7 +161,7 @@ fun GameScreen(
                 Column(
                     modifier = modifier
                         .fillMaxSize()
-                        .padding(columnPadding, columnPadding),
+                        .padding(dimens.components.gameScreenPadding, dimens.components.gameScreenPadding),
                     verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
@@ -210,8 +191,6 @@ fun GameScreen(
                                     operand2 = gameState.operand2,
                                     operator = gameState.operator.symbol,
                                     input = gameState.input,
-                                    fontSize = problemFontSize,
-                                    width = resultLineWidth,
                                     problemStatus = gameState.problemStatus,
                                     inputDirectionMode = inputDirectionMode,
                                     formMode = formMode,
@@ -248,8 +227,6 @@ fun GameScreen(
                                             InputDirectionMode.RIGHT_TO_LEFT -> { gameViewModel.addFirstDigit(number) }
                                         }
                                     },
-                                    size = roundButtonSize,
-                                    fontSize = numberFontSize
                                 )
                             }
                         }
@@ -268,8 +245,6 @@ fun GameScreen(
                                             InputDirectionMode.RIGHT_TO_LEFT -> { gameViewModel.addFirstDigit(number) }
                                         }
                                     },
-                                    size = roundButtonSize,
-                                    fontSize = numberFontSize
                                 )
                             }
                         }
@@ -288,8 +263,6 @@ fun GameScreen(
                                             InputDirectionMode.RIGHT_TO_LEFT -> { gameViewModel.addFirstDigit(number) }
                                         }
                                     },
-                                    size = roundButtonSize,
-                                    fontSize = numberFontSize
                                 )
                             }
                         }
@@ -308,8 +281,6 @@ fun GameScreen(
                                 }
                             },
                             inputDirectionMode = inputDirectionMode,
-                            size = roundButtonSize,
-                            iconSize = backSpaceIconSize
                         )
                         NumberButton(
                             number = 0,
@@ -320,17 +291,13 @@ fun GameScreen(
                                     InputDirectionMode.RIGHT_TO_LEFT -> { gameViewModel.addFirstDigit(0) }
                                 }
                             },
-                            size = roundButtonSize,
-                            fontSize = numberFontSize
                         )
                         EnterButton(
                             onClick = { gameViewModel.submitAnswer() },
                             enabled = !disableEnterButton,
                             isToggled = gameState.input.isEmpty(),
-                            size = roundButtonSize,
                             iconId1 = R.drawable.keyboard_double_arrow_right_24dp,
                             iconId2 = R.drawable.keyboard_tab_24dp,
-                            iconSize = doubleArrowIconSize
                         )
                     }
                 }
@@ -369,8 +336,6 @@ fun GameScreen(
                 gameViewModel.playFeedback(FeedbackType.TAP)
                 showDialog = false
             },
-            titleSize = titleFontSize,
-            descriptionSize = popUpDescriptionFontSize,
             title = stringResource(R.string.quit_game_popup_title),
             description = stringResource(R.string.quit_game_popup_description),
             confirmationText = stringResource(R.string.quit_game_popup_confirmation_text),

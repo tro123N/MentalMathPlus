@@ -42,11 +42,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
@@ -62,6 +59,7 @@ import com.helddertierwelt.mentalmath.presentation.component.settings.screen.Mod
 import com.helddertierwelt.mentalmath.presentation.component.settings.screen.OperatorButton
 import com.helddertierwelt.mentalmath.presentation.component.settings.screen.SettingsTopBar
 import com.helddertierwelt.mentalmath.presentation.component.settings.screen.StartButton
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
@@ -78,23 +76,7 @@ fun SettingsScreen(
     navController: NavController,
 ) {
     val context = LocalContext.current
-    val containerSizePx = LocalWindowInfo.current.containerSize
-    val density = LocalDensity.current
-    val screenHeight = with(density) { containerSizePx.height.toDp() }
-    val screenWidth = with(density) { containerSizePx.width.toDp() }
-
-    // font and icon sizes
-    val roundButtonSize = (0.09f * screenHeight.value).dp
-    val sliderSize = (0.05f * screenHeight.value).dp
-    val startIconSize = (0.057f * screenHeight.value).dp
-    val modeIconSize = (0.048f * screenHeight.value).dp
-    val operationIconSize = (0.043f * screenHeight.value).dp
-    val topBarIconSize = (0.038f * screenHeight.value).dp
-    val popUpDescriptionFontSize = (0.018f * screenHeight.value).sp
-    val textLabelFontSize = (0.024f * screenHeight.value).sp
-    val titleFontSize = (0.031f * screenHeight.value).sp
-    val startButtonFontSize = (0.038f * screenHeight.value).sp
-    val thumbnailFontSize = (0.015f * screenHeight.value).sp
+    val dimens = MentalMathTheme.dimens
 
     // viewModels
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
@@ -136,7 +118,6 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             SettingsTopBar(
-                titleFontSize = titleFontSize,
                 onMenuClick = {
                     settingsViewModel.playFeedback(FeedbackType.TAP)
                     settingsViewModel.toggleMenuOpen()
@@ -146,7 +127,6 @@ fun SettingsScreen(
                     settingsViewModel.loadBestGameScores()
                     settingsViewModel.toggleScoreOpen()
                 },
-                iconSize = topBarIconSize,
                 scoreEnabled = hasGamesWithScore && !isSliderActive,
                 isGreyedOut = !hasGamesWithScore
             )
@@ -167,9 +147,9 @@ fun SettingsScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.mode_instruction),
-                        fontSize = textLabelFontSize,
+                        fontSize = dimens.fonts.settingsLabel,
                         color = MaterialTheme.colorScheme.onPrimary,
-                        lineHeight = textLabelFontSize
+                        lineHeight = dimens.fonts.settingsLabel
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -181,8 +161,6 @@ fun SettingsScreen(
                                 settingsViewModel.setGameMode(nextGameMode)
                                 settingsViewModel.checkForGamesWithScore()
                             },
-                            iconSize = modeIconSize,
-                            size = roundButtonSize
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomSlider(
@@ -198,15 +176,13 @@ fun SettingsScreen(
                             },
                             gameMode = settingsState.gameMode,
                             activeTrackColor = MaterialTheme.colorScheme.onPrimary,
-                            size = sliderSize,
-                            thumbnailFontSize = thumbnailFontSize
                         )
                     }
                     Text(
                         text = stringResource(R.string.operator_instruction),
-                        fontSize = textLabelFontSize,
+                        fontSize = dimens.fonts.settingsLabel,
                         color = MaterialTheme.colorScheme.onPrimary,
-                        lineHeight = textLabelFontSize
+                        lineHeight = dimens.fonts.settingsLabel
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -220,8 +196,6 @@ fun SettingsScreen(
                                 settingsViewModel.toggleAddition()
                                 settingsViewModel.checkForGamesWithScore()
                             },
-                            size = roundButtonSize,
-                            iconSize = operationIconSize,
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
@@ -237,8 +211,6 @@ fun SettingsScreen(
                             },
                             isEnabled = settingsState.isAdditionEnabled,
                             activeTrackColor = green,
-                            size = sliderSize,
-                            thumbnailFontSize = thumbnailFontSize
                         )
                     }
                     Row(
@@ -253,8 +225,6 @@ fun SettingsScreen(
                                 settingsViewModel.toggleSubtraction()
                                 settingsViewModel.checkForGamesWithScore()
                             },
-                            size = roundButtonSize,
-                            iconSize = operationIconSize
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
@@ -270,8 +240,6 @@ fun SettingsScreen(
                             },
                             isEnabled = settingsState.isSubtractionEnabled,
                             activeTrackColor = red,
-                            size = sliderSize,
-                            thumbnailFontSize = thumbnailFontSize
                         )
                     }
                     Row(
@@ -286,8 +254,6 @@ fun SettingsScreen(
                                 settingsViewModel.toggleMultiplication()
                                 settingsViewModel.checkForGamesWithScore()
                             },
-                            size = roundButtonSize,
-                            iconSize = operationIconSize
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
@@ -303,8 +269,6 @@ fun SettingsScreen(
                             },
                             isEnabled = settingsState.isMultiplicationEnabled,
                             activeTrackColor = yellow,
-                            size = sliderSize,
-                            thumbnailFontSize = thumbnailFontSize
                         )
                     }
                     Row(
@@ -319,8 +283,6 @@ fun SettingsScreen(
                                 settingsViewModel.toggleDivide()
                                 settingsViewModel.checkForGamesWithScore()
                             },
-                            size = roundButtonSize,
-                            iconSize = operationIconSize
                         )
                         Spacer(Modifier.padding(8.dp))
                         CustomRangeSlider(
@@ -336,8 +298,6 @@ fun SettingsScreen(
                             },
                             isEnabled = settingsState.isDivisionEnabled,
                             activeTrackColor = blue,
-                            size = sliderSize,
-                            thumbnailFontSize = thumbnailFontSize
                         )
                     }
                     StartButton(
@@ -360,9 +320,6 @@ fun SettingsScreen(
                                 gameViewModel.startGame(seed)
                             }
                         },
-                        size = roundButtonSize,
-                        fontSize = startButtonFontSize,
-                        iconSize = startIconSize,
                         isEnabled = settingsState.isAdditionEnabled ||
                                 settingsState.isSubtractionEnabled ||
                                 settingsState.isMultiplicationEnabled ||
@@ -371,13 +328,9 @@ fun SettingsScreen(
                     )
                 }
                 ScoreSideSheet(
-                    screenWidth = screenWidth,
-                    screenHeight = screenHeight,
                     navController = navController,
                 )
                 MenuSideSheet(
-                    screenWidth = screenWidth,
-                    screenHeight = screenHeight,
                     navController = navController
                 )
             }
@@ -396,8 +349,6 @@ fun SettingsScreen(
                 settingsViewModel.playFeedback(FeedbackType.TAP)
                 settingsViewModel.setShowNotificationPermissionPopUp(false)
             },
-            titleSize = titleFontSize,
-            descriptionSize = popUpDescriptionFontSize,
             title = stringResource(R.string.notification_popup_title),
             description = stringResource(R.string.notification_popup_description),
             confirmationText = stringResource(R.string.notification_popup_confirmation_text),
@@ -423,8 +374,6 @@ fun SettingsScreen(
                 settingsViewModel.playFeedback(FeedbackType.TAP)
                 settingsViewModel.setShowResetPopUp(false)
             },
-            titleSize = titleFontSize,
-            descriptionSize = popUpDescriptionFontSize,
             title = stringResource(R.string.reset_app_popup_title),
             description = stringResource(R.string.reset_app_popup_description),
             confirmationText = stringResource(R.string.reset_app_popup_confirmation_text),

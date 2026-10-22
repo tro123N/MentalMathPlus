@@ -35,20 +35,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.data.entity.GameScore
 import com.helddertierwelt.mentalmath.presentation.component.result.summary.formatScore
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.green
 
 @Composable
 fun ScoreList(
     gameScores: List<GameScore>,
-    fontSizeScore: TextUnit,
     lastGameId: Int,
     onClick: (GameScore) -> Unit,
     isEnabled: Boolean = true
 ) {
+    val dimens = MentalMathTheme.dimens
 
     val scrollState = rememberScrollState()
     Column(
@@ -73,7 +73,7 @@ fun ScoreList(
                 Text(
                     text = "${index + 1}",
                     color = color,
-                    fontSize = fontSizeScore,
+                    fontSize = dimens.fonts.sideSheetEntry,
                     textAlign = TextAlign.End,
                     modifier = Modifier.weight(0.3f),
                     fontWeight = Bold
@@ -81,7 +81,7 @@ fun ScoreList(
                 Text(
                     text = formatScore(gameScore.activeScore),
                     color = color,
-                    fontSize = fontSizeScore,
+                    fontSize = dimens.fonts.sideSheetEntry,
                     textAlign = TextAlign.End,
                     modifier = Modifier
                         .padding(12.dp, 0.dp)

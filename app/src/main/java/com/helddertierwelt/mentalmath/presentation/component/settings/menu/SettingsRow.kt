@@ -36,19 +36,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @Composable
 fun SettingsRow(
-    fontSize: TextUnit,
-    iconSize: Dp,
     @DrawableRes iconRes: Int,
     text: String,
     color: Color = MaterialTheme.colorScheme.onPrimary,
     onClick: () -> Unit,
 ) {
+    val dimens = MentalMathTheme.dimens
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -62,7 +60,7 @@ fun SettingsRow(
         Icon(
             painter = painterResource(iconRes),
             contentDescription = text,
-            modifier = Modifier.size(iconSize),
+            modifier = Modifier.size(dimens.icons.menuItem),
             tint = color
         )
 
@@ -70,8 +68,8 @@ fun SettingsRow(
 
         Text(
             text = text,
-            fontSize = fontSize,
-            lineHeight = fontSize,
+            fontSize = dimens.fonts.sideSheetEntry,
+            lineHeight = dimens.fonts.sideSheetEntry,
             color = color
         )
     }

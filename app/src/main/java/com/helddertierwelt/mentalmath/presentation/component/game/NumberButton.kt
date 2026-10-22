@@ -30,18 +30,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @Composable
 fun NumberButton(
     number: Int,
     onClick: () -> Unit,
     onPress: () -> Unit,
-    size: Dp,
-    fontSize: TextUnit,
 ) {
+    val dimens = MentalMathTheme.dimens
     val interactionSource = remember { MutableInteractionSource() }
 
     LaunchedEffect(interactionSource) {
@@ -56,12 +54,12 @@ fun NumberButton(
         onClick = onClick,
         interactionSource = interactionSource,
         shape = CircleShape,
-        modifier = Modifier.size(size),
+        modifier = Modifier.size(dimens.components.numPadKey),
         contentPadding = PaddingValues(0.dp)
     ) {
         Text(
             text = number.toString(),
-            fontSize = fontSize,
+            fontSize = dimens.fonts.numPadKey,
             color = MaterialTheme.colorScheme.onPrimary
         )
     }

@@ -36,11 +36,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.game.ProblemStatus
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
@@ -50,8 +50,8 @@ import com.helddertierwelt.mentalmath.presentation.theme.yellow
 @Composable
 fun ProblemStatusIcon(
     status: ProblemStatus,
-    iconSize: Dp,
 ) {
+    val dimens = MentalMathTheme.dimens
     val tooltipState = rememberTooltipState()
 
     val (icon, contentDescription, tooltip, tint) = when (status) {
@@ -105,7 +105,7 @@ fun ProblemStatusIcon(
             contentDescription = contentDescription,
             tint = tint,
             modifier = Modifier
-                .size(iconSize)
+                .size(dimens.icons.problemStatus)
                 .then(
                     if (status == ProblemStatus.SKIPPED) {
                         Modifier.scale(

@@ -37,21 +37,19 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 
 @Composable
 fun ActionRow(
     @DrawableRes iconResId: Int,
     contentDescription: String,
     text: String,
-    fontSize: TextUnit,
-    iconSize: Dp,
     color: Color = MaterialTheme.colorScheme.onPrimary,
     isEnabled: Boolean = true,
     onClick: () -> Unit
 ) {
+    val dimens = MentalMathTheme.dimens
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -69,7 +67,7 @@ fun ActionRow(
         Icon(
             painter = painterResource(iconResId),
             contentDescription = contentDescription,
-            modifier = Modifier.size(iconSize),
+            modifier = Modifier.size(dimens.icons.menuItem),
             tint = color
         )
 
@@ -77,8 +75,8 @@ fun ActionRow(
 
         Text(
             text = text,
-            fontSize = fontSize,
-            lineHeight = fontSize,
+            fontSize = dimens.fonts.sideSheetEntry,
+            lineHeight = dimens.fonts.sideSheetEntry,
             color = color
         )
     }

@@ -40,10 +40,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
@@ -65,16 +62,8 @@ fun HistoryScreen(
     val historyViewModel: HistoryViewModel = hiltViewModel(viewModelStoreOwner)
     val resultViewModel: ResultViewModel = hiltViewModel(viewModelStoreOwner)
 
-    // font and icon sizes
-    val screenHeight = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
-    val iconSize = (0.038f * screenHeight.value).dp
-    val roundButtonSize = (0.09f * screenHeight.value).dp
-    val doneIconSize = (0.057f * screenHeight.value).dp
-    val fontSize = (0.038f * screenHeight.value).sp
-    val titleFontSize = (0.032f * screenHeight.value).sp
-    val scrollState = rememberScrollState()
-
     // variables
+    val scrollState = rememberScrollState()
     val allGames = historyViewModel.allGames.collectAsState().value
     val currentSortMode = historyViewModel.sortMode.collectAsState().value
     val isEntryClicked = historyViewModel.isEntryClicked.collectAsState().value
@@ -94,8 +83,6 @@ fun HistoryScreen(
         topBar = {
             HistoryTopBar(
                 R.string.history,
-                titleFontSize = titleFontSize,
-                iconSize = iconSize,
                 onClick = {
                     historyViewModel.playFeedback(FeedbackType.TAP)
                     historyViewModel.setSortMode(it)
@@ -115,9 +102,7 @@ fun HistoryScreen(
                         .fillMaxSize()
                         .padding(24.dp),
                 ) {
-                    HistoryHeadCard(
-                        iconSize = iconSize
-                    )
+                    HistoryHeadCard()
                     Spacer(modifier = Modifier.height(2.dp))
                     Column(
                         verticalArrangement = Arrangement.Top,
@@ -130,7 +115,6 @@ fun HistoryScreen(
                         HistoryEntriesCard(
                             gameRecords = allGames,
                             currentSortMode = currentSortMode,
-                            fontSize = 12.sp,
                             isEnabled = !isEntryClicked,
                             onClick = { gameRecordId ->
                                 historyViewModel.playFeedback(FeedbackType.TAP)
@@ -146,9 +130,6 @@ fun HistoryScreen(
                     Spacer(modifier = Modifier.height(24.dp))
                     HistoryDoneButton(
                         buttonTextId = R.string.done,
-                        size = roundButtonSize,
-                        fontSize = fontSize,
-                        iconSize = doneIconSize,
                         modifier = Modifier,
                         onClick = {
                             historyViewModel.playFeedback(FeedbackType.TAP)

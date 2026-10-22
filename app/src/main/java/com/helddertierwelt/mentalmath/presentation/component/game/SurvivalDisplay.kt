@@ -38,12 +38,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import kotlinx.coroutines.delay
@@ -52,9 +51,8 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun SurvivalDisplay(
-    fontSize: TextUnit,
-    heartIconSize: Dp,
 ) {
+    val dimens = MentalMathTheme.dimens
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
     val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
     val gameState by gameViewModel.gameState.collectAsState()
@@ -83,7 +81,6 @@ fun SurvivalDisplay(
 
         if (timeLeft <= 3_000) {
             PulsatingCountdown(
-                fontSize = fontSize,
                 time = ceil(timeLeft / 1000.0).toLong().toString(),
                 paddingEnd = 0.dp
             )
@@ -91,7 +88,7 @@ fun SurvivalDisplay(
             Text(
                 text = ceil(timeLeft / 1000.0).toLong().toString(),
                 color = timerColor,
-                fontSize = fontSize,
+                fontSize = dimens.fonts.gameProgress,
             )
         }
 
@@ -107,7 +104,7 @@ fun SurvivalDisplay(
                             R.drawable.heart_outlined_24dp
                     ),
                     contentDescription = "Lives",
-                    modifier = Modifier.size(heartIconSize),
+                    modifier = Modifier.size(dimens.icons.survivalHeart),
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
