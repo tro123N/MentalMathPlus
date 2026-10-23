@@ -19,6 +19,8 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.presentation.component.game
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -35,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
@@ -52,6 +55,7 @@ fun SurvivalDisplay(
     lives: Int,
 ) {
     val dimens = MentalMathTheme.dimens
+    val isTimeRunningOut = timeLeft <= 3_000
     var highlightTimer by remember { mutableStateOf(false) }
 
     LaunchedEffect(totalAnswers / 5) {
@@ -62,20 +66,17 @@ fun SurvivalDisplay(
         }
     }
 
-    val isTimeRunningOut = timeLeft <= 3_000
-    val timerColor by animateColorAsState(
-        targetValue = when {
-            isTimeRunningOut -> red
-            highlightTimer -> yellow
-            else -> MaterialTheme.colorScheme.onPrimary
-        },
-        animationSpec = when {
-            isTimeRunningOut -> tween(500)
-            highlightTimer -> tween(150)
-            else -> tween(500)
-        },
-        label = "timerColor"
+    val baseColor by animateColorAsState(
+        targetValue = if (highlightTimer) yellow else MaterialTheme.colorScheme.onPrimary,
+        animationSpec = if (highlightTimer) tween(150) else tween(500),
+        label = "timerBaseColor"
     )
+    val redFraction by animateFloatAsState(
+        targetValue = if (isTimeRunningOut) 1f else 0f,
+        animationSpec = if (isTimeRunningOut) tween(500) else snap(),
+        label = "timerRedFraction"
+    )
+    val timerColor = lerp(baseColor, red, redFraction)
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
