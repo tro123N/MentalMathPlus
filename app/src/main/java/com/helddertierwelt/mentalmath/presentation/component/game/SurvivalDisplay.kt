@@ -54,7 +54,7 @@ fun SurvivalDisplay(
     val dimens = MentalMathTheme.dimens
     var highlightTimer by remember { mutableStateOf(false) }
 
-    LaunchedEffect(totalAnswers) {
+    LaunchedEffect(totalAnswers / 5) {
         if (totalAnswers in 1..40 && totalAnswers % 5 == 0 ) {
             highlightTimer = true
             delay(1000.milliseconds)
@@ -69,7 +69,11 @@ fun SurvivalDisplay(
             highlightTimer -> yellow
             else -> MaterialTheme.colorScheme.onPrimary
         },
-        animationSpec = tween(500),
+        animationSpec = when {
+            isTimeRunningOut -> tween(500)
+            highlightTimer -> tween(150)
+            else -> tween(500)
+        },
         label = "timerColor"
     )
 
@@ -90,12 +94,7 @@ fun SurvivalDisplay(
         ) {
             repeat(3) { index ->
                 Icon(
-                    painter = painterResource(
-                        if (index >= 3 - lives)
-                            R.drawable.heart_24dp
-                        else
-                            R.drawable.heart_outlined_24dp
-                    ),
+                    painter = painterResource(if (index >= 3 - lives) R.drawable.heart_24dp else R.drawable.heart_outlined_24dp),
                     contentDescription = "Lives",
                     modifier = Modifier.size(dimens.icons.survivalHeart),
                     tint = MaterialTheme.colorScheme.onPrimary
