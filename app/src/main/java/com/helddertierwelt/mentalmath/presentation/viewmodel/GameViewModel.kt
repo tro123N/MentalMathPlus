@@ -18,6 +18,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.viewmodel
 
+import android.app.Activity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
@@ -219,7 +220,6 @@ class GameViewModel @Inject constructor(
                 solvedProblems = state.solvedProblems + solvedProblem
             )
         )
-        resetSurvivalProblemStart()
     }
 
     fun submitAnswer() {
@@ -255,6 +255,7 @@ class GameViewModel @Inject constructor(
             endGame()
         } else {
             generateNewProblem()
+            resetSurvivalProblemStart()
         }
     }
 
@@ -615,9 +616,15 @@ class GameViewModel @Inject constructor(
     }
 
     private fun setStartTimestamps() {
-        saveState(_gameState.value.copy(
+        val state = _gameState.value
+        saveState(state.copy(
             startTimeStamp = System.currentTimeMillis(),
-            survivalProblemStartTime = System.currentTimeMillis()
+            survivalProblemStartTime = System.currentTimeMillis(),
+            survivalTimeLeft = if (state.gameMode == GameMode.SURVIVAL) {
+                getSurvivalTimeLimit(state) * 1000L
+            } else {
+                state.survivalTimeLeft
+            }
         ))
     }
 
@@ -625,7 +632,7 @@ class GameViewModel @Inject constructor(
         if (!_gameState.value.isGameStarted) return
         saveState(_gameState.value.copy(isTimerRunning = true))
 
-        timerJob = viewModelScope.launch(Dispatchers.Default) {
+        timerJob = viewModelScope.launch {
             while (_gameState.value.isTimerRunning) {
                 updateGameTime()
                 delay(100.milliseconds)
@@ -644,16 +651,22 @@ class GameViewModel @Inject constructor(
 
         val elapsedTime = System.currentTimeMillis() - state.startTimeStamp
         val activeTime = elapsedTime - state.totalPauseDuration
+        val survivalTimeLeft = if (state.gameMode == GameMode.SURVIVAL) {
+            calculateSurvivalTimeLeft(state)
+        } else {
+            state.survivalTimeLeft
+        }
 
         saveState(
             state.copy(
                 activeTime = activeTime,
-                totalTime = elapsedTime
+                totalTime = elapsedTime,
+                survivalTimeLeft = survivalTimeLeft
             )
         )
 
         if (state.gameMode == GameMode.SURVIVAL) {
-            updateSurvivalTimer()
+            handleSurvivalTimeout()
             return
         }
 
@@ -670,8 +683,8 @@ class GameViewModel @Inject constructor(
         )
     }
 
-    private fun updateSurvivalTimer() {
-        if (getSurvivalTimeLeft() <= 0L) {
+    private fun handleSurvivalTimeout() {
+        if (_gameState.value.survivalTimeLeft <= 0L) {
             finishProblem(
                 problemStatus = ProblemStatus.TIMEOUT,
                 userInput = ""
@@ -682,6 +695,7 @@ class GameViewModel @Inject constructor(
                 endGame()
             } else {
                 generateNewProblem()
+                resetSurvivalProblemStart()
             }
         }
     }
@@ -691,7 +705,8 @@ class GameViewModel @Inject constructor(
 
         saveState(
             _gameState.value.copy(
-                survivalProblemStartTime = System.currentTimeMillis()
+                survivalProblemStartTime = System.currentTimeMillis(),
+                survivalTimeLeft = getSurvivalTimeLimit(_gameState.value) * 1000L
             )
         )
     }
@@ -708,9 +723,7 @@ class GameViewModel @Inject constructor(
         return percentageTime.coerceAtLeast(minimumTime)
     }
 
-    fun getSurvivalTimeLeft(): Long {
-        val state = _gameState.value
-
+    private fun calculateSurvivalTimeLeft(state: GameState): Long {
         val elapsedTime = System.currentTimeMillis() - state.survivalProblemStartTime
         val timeLimit = getSurvivalTimeLimit(state) * 1000L
 
@@ -719,8 +732,9 @@ class GameViewModel @Inject constructor(
 
     fun getSurvivalProgress(): Float {
 
-        val timeLimit = getSurvivalTimeLimit(_gameState.value) * 1000L
-        val timeLeft = getSurvivalTimeLeft()
+        val state = _gameState.value
+        val timeLimit = getSurvivalTimeLimit(state) * 1000L
+        val timeLeft = state.survivalTimeLeft
 
         return (1f - timeLeft.toFloat() / timeLimit)
             .coerceIn(0f, 1f)
@@ -772,6 +786,7 @@ class GameViewModel @Inject constructor(
 
     override fun onDestroy(owner: LifecycleOwner) {
         super.onDestroy(owner)
+        if ((owner as? Activity)?.isChangingConfigurations == true) return
         if (_gameState.value.isGameStarted) {
             cancelGame()
         }

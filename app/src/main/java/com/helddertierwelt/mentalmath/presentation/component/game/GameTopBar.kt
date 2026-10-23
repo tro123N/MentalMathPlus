@@ -18,7 +18,6 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.game
 
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,27 +28,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.ViewModelStoreOwner
-import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.game.GameState
 import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.red
-import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameTopBar(
-    navController: NavController,
+    gameState: GameState,
+    onClose: () -> Unit,
 ) {
     val dimens = MentalMathTheme.dimens
-    val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
-    val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
 
     TopAppBar(
         title = {},
@@ -59,13 +53,7 @@ fun GameTopBar(
         ),
         navigationIcon = {
             IconButton(
-                onClick = {
-                    gameViewModel.cancelGame()
-                    navController.navigate("settings") {
-                        popUpTo(0) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                },
+                onClick = onClose,
                 modifier = Modifier.padding(start = 16.dp)
             ) {
                 Icon(
@@ -77,7 +65,6 @@ fun GameTopBar(
             }
         },
         actions = {
-            val gameState = gameViewModel.gameState.collectAsState().value
             when (gameState.gameMode) {
 
                 GameMode.PROBLEMS -> {
@@ -95,11 +82,16 @@ fun GameTopBar(
                 GameMode.TIMED -> {
                     CountdownDisplay(
                         time = gameState.modeLimit.toLong() * 60000L,
+                        activeTime = gameState.activeTime,
                     )
                 }
 
                 GameMode.SURVIVAL -> {
-                    SurvivalDisplay()
+                    SurvivalDisplay(
+                        timeLeft = gameState.survivalTimeLeft,
+                        totalAnswers = gameState.totalAnswers,
+                        lives = gameState.lives,
+                    )
                 }
             }
         },

@@ -242,7 +242,7 @@ fun ResultScreen(
                             }
                         )
                         Spacer(modifier = Modifier.height(24.dp))
-                        ProblemsCard()
+                        ProblemsCard(solvedProblems = resultGameRecord.solvedProblems)
                     }
                     Spacer(modifier = Modifier.height(24.dp))
                     DoneButton(

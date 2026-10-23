@@ -18,45 +18,39 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.game
 
-import androidx.activity.compose.LocalActivity
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
-import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
+import com.helddertierwelt.mentalmath.presentation.theme.red
 import kotlin.math.ceil
 
 @Composable
 fun CountdownDisplay(
     time: Long,
+    activeTime: Long,
 ) {
     val dimens = MentalMathTheme.dimens
-    val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
-    val gameViewModel: GameViewModel = hiltViewModel(viewModelStoreOwner)
+    val timeLeft = time - activeTime
 
-    val gameState by gameViewModel.gameState.collectAsState()
-    val timeLeft = time - gameState.activeTime
+    val timerColor by animateColorAsState(
+        targetValue = if (timeLeft <= 10_000) { red } else { MaterialTheme.colorScheme.onPrimary },
+        animationSpec = tween(500),
+        label = "timerColor"
+    )
 
-    if (timeLeft <= 10_000) {
-        PulsatingCountdown(
-            time = formatTime(timeLeft),
-            paddingEnd = 24.dp
-        )
-    } else {
-        Text(
-            text = formatTime(timeLeft),
-            color = MaterialTheme.colorScheme.onPrimary,
-            fontSize = dimens.fonts.gameProgress,
-            modifier = Modifier.padding(end = 24.dp)
-        )
-    }
+    Text(
+        text = formatTime(timeLeft),
+        color = timerColor,
+        fontSize = dimens.fonts.gameProgress,
+        modifier = Modifier.padding(end = 24.dp)
+    )
 }
 
 fun formatTime(milliseconds: Long): String {

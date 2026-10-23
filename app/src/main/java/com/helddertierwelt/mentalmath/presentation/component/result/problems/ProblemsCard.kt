@@ -18,7 +18,6 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.presentation.component.result.problems
 
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,32 +32,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.ViewModelStoreOwner
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.game.SolvedProblem
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.blue
-import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 
 @Composable
 fun ProblemsCard(
+    solvedProblems: List<SolvedProblem>,
 ) {
     val dimens = MentalMathTheme.dimens
-
-    val activity = LocalActivity.current as ViewModelStoreOwner
-    val resultViewModel: ResultViewModel = hiltViewModel(activity)
-    val solvedProblems =
-        if (resultViewModel.showLoadedGameRecord.collectAsState().value) {
-            resultViewModel.loadedGameRecord.collectAsState().value.solvedProblems
-        } else {
-            resultViewModel.lastGameRecord.collectAsState().value.solvedProblems
-        }
 
     Card(
         shape = RoundedCornerShape(dimens.components.cardCornerRadius),

@@ -131,7 +131,14 @@ fun GameScreen(
         topBar = {
             Column {
                 GameTopBar(
-                    navController = navController,
+                    gameState = gameState,
+                    onClose = {
+                        gameViewModel.cancelGame()
+                        navController.navigate("settings") {
+                            popUpTo(0) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
                 )
                 LinearProgressIndicator(
                     progress = {
@@ -141,9 +148,7 @@ fun GameScreen(
                             GameMode.SURVIVAL -> gameViewModel.getSurvivalProgress()
                         }
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(4.dp),
+                    modifier = Modifier.fillMaxWidth().height(4.dp),
                     color = blue,
                     trackColor = MaterialTheme.colorScheme.background,
                     drawStopIndicator = {},
