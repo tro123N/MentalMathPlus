@@ -61,14 +61,12 @@ import com.helddertierwelt.mentalmath.presentation.component.game.BackspaceButto
 import com.helddertierwelt.mentalmath.presentation.component.game.EnterButton
 import com.helddertierwelt.mentalmath.presentation.component.game.GameTopBar
 import com.helddertierwelt.mentalmath.presentation.component.game.NumberButton
-import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
 import com.helddertierwelt.mentalmath.presentation.component.game.ProblemInput
 import com.helddertierwelt.mentalmath.presentation.component.game.QuickToastHost
 import com.helddertierwelt.mentalmath.presentation.component.game.ToastEvent
+import com.helddertierwelt.mentalmath.presentation.component.popup.QuitGamePopUp
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.blue
-import com.helddertierwelt.mentalmath.presentation.theme.green
-import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
@@ -113,9 +111,13 @@ fun GameScreen(
                     val currentGameState = gameViewModel.gameState.value
 
                     resultViewModel.setShowLoadedGameRecord(false)
-                    resultViewModel.setShowLinkGamePopUp(currentGameState.isLinkGame)
-                    resultViewModel.setShowSurvivalCompletedPopUp(
-                        currentGameState.gameMode == GameMode.SURVIVAL && currentGameState.totalAnswers >= 100
+                    resultViewModel.showPopUps(
+                        listOfNotNull(
+                            ResultViewModel.PopUp.SurvivalCompleted.takeIf {
+                                currentGameState.gameMode == GameMode.SURVIVAL && currentGameState.totalAnswers >= 100
+                            },
+                            ResultViewModel.PopUp.LinkGameResult.takeIf { currentGameState.isLinkGame }
+                        )
                     )
 
                     navController.navigate("result") {
@@ -327,7 +329,7 @@ fun GameScreen(
     }
 
     if (showDialog) {
-        PopUp(
+        QuitGamePopUp(
             onDismissRequest = { showDialog = false },
             onConfirm = {
                 showDialog = false
@@ -340,13 +342,7 @@ fun GameScreen(
             onCancel = {
                 gameViewModel.playFeedback(FeedbackType.TAP)
                 showDialog = false
-            },
-            title = stringResource(R.string.quit_game_popup_title),
-            description = stringResource(R.string.quit_game_popup_description),
-            confirmationText = stringResource(R.string.quit_game_popup_confirmation_text),
-            cancelText = stringResource(R.string.quit_game_popup_cancel_text),
-            dismissColor = green,
-            confirmColor = red
+            }
         )
     }
 }

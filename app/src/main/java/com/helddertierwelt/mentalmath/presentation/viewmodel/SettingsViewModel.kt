@@ -69,11 +69,13 @@ class SettingsViewModel @Inject constructor(
     private val _isScoreOpen = MutableStateFlow(false)
     val isScoreOpen = _isScoreOpen.asStateFlow()
 
-    private val _showResetPopUp = MutableStateFlow(false)
-    val showResetPopUp = _showResetPopUp.asStateFlow()
+    sealed interface PopUp {
+        data object ResetApp : PopUp
+        data object NotificationPermission : PopUp
+    }
 
-    private val _showNotificationPermissionPopUp = MutableStateFlow(false)
-    val showNotificationPermissionPopUp = _showNotificationPermissionPopUp.asStateFlow()
+    private val _popUp = MutableStateFlow<PopUp?>(null)
+    val popUp = _popUp.asStateFlow()
 
     private val _hasGamesWithScore = MutableStateFlow(false)
     val hasGamesWithScore = _hasGamesWithScore.asStateFlow()
@@ -225,12 +227,12 @@ class SettingsViewModel @Inject constructor(
         playFeedback(FeedbackType.TAP)
     }
 
-    fun setShowResetPopUp(value: Boolean) {
-        _showResetPopUp.value = value
+    fun showPopUp(popUp: PopUp) {
+        _popUp.value = popUp
     }
 
-    fun setShowNotificationPermissionPopUp(value: Boolean) {
-        _showNotificationPermissionPopUp.value = value
+    fun closePopUp() {
+        _popUp.value = null
     }
 
     fun isPermissionGranted(context: Context): Boolean {
@@ -301,13 +303,12 @@ class SettingsViewModel @Inject constructor(
         _isMenuOpen.value = false
         _expandedGroup.value = null
         _isScoreOpen.value = false
-        _showResetPopUp.value = false
+        _popUp.value = null
         _hasGamesWithScore.value = false
         _isScoreClicked.value = false
         _isStartButtonClicked.value = false
         _isRandomGameButtonClicked.value = false
         _isSliderActive.value = false
-        _showNotificationPermissionPopUp.value = false
         saveState()
     }
 
@@ -364,7 +365,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    suspend fun checkIfGameWasAlreadyPlayed(gameRecord: GameRecord): Boolean {
+    suspend fun wasAlreadyPlayed(gameRecord: GameRecord): Boolean {
         return gameRecordRepository.wasAlreadyPlayed(gameRecord)
     }
 

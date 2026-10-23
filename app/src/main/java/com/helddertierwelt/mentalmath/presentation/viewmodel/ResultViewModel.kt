@@ -44,11 +44,13 @@ class ResultViewModel @Inject constructor(
     private val _showLoadedGameRecord = MutableStateFlow(false)
     val showLoadedGameRecord = _showLoadedGameRecord.asStateFlow()
 
-    private val _showSurvivalCompletedPopUp = MutableStateFlow(false)
-    val showSurvivalCompletedPopUp = _showSurvivalCompletedPopUp.asStateFlow()
+    sealed interface PopUp {
+        data object SurvivalCompleted : PopUp
+        data object LinkGameResult : PopUp
+    }
 
-    private val _showLinkGamePopUp = MutableStateFlow(false)
-    val showLinkGamePopUp = _showLinkGamePopUp.asStateFlow()
+    private val _popUps = MutableStateFlow<List<PopUp>>(emptyList())
+    val popUps = _popUps.asStateFlow()
 
     private val _scoreFromLink = MutableStateFlow(0.00f)
     val scoreFromLink = _scoreFromLink.asStateFlow()
@@ -69,12 +71,12 @@ class ResultViewModel @Inject constructor(
         _showLoadedGameRecord.value = value
     }
 
-    fun setShowLinkGamePopUp(value: Boolean) {
-        _showLinkGamePopUp.value = value
+    fun showPopUps(popUps: List<PopUp>) {
+        _popUps.value = popUps
     }
 
-    fun setShowSurvivalCompletedPopUp(value: Boolean) {
-        _showSurvivalCompletedPopUp.value = value
+    fun closePopUp(popUp: PopUp) {
+        _popUps.value -= popUp
     }
 
     fun setScoreFromLink(value: Float) {
@@ -96,8 +98,7 @@ class ResultViewModel @Inject constructor(
     }
 
     fun closeAllPopUps() {
-        _showLinkGamePopUp.value = false
-        _showSurvivalCompletedPopUp.value = false
+        _popUps.value = emptyList()
     }
 
     fun resetStatistics() {

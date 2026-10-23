@@ -33,20 +33,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,7 +55,6 @@ import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
@@ -68,15 +67,13 @@ import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.result.GameResultInfoGenerator.getGamePopUpInfo
 import com.helddertierwelt.mentalmath.domain.settings.AppLocale
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil
-import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
+import com.helddertierwelt.mentalmath.presentation.component.popup.LinkGameResultPopUp
+import com.helddertierwelt.mentalmath.presentation.component.popup.SurvivalCompletedPopUp
 import com.helddertierwelt.mentalmath.presentation.component.result.DoneButton
 import com.helddertierwelt.mentalmath.presentation.component.result.ResultTopBar
 import com.helddertierwelt.mentalmath.presentation.component.result.problems.ProblemsCard
 import com.helddertierwelt.mentalmath.presentation.component.result.summary.SummaryCard
 import com.helddertierwelt.mentalmath.presentation.component.result.summary.formatScore
-import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
-import com.helddertierwelt.mentalmath.presentation.theme.green
-import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import kotlinx.coroutines.launch
 import java.io.File
@@ -89,8 +86,6 @@ fun ResultScreen(
     val context = LocalContext.current
     val localView = LocalView.current
     val coroutineScope = rememberCoroutineScope()
-
-    val dimens = MentalMathTheme.dimens
 
     // viewModels
     val viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner
@@ -110,8 +105,7 @@ fun ResultScreen(
         }
 
     // variables for PopUps
-    val showLinkGamePopUp by resultViewModel.showLinkGamePopUp.collectAsState()
-    val showSurvivalCompletedPopUp by resultViewModel.showSurvivalCompletedPopUp.collectAsState()
+    val popUp = resultViewModel.popUps.collectAsState().value.firstOrNull()
     val seed by resultViewModel.seedFromLink.collectAsState()
     val linkScore by resultViewModel.scoreFromLink.collectAsState()
     val currentScore = resultViewModel.lastGameRecord.collectAsState().value.activeScore
@@ -258,73 +252,61 @@ fun ResultScreen(
         }
     )
 
-    if (showSurvivalCompletedPopUp) {
-        resultViewModel.playDelayedFeedback(FeedbackType.RESULT_PERFECT)
-        PopUp(
-            onDismissRequest = { resultViewModel.setShowSurvivalCompletedPopUp(false) },
-            onConfirm = {
-                resultViewModel.playFeedback(FeedbackType.TAP)
-                resultViewModel.setShowSurvivalCompletedPopUp(false)
-            },
-            title = stringResource(R.string.survival_completed_popup_title),
-            icon = {
-                Icon(
-                    painter = painterResource(R.drawable.crown_24dp),
-                    contentDescription = "Survival Completed",
-                    tint = yellow,
-                    modifier = Modifier.size(dimens.icons.popUp)
-                )
-            },
-            description = stringResource(R.string.survival_completed_popup_description),
-            confirmationText = stringResource(R.string.ok),
-            confirmColor = green
-        )
-    } else if (showLinkGamePopUp) {
-        val gamePopUpInfo = getGamePopUpInfo(currentScore, linkScore, seed)
-        val shareMessage = if (linkScore < 0f) {
-            AppLocale.format(stringResource(R.string.result_share_message_waiting), formatScore(currentScore), seed)
-        } else {
-            AppLocale.format(
-                stringResource(R.string.result_share_message),
-                formatScore(currentScore),
-                formatScore(linkScore),
-                seed
+    // play the feedback only once per pop up, also across configuration changes
+    var feedbackPlayed by rememberSaveable(popUp) { mutableStateOf(false) }
+    fun playPopUpFeedback(feedbackType: FeedbackType) {
+        if (!feedbackPlayed) {
+            feedbackPlayed = true
+            resultViewModel.playDelayedFeedback(feedbackType)
+        }
+    }
+
+    when (popUp) {
+        ResultViewModel.PopUp.SurvivalCompleted -> {
+            LaunchedEffect(popUp) { playPopUpFeedback(FeedbackType.RESULT_PERFECT) }
+            SurvivalCompletedPopUp(
+                onDismissRequest = { resultViewModel.closePopUp(popUp) },
+                onConfirm = {
+                    resultViewModel.playFeedback(FeedbackType.TAP)
+                    resultViewModel.closePopUp(popUp)
+                }
             )
         }
-        resultViewModel.playDelayedFeedback(gamePopUpInfo.feedbackType)
-        PopUp(
-            title = gamePopUpInfo.title,
-            description = gamePopUpInfo.description,
-            confirmationText = stringResource(R.string.result_popup_confirmation_text),
-            cancelText = stringResource(R.string.ok),
-            icon = {
-                Icon(
-                    painter = painterResource(gamePopUpInfo.icon),
-                    contentDescription = "challenge result",
-                    tint = gamePopUpInfo.color,
-                    modifier = Modifier.size(dimens.icons.popUp)
+        ResultViewModel.PopUp.LinkGameResult -> {
+            val gamePopUpInfo = getGamePopUpInfo(currentScore, linkScore, seed)
+            val shareMessage = if (linkScore < 0f) {
+                AppLocale.format(stringResource(R.string.result_share_message_waiting), formatScore(currentScore), seed)
+            } else {
+                AppLocale.format(
+                    stringResource(R.string.result_share_message),
+                    formatScore(currentScore),
+                    formatScore(linkScore),
+                    seed
                 )
-            },
-            confirmColor = green,
-            dismissColor = green,
-            onDismissRequest = { resultViewModel.setShowLinkGamePopUp(false) },
-            onCancel = {
-                resultViewModel.playFeedback(FeedbackType.TAP)
-                resultViewModel.setShowLinkGamePopUp(false)
-            },
-            onConfirm = {
-                resultViewModel.playFeedback(FeedbackType.TAP)
-                coroutineScope.launch {
-                    scrollState.animateScrollTo(0)
-                    val bitmap = captureSettingsCardBitmap()
-                    if (bitmap != null) {
-                        shareResult(context, bitmap, shareMessage)
-                    } else {
-                        Log.e("StatisticsScreen", "Bitmap could not be captured")
+            }
+            LaunchedEffect(popUp) { playPopUpFeedback(gamePopUpInfo.feedbackType) }
+            LinkGameResultPopUp(
+                gameResultInfo = gamePopUpInfo,
+                onDismissRequest = { resultViewModel.closePopUp(popUp) },
+                onCancel = {
+                    resultViewModel.playFeedback(FeedbackType.TAP)
+                    resultViewModel.closePopUp(popUp)
+                },
+                onConfirm = {
+                    resultViewModel.playFeedback(FeedbackType.TAP)
+                    coroutineScope.launch {
+                        scrollState.animateScrollTo(0)
+                        val bitmap = captureSettingsCardBitmap()
+                        if (bitmap != null) {
+                            shareResult(context, bitmap, shareMessage)
+                        } else {
+                            Log.e("StatisticsScreen", "Bitmap could not be captured")
+                        }
                     }
                 }
-            }
-        )
+            )
+        }
+        null -> {}
     }
 
     val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher

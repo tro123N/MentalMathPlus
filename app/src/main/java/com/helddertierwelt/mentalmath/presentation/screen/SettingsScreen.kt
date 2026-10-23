@@ -50,15 +50,16 @@ import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
-import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
+import com.helddertierwelt.mentalmath.presentation.component.popup.NotificationPermissionPopUp
+import com.helddertierwelt.mentalmath.presentation.component.popup.ResetAppPopUp
+import com.helddertierwelt.mentalmath.presentation.component.settings.CustomRangeSlider
+import com.helddertierwelt.mentalmath.presentation.component.settings.CustomSlider
+import com.helddertierwelt.mentalmath.presentation.component.settings.ModeButton
+import com.helddertierwelt.mentalmath.presentation.component.settings.OperatorButton
+import com.helddertierwelt.mentalmath.presentation.component.settings.SettingsTopBar
+import com.helddertierwelt.mentalmath.presentation.component.settings.StartButton
 import com.helddertierwelt.mentalmath.presentation.component.settings.menu.MenuSideSheet
 import com.helddertierwelt.mentalmath.presentation.component.settings.score.ScoreSideSheet
-import com.helddertierwelt.mentalmath.presentation.component.settings.screen.CustomRangeSlider
-import com.helddertierwelt.mentalmath.presentation.component.settings.screen.CustomSlider
-import com.helddertierwelt.mentalmath.presentation.component.settings.screen.ModeButton
-import com.helddertierwelt.mentalmath.presentation.component.settings.screen.OperatorButton
-import com.helddertierwelt.mentalmath.presentation.component.settings.screen.SettingsTopBar
-import com.helddertierwelt.mentalmath.presentation.component.settings.screen.StartButton
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
@@ -337,50 +338,42 @@ fun SettingsScreen(
         }
     )
 
-    if (settingsViewModel.showNotificationPermissionPopUp.collectAsState().value) {
-        PopUp(
-            onDismissRequest = { settingsViewModel.setShowNotificationPermissionPopUp(false) },
-            onConfirm = {
-                settingsViewModel.playFeedback(FeedbackType.TAP)
-                openNotificationSettings(context)
-                settingsViewModel.setShowNotificationPermissionPopUp(false)
-            },
-            onCancel = {
-                settingsViewModel.playFeedback(FeedbackType.TAP)
-                settingsViewModel.setShowNotificationPermissionPopUp(false)
-            },
-            title = stringResource(R.string.notification_popup_title),
-            description = stringResource(R.string.notification_popup_description),
-            confirmationText = stringResource(R.string.notification_popup_confirmation_text),
-            cancelText = stringResource(R.string.cancel),
-            dismissColor = red,
-            confirmColor = green
-        )
-    }
+    when (settingsViewModel.popUp.collectAsState().value) {
+        SettingsViewModel.PopUp.NotificationPermission -> {
+            NotificationPermissionPopUp(
+                onDismissRequest = { settingsViewModel.closePopUp() },
+                onConfirm = {
+                    settingsViewModel.playFeedback(FeedbackType.TAP)
+                    openNotificationSettings(context)
+                    settingsViewModel.closePopUp()
+                },
+                onCancel = {
+                    settingsViewModel.playFeedback(FeedbackType.TAP)
+                    settingsViewModel.closePopUp()
+                }
+            )
+        }
 
-    if (settingsViewModel.showResetPopUp.collectAsState().value) {
-        PopUp(
-            onDismissRequest = { settingsViewModel.setShowResetPopUp(false) },
-            onConfirm = {
-                settingsViewModel.playFeedback(FeedbackType.STOP)
-                gameViewModel.resetGameData()
-                settingsViewModel.resetSettings()
-                NotificationScheduler.cancelNotificationWork(context)
-                resultViewModel.resetStatistics()
-                historyViewModel.resetHistory()
-                mainActivityViewModel.resetMainActivity()
-            },
-            onCancel = {
-                settingsViewModel.playFeedback(FeedbackType.TAP)
-                settingsViewModel.setShowResetPopUp(false)
-            },
-            title = stringResource(R.string.reset_app_popup_title),
-            description = stringResource(R.string.reset_app_popup_description),
-            confirmationText = stringResource(R.string.reset_app_popup_confirmation_text),
-            cancelText = stringResource(R.string.cancel),
-            dismissColor = green,
-            confirmColor = red
-        )
+        SettingsViewModel.PopUp.ResetApp -> {
+            ResetAppPopUp(
+                onDismissRequest = { settingsViewModel.closePopUp() },
+                onConfirm = {
+                    settingsViewModel.playFeedback(FeedbackType.STOP)
+                    gameViewModel.resetGameData()
+                    settingsViewModel.resetSettings()
+                    NotificationScheduler.cancelNotificationWork(context)
+                    resultViewModel.resetStatistics()
+                    historyViewModel.resetHistory()
+                    mainActivityViewModel.resetMainActivity()
+                },
+                onCancel = {
+                    settingsViewModel.playFeedback(FeedbackType.TAP)
+                    settingsViewModel.closePopUp()
+                }
+            )
+        }
+
+        null -> {}
     }
 
     BackHandler {

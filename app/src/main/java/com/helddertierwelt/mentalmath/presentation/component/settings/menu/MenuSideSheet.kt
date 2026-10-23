@@ -455,7 +455,7 @@ fun MenuSideSheet(
                                                 ).show()
                                             }
                                         } else {
-                                            settingsViewModel.setShowNotificationPermissionPopUp(true)
+                                            settingsViewModel.showPopUp(SettingsViewModel.PopUp.NotificationPermission)
                                         }
                                     },
                                     options = listOf(
@@ -609,7 +609,7 @@ fun MenuSideSheet(
                     color = red,
                     onClick = {
                         settingsViewModel.playFeedback(FeedbackType.TAP)
-                        settingsViewModel.setShowResetPopUp(true)
+                        settingsViewModel.showPopUp(SettingsViewModel.PopUp.ResetApp)
                     }
                 )
                 Spacer(modifier = Modifier.height(16.dp))

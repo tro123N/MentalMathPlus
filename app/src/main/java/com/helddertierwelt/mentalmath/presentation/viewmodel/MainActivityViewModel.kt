@@ -19,6 +19,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackController
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,23 +31,24 @@ import javax.inject.Inject
 class MainActivityViewModel @Inject constructor(
     private val feedbackController: FeedbackController,
     ) : ViewModel() {
-    private val _showAlreadyPlayedPopUp = MutableStateFlow(false)
-    val showAlreadyPlayedPopUp: StateFlow<Boolean> = _showAlreadyPlayedPopUp
-
-    private val _showDeepLinkPopUp = MutableStateFlow(false)
-    val showDeepLinkPopUp: StateFlow<Boolean> = _showDeepLinkPopUp
-
-    fun setShowAlreadyPlayedPopUp(value: Boolean) {
-        _showAlreadyPlayedPopUp.value = value
+    sealed interface PopUp {
+        data class DeepLink(val gameRecord: GameRecord) : PopUp
+        data object AlreadyPlayed : PopUp
     }
 
-    fun setShowDeepLinkPopUp(value: Boolean) {
-        _showDeepLinkPopUp.value = value
+    private val _popUp = MutableStateFlow<PopUp?>(null)
+    val popUp: StateFlow<PopUp?> = _popUp
+
+    fun showPopUp(popUp: PopUp) {
+        _popUp.value = popUp
+    }
+
+    fun closePopUp() {
+        _popUp.value = null
     }
 
     fun resetMainActivity() {
-        setShowAlreadyPlayedPopUp(false)
-        setShowDeepLinkPopUp(false)
+        closePopUp()
     }
 
     fun playFeedback(feedbackType: FeedbackType) {

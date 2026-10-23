@@ -30,23 +30,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil.deserialize
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil.isValidQueryParameter
 import com.helddertierwelt.mentalmath.domain.settings.enums.ThemeMode
-import com.helddertierwelt.mentalmath.presentation.component.game.PopUp
+import com.helddertierwelt.mentalmath.presentation.component.popup.AlreadyPlayedPopUp
+import com.helddertierwelt.mentalmath.presentation.component.popup.DeepLinkPopUp
 import com.helddertierwelt.mentalmath.presentation.screen.Navigation
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
-import com.helddertierwelt.mentalmath.presentation.theme.green
-import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.MainActivityViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
@@ -61,7 +57,6 @@ class MainActivity : ComponentActivity() {
     private val settingsViewModel: SettingsViewModel by viewModels()
     private val resultViewModel: ResultViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by viewModels()
-    private val gameRecordFromAppLink = mutableStateOf(GameRecord())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Splash Screen as long as settings are loading
@@ -107,58 +102,46 @@ class MainActivity : ComponentActivity() {
                 Navigation(
                     navController = navController
                 )
-                val showAlreadyPlayedPopUp = mainActivityViewModel.showAlreadyPlayedPopUp.collectAsState().value
-                val showDeepLinkPopUp = mainActivityViewModel.showDeepLinkPopUp.collectAsState().value
-
-                // App link pop up
-                if (showDeepLinkPopUp) {
-                    PopUp(
-                        onDismissRequest = { mainActivityViewModel.setShowDeepLinkPopUp(false) },
-                        onConfirm = {
-                            gameViewModel.resetGameState()
-                            gameViewModel.setIsLinkGame(true)
-                            gameViewModel.setSettingsFromLink(gameRecordFromAppLink.value, settingsViewModel.settingsState.value)
-                            resultViewModel.closeAllPopUps()
-                            resultViewModel.prepareGameFromLink(gameRecordFromAppLink.value)
-                            mainActivityViewModel.playFeedback(FeedbackType.START)
-                            navController.navigate("game") {
-                                popUpTo(0) { inclusive = true }
-                                launchSingleTop = true
+                when (val popUp = mainActivityViewModel.popUp.collectAsState().value) {
+                    // App link pop up
+                    is MainActivityViewModel.PopUp.DeepLink -> {
+                        val gameRecordFromAppLink = popUp.gameRecord
+                        DeepLinkPopUp(
+                            linkScore = gameRecordFromAppLink.activeScore,
+                            onDismissRequest = { mainActivityViewModel.closePopUp() },
+                            onConfirm = {
+                                gameViewModel.resetGameState()
+                                gameViewModel.setIsLinkGame(true)
+                                gameViewModel.setSettingsFromLink(gameRecordFromAppLink, settingsViewModel.settingsState.value)
+                                resultViewModel.closeAllPopUps()
+                                resultViewModel.prepareGameFromLink(gameRecordFromAppLink)
+                                mainActivityViewModel.playFeedback(FeedbackType.START)
+                                navController.navigate("game") {
+                                    popUpTo(0) { inclusive = true }
+                                    launchSingleTop = true
+                                }
+                                gameViewModel.startGame(gameRecordFromAppLink.seed)
+                                mainActivityViewModel.closePopUp()
+                            },
+                            onCancel = {
+                                mainActivityViewModel.playFeedback(FeedbackType.TAP)
+                                mainActivityViewModel.closePopUp()
                             }
-                            gameViewModel.startGame(gameRecordFromAppLink.value.seed)
-                            gameRecordFromAppLink.value = GameRecord()
-                            mainActivityViewModel.setShowDeepLinkPopUp(false)
-                        },
-                        onCancel = {
-                            mainActivityViewModel.playFeedback(FeedbackType.TAP)
-                            mainActivityViewModel.setShowDeepLinkPopUp(false)
-                        },
-                        title = stringResource(R.string.app_link_game_popup_title),
-                        description = if (gameRecordFromAppLink.value.activeScore < 0f) {
-                            stringResource(R.string.app_link_popup_description_new_game)
-                        } else {
-                            stringResource(R.string.app_link_popup_description_challenge)
-                        },
-                        confirmationText = stringResource(R.string.app_link_popup_confirmation_text),
-                        cancelText = stringResource(R.string.cancel),
-                        dismissColor = red,
-                        confirmColor = green
-                    )
-                }
+                        )
+                    }
 
-                // Already played pop up
-                if (showAlreadyPlayedPopUp) {
-                    PopUp(
-                        onDismissRequest = { mainActivityViewModel.setShowAlreadyPlayedPopUp(false) },
-                        onConfirm = {
-                            mainActivityViewModel.playFeedback(FeedbackType.TAP)
-                            mainActivityViewModel.setShowAlreadyPlayedPopUp(false)
-                        },
-                        title = stringResource(R.string.already_played_popup_title),
-                        description = stringResource(R.string.already_played_popup_description),
-                        confirmationText = stringResource(R.string.ok),
-                        confirmColor = green
-                    )
+                    // Already played pop up
+                    MainActivityViewModel.PopUp.AlreadyPlayed -> {
+                        AlreadyPlayedPopUp(
+                            onDismissRequest = { mainActivityViewModel.closePopUp() },
+                            onConfirm = {
+                                mainActivityViewModel.playFeedback(FeedbackType.TAP)
+                                mainActivityViewModel.closePopUp()
+                            }
+                        )
+                    }
+
+                    null -> {}
                 }
             }
         }
@@ -177,13 +160,10 @@ class MainActivity : ComponentActivity() {
         if (encodedSettingsString != null && isValidQueryParameter(encodedSettingsString)) {
             val linkGameRecord = deserialize(encodedSettingsString)
 
-            if (settingsViewModel.checkIfGameWasAlreadyPlayed(linkGameRecord)) {
-                mainActivityViewModel.setShowDeepLinkPopUp(false)
-                mainActivityViewModel.setShowAlreadyPlayedPopUp(true)
+            if (settingsViewModel.wasAlreadyPlayed(linkGameRecord)) {
+                mainActivityViewModel.showPopUp(MainActivityViewModel.PopUp.AlreadyPlayed)
             } else {
-                mainActivityViewModel.setShowAlreadyPlayedPopUp(false)
-                mainActivityViewModel.setShowDeepLinkPopUp(true)
-                gameRecordFromAppLink.value = linkGameRecord
+                mainActivityViewModel.showPopUp(MainActivityViewModel.PopUp.DeepLink(linkGameRecord))
             }
 
         } else {
