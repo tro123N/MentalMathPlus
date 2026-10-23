@@ -75,7 +75,7 @@ fun HistoryTopBar(
             Row(
                 modifier = Modifier
                     .padding(16.dp)
-                    .clip(RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(dimens.components.cornerRadius))
                     .clickable {
                         val nextIndex = (currentIndex + 1) % modes.size
                         onClick(modes[nextIndex])

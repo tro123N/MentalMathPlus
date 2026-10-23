@@ -63,7 +63,7 @@ fun ExpandableMenuGroup(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 8.dp)
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(dimens.components.cornerRadius))
                 .clickable(onClick = onToggle)
                 .animateContentSize(),
             verticalAlignment = Alignment.CenterVertically

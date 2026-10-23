@@ -61,7 +61,7 @@ fun ProblemsCard(
         }
 
     Card(
-        shape = RoundedCornerShape(32.dp),
+        shape = RoundedCornerShape(dimens.components.cardCornerRadius),
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary,

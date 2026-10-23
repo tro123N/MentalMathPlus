@@ -88,7 +88,7 @@ fun CustomSlider(
                 }
                 .alpha(if (isDragging) 1f else 0f)
                 .background(
-                    activeTrackColor, shape = RoundedCornerShape(16.dp)
+                    activeTrackColor, shape = RoundedCornerShape(dimens.components.cornerRadius)
                 )
                 .padding(horizontal = 6.dp),
             text = when (gameMode) {

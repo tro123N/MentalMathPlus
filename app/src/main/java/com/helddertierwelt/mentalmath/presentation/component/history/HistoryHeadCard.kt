@@ -44,7 +44,7 @@ fun HistoryHeadCard(
 ) {
     val dimens = MentalMathTheme.dimens
     Card(
-        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+        shape = RoundedCornerShape(topStart = dimens.components.cardCornerRadius, topEnd = dimens.components.cardCornerRadius),
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary,

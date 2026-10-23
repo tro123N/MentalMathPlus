@@ -92,7 +92,7 @@ fun ProblemStatusIcon(
         ),
         tooltip = {
             PlainTooltip(
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(dimens.components.cornerRadius),
                 containerColor = MaterialTheme.colorScheme.onPrimary,
                 contentColor = MaterialTheme.colorScheme.onSecondary
             ) {

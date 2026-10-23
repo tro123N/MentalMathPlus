@@ -95,7 +95,7 @@ fun CustomRangeSlider(
                     .alpha(if (isDraggingStart) 1f else 0f)
                     .background(
                         activeTrackColor,
-                        shape = RoundedCornerShape(16.dp)
+                        shape = RoundedCornerShape(dimens.components.cornerRadius)
                     )
                     .padding(horizontal = 6.dp),
                 text = "${value.start.toInt()}",
@@ -114,7 +114,7 @@ fun CustomRangeSlider(
                     .alpha(if (isDraggingEnd) 1f else 0f)
                     .background(
                         activeTrackColor,
-                        shape = RoundedCornerShape(16.dp)
+                        shape = RoundedCornerShape(dimens.components.cornerRadius)
                     )
                     .padding(horizontal = 6.dp),
                 text = "${value.endInclusive.toInt()}",

@@ -79,7 +79,7 @@ fun SummaryCard(
     }
 
     Card(
-        shape = RoundedCornerShape(32.dp),
+        shape = RoundedCornerShape(dimens.components.cardCornerRadius),
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary,
@@ -106,7 +106,7 @@ fun SummaryCard(
                 )
             }
             HorizontalDivider(
-                thickness = 2.dp,
+                thickness = dimens.components.dividerThickness,
                 color = MaterialTheme.colorScheme.background
             )
             Row(
@@ -175,7 +175,7 @@ fun SummaryCard(
                 )
             }
             HorizontalDivider(
-                thickness = 2.dp,
+                thickness = dimens.components.dividerThickness,
                 color = MaterialTheme.colorScheme.background
             )
             Row(
@@ -233,7 +233,7 @@ fun SummaryCard(
                 )
             }
             HorizontalDivider(
-                thickness = 2.dp,
+                thickness = dimens.components.dividerThickness,
                 color = MaterialTheme.colorScheme.background
             )
             Spacer(modifier = modifier.height(8.dp))

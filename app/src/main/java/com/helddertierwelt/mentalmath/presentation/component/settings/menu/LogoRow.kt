@@ -58,7 +58,7 @@ fun LogoRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp)
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(dimens.components.cornerRadius))
             .clickable {
                 onClickSound()
                 try {

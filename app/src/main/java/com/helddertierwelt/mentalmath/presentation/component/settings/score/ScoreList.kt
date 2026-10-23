@@ -65,7 +65,7 @@ fun ScoreList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(end = 12.dp, top= 8.dp, bottom = 8.dp)
-                    .clip(RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(dimens.components.cornerRadius))
                     .clickable(enabled = isEnabled) { onClick(gameScore) },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start

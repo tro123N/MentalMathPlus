@@ -66,6 +66,7 @@ data class Dimens(
                     summaryStat = dp(0.046f),
                     problemStatus = dp(0.032f),
                     cardHeader = dp(0.038f),
+                    scoreHeader = dp(0.08f),
                 ),
                 components = ComponentSizes(
                     button = dp(0.09f),
@@ -74,6 +75,9 @@ data class Dimens(
                     gameScreenPadding = dp(0.028f),
                     numPadKey = dp(0.10f),
                     answerLineWidth = dp(0.32f),
+                    cornerRadius = 16.dp,
+                    cardCornerRadius = 32.dp,
+                    dividerThickness = 2.dp,
                 ),
             )
         }
@@ -112,6 +116,7 @@ data class IconSizes(
     val summaryStat: Dp,
     val problemStatus: Dp,
     val cardHeader: Dp,
+    val scoreHeader: Dp,
 )
 
 @Immutable
@@ -122,6 +127,9 @@ data class ComponentSizes(
     val gameScreenPadding: Dp,
     val numPadKey: Dp,
     val answerLineWidth: Dp,
+    val cornerRadius: Dp,
+    val cardCornerRadius: Dp,
+    val dividerThickness: Dp,
 )
 
 val LocalDimens = staticCompositionLocalOf<Dimens> { error("No Dimens provided") }

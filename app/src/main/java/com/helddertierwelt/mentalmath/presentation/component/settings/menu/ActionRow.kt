@@ -54,7 +54,7 @@ fun ActionRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 8.dp)
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(dimens.components.cornerRadius))
             .clickable(
                 enabled = isEnabled,
                 onClick = onClick

@@ -69,7 +69,7 @@ fun ProgressColumn(
             positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above, 8.dp),
             tooltip = {
                 PlainTooltip(
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(dimens.components.cornerRadius),
                     containerColor = MaterialTheme.colorScheme.onPrimary,
                     contentColor = MaterialTheme.colorScheme.onSecondary,
                 ) {

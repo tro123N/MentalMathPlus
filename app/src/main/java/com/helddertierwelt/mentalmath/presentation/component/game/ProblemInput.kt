@@ -36,6 +36,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -62,6 +63,10 @@ fun ProblemInput(
     onProblemClick: () -> Unit
 ) {
     val dimens = MentalMathTheme.dimens
+    val density = LocalDensity.current
+    val problemBoxHeight = with(density) { (dimens.fonts.problem * 2.5f).toDp() }
+    val inputBoxHeight = with(density) { (dimens.fonts.problem * 1.6f).toDp() }
+    val equalsSignWidth = with(density) { (dimens.fonts.problem * 1.2f).toDp() }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -83,8 +88,8 @@ fun ProblemInput(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .height(dimens.fonts.problem.value.dp * 2.5f)
-                .clip(RoundedCornerShape(16.dp))
+                .height(problemBoxHeight)
+                .clip(RoundedCornerShape(dimens.components.cornerRadius))
                 .clickable { onProblemClick() }
         ) {
             Text(
@@ -107,7 +112,7 @@ fun ProblemInput(
             )
         }
         Box(
-            modifier = Modifier.width(dimens.components.answerLineWidth + (1.2 * dimens.fonts.problem.value).dp),
+            modifier = Modifier.width(dimens.components.answerLineWidth + equalsSignWidth),
             contentAlignment = Alignment.CenterStart
         ) {
             Text(
@@ -121,8 +126,8 @@ fun ProblemInput(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .width(dimens.components.answerLineWidth)
-                    .height((dimens.fonts.problem * 1.6f).value.dp)
-                    .clip(RoundedCornerShape(16.dp))
+                    .height(inputBoxHeight)
+                    .clip(RoundedCornerShape(dimens.components.cornerRadius))
                     .clickable { onInputClick() }
                     .drawBehind {
                         val arrowSize = 12.dp.toPx()

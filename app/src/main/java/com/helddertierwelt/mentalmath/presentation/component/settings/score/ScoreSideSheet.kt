@@ -186,7 +186,7 @@ fun ScoreSideSheet(
                             painter = painterResource(R.drawable.star_24dp),
                             contentDescription = "Star",
                             tint = yellow,
-                            modifier = Modifier.size(70.dp)
+                            modifier = Modifier.size(dimens.icons.scoreHeader)
                         )
                         Text(
                             text = stringResource(R.string.top_ten_scores),

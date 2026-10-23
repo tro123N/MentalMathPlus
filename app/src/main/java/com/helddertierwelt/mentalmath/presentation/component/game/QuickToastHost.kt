@@ -35,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -43,6 +44,7 @@ fun QuickToastHost(
     event: ToastEvent?,
     durationMs: Long = 400,
 ) {
+    val dimens = MentalMathTheme.dimens
     var visible by remember { mutableStateOf(false) }
 
     LaunchedEffect(event?.id) {
@@ -63,7 +65,7 @@ fun QuickToastHost(
             modifier = Modifier
                 .background(
                     MaterialTheme.colorScheme.onPrimary,
-                    RoundedCornerShape(16.dp)
+                    RoundedCornerShape(dimens.components.cornerRadius)
                 )
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             color = MaterialTheme.colorScheme.onSecondary

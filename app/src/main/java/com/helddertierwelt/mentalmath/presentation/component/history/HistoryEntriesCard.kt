@@ -83,7 +83,7 @@ fun HistoryEntriesCard(
         SortMode.ALPHA_ASCENDING -> sortGameRecords(gameRecords, ascending = true)
     }
     Card(
-        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
+        shape = RoundedCornerShape(bottomStart = dimens.components.cardCornerRadius, bottomEnd = dimens.components.cardCornerRadius),
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary,
@@ -123,7 +123,7 @@ fun HistoryEntriesCard(
 
                     if (index > 0) {
                         HorizontalDivider(
-                            thickness = 2.dp,
+                            thickness = dimens.components.dividerThickness,
                             color = MaterialTheme.colorScheme.background
                         )
                     }
@@ -131,7 +131,7 @@ fun HistoryEntriesCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 12.dp, vertical = 8.dp)
-                            .clip(RoundedCornerShape(16.dp))
+                            .clip(RoundedCornerShape(dimens.components.cornerRadius))
                             .clickable(enabled = isEnabled) { onClick(game.id) }
                     ) {
                         allStrings.forEach { textContent ->
