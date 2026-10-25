@@ -50,7 +50,7 @@ class SolvedProblemConverter {
 
     @TypeConverter
     fun toSolvedProblemList(value: String): List<SolvedProblem> {
-        // version 29 wrote the old JSON "[]" when the app was reset
+        // version 29 wrote the old JSON "[]" when the app was reset (see TODO in GameRecordMigrations)
         if (value.isBlank() || value == "[]") {
             return emptyList()
         }

@@ -325,6 +325,17 @@ object GameRecordMigrations {
         }
     }
 
+    /*
+     * TODO for the next migration (MIGRATION_3_4):
+     * Resetting the app in version 29 wrote the old JSON "[]" into solvedProblems
+     * instead of the new format "1|". Run this as the first step of the migration:
+     *
+     *   UPDATE game_records SET solvedProblems = '1|' WHERE solvedProblems = '[]'
+     *
+     * Otherwise any migration that parses solvedProblems itself will fail on these rows.
+     * Afterwards the "[]" check in SolvedProblemConverter.toSolvedProblemList can be removed.
+     */
+
     private data class LegacyGameRecord(
         val id: Int,
         val isModeEnabled: Boolean,
