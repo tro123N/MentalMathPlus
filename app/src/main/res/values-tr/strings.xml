@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Mod ve limiti seçin</string>
+    <string name="second">sn</string>
+    <string name="minute">dk</string>
     <string name="operator_instruction">İşlemleri ve zorluğu seçin</string>
     <string name="start">Başla</string>
+    <!-- Settings Screen: Menu -->
     <string name="share_game">Oyunu Paylaş</string>
     <string name="random_game">Rastgele Oyun</string>
     <string name="history">Geçmiş</string>
@@ -39,15 +43,19 @@
     <string name="game_settings">Oyun Ayarları</string>
     <string name="app_settings">Uygulama Ayarları</string>
     <string name="support">Destek</string>
+    <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">İlk 10</string>
+    <!-- Game Screen -->
     <string name="rtl_toast">Sağdan Sola Giriş</string>
     <string name="ltr_toast">Soldan Sağa Giriş</string>
-    <string name="horizontal_toast">Yatay Düzen</string>
     <string name="vertical_toast">Dikey Düzen</string>
+    <string name="horizontal_toast">Yatay Düzen</string>
+    <!-- Statistics Screen -->
     <string name="result">Sonuç</string>
     <string name="seed">Seed: %d</string>
     <string name="problem_limit">Soru Limiti</string>
     <string name="time_limit">Süre Limiti</string>
+    <string name="survival_initial_time">Soru başına başlangıç süresi</string>
     <string name="difficulty_addition">Toplama Zorluğu</string>
     <string name="difficulty_subtraction">Çıkarma Zorluğu</string>
     <string name="difficulty_multiplication">Çarpma Zorluğu</string>
@@ -64,9 +72,12 @@
     <string name="status_correct">Doğru</string>
     <string name="status_incorrect">Yanlış</string>
     <string name="status_skipped">Atlandı</string>
+    <string name="status_timeout">Süre doldu</string>
     <string name="no_problems">Çözülen soru yok</string>
     <string name="done">Bitti</string>
+    <!-- History Screen -->
     <string name="no_games">Puanı olan oyun yok</string>
+    <!-- Pop-ups -->
     <string name="notification_popup_title">Bildirimler kapalı</string>
     <string name="notification_popup_description">Hatırlatıcı kurmak için sistem ayarlarından bildirimleri açın.\n\nNot: Pil tasarrufu ayarları bildirimleri yine de engelleyebilir.</string>
     <string name="notification_popup_confirmation_text">Ayarları aç</string>
@@ -88,48 +99,57 @@
     <string name="survival_completed_popup_description">100 sorunun tamamını başarıyla çözdün!</string>
     <string name="cancel">İptal</string>
     <string name="ok">Tamam</string>
+    <!-- Result pop-up messages -->
     <string name="waiting_title">Rakibin bekleniyor…</string>
     <string name="waiting_message_1">Sen: %1$s | Rakip: ??\nSeed: %2$d\n\nÇıtayı sen koydun! Bakalım rakibin yetişebilecek mi!</string>
     <string name="waiting_message_2">Sen: %1$s | Rakip: ??\nSeed: %2$d\n\nPuanın kilitlendi — sıra rakibinde!</string>
     <string name="waiting_message_3">Sen: %1$s | Rakip: ??\nSeed: %2$d\n\nŞimdi tüm gözler rakibinde!</string>
     <string name="waiting_message_4">Sen: %1$s | Rakip: ??\nSeed: %2$d\n\nÖne geçtin… yoksa henüz değil mi?</string>
     <string name="waiting_message_5">Sen: %1$s | Rakip: ??\nSeed: %2$d\n\nPuanın o kadar iyi ki rakibin oyunu siliyordur.</string>
+
     <string name="easy_win_title">Kolay galibiyet</string>
     <string name="easy_win_message_1">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nKazandın, ama ortada gerçek bir rekabet yoktu!</string>
     <string name="easy_win_message_2">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nRakibin formunu getirmemiş… hatta oyunu da getirmemiş!</string>
     <string name="easy_win_message_3">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nRakibin hâlâ kuralları çözmeye çalışırken sen kazandın.</string>
+
     <string name="anyone_here_title">Kimse var mı?</string>
     <string name="anyone_here_message_1">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nPuan falan yok, boş bir maç!</string>
     <string name="anyone_here_message_2">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nYankı… yankı… bu oyunu oynayan kimse yok mu?</string>
     <string name="anyone_here_message_3">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nBurada kayda değer hiçbir şey olmadı.</string>
+
     <string name="win_title">Kazandın</string>
     <string name="win_message_1">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nZihinden matematik tam gazdı!</string>
     <string name="win_message_2">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nZafer sana çok yakışıyor!</string>
     <string name="win_message_3">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nZihinden matematiğin resmen sihir.</string>
     <string name="win_message_4">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nRakibin bir dahaki sefere hesap makinesi alsın!</string>
     <string name="win_message_5">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nMatematik becerileri açıldı — rakip devrildi!</string>
+
     <string name="close_win_title">Kıl payı</string>
     <string name="close_win_message_1">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nÇok sıktı! İyi ki gözünü kırpmadın.</string>
     <string name="close_win_message_2">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nKıl payı! Ama zaferin tadı yine harika.</string>
     <string name="close_win_message_3">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nRakibin iyiydi, ama skor tabelası yalan söylemez!</string>
     <string name="close_win_message_4">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nNefes kesen bir bitiş… zirvede sen varsın!</string>
     <string name="close_win_message_5">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nRakibe saygı, ama galibiyet galibiyettir.</string>
+
     <string name="draw_title">Berabere</string>
     <string name="draw_message_1">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nKazanan yok, kaybeden yok — ikiniz de şampiyon.</string>
     <string name="draw_message_2">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nBunu bir kez ve kesin çözmek için rövanş zamanı.</string>
     <string name="draw_message_3">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nAsıl kazananı ancak yeni bir oyun belli eder.</string>
+
     <string name="close_defeat_title">Kıl payı</string>
     <string name="close_defeat_message_1">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nAz kalsın! Üzülme, rövanş tatlıdır.</string>
     <string name="close_defeat_message_2">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nRakibin bu sefer şanslıydı, o kadar.</string>
     <string name="close_defeat_message_3">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nRakibin bu zaferin tadını uzun süre çıkarmasın.</string>
     <string name="close_defeat_message_4">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nDevam et, zafer köşede.</string>
     <string name="close_defeat_message_5">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nÇok yakındın! Devam et, yeteneğin ortada.</string>
+
     <string name="defeat_title">Yenilgi</string>
     <string name="defeat_message_1">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nSilkin ve bir kez daha dene!</string>
     <string name="defeat_message_2">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nHer şampiyon buradan geçti. Şimdi kalkma sırası sende.</string>
     <string name="defeat_message_3">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nKimi kazanırsın, kimi kaybedersin. Hayat böyle.</string>
     <string name="defeat_message_4">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nBüyük mesele değil — hayatta başka şeyler de var.</string>
     <string name="defeat_message_5">Sen: %1$s | Rakip: %2$s\nSeed: %3$d\n\nBırak rakibin kazansın. Herkesin bir anı olur.</string>
+
     <string name="result_popup_confirmation_text">Paylaş</string>
     <string name="result_share_message_waiting">Ben: %1$s | Sen: ??\nSeed: %2$d</string>
     <string name="result_share_message">Ben: %1$s | Sen: %2$s\nSeed: %3$d</string>

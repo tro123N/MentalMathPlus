@@ -34,7 +34,7 @@ class FeedbackController @Inject constructor(
     private val soundManager: SoundManager,
     private val vibrationManager: VibrationManager,
     settingsRepository: SettingsRepository
-) {
+) : FeedbackPlayer {
 
     private var soundMode = SoundMode.SOUND_OFF
     private var vibrationMode = VibrationMode.VIBRATION_OFF
@@ -56,7 +56,7 @@ class FeedbackController @Inject constructor(
         vibrationMode = mode
     }
 
-    fun play(feedback: FeedbackType) {
+    override fun play(feedback: FeedbackType) {
         when (soundMode) {
             SoundMode.SOUND_OFF -> Unit
             SoundMode.SOUND_ON -> soundManager.play(feedback)

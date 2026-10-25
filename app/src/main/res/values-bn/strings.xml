@@ -7,7 +7,6 @@
     <string name="minute">মি.</string>
     <string name="operator_instruction">অপারেশন এবং কঠোরতা নির্বাচন করুন</string>
     <string name="start">শুরু করুন</string>
-
     <!-- Settings Screen: Menu -->
     <string name="share_game">গেম শেয়ার করুন</string>
     <string name="random_game">র‍্যান্ডম গেম</string>
@@ -44,16 +43,13 @@
     <string name="game_settings">গেমের সেটিংস</string>
     <string name="app_settings">অ্যাপের সেটিংস</string>
     <string name="support">অ্যাপকে সহায়তা করুন</string>
-
     <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">শীর্ষ ১০</string>
-
     <!-- Game Screen -->
     <string name="rtl_toast">ডান-থেকে-বাম ইনপুট</string>
     <string name="ltr_toast">বাম-থেকে-ডান ইনপুট</string>
-    <string name="horizontal_toast">আনুভূমিক লেআউট</string>
     <string name="vertical_toast">উলম্ব লেআউট</string>
-
+    <string name="horizontal_toast">আনুভূমিক লেআউট</string>
     <!-- Statistics Screen -->
     <string name="result">ফলাফল</string>
     <string name="seed">সিড: %d</string>
@@ -79,38 +75,30 @@
     <string name="status_timeout">সময় শেষ</string>
     <string name="no_problems">কোনো অঙ্ক সমাধান করা হয়নি</string>
     <string name="done">সম্পন্ন করুন</string>
-
     <!-- History Screen -->
     <string name="no_games">স্কোর সহ কোনো গেম নেই</string>
-
     <!-- Pop-ups -->
     <string name="notification_popup_title">নোটিফিকেশন বন্ধ আছে</string>
     <string name="notification_popup_description">রিমাইন্ডার সেট করতে আপনার সিস্টেম সেটিংসে নোটিফিকেশন চালু করুন।\n\nবিঃদ্রঃ: ব্যাটারি অপ্টিমাইজেশন সেটিংস নোটিফিকেশন ব্লক করতে পারে।</string>
     <string name="notification_popup_confirmation_text">সেটিংস খুলুন</string>
     <string name="notification_toast_text">বিরতির পর সন্ধ্যায় রিমাইন্ডার শুরু হবে</string>
-
     <string name="reset_app_popup_title">অ্যাপ রিসেট করবেন?</string>
     <string name="reset_app_popup_description">সমস্ত স্কোর এবং সেটিংস মুছে ফেলা হবে।</string>
     <string name="reset_app_popup_confirmation_text">রিসেট</string>
-
     <string name="quit_game_popup_title">গেম থেকে বের হবেন?</string>
     <string name="quit_game_popup_description">আপনার বর্তমান অগ্রগতি মুছে যাবে।</string>
     <string name="quit_game_popup_confirmation_text">বের হোন</string>
     <string name="quit_game_popup_cancel_text">চালিয়ে যান</string>
-
     <string name="app_link_game_popup_title">লিঙ্ক থেকে গেম শুরু করবেন?</string>
     <string name="app_link_popup_description_new_game">পূর্বনির্ধারিত সেটিংস এবং একটি র‍্যান্ডম সিড দিয়ে নতুন গেম খেলুন।\n\nবর্তমান গেমের যেকোনো অগ্রগতি মুছে যাবে।</string>
     <string name="app_link_popup_description_challenge">একই গেম পুনরায় খেলে আপনার বন্ধুর স্কোরকে হারানোর চেষ্টা করুন।\n\nবর্তমান গেমের যেকোনো অগ্রগতি মুছে যাবে।</string>
     <string name="app_link_popup_confirmation_text">শুরু করুন</string>
-
     <string name="already_played_popup_title">গেমটি আগেই খেলা হয়েছে</string>
     <string name="already_played_popup_description">আপনি ইতিমধ্যেই একই সেটিংস এবং সিড দিয়ে একটি গেম খেলেছেন।\n\nঅনুগ্রহ করে অন্য একটি লিঙ্ক চেষ্টা করুন বা নতুন গেম শুরু করুন।</string>
-
     <string name="survival_completed_popup_title">বেঁচে থাকার রাজা</string>
-    <string name="survival_completed_popup_description">তুমি ১০০টি সমস্যাই সফলভাবে সমাধান করেছ</string>
+    <string name="survival_completed_popup_description">তুমি ১০০টি সমস্যাই সফলভাবে সমাধান করেছ!</string>
     <string name="cancel">বাতিল করুন</string>
     <string name="ok">ঠিক আছে</string>
-
     <!-- Result pop-up messages -->
     <string name="waiting_title">আপনার প্রতিপক্ষের জন্য অপেক্ষা করা হচ্ছে…</string>
     <string name="waiting_message_1">আপনি: %1$s | প্রতিপক্ষ: ??\nসিড: %2$d\n\nআপনি একটি দুর্দান্ত লক্ষ্য নির্ধারণ করেছেন! দেখা যাক আপনার প্রতিপক্ষ সেটা ছুঁতে পারে কিনা!</string>
@@ -167,5 +155,4 @@
     <string name="result_share_message">আমি: %1$s | আপনি: %2$s\nসিড: %3$d</string>
     <string name="share_challenge">মানসিক গণিত-এ আমার %1$s স্কোর টপকে যাওয়ার চেষ্টা করুন।\n%2$d সিড দিয়ে আমার গেমটি পুনরায় খেলুন:\n\n%3$s</string>
     <string name="share_new_game">চলুন এক রাউন্ড মানসিক গণিত খেলি!\nআমার সেটিংস এবং সিড দিয়ে একটি নতুন গেম শুরু করতে নিচের লিঙ্কে ক্লিক করুন:\n%1$d\n\n%2$s</string>
-
 </resources>

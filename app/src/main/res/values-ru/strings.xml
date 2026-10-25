@@ -53,6 +53,7 @@
     <!-- Statistics Screen -->
     <string name="result">Результат</string>
     <string name="seed">Сид: %d</string>
+    <string name="problem_limit">Лимит задач</string>
     <string name="time_limit">Лимит времени</string>
     <string name="survival_initial_time">Начальное время на задачу</string>
     <string name="difficulty_addition">Сложность сложения</string>
@@ -60,21 +61,20 @@
     <string name="difficulty_multiplication">Сложность умножения</string>
     <string name="difficulty_division">Сложность деления</string>
     <string name="time_spent">Затраченное время</string>
+    <string name="problems_completed">Решено задач</string>
     <string name="correct_answers">Правильные ответы</string>
     <string name="incorrect_answers">Неправильные ответы</string>
     <string name="accuracy">Точность</string>
     <string name="avg_time_per_correct_answer">Время на правильный ответ</string>
     <string name="score">Счёт</string>
+    <string name="problem">Задача</string>
     <string name="status">Статус</string>
     <string name="status_correct">Правильно</string>
     <string name="status_incorrect">Неправильно</string>
     <string name="status_skipped">Пропущено</string>
-    <string name="done">OK</string>
-    <string name="problem_limit">Лимит задач</string>
-    <string name="problems_completed">Решено задач</string>
-    <string name="problem">Задача</string>
     <string name="status_timeout">Время истекло</string>
     <string name="no_problems">Ни одной задачи не решено</string>
+    <string name="done">OK</string>
     <!-- History Screen -->
     <string name="no_games">Пока нет сыгранных игр с результатами</string>
     <!-- Pop-ups -->
@@ -155,5 +155,4 @@
     <string name="result_share_message">Я: %1$s | Ты: %2$s\nСид: %3$d</string>
     <string name="share_challenge">Сможешь побить мой результат %1$s в Mental Math?\nСыграй мой раунд с сидом %2$d:\n\n%3$s</string>
     <string name="share_new_game">Сыграй раунд Mental Math со мной!\nОткрой ссылку, чтобы начать новую игру с моими настройками и следующим сидом:\n%1$d\n\n%2$s</string>
-
 </resources>

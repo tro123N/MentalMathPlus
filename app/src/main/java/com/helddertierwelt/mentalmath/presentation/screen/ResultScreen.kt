@@ -158,8 +158,7 @@ fun ResultScreen(
     }
 
     fun createLink(): String {
-        val settingsString = SettingsLinkUtil.serialize(resultGameRecord)
-        return "https://mental-math.codeberg.page/app?s=${settingsString}"
+        return SettingsLinkUtil.createLink(resultGameRecord)
     }
 
     fun navigateBack() {

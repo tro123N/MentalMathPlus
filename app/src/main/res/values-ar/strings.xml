@@ -1,70 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Settings Screen -->
+    <string name="app_name">Mental Math</string>
+    <string name="mode_instruction">حدد الوضع والحد</string>
     <string name="second">ث</string>
     <string name="minute">د</string>
-    <string name="light_mode">الوضع الفاتح</string>
-    <string name="horizontal">أفقي</string>
-    <string name="accuracy">الدقة</string>
-    <string name="problems_completed">المسائل المحلولة</string>
-    <string name="difficulty_division">صعوبة القسمة</string>
-    <string name="vertical_toast">تخطيط رأسي</string>
-    <string name="no_share">لا يوجد تطبيق متاح لمشاركة هذا المحتوى.</string>
-    <string name="rtl_toast">إدخال من اليمين إلى اليسار</string>
-    <string name="ltr_toast">إدخال من اليسار إلى اليمين</string>
-    <string name="no_mail">لا يوجد تطبيق متاح لإرسال رسائل البريد الإلكتروني.</string>
-    <string name="time_limit">الحد الزمني</string>
-    <string name="weekly_reminder">تذكير أسبوعي</string>
-    <string name="reset_app">إعادة ضبط التطبيق</string>
-    <string name="feedback">علِّق حول التطبيق</string>
-    <string name="difficulty_multiplication">صعوبة الضرب</string>
+    <string name="operator_instruction">اختر العمليات ومستوى الصعوبة</string>
     <string name="start">بدء</string>
-    <string name="incorrect_answers">الإجابات غير الصحيحة</string>
-    <string name="number_pad">لوحة الأرقام</string>
-    <string name="difficulty_subtraction">صعوبة الطرح</string>
-    <string name="unknown_error">حدث خطأ غير معروف.</string>
-    <string name="recommend">وصِّ بالتطبيق</string>
-    <string name="about">حول التطبيق</string>
-    <string name="horizontal_toast">تخطيط أفقي</string>
-    <string name="no_app_store">لا توجد سوق تطبيقات متاحة لفتح هذه الصفحة.</string>
-    <string name="time_spent">الوقت المُستغرَق</string>
+    <!-- Settings Screen: Menu -->
+    <string name="share_game">شارك اللعبة</string>
     <string name="random_game">لعبة عشوائية</string>
-    <string name="right_to_left">من اليمين إلى اليسار</string>
     <string name="history">السجلّ</string>
-    <string name="avg_time_per_correct_answer">الوقت المُستغرَق لكل إجابة صحيحة</string>
+    <string name="phone_pad">لوحة الهاتف</string>
+    <string name="number_pad">لوحة الأرقام</string>
+    <string name="right_to_left">من اليمين إلى اليسار</string>
+    <string name="left_to_right">من اليسار إلى اليمين</string>
+    <string name="horizontal">أفقي</string>
     <string name="vertical">رأسي</string>
+    <string name="reminder_off">التذكير موقف</string>
+    <string name="daily_reminder">تذكير يومي</string>
+    <string name="every_three_days">كل ٣ أيام</string>
+    <string name="weekly_reminder">تذكير أسبوعي</string>
+    <string name="light_mode">الوضع الفاتح</string>
+    <string name="dark_mode">الوضع الداكن</string>
+    <string name="system_mode">اتباع النظام</string>
+    <string name="sound_on">الصوت مشغل</string>
+    <string name="sound_off">الصوت موقف</string>
     <string name="vibration_on">الاهتزاز مفعّل</string>
     <string name="vibration_off">الاهتزاز معطّل</string>
     <string name="vibration_toast_text">قد تتأثر الاهتزازات بالجهاز أو إعدادات النظام</string>
     <string name="language">اللغة</string>
+    <string name="about">حول التطبيق</string>
+    <string name="feedback">علِّق حول التطبيق</string>
+    <string name="recommend">وصِّ بالتطبيق</string>
+    <string name="donate">تبرَّع</string>
+    <string name="reset_app">إعادة ضبط التطبيق</string>
+    <string name="unknown_error">حدث خطأ غير معروف.</string>
+    <string name="no_browser">لا يوجد تطبيق متاح لفتح هذا الرابط.</string>
+    <string name="no_share">لا يوجد تطبيق متاح لمشاركة هذا المحتوى.</string>
+    <string name="no_app_store">لا توجد سوق تطبيقات متاحة لفتح هذه الصفحة.</string>
+    <string name="no_mail">لا يوجد تطبيق متاح لإرسال رسائل البريد الإلكتروني.</string>
+    <string name="game_settings">إعدادات اللعبة</string>
+    <string name="app_settings">إعدادات التطبيق</string>
+    <string name="support">دعم التطبيق</string>
+    <!-- Settings Screen: Leaderboard -->
+    <string name="top_ten_scores">أفضل ١٠</string>
+    <!-- Game Screen -->
+    <string name="rtl_toast">إدخال من اليمين إلى اليسار</string>
+    <string name="ltr_toast">إدخال من اليسار إلى اليمين</string>
+    <string name="vertical_toast">تخطيط رأسي</string>
+    <string name="horizontal_toast">تخطيط أفقي</string>
+    <!-- Statistics Screen -->
+    <string name="result">النتيجة</string>
+    <string name="seed">البذرة: %d</string>
+    <string name="problem_limit">حد المسائل</string>
+    <string name="time_limit">الحد الزمني</string>
     <string name="survival_initial_time">الوقت الأولي لكل مسألة</string>
     <string name="difficulty_addition">صعوبة الجمع</string>
-    <string name="mode_instruction">حدد الوضع والحد</string>
-    <string name="phone_pad">لوحة الهاتف</string>
+    <string name="difficulty_subtraction">صعوبة الطرح</string>
+    <string name="difficulty_multiplication">صعوبة الضرب</string>
+    <string name="difficulty_division">صعوبة القسمة</string>
+    <string name="time_spent">الوقت المُستغرَق</string>
+    <string name="problems_completed">المسائل المحلولة</string>
     <string name="correct_answers">الإجابات الصحيحة</string>
-    <string name="donate">تبرَّع</string>
-    <string name="dark_mode">الوضع الداكن</string>
-    <string name="share_game">شارك اللعبة</string>
-    <string name="result">النتيجة</string>
-    <string name="operator_instruction">اختر العمليات ومستوى الصعوبة</string>
-    <string name="reminder_off">التذكير موقف</string>
-    <string name="every_three_days">كل ٣ أيام</string>
-    <string name="daily_reminder">تذكير يومي</string>
-    <string name="app_name">Mental Math</string>
-    <string name="no_browser">لا يوجد تطبيق متاح لفتح هذا الرابط.</string>
-    <string name="sound_on">الصوت مشغل</string>
-    <string name="seed">البذرة: %d</string>
-    <string name="left_to_right">من اليسار إلى اليمين</string>
-    <string name="sound_off">الصوت موقف</string>
-    <string name="top_ten_scores">أفضل ١٠</string>
-    <string name="problem_limit">حد المسائل</string>
-    <string name="system_mode">اتباع النظام</string>
+    <string name="incorrect_answers">الإجابات غير الصحيحة</string>
+    <string name="accuracy">الدقة</string>
+    <string name="avg_time_per_correct_answer">الوقت المُستغرَق لكل إجابة صحيحة</string>
     <string name="score">العلامة</string>
     <string name="problem">مسألة</string>
     <string name="status">الحالة</string>
+    <string name="status_correct">صائبة</string>
+    <string name="status_incorrect">خاطئة</string>
+    <string name="status_skipped">متخطاة</string>
     <string name="status_timeout">انتهى الوقت</string>
     <string name="no_problems">لم تُحَلّ أية مسائل</string>
     <string name="done">تم</string>
+    <!-- History Screen -->
     <string name="no_games">لا توجد لعبات ذات علامة</string>
+    <!-- Pop-ups -->
     <string name="notification_popup_title">الإشعارات معطلة</string>
     <string name="notification_popup_description">يرجى تفعيل الإشعارات في إعدادات النظام لضبط التذكيرات.\n\nملاحظة: قد تمنع إعدادات تحسين البطارية وصول الإشعارات.</string>
     <string name="notification_popup_confirmation_text">فتح الإعدادات</string>
@@ -86,57 +99,60 @@
     <string name="survival_completed_popup_description">لقد أنجزت جميع المهام المئة!</string>
     <string name="cancel">إلغاء</string>
     <string name="ok">حسنًا</string>
+    <!-- Result pop-up messages -->
     <string name="waiting_title">في انتظار خصمك…</string>
     <string name="waiting_message_1">أنت: %1$s | الخصم: ؟؟\nالبذرة: %2$d\n\nلقد رفعت سقف التحدي! لنرَ إنْ كان خصمك سيتمكن من اللحاق بك!</string>
     <string name="waiting_message_2">أنت: %1$s | الخصم: ؟؟\nالبذرة: %2$d\n\nثُبِّتَت نتيجتك - حان دور خصمك للرد!</string>
     <string name="waiting_message_3">أنت: %1$s | الخصم: ؟؟\nالبذرة: %2$d\n\nالأنظار كلها متجهة الآن إلى خصمك!</string>
     <string name="waiting_message_4">أنت: %1$s | الخصم: ؟؟\nالبذرة: %2$d\n\nلقد تقدمت في النتيجة… أم لا؟</string>
     <string name="waiting_message_5">أنت: %1$s | الخصم: ؟؟\nالبذرة: %2$d\n\nنتيجتك رائعة لدرجة أنهم ربما سيحذفون اللعبة.</string>
+
     <string name="easy_win_title">فوز سهل</string>
     <string name="easy_win_message_1">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nفوز، ولكن بدون منافسة حقيقية!</string>
     <string name="easy_win_message_2">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nلم يقدّم خصمك أفضل ما لديه… أو أيّ أداءٍ على الإطلاق!</string>
     <string name="easy_win_message_3">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nلقد فزت بينما كان خصمك لا يزال يحاول فهم القواعد.</string>
+
     <string name="anyone_here_title">هل يوجد أحدٌ هنا؟</string>
     <string name="anyone_here_message_1">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nلعبة لا طائل منها!</string>
     <string name="anyone_here_message_2">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nصدى… صدى… هل هناك أحدٌ يلعب هذه اللعبة؟</string>
     <string name="anyone_here_message_3">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nلم يحدث شيءٌ يُذكَر هنا.</string>
+
     <string name="win_title">لقد فزت</string>
     <string name="win_message_1">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nيا له من حسابٍ ذهنيٍّ مُرهِق!</string>
     <string name="win_message_2">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nالفوز يليق بك!</string>
     <string name="win_message_3">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nحساباتك الذهنية أشبه بالسحر.</string>
     <string name="win_message_4">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nقد يحتاج خصمك إلى آلةٍ حاسبةٍ في المرة القادمة!</string>
     <string name="win_message_5">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nفُعِّلَت المهارات الرياضية - هُزِم الخصم!</string>
-    <string name="status_correct">صائبة</string>
-    <string name="status_incorrect">خاطئة</string>
-    <string name="status_skipped">متخطاة</string>
+
     <string name="close_win_title">فوزٌ بفارق ضئيل</string>
     <string name="close_win_message_1">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nكانت مباراة حماسية! لحسن حظك أنك لم ترمش.</string>
     <string name="close_win_message_2">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nمباراة متقاربة! لكن طعم النصر لا يزال لذيذًا.</string>
     <string name="close_win_message_3">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nحركة جيدة من خصمك، لكن النتيجة لا تكذب!</string>
     <string name="close_win_message_4">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nيا لها من نهاية مثيرة… انتهى الأمر باسمك في المقدمة!</string>
     <string name="close_win_message_5">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nمع الاحترام لخصمك، لكن الفوز يبقى فوزًا.</string>
+
     <string name="draw_title">تعادل</string>
     <string name="draw_message_1">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nلا فائز ولا خاسر، فقط أبطال.</string>
     <string name="draw_message_2">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nحان وقت مباراة إعادة لحسم هذا الأمر نهائيًّا.</string>
     <string name="draw_message_3">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nلا يمكن تحديد الفائز الحقيقي إلا من خلال جولة جديدة.</string>
+
     <string name="close_defeat_title">فوزٌ بفارق ضئيل</string>
     <string name="close_defeat_message_1">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nكدت تفوز! ولكن لا تقلق، فإنّ الانتقام لذيذ.</string>
     <string name="close_defeat_message_2">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nلقد حالف الحظ خصمك هذه المرة.</string>
     <string name="close_defeat_message_3">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nلا تدع خصمك يستمتع بهذا النصر لفترة طويلة.</string>
     <string name="close_defeat_message_4">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nاستمر في المحاولة، فالنصر قريب.</string>
     <string name="close_defeat_message_5">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nأنت قريبٌ للغاية! استمر، فمهاراتك لا تُنكَر.</string>
+
     <string name="defeat_title">هزيمة</string>
     <string name="defeat_message_1">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nتجاوَز الأمر وحاول مرّةً أخرى!</string>
     <string name="defeat_message_2">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nكل الأبطال مروا بهذه المرحلة. حان دورك الآن لتتألق.</string>
     <string name="defeat_message_3">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nيومٌ لك، ويومٌ عليك. هذه هي الحياة.</string>
     <string name="defeat_message_4">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nلا بأس، فالحياة أوسع من ذلك.</string>
     <string name="defeat_message_5">أنت: %1$s | الخصم: %2$s\nالبذرة: %3$d\n\nدع منافسك يستمتع بالفوز. لكل شخص لحظته.</string>
+
     <string name="result_popup_confirmation_text">شارك</string>
     <string name="result_share_message_waiting">أنا: %1$s | أنت: ؟؟\nالبذرة: %2$d</string>
     <string name="result_share_message">أنا: %1$s | أنت: %2$s\nالبذرة: %3$d</string>
     <string name="share_challenge">حاول أنْ تتفوّق على نتيجتي البالغة %1$s في تطبيق الحساب الذهني.\nأعد تشغيل لعبتي باستخدام البذرة %2$d:\n\n%3$s</string>
     <string name="share_new_game">هيّا نلعب جولةً من الحساب الذهني!\nانقر على الرابط أدناه لبدء لعبةٍ جديدةٍ بإعداداتي ورقم البذرة:\n%1$d\n\n%2$s</string>
-    <string name="game_settings">إعدادات اللعبة</string>
-    <string name="app_settings">إعدادات التطبيق</string>
-    <string name="support">دعم التطبيق</string>
 </resources>

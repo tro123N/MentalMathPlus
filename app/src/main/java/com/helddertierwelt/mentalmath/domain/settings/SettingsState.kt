@@ -18,6 +18,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 
 package com.helddertierwelt.mentalmath.domain.settings
 
+import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
@@ -48,4 +49,19 @@ data class SettingsState(
     val inputMode: InputMode = InputMode.PHONE_KEYPAD,
     val inputDirectionMode: InputDirectionMode = InputDirectionMode.LEFT_TO_RIGHT,
     val formMode: FormMode = FormMode.HORIZONTAL
-)
+) {
+    fun toNewGameRecord(seed: Long) = GameRecord(
+        gameMode = gameMode,
+        modeLimit = limit.toInt(),
+        additionRangeStart = if (isAdditionEnabled) additionRange.first.toInt() else 0,
+        additionRangeEnd = if (isAdditionEnabled) additionRange.second.toInt() else 0,
+        subtractionRangeStart = if (isSubtractionEnabled) subtractionRange.first.toInt() else 0,
+        subtractionRangeEnd = if (isSubtractionEnabled) subtractionRange.second.toInt() else 0,
+        multiplicationRangeStart = if (isMultiplicationEnabled) multiplicationRange.first.toInt() else 0,
+        multiplicationRangeEnd = if (isMultiplicationEnabled) multiplicationRange.second.toInt() else 0,
+        divisionRangeStart = if (isDivisionEnabled) divisionRange.first.toInt() else 0,
+        divisionRangeEnd = if (isDivisionEnabled) divisionRange.second.toInt() else 0,
+        activeScore = SettingsLinkUtil.NO_SCORE,
+        seed = seed
+    )
+}

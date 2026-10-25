@@ -22,7 +22,6 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Base64
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -33,6 +32,7 @@ import com.helddertierwelt.mentalmath.data.repository.SettingsRepository
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackController
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.settings.SettingsGroup
+import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil
 import com.helddertierwelt.mentalmath.domain.settings.SettingsState
 import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
@@ -47,7 +47,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -313,53 +312,40 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun checkForGamesWithScore() {
-        val additionRangeStart = if (settingsState.value.isAdditionEnabled) settingsState.value.additionRange.first.toInt() else 0
-        val additionRangeEnd = if (settingsState.value.isAdditionEnabled) settingsState.value.additionRange.second.toInt() else 0
-        val subtractionRangeStart = if (settingsState.value.isSubtractionEnabled) settingsState.value.subtractionRange.first.toInt() else 0
-        val subtractionRangeEnd = if (settingsState.value.isSubtractionEnabled) settingsState.value.subtractionRange.second.toInt() else 0
-        val multiplicationRangeStart = if (settingsState.value.isMultiplicationEnabled) settingsState.value.multiplicationRange.first.toInt() else 0
-        val multiplicationRangeEnd = if (settingsState.value.isMultiplicationEnabled) settingsState.value.multiplicationRange.second.toInt() else 0
-        val divisionRangeStart = if (settingsState.value.isDivisionEnabled) settingsState.value.divisionRange.first.toInt() else 0
-        val divisionRangeEnd = if (settingsState.value.isDivisionEnabled) settingsState.value.divisionRange.second.toInt() else 0
+        val game = settingsState.value.toNewGameRecord(seed = 0)
 
         viewModelScope.launch(Dispatchers.IO) {
             val hasGamesWithScore = gameRecordRepository.hasGamesWithScore(
-                settingsState.value.gameMode,
-                settingsState.value.limit.toInt(),
-                additionRangeStart,
-                additionRangeEnd,
-                subtractionRangeStart,
-                subtractionRangeEnd,
-                multiplicationRangeStart,
-                multiplicationRangeEnd,
-                divisionRangeStart,
-                divisionRangeEnd
+                game.gameMode,
+                game.modeLimit,
+                game.additionRangeStart,
+                game.additionRangeEnd,
+                game.subtractionRangeStart,
+                game.subtractionRangeEnd,
+                game.multiplicationRangeStart,
+                game.multiplicationRangeEnd,
+                game.divisionRangeStart,
+                game.divisionRangeEnd
             )
             _hasGamesWithScore.value = hasGamesWithScore
         }
     }
 
     fun loadBestGameScores() {
-        val additionRangeStart = if (settingsState.value.isAdditionEnabled) settingsState.value.additionRange.first.toInt() else 0
-        val additionRangeEnd = if (settingsState.value.isAdditionEnabled) settingsState.value.additionRange.second.toInt() else 0
-        val subtractionRangeStart = if (settingsState.value.isSubtractionEnabled) settingsState.value.subtractionRange.first.toInt() else 0
-        val subtractionRangeEnd = if (settingsState.value.isSubtractionEnabled) settingsState.value.subtractionRange.second.toInt() else 0
-        val multiplicationRangeStart = if (settingsState.value.isMultiplicationEnabled) settingsState.value.multiplicationRange.first.toInt() else 0
-        val multiplicationRangeEnd = if (settingsState.value.isMultiplicationEnabled) settingsState.value.multiplicationRange.second.toInt() else 0
-        val divisionRangeStart = if (settingsState.value.isDivisionEnabled) settingsState.value.divisionRange.first.toInt() else 0
-        val divisionRangeEnd = if (settingsState.value.isDivisionEnabled) settingsState.value.divisionRange.second.toInt() else 0
+        val game = settingsState.value.toNewGameRecord(seed = 0)
+
         viewModelScope.launch(Dispatchers.IO) {
             val resultBestGames = gameRecordRepository.findBestGameScores(
-                settingsState.value.gameMode,
-                settingsState.value.limit.toInt(),
-                additionRangeStart,
-                additionRangeEnd,
-                subtractionRangeStart,
-                subtractionRangeEnd,
-                multiplicationRangeStart,
-                multiplicationRangeEnd,
-                divisionRangeStart,
-                divisionRangeEnd
+                game.gameMode,
+                game.modeLimit,
+                game.additionRangeStart,
+                game.additionRangeEnd,
+                game.subtractionRangeStart,
+                game.subtractionRangeEnd,
+                game.multiplicationRangeStart,
+                game.multiplicationRangeEnd,
+                game.divisionRangeStart,
+                game.divisionRangeEnd
             )
             _bestGameScores.value = resultBestGames
         }
@@ -370,27 +356,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun generateSeedLink(seed: Long): String {
-        val state = _settingsState.value
-        val settingsStringByteArray = listOf(
-            when (state.gameMode) {
-                GameMode.TIMED -> "0"
-                GameMode.PROBLEMS -> "1"
-                GameMode.SURVIVAL -> "2"
-            },
-            state.limit.toInt().toString(),
-            if (state.isAdditionEnabled) state.additionRange.first.toInt().toString() else "0",
-            if (state.isAdditionEnabled) state.additionRange.second.toInt().toString() else "0",
-            if (state.isSubtractionEnabled) state.subtractionRange.first.toInt().toString() else "0",
-            if (state.isSubtractionEnabled) state.subtractionRange.second.toInt().toString() else "0",
-            if (state.isMultiplicationEnabled) state.multiplicationRange.first.toInt().toString() else "0",
-            if (state.isMultiplicationEnabled) state.multiplicationRange.second.toInt().toString() else "0",
-            if (state.isDivisionEnabled) state.divisionRange.first.toInt().toString() else "0",
-            if (state.isDivisionEnabled) state.divisionRange.second.toInt().toString() else "0",
-            "%019d".format(Locale.ENGLISH, seed)
-        ).joinToString("").toBigInteger().toByteArray()
-
-        val encoded = Base64.encodeToString(settingsStringByteArray, Base64.URL_SAFE or Base64.NO_WRAP)
-        return "https://mental-math.codeberg.page/app?s=${encoded}"
+        return SettingsLinkUtil.createLink(settingsState.value.toNewGameRecord(seed))
     }
 
     fun playFeedback(feedbackType: FeedbackType) {

@@ -48,8 +48,8 @@
     <!-- Game Screen -->
     <string name="rtl_toast">Jobbról balra bevitel</string>
     <string name="ltr_toast">Balról jobbra bevitel</string>
-    <string name="horizontal_toast">Vízszintes elrendezés</string>
     <string name="vertical_toast">Függőleges elrendezés</string>
+    <string name="horizontal_toast">Vízszintes elrendezés</string>
     <!-- Statistics Screen -->
     <string name="result">Eredmény</string>
     <string name="seed">Seed: %d</string>

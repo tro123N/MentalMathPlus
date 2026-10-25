@@ -7,7 +7,6 @@
     <string name="minute">λεπ.</string>
     <string name="operator_instruction">Επιλογή τελεστών και δυσκολίας</string>
     <string name="start">Εναρξη</string>
-
     <!-- Settings Screen: Menu -->
     <string name="share_game">Κοινή Χρήση Παρτίδας</string>
     <string name="random_game">Τυχαία Παρτίδα</string>
@@ -49,12 +48,12 @@
     <!-- Game Screen -->
     <string name="rtl_toast">Εισαγωγή από δεξιά προς τα αριστερά</string>
     <string name="ltr_toast">Εισαγωγή από αριστερά προς τα δεξιά</string>
-    <string name="horizontal_toast">Οριζόντια διάταξη</string>
     <string name="vertical_toast">Κατακόρυφη διάταξη</string>
-
+    <string name="horizontal_toast">Οριζόντια διάταξη</string>
     <!-- Statistics Screen -->
     <string name="result">Αποτέλεσμα</string>
     <string name="seed">Seed: %d</string>
+    <string name="problem_limit">Όριο ασκήσεων</string>
     <string name="time_limit">Χρονικό Οριο</string>
     <string name="survival_initial_time">Αρχικός χρόνος ανά άσκηση</string>
     <string name="difficulty_addition">Δυσκολία Πρόσθεσης</string>
@@ -62,22 +61,20 @@
     <string name="difficulty_multiplication">Δυσκολία Πολλαπλασιασμού</string>
     <string name="difficulty_division">Δυσκολία Διαίρεσης</string>
     <string name="time_spent">Χρόνος που αφιερώθηκε</string>
+    <string name="problems_completed">Λυμένες ασκήσεις</string>
     <string name="correct_answers">Σωστές Απαντήσεις</string>
     <string name="incorrect_answers">Λανθασμένες Απαντήσεις</string>
     <string name="accuracy">Ακρίβεια</string>
     <string name="avg_time_per_correct_answer">Χρόνος που αφιερώθηκε/Σωστές απαντήσεις</string>
     <string name="score">Βαθμολογία</string>
+    <string name="problem">Άσκηση</string>
     <string name="status">Κατάσταση</string>
     <string name="status_correct">Σωστό</string>
     <string name="status_incorrect">Λάθος</string>
     <string name="status_skipped">Παραλείφθηκε</string>
-    <string name="done">Ολοκλήρωση</string>
-    <string name="problem_limit">Όριο ασκήσεων</string>
-    <string name="problems_completed">Λυμένες ασκήσεις</string>
-    <string name="problem">Άσκηση</string>
     <string name="status_timeout">Ο χρόνος έληξε</string>
     <string name="no_problems">Δεν λύθηκαν ασκήσεις</string>
-
+    <string name="done">Ολοκλήρωση</string>
     <!-- History Screen -->
     <string name="no_games">Δεν υπάρχουν παρτίδες με βαθμολογία</string>
     <!-- Pop-ups -->
@@ -158,5 +155,4 @@
     <string name="result_share_message">Εγώ: %1$s | Εσύ: %2$s\nSeed: %3$d</string>
     <string name="share_challenge">Δοκιμάστε να ξεπεράσετε το σκορ μου %1$s στο Mental Math.\nΕπαναλάβετε το παιχνίδι μου με το Seed %2$d:\n\n%3$s</string>
     <string name="share_new_game">Ας παίξουμε μια παρτίδα Mental Math!\nΚάντε κλικ στο παρακάτω link για να αρχίσετε μια φρέσκια παρτίδα με τις ρυθμίσεις μου και το Seed:\n%1$d\n\n%2$s</string>
-
 </resources>

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Zvolte režim a limit</string>
     <string name="operator_instruction">Zvolte operace a složitost</string>
     <string name="start">Začít</string>
+    <!-- Settings Screen: Menu -->
     <string name="share_game">Sdílet hru</string>
     <string name="random_game">Náhodná hra</string>
     <string name="history">Historie</string>
@@ -37,11 +39,14 @@
     <string name="game_settings">Nastavení hry</string>
     <string name="app_settings">Nastavení aplikace</string>
     <string name="support">Podpora</string>
+    <!-- Settings Screen: Leaderboard -->
     <string name="top_ten_scores">Top 10</string>
+    <!-- Game Screen -->
     <string name="rtl_toast">Zprava doleva vstup</string>
     <string name="ltr_toast">Zleva doprava vstup</string>
-    <string name="horizontal_toast">Horizontální rozvržení</string>
     <string name="vertical_toast">Vertikální rozvržení</string>
+    <string name="horizontal_toast">Horizontální rozvržení</string>
+    <!-- Statistics Screen -->
     <string name="result">Výsledek</string>
     <string name="seed">Seed: %d</string>
     <string name="problem_limit">Limit úkolů</string>

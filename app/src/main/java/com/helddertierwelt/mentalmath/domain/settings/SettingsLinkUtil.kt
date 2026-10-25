@@ -26,25 +26,37 @@ import java.math.BigInteger
 import java.util.Locale
 
 object SettingsLinkUtil {
+
+    const val NO_SCORE = -1f
+    private const val LINK_PREFIX = "https://mental-math.codeberg.page/app?s="
+
+    fun createLink(record: GameRecord): String {
+        return LINK_PREFIX + serialize(record)
+    }
+
     fun serialize(record: GameRecord): String {
-        val settingsStringByteArray = listOf(
-            when (record.gameMode) {
-                GameMode.TIMED -> "0"
-                GameMode.PROBLEMS -> "1"
-                GameMode.SURVIVAL -> "2"
-            },
-            record.modeLimit.toString(),
-            record.additionRangeStart.toString(),
-            record.additionRangeEnd.toString(),
-            record.subtractionRangeStart.toString(),
-            record.subtractionRangeEnd.toString(),
-            record.multiplicationRangeStart.toString(),
-            record.multiplicationRangeEnd.toString(),
-            record.divisionRangeStart.toString(),
-            record.divisionRangeEnd.toString(),
-            "%019d".format(Locale.ENGLISH, record.seed),
-            "%06d".format(Locale.ENGLISH, (record.activeScore * 100).toInt())
-        ).joinToString("").toBigInteger().toByteArray()
+        val settingsStringByteArray = buildList {
+            add(
+                when (record.gameMode) {
+                    GameMode.TIMED -> "0"
+                    GameMode.PROBLEMS -> "1"
+                    GameMode.SURVIVAL -> "2"
+                }
+            )
+            add(record.modeLimit.toString())
+            add(record.additionRangeStart.toString())
+            add(record.additionRangeEnd.toString())
+            add(record.subtractionRangeStart.toString())
+            add(record.subtractionRangeEnd.toString())
+            add(record.multiplicationRangeStart.toString())
+            add(record.multiplicationRangeEnd.toString())
+            add(record.divisionRangeStart.toString())
+            add(record.divisionRangeEnd.toString())
+            add("%019d".format(Locale.ENGLISH, record.seed))
+            if (record.activeScore >= 0f) {
+                add("%06d".format(Locale.ENGLISH, (record.activeScore * 100).toInt()))
+            }
+        }.joinToString("").toBigInteger().toByteArray()
 
         val encoded = Base64.encodeToString(settingsStringByteArray, Base64.URL_SAFE or Base64.NO_WRAP)
         return encoded
@@ -82,7 +94,7 @@ object SettingsLinkUtil {
             correctAnswers = 0,
             activeTime = 0L,
             totalTime = 0L,
-            activeScore = if (hasScore) bigIntString.substring(29, 35).toInt() / 100f else -1f,
+            activeScore = if (hasScore) bigIntString.substring(29, 35).toInt() / 100f else NO_SCORE,
             seed = bigIntString.substring(10, 29).toLong(),
             totalScore = 0f,
             solvedProblems = emptyList()

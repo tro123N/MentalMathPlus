@@ -28,7 +28,7 @@ import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.data.entity.MathProblem
 import com.helddertierwelt.mentalmath.data.repository.GameRecordRepository
 import com.helddertierwelt.mentalmath.data.repository.MathProblemRepository
-import com.helddertierwelt.mentalmath.domain.feedback.FeedbackController
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackPlayer
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.game.GameState
 import com.helddertierwelt.mentalmath.domain.game.Operation
@@ -38,8 +38,8 @@ import com.helddertierwelt.mentalmath.domain.settings.SettingsState
 import com.helddertierwelt.mentalmath.domain.settings.enums.FormMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
+import com.helddertierwelt.mentalmath.domain.time.TimeProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -49,7 +49,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
@@ -61,7 +60,8 @@ import kotlin.time.Duration.Companion.milliseconds
 class GameViewModel @Inject constructor(
     private val mathProblemRepository: MathProblemRepository,
     private val gameRecordRepository: GameRecordRepository,
-    private val feedbackController: FeedbackController,
+    private val feedbackPlayer: FeedbackPlayer,
+    private val timeProvider: TimeProvider,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel(), DefaultLifecycleObserver {
 
@@ -79,7 +79,7 @@ class GameViewModel @Inject constructor(
     private val _gameEvents = MutableSharedFlow<GameEvent>()
     val gameEvents = _gameEvents.asSharedFlow()
 
-    private var random: Random = Random(System.currentTimeMillis())
+    private var random: Random = Random(timeProvider.now())
     private val randomMutex = Mutex()
 
     private val _disableEnterButton = MutableStateFlow(false)
@@ -289,7 +289,7 @@ class GameViewModel @Inject constructor(
 
     private fun generateNewProblem() {
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
 
             // lock all calls with the random-object to keep the order of problems deterministic
             val (operation, operands) = randomMutex.withLock {
@@ -345,22 +345,18 @@ class GameViewModel @Inject constructor(
 
             // delay to let the ui show if the answer was correct
             delay(80.milliseconds)
-            withContext(Dispatchers.Main) {
-                saveState(
-                    _gameState.value.copy(
-                        operand1 = operands.first,
-                        operand2 = operands.second,
-                        operator = operation,
-                        input = "",
-                        problemStatus = ProblemStatus.SKIPPED
-                    )
+            saveState(
+                _gameState.value.copy(
+                    operand1 = operands.first,
+                    operand2 = operands.second,
+                    operator = operation,
+                    input = "",
+                    problemStatus = ProblemStatus.SKIPPED
                 )
-            }
+            )
 
             delay(170.milliseconds)
-            withContext(Dispatchers.Main) {
-                _disableEnterButton.value = false
-            }
+            _disableEnterButton.value = false
         }
     }
 
@@ -436,7 +432,7 @@ class GameViewModel @Inject constructor(
             totalScore = totalScore
         )
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val newId = gameRecordRepository.insertGameRecord(gameRecord)
             gameRecordRepository.setLastGameRecord(
                 gameRecord.copy(id = newId.toInt())
@@ -446,7 +442,7 @@ class GameViewModel @Inject constructor(
 
     private fun saveCancelledGameRecord() {
         val cancelledGame = createGameRecord(_gameState.value)
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             gameRecordRepository.insertGameRecord(cancelledGame)
         }
     }
@@ -599,13 +595,13 @@ class GameViewModel @Inject constructor(
 
     fun resetGameData() {
         resetGameState()
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             gameRecordRepository.reset()
         }
     }
 
     fun playFeedback(feedbackType: FeedbackType) {
-        feedbackController.play(feedbackType)
+        feedbackPlayer.play(feedbackType)
     }
 
     fun playDelayedFeedback(feedbackType: FeedbackType) {
@@ -618,8 +614,8 @@ class GameViewModel @Inject constructor(
     private fun setStartTimestamps() {
         val state = _gameState.value
         saveState(state.copy(
-            startTimeStamp = System.currentTimeMillis(),
-            survivalProblemStartTime = System.currentTimeMillis(),
+            startTimeStamp = timeProvider.now(),
+            survivalProblemStartTime = timeProvider.now(),
             survivalTimeLeft = if (state.gameMode == GameMode.SURVIVAL) {
                 getSurvivalTimeLimit(state) * 1000L
             } else {
@@ -649,7 +645,7 @@ class GameViewModel @Inject constructor(
     private fun updateGameTime() {
         val state = _gameState.value
 
-        val elapsedTime = System.currentTimeMillis() - state.startTimeStamp
+        val elapsedTime = timeProvider.now() - state.startTimeStamp
         val activeTime = elapsedTime - state.totalPauseDuration
         val survivalTimeLeft = if (state.gameMode == GameMode.SURVIVAL) {
             calculateSurvivalTimeLeft(state)
@@ -705,7 +701,7 @@ class GameViewModel @Inject constructor(
 
         saveState(
             _gameState.value.copy(
-                survivalProblemStartTime = System.currentTimeMillis(),
+                survivalProblemStartTime = timeProvider.now(),
                 survivalTimeLeft = getSurvivalTimeLimit(_gameState.value) * 1000L
             )
         )
@@ -724,7 +720,7 @@ class GameViewModel @Inject constructor(
     }
 
     private fun calculateSurvivalTimeLeft(state: GameState): Long {
-        val elapsedTime = System.currentTimeMillis() - state.survivalProblemStartTime
+        val elapsedTime = timeProvider.now() - state.survivalProblemStartTime
         val timeLimit = getSurvivalTimeLimit(state) * 1000L
 
         return (timeLimit - elapsedTime).coerceAtLeast(0L)
@@ -744,7 +740,7 @@ class GameViewModel @Inject constructor(
         if (_gameState.value.isGameStarted && _gameState.value.isTimerRunning) {
             saveState(
                 _gameState.value.copy(
-                    pausedAt = System.currentTimeMillis(),
+                    pausedAt = timeProvider.now(),
                     isTimerRunning = false
                 )
             )
@@ -758,7 +754,7 @@ class GameViewModel @Inject constructor(
         ) return
 
         val state = _gameState.value
-        val now = System.currentTimeMillis()
+        val now = timeProvider.now()
         val pauseDuration = now - state.pausedAt
 
         val newState = state.copy(

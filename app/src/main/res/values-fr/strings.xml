@@ -48,14 +48,14 @@
     <!-- Game Screen -->
     <string name="rtl_toast">Saisie de droite à gauche</string>
     <string name="ltr_toast">Saisie de gauche à droite</string>
-    <string name="horizontal_toast">Disposition horizontale</string>
     <string name="vertical_toast">Disposition verticale</string>
+    <string name="horizontal_toast">Disposition horizontale</string>
     <!-- Statistics Screen -->
     <string name="result">Résultat</string>
     <string name="seed">Seed : %d</string>
     <string name="problem_limit">Limite de problèmes</string>
     <string name="time_limit">Limite de temps</string>
-    <string name="survival_initial_time">"Temps initial par problème "</string>
+    <string name="survival_initial_time">Temps initial par problème</string>
     <string name="difficulty_addition">Difficulté (addition)</string>
     <string name="difficulty_subtraction">Difficulté (soustraction)</string>
     <string name="difficulty_multiplication">Difficulté (multiplication)</string>
@@ -72,7 +72,7 @@
     <string name="status_correct">Correct</string>
     <string name="status_incorrect">Incorrect</string>
     <string name="status_skipped">Passée</string>
-    <string name="status_timeout">Temps écoulé</string>
+    <string name="status_timeout">Délai dépassé</string>
     <string name="no_problems">Aucun problème résolu</string>
     <string name="done">Retour</string>
     <!-- History Screen -->
@@ -95,7 +95,6 @@
     <string name="app_link_popup_confirmation_text">Démarrer</string>
     <string name="already_played_popup_title">Partie déjà jouée</string>
     <string name="already_played_popup_description">Tu as déjà joué une partie avec le même seed et les mêmes paramètres.\n\nEssaye un autre lien, ou démarre une nouvelle partie.</string>
-
     <string name="survival_completed_popup_title">Roi de la survie</string>
     <string name="survival_completed_popup_description">Tu as réussi les 100 exercices !</string>
     <string name="cancel">Abandonner</string>
@@ -156,5 +155,4 @@
     <string name="result_share_message">Moi : %1$s | Toi : %2$s\nSeed : %3$d</string>
     <string name="share_challenge">%1$s points sur Mental Math, essaye de me battre !\nRejoue ma partie avec le seed %2$d:\n\n%3$s</string>
     <string name="share_new_game">Une partie sur Mental Math ?\nSuit le lien pour démarrer une partie avec ma configuration et mon seed :\n%1$d\n\n%2$s</string>
-
 </resources>

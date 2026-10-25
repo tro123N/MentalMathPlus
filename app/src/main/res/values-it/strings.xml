@@ -48,8 +48,8 @@
     <!-- Game Screen -->
     <string name="rtl_toast">Input da destra a sinistra</string>
     <string name="ltr_toast">Input da sinistra a destra</string>
-    <string name="horizontal_toast">Disposizione orizzontale</string>
     <string name="vertical_toast">Disposizione verticale</string>
+    <string name="horizontal_toast">Disposizione orizzontale</string>
     <!-- Statistics Screen -->
     <string name="result">Risultato</string>
     <string name="seed">Seed: %d</string>

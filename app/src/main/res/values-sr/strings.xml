@@ -48,8 +48,8 @@
     <!-- Game Screen -->
     <string name="rtl_toast">Unos zdesna nalevo</string>
     <string name="ltr_toast">Unos sleva nadesno</string>
-    <string name="horizontal_toast">Vodoravni raspored</string>
     <string name="vertical_toast">Uspravni raspored</string>
+    <string name="horizontal_toast">Vodoravni raspored</string>
     <!-- Statistics Screen -->
     <string name="result">Rezultat</string>
     <string name="seed">Seed: %d</string>

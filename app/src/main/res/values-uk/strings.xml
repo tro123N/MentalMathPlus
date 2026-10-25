@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Settings Screen -->
     <string name="app_name">Mental Math</string>
     <string name="mode_instruction">Оберіть режим та ліміт</string>
     <string name="operator_instruction">Оберіть операції та рівень складності</string>
     <string name="start">Початок</string>
+    <!-- Settings Screen: Menu -->
     <string name="share_game">Поділитися грою</string>
     <string name="random_game">Випадкова гра</string>
     <string name="history">Історія</string>
