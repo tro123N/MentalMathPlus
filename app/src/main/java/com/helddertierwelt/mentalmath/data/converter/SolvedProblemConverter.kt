@@ -50,7 +50,8 @@ class SolvedProblemConverter {
 
     @TypeConverter
     fun toSolvedProblemList(value: String): List<SolvedProblem> {
-        if (value.isBlank()) {
+        // version 29 wrote the old JSON "[]" when the app was reset
+        if (value.isBlank() || value == "[]") {
             return emptyList()
         }
 

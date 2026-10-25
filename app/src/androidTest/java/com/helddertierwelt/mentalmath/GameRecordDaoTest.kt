@@ -181,6 +181,14 @@ class GameRecordDaoTest {
     }
 
     @Test
+    fun gameResetByVersion29CanStillBeLoaded() = runBlocking {
+        val id = dao.insert(game).toInt()
+        database.openHelper.writableDatabase.execSQL("UPDATE game_records SET solvedProblems = '[]'")
+
+        assertEquals(emptyList<SolvedProblem>(), dao.findById(id)?.solvedProblems)
+    }
+
+    @Test
     fun linkGameStaysPlayedAfterReset() = runBlocking {
         dao.insert(game)
 
