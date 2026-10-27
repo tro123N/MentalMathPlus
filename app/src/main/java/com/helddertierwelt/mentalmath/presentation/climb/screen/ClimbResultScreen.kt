@@ -206,6 +206,18 @@ private fun typeTitle(type: SessionType): String = when (type) {
     SessionType.FREE -> "Freies Training"
 }
 
+/** Eine Zeile für die Aufgabenliste: Aufgabe mit kurzer Beschreibung, ohne doppelte Fragezeichen. */
+private fun promptLine(prompt: com.helddertierwelt.mentalmath.domain.climb.model.Prompt): String {
+    val caption = prompt.caption
+    val lines = if (prompt.lines.isNotEmpty() && prompt.hideAfterMs == null) " (" + prompt.lines.joinToString("; ") { it.trim() } + ")" else ""
+    return when {
+        caption == null -> prompt.text + lines
+        prompt.text.startsWith("?") -> caption
+        caption.length <= 8 -> prompt.text + lines
+        else -> "$caption: ${prompt.text}$lines"
+    }
+}
+
 /** Schulnote aus dem Anteil richtiger Antworten. */
 fun grade(correct: Int, total: Int): Int {
     if (total == 0) return 6
@@ -362,7 +374,7 @@ private fun ProblemsCard(results: List<ProblemResult>) {
                     Column(modifier = Modifier.weight(1f)) {
                         val prompt = r.problem.prompt
                         Text(
-                            text = (prompt.caption?.let { "$it: " } ?: "") + prompt.text,
+                            text = promptLine(prompt),
                             fontSize = dimens.fonts.sideSheetEntry,
                             color = MaterialTheme.colorScheme.onPrimary,
                         )

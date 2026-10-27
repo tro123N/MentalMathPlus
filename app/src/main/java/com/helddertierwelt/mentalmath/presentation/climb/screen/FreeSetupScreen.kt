@@ -95,6 +95,14 @@ fun paramLabel(mode: FreeMode, param: Int): String = when (mode) {
     FreeMode.ENDLOS -> ""
 }
 
+/** Kurze Beschriftung für die Auswahlknöpfe. */
+private fun shortParamLabel(mode: FreeMode, param: Int): String = when (mode) {
+    FreeMode.ZEIT -> "${param / 60} min"
+    FreeMode.UEBERLEBEN -> "♥ $param"
+    FreeMode.PRUEFUNG -> "$param"
+    FreeMode.ENDLOS -> ""
+}
+
 /** Freies Training: Aufgabenarten, Schwierigkeit und Modus wählen, Statistik ansehen. */
 @Composable
 fun FreeSetupScreen(navController: NavController) {
@@ -206,7 +214,7 @@ fun FreeSetupScreen(navController: NavController) {
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 FreeConfig.options(mode).forEach { option ->
                                     PillButton(
-                                        text = paramLabel(mode, option),
+                                        text = shortParamLabel(mode, option),
                                         onClick = { update(config.copy(param = option)) },
                                         color = if (config.param == option) blue else MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
                                         modifier = Modifier.weight(1f),
