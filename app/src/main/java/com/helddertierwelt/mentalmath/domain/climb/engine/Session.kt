@@ -53,6 +53,7 @@ data class FreeRules(
     val mode: FreeMode,
     /** Sekunden (Zeit), Leben (Überleben) bzw. Aufgaben (Prüfung). */
     val param: Int,
+    /** Stufe 1 bis 3; 0 = automatisch (anpassende Schwierigkeit). */
     val level: Int,
 ) {
     /** Schlüssel für Bestwerte, z. B. „ZEIT_60“. */
@@ -115,6 +116,8 @@ data class Session(
     val free: FreeRules? = null,
     /** Nur beim Einstufungstest gesetzt: die geprüfte Welt. */
     val worldId: String? = null,
+    /** Nur im freien Training mit anpassender Schwierigkeit gesetzt. */
+    val adaptive: AdaptiveState? = null,
 ) {
     val current: Planned? get() = problems.getOrNull(index)
     val problem: Problem? get() = current?.problem
@@ -182,6 +185,21 @@ object SessionLogic {
             timeLimitMs = timeLimitMs,
             free = rules,
         )
+
+    /**
+     * Anpassende Schwierigkeit: nach einer Antwort die Stufe nachführen. Ändert sie sich, werden
+     * die noch kommenden Aufgaben mit [regenerate] (Stufe, Anzahl) neu erzeugt.
+     */
+    fun adapt(s: Session, regenerate: (level: Int, count: Int) -> List<Problem>): Session {
+        val state = s.adaptive ?: return s
+        val last = s.results.lastOrNull() ?: return s
+        val next = Adaptive.update(state, last.correct, last.timeMs, last.problem.skillId)
+        if (next.level == state.level) return s.copy(adaptive = next)
+        val keep = s.problems.take(s.index + 1)
+        val count = s.problems.size - keep.size
+        val fresh = if (count > 0) regenerate(next.level, count).map { Planned(it) } else emptyList()
+        return s.copy(adaptive = next, problems = keep + fresh)
+    }
 
     /** Ist eine Einheit im freien Training nach ihren Regeln vorbei? */
     fun freeOver(s: Session, extraMs: Long = 0): Boolean {
@@ -382,6 +400,8 @@ data class Summary(
     val freeBestBefore: Int = 0,
     /** Einstufungstest: Auswertung. */
     val placement: PlacementOutcome? = null,
+    /** Freies Training mit anpassender Schwierigkeit: Stufe am Ende (1 bis 3). */
+    val freeEndLevel: Int? = null,
 )
 
 object SessionFinisher {
@@ -491,6 +511,7 @@ object SessionFinisher {
             free = rules,
             freeScore = score,
             freeBestBefore = bestBefore,
+            freeEndLevel = session.adaptive?.level,
         )
         return p to summary
     }

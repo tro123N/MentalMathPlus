@@ -290,6 +290,15 @@ class ClimbSmokeTest {
         compose.waitForIdle()
     }
 
+    /** Vom Kletterweg zum klassischen Modus: erst „Freies Training“, dann fährt „Klassisch“ heraus. */
+    private fun openClassic() {
+        if (compose.onAllNodesWithTag("freeColumn").fetchSemanticsNodes().isEmpty()) {
+            compose.onNodeWithTag("tab_free").performClick()
+            waitForTag("freeColumn")
+        }
+        compose.onNodeWithTag("tab_classic").performClick()
+    }
+
     private fun openSkill(world: World, skill: Skill) {
         val list = compose.onNodeWithTag("climbList")
         list.performScrollToNode(hasTestTag("world_${world.id}"))
@@ -348,7 +357,7 @@ class ClimbSmokeTest {
         waitForHome()
         shot("a_nach_pruefung")
 
-        compose.onNodeWithTag("tab_classic").performClick()
+        openClassic()
         waitForTag("classicIntro")
         compose.onAllNodesWithContentDescription("menu").onFirst().performClick()
         compose.waitForIdle()
@@ -476,6 +485,8 @@ class ClimbSmokeTest {
         waitForHome()
         compose.onNodeWithTag("tab_free").performClick()
         waitForTag("freeColumn")
+        compose.onNodeWithTag("adaptiveSwitch").performScrollTo().performClick()
+        compose.waitUntil(5_000) { vm.plusSettings.value.adaptive }
         listOf("PERCENT", "WORD", "ALGEBRA", "GEOMETRY", "NUMBER_THEORY", "FOUR_OPS").forEach { topic ->
             compose.onNodeWithTag("topic_$topic").performScrollTo().performClick()
         }
@@ -490,6 +501,11 @@ class ClimbSmokeTest {
             if (s.phase == Phase.FINISHED) return@repeat
             when (s.phase) {
                 Phase.ANSWERING -> {
+                    if (answered == 1) {
+                        compose.onNodeWithTag("trickButton").performClick()
+                        compose.waitForIdle()
+                        shot("c_trick_tipp")
+                    }
                     if (answered < 8) shot("c_aufgabe_$answered")
                     answer(wrong = answered >= 8)
                     answered++
@@ -506,6 +522,8 @@ class ClimbSmokeTest {
         compose.onNodeWithText("Statistik").performScrollTo()
         compose.waitForIdle()
         shot("c_statistik")
+        compose.onNodeWithTag("adaptiveSwitch").performScrollTo().performClick()
+        compose.waitUntil(5_000) { !vm.plusSettings.value.adaptive }
         back()
         waitForHome()
     }
@@ -545,12 +563,12 @@ class ClimbSmokeTest {
         compose.onNodeWithTag("tab_free").performClick()
         waitForTag("freeColumn")
         shot("e_freies_training")
-        compose.onNodeWithTag("tab_classic").performClick()
+        openClassic()
         waitForTag("classicIntro")
         shot("e_klassisch")
         compose.onNodeWithTag("tab_climb").performClick()
         waitForHome()
-        compose.onNodeWithTag("tab_classic").performClick()
+        openClassic()
         waitForTag("classicIntro")
         back()
         waitForHome()
@@ -703,7 +721,7 @@ class ClimbSmokeTest {
         shot("h_statistik_dunkel")
         back()
         waitForHome()
-        compose.onNodeWithTag("tab_classic").performClick()
+        openClassic()
         waitForTag("classicIntro")
         shot("h_klassisch_dunkel")
         back()

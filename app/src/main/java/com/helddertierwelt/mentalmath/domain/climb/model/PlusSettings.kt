@@ -48,6 +48,10 @@ data class PlusSettings(
     val reminderOnlyIfIdle: Boolean = true,
     /** Die Erinnerung der Original-App wurde schon übernommen. */
     val oldReminderMigrated: Boolean = false,
+    /** Knopf „Trick-Tipp“ beim Üben zeigen. */
+    val trickTips: Boolean = true,
+    /** Freies Training: Schwierigkeit passt sich automatisch an. */
+    val adaptive: Boolean = false,
 ) {
     val paletteValue: Palette get() = Palette.of(palette)
 

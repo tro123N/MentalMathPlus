@@ -32,8 +32,10 @@ Die App hat drei getrennte Bereiche (Leiste unten):
 
 ### 2. Freies Training – üben ohne Plan (neu in Mental Math Plus)
 - Neun Aufgabenarten in drei Stufen mit den Modi Auf Zeit, Endlos, Überleben und Prüfung, eigene Bestwerte. Zählt nicht für den Kletterweg.
+- **Anpassende Schwierigkeit** (schaltbar): wird schwerer, wenn es gut läuft, und leichter nach Fehlern.
+- **Trick-Tipp-Knopf** (schaltbar, auch im Kletterweg beim Üben): zeigt, welcher Trick zur Aufgabe passt.
 
-### 3. Klassischer Modus – die Original-App
+### 3. Klassischer Modus – die Original-App (fährt neben „Freies Training“ heraus)
 - Der unveränderte Spielmodus von „Mental Math“: Grundrechenarten mit eigenen Zahlenbereichen, Bestenliste, Verlauf und Spiele per Link.
 
 ### Für alle Bereiche

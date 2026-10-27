@@ -22,7 +22,10 @@ package com.helddertierwelt.mentalmath.presentation.climb.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,16 +36,23 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -86,49 +96,92 @@ fun NavController.openTab(tab: PlusTab) {
     }
 }
 
-/** Leiste unten zum Wechseln zwischen den drei Bereichen. */
+/** War „Klassisch“ auf der vorigen Seite ausgeklappt? */
+private var classicShownBefore = false
+
+/**
+ * Leiste unten zum Wechseln zwischen den Bereichen. „Klassisch“ gehört zum freien Üben: Der Knopf
+ * fährt erst neben „Freies Training“ heraus, wenn man dort ist.
+ */
 @Composable
 fun PlusBottomBar(navController: NavController, current: PlusTab, onTap: () -> Unit = {}) {
-    val selectedColor = accent
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.primary,
-        tonalElevation = 0.dp,
+    val showClassic = current != PlusTab.CLIMB
+    // Startet im Zustand der vorigen Seite, damit der Knopf nur beim Wechsel hinein- oder herausfährt.
+    var revealed by remember { mutableStateOf(classicShownBefore) }
+    LaunchedEffect(showClassic) {
+        revealed = showClassic
+        classicShownBefore = showClassic
+    }
+    val classicWeight by animateFloatAsState(
+        targetValue = if (revealed) 1f else 0.001f,
+        animationSpec = tween(durationMillis = 350),
+        label = "klassisch",
+    )
+    Surface(color = MaterialTheme.colorScheme.primary) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .height(72.dp)
+                .padding(horizontal = 8.dp),
+        ) {
+            PlusTab.entries.forEach { tab ->
+                val weight = if (tab == PlusTab.CLASSIC) classicWeight else 1f
+                BarItem(
+                    tab = tab,
+                    selected = tab == current,
+                    onClick = {
+                        if (tab != current) {
+                            onTap()
+                            navController.openTab(tab)
+                        }
+                    },
+                    modifier = Modifier
+                        .weight(weight)
+                        .alpha(if (tab == PlusTab.CLASSIC) classicWeight.coerceIn(0f, 1f) else 1f),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun BarItem(tab: PlusTab, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val color = if (selected) accent else MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.65f)
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier
+            .fillMaxHeight()
+            .clipToBounds()
+            .clip(RoundedCornerShape(16.dp))
+            .clickable { onClick() }
+            .testTag(tab.tag),
     ) {
-        PlusTab.entries.forEach { tab ->
-            val selected = tab == current
-            NavigationBarItem(
-                selected = selected,
-                onClick = {
-                    if (!selected) {
-                        onTap()
-                        navController.openTab(tab)
-                    }
-                },
-                icon = {
-                    Icon(
-                        painter = painterResource(tab.icon),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                    )
-                },
-                label = {
-                    Text(
-                        text = tab.title,
-                        fontSize = 12.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = selectedColor,
-                    selectedTextColor = selectedColor,
-                    indicatorColor = selectedColor.copy(alpha = 0.16f),
-                    unselectedIconColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.65f),
-                    unselectedTextColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.65f),
-                ),
-                modifier = Modifier.testTag(tab.tag),
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .clip(RoundedCornerShape(16.dp))
+                .background(if (selected) accent.copy(alpha = 0.16f) else Color.Transparent)
+                .padding(horizontal = 18.dp, vertical = 4.dp),
+        ) {
+            Icon(
+                painter = painterResource(tab.icon),
+                contentDescription = null,
+                tint = color,
+                modifier = Modifier.size(24.dp),
             )
         }
+        Spacer(Modifier.height(4.dp))
+        Text(
+            text = tab.title,
+            fontSize = 12.sp,
+            color = color,
+            maxLines = 1,
+            softWrap = false,
+            overflow = TextOverflow.Clip,
+        )
     }
 }
 

@@ -40,6 +40,8 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.ui.platform.testTag
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -64,6 +66,7 @@ import com.helddertierwelt.mentalmath.domain.climb.model.InputKind
 import com.helddertierwelt.mentalmath.presentation.climb.ClimbViewModel
 import com.helddertierwelt.mentalmath.presentation.climb.component.AnswerField
 import com.helddertierwelt.mentalmath.presentation.climb.component.BodyText
+import com.helddertierwelt.mentalmath.presentation.climb.component.CaptionText
 import com.helddertierwelt.mentalmath.presentation.climb.component.ChoiceButtons
 import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbCard
 import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbKeypad
@@ -116,6 +119,7 @@ fun ClimbPlayScreen(navController: NavController) {
     val sessionOrNull by viewModel.session.collectAsState()
     val summary by viewModel.summary.collectAsState()
     val elapsed by viewModel.elapsedMs.collectAsState()
+    val plus by viewModel.plusSettings.collectAsState()
     var showQuit by remember { mutableStateOf(false) }
 
     fun leave() {
@@ -239,6 +243,15 @@ fun ClimbPlayScreen(navController: NavController) {
                     verticalArrangement = Arrangement.Center,
                 ) {
                     session.problem?.let { problem ->
+                        // Trick-Tipp: nur beim Üben, nie in Prüfungen; für jede Aufgabe neu zugeklappt.
+                        val trickAllowed = plus.trickTips && !session.isGuided &&
+                            (session.type == SessionType.PRACTICE || session.type == SessionType.REVIEW || session.type == SessionType.FREE) &&
+                            session.free?.mode != com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.PRUEFUNG
+                        var showTrick by remember(session.index) { mutableStateOf(false) }
+                        session.adaptive?.let { a ->
+                            CaptionText("Stufe automatisch: ${listOf("Leicht", "Mittel", "Schwer")[(a.level - 1).coerceIn(0, 2)]}")
+                            Spacer(Modifier.height(8.dp))
+                        }
                         val hideMs = problem.prompt.hideAfterMs
                         val hidden = hideMs != null && session.phase == Phase.ANSWERING &&
                             (session.input.isNotEmpty() || session.stepIndex > 0 || elapsed >= hideMs)
@@ -248,6 +261,21 @@ fun ClimbPlayScreen(navController: NavController) {
                             GuidedSteps(session = session)
                         } else if (problem.input != InputKind.CHOICE) {
                             AnswerField(session = session, unit = problem.prompt.unit)
+                        }
+                        if (trickAllowed && session.phase == Phase.ANSWERING) {
+                            Spacer(Modifier.height(10.dp))
+                            PillButton(
+                                text = if (showTrick) "Trick-Tipp aus" else "💡 Trick-Tipp",
+                                onClick = {
+                                    viewModel.playTap()
+                                    showTrick = !showTrick
+                                },
+                                color = yellow,
+                                modifier = Modifier.testTag("trickButton"),
+                            )
+                            AnimatedVisibility(visible = showTrick) {
+                                TrickCard(viewModel.trickTip(problem))
+                            }
                         }
                         Spacer(Modifier.height(12.dp))
                         FlashFeedback(session = session)
@@ -279,6 +307,28 @@ fun ClimbPlayScreen(navController: NavController) {
                 showQuit = false
             },
         )
+    }
+}
+
+@Composable
+private fun TrickCard(tip: com.helddertierwelt.mentalmath.domain.climb.engine.TrickTip) {
+    val dimens = MentalMathTheme.dimens
+    ClimbCard(modifier = Modifier.padding(top = 10.dp).testTag("trickCard")) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                painter = painterResource(R.drawable.lightbulb_24dp),
+                contentDescription = null,
+                tint = yellow,
+                modifier = Modifier.size(dimens.icons.menuItem),
+            )
+            Spacer(Modifier.size(10.dp))
+            Text(tip.title, fontSize = dimens.fonts.sideSheetEntry, color = MaterialTheme.colorScheme.onPrimary)
+        }
+        Spacer(Modifier.height(6.dp))
+        BodyText(tip.text)
+        tip.steps.forEachIndexed { i, step ->
+            CaptionText("${i + 1}. $step")
+        }
     }
 }
 

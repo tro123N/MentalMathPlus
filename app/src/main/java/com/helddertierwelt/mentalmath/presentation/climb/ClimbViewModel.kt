@@ -27,7 +27,11 @@ import androidx.lifecycle.viewModelScope
 import com.helddertierwelt.mentalmath.data.climb.ClimbRepository
 import com.helddertierwelt.mentalmath.data.climb.PlusSettingsRepository
 import com.helddertierwelt.mentalmath.domain.climb.curriculum.Curriculum
+import com.helddertierwelt.mentalmath.domain.climb.engine.AdaptiveState
 import com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode
+import com.helddertierwelt.mentalmath.domain.climb.engine.TrickAdvisor
+import com.helddertierwelt.mentalmath.domain.climb.engine.TrickTip
+import com.helddertierwelt.mentalmath.domain.climb.model.Problem
 import com.helddertierwelt.mentalmath.domain.climb.engine.FreeRules
 import com.helddertierwelt.mentalmath.domain.climb.engine.Phase
 import com.helddertierwelt.mentalmath.domain.climb.engine.Placement
@@ -176,16 +180,36 @@ class ClimbViewModel @Inject constructor(
         _freeConfig.value = config
     }
 
+    /** Aufgaben des freien Trainings für die gewählten Aufgabenarten. */
+    private fun freeProblems(topics: List<FreeTopic>, level: Int, count: Int): List<Problem> =
+        List(count) { FreeTopics.generate(topics[random.nextInt(topics.size)], level, random) }
+
     /** Freies Training mit den aktuellen Einstellungen starten. */
     fun startFree(): Boolean {
         val c = _freeConfig.value
         val topics = c.topics.toList().ifEmpty { return false }
+        val adaptive = plusSettings.value.adaptive
         val count = if (c.mode == FreeMode.PRUEFUNG) c.param else 400
-        val problems = List(count) { FreeTopics.generate(topics[random.nextInt(topics.size)], c.level, random) }
-        val limit = if (c.mode == FreeMode.PRUEFUNG) 5_000L + 7_000L * c.level else null
+        val problems = freeProblems(topics, c.level, count)
+        val limit = if (c.mode == FreeMode.PRUEFUNG) 5_000L + 7_000L * (if (adaptive) 3 else c.level) else null
         val title = if (topics.size == 1) topics.first().title else "${topics.size} Aufgabenarten"
-        begin(SessionLogic.createFree(problems, FreeRules(c.mode, c.param, c.level), title, limit))
+        val rules = FreeRules(c.mode, c.param, if (adaptive) 0 else c.level)
+        val session = SessionLogic.createFree(problems, rules, title, limit)
+        begin(if (adaptive) session.copy(adaptive = AdaptiveState(c.level)) else session)
         return true
+    }
+
+    /** Trick-Tipp zur Aufgabe. */
+    fun trickTip(problem: Problem): TrickTip = TrickAdvisor.tip(problem, worlds)
+
+    fun setTrickTips(on: Boolean) {
+        feedbackController.play(FeedbackType.TAP)
+        viewModelScope.launch { settingsRepository.update { it.copy(trickTips = on) } }
+    }
+
+    fun setAdaptive(on: Boolean) {
+        feedbackController.play(FeedbackType.TAP)
+        viewModelScope.launch { settingsRepository.update { it.copy(adaptive = on) } }
     }
 
     /** Freies Training beenden und auswerten (Endlos-Modus oder vorzeitig). */
@@ -344,6 +368,8 @@ class ClimbViewModel @Inject constructor(
                     reminderHour = s.reminderHour,
                     reminderMinute = s.reminderMinute,
                     reminderOnlyIfIdle = s.reminderOnlyIfIdle,
+                    trickTips = s.trickTips,
+                    adaptive = s.adaptive,
                 )
             }
         }
@@ -354,7 +380,11 @@ class ClimbViewModel @Inject constructor(
     // --- Ablauf ----------------------------------------------------------------------------------
 
     private fun apply(result: Pair<Session, SessionEvent>) {
-        val (s, event) = result
+        var (s, event) = result
+        if (s.adaptive != null && (event == SessionEvent.CORRECT || event == SessionEvent.WRONG || event == SessionEvent.TIMEOUT)) {
+            val topics = _freeConfig.value.topics.toList().ifEmpty { listOf(FreeTopic.BASIC) }
+            s = SessionLogic.adapt(s) { level, count -> freeProblems(topics, level, count) }
+        }
         _session.value = s
         when (event) {
             SessionEvent.KEY -> feedbackController.play(FeedbackType.NUMPAD)

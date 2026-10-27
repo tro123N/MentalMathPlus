@@ -283,6 +283,9 @@ private fun SummaryCard(summary: Summary, viewModel: ClimbViewModel) {
             summary.free?.let { rules ->
                 val p = paramLabel(rules.mode, rules.param)
                 CaptionText(rules.mode.title + (if (p.isNotEmpty()) " · $p" else ""))
+                summary.freeEndLevel?.let { lvl ->
+                    CaptionText("Stufe automatisch angepasst – zuletzt: ${listOf("Leicht", "Mittel", "Schwer")[(lvl - 1).coerceIn(0, 2)]}")
+                }
                 if (rules.mode == com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.PRUEFUNG) {
                     Text(
                         text = "Note ${grade(correct, total)}",

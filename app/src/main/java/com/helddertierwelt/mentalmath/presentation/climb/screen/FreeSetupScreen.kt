@@ -53,6 +53,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.climb.engine.Adaptive
 import com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode
 import com.helddertierwelt.mentalmath.domain.climb.free.FreeTopic
 import com.helddertierwelt.mentalmath.domain.climb.math.Fmt
@@ -63,6 +64,7 @@ import com.helddertierwelt.mentalmath.presentation.climb.component.ActionButton
 import com.helddertierwelt.mentalmath.presentation.climb.component.AreaIntro
 import com.helddertierwelt.mentalmath.presentation.climb.component.PlusBottomBar
 import com.helddertierwelt.mentalmath.presentation.climb.component.PlusTab
+import com.helddertierwelt.mentalmath.presentation.climb.component.SwitchRow
 import com.helddertierwelt.mentalmath.presentation.climb.component.BodyText
 import com.helddertierwelt.mentalmath.presentation.climb.component.CaptionText
 import com.helddertierwelt.mentalmath.presentation.climb.component.CardGap
@@ -114,6 +116,7 @@ fun FreeSetupScreen(navController: NavController) {
     val viewModel: ClimbViewModel = hiltViewModel(owner)
     val config by viewModel.freeConfig.collectAsState()
     val progress by viewModel.progress.collectAsState()
+    val plus by viewModel.plusSettings.collectAsState()
 
     fun back() {
         viewModel.playTap()
@@ -190,6 +193,25 @@ fun FreeSetupScreen(navController: NavController) {
                         )
                     }
                 }
+                Spacer(Modifier.height(6.dp))
+                SwitchRow(
+                    title = "Automatisch anpassen",
+                    subtitle = if (plus.adaptive) {
+                        "Start bei „${levelNames[config.level - 1]}“. ${Adaptive.UP_AFTER}× in Folge schnell richtig: schwerer. ${Adaptive.DOWN_AFTER} Fehler in Folge: leichter."
+                    } else {
+                        "Aus – die Stufe bleibt, wie gewählt."
+                    },
+                    checked = plus.adaptive,
+                    onCheckedChange = { viewModel.setAdaptive(it) },
+                    modifier = Modifier.testTag("adaptiveSwitch"),
+                )
+                SwitchRow(
+                    title = "Trick-Tipp-Knopf",
+                    subtitle = "Zeigt beim Rechnen, welcher Trick hier passt (nicht im Prüfungsmodus).",
+                    checked = plus.trickTips,
+                    onCheckedChange = { viewModel.setTrickTips(it) },
+                    modifier = Modifier.testTag("trickSwitch"),
+                )
             }
             CardGap()
             ClimbCard {
@@ -241,7 +263,11 @@ fun FreeSetupScreen(navController: NavController) {
             CardGap()
             ActionButton(
                 text = "Los geht's",
-                subtitle = if (config.topics.isEmpty()) "Wähle mindestens eine Aufgabenart" else "${config.mode.title} · ${levelNames[config.level - 1]}",
+                subtitle = if (config.topics.isEmpty()) {
+                    "Wähle mindestens eine Aufgabenart"
+                } else {
+                    "${config.mode.title} · ${levelNames[config.level - 1]}" + if (plus.adaptive) " · automatisch" else ""
+                },
                 icon = R.drawable.play_arrow_24dp,
                 iconTint = green,
                 enabled = config.topics.isNotEmpty(),
@@ -259,9 +285,9 @@ private fun bestLabel(key: String): String? {
     if (parts.size != 3) return null
     val mode = FreeMode.entries.firstOrNull { it.name == parts[0] } ?: return null
     val param = parts[1].toIntOrNull() ?: return null
-    val level = parts[2].toIntOrNull()?.takeIf { it in 1..3 } ?: return null
+    val level = parts[2].toIntOrNull()?.takeIf { it in 0..3 } ?: return null
     val p = paramLabel(mode, param)
-    return mode.title + (if (p.isNotEmpty()) " $p" else "") + " · " + levelNames[level - 1]
+    return mode.title + (if (p.isNotEmpty()) " $p" else "") + " · " + (if (level == 0) "Automatisch" else levelNames[level - 1])
 }
 
 @Composable

@@ -20,7 +20,18 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.domain.climb
 
 import com.helddertierwelt.mentalmath.domain.climb.curriculum.Curriculum
+import com.helddertierwelt.mentalmath.domain.climb.engine.Adaptive
+import com.helddertierwelt.mentalmath.domain.climb.engine.AdaptiveState
+import com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode
+import com.helddertierwelt.mentalmath.domain.climb.engine.FreeRules
 import com.helddertierwelt.mentalmath.domain.climb.engine.Phase
+import com.helddertierwelt.mentalmath.domain.climb.engine.TrickAdvisor
+import com.helddertierwelt.mentalmath.domain.climb.free.FreeTopic
+import com.helddertierwelt.mentalmath.domain.climb.free.FreeTopics
+import com.helddertierwelt.mentalmath.domain.climb.model.InputKind
+import com.helddertierwelt.mentalmath.domain.climb.model.Problem
+import com.helddertierwelt.mentalmath.domain.climb.model.Prompt
+import com.helddertierwelt.mentalmath.domain.climb.model.exact
 import com.helddertierwelt.mentalmath.domain.climb.engine.Placement
 import com.helddertierwelt.mentalmath.domain.climb.engine.ProblemResult
 import com.helddertierwelt.mentalmath.domain.climb.engine.Progression
@@ -234,5 +245,76 @@ class PlusFeaturesTest {
         val fromRaw = BackupCodec.decode(raw).getOrThrow()
         assertEquals(progress, fromRaw.progress)
         assertNotNull(fromRaw)
+    }
+
+    private fun prompt(text: String) = Problem("free.basic", text, Prompt(text), exact(1), InputKind.INTEGER, emptyList())
+
+    @Test
+    fun trickAdvisorFindsTheRightLevel() {
+        val cases = mapOf(
+            "43 × 11" to "w2.times11a",
+            "47 × 11" to "w2.times11b",
+            "78 × 11" to "w2.times11b",
+            "65²" to "w2.square5",
+            "43 × 47" to "w2.sametens",
+            "96 × 97" to "w6.close",
+            "47 × 6" to "w4.mul21",
+            "49 × 7" to "w4.roundup",
+            "347 × 6" to "w4.mul31",
+            "58 + 36" to "w3.add2",
+            "1.000 − 367" to "w3.complement",
+            "15 % von 240" to "w5.percent",
+            "7 × 8" to "w1.times",
+            "17³" to "w6.cube",
+        )
+        cases.forEach { (text, id) -> assertEquals(text, id, TrickAdvisor.guessSkill(prompt(text))) }
+        // Kletterweg-Aufgaben gehören zu ihrem Level.
+        val skill = worlds[5].skills[0]
+        val tip = TrickAdvisor.tip(skill.generate(Random(2)), worlds)
+        assertEquals(skill.id, tip.skillId)
+        assertEquals(skill.method, tip.title)
+        // Jede Aufgabe des freien Trainings bekommt einen Tipp mit gültigem Level oder einen allgemeinen Hinweis.
+        val ids = worlds.flatMap { w -> w.skills.map { it.id } }.toSet()
+        val r = Random(9)
+        FreeTopic.entries.forEach { t ->
+            (1..3).forEach { level ->
+                repeat(30) {
+                    val t2 = TrickAdvisor.tip(FreeTopics.generate(t, level, r), worlds)
+                    assertTrue("${t.name}: ${t2.skillId}", t2.skillId == null || t2.skillId in ids)
+                    assertTrue(t2.text.isNotBlank())
+                }
+            }
+        }
+        TrickAdvisor.run { cases.values.forEach { assertTrue(it, it in ids) } }
+    }
+
+    @Test
+    fun adaptiveDifficultyGoesUpAndDown() {
+        var st = AdaptiveState(1)
+        repeat(Adaptive.UP_AFTER) { st = Adaptive.update(st, true, 1_000, "free.basic") }
+        assertEquals(2, st.level)
+        st = Adaptive.update(st, true, 60_000, "free.basic")
+        assertEquals(0, st.streak)
+        repeat(Adaptive.DOWN_AFTER) { st = Adaptive.update(st, false, 1_000, "free.basic") }
+        assertEquals(1, st.level)
+        repeat(10) { st = Adaptive.update(st, false, 1_000, "free.basic") }
+        assertEquals(1, st.level)
+        repeat(20) { st = Adaptive.update(st, true, 1_000, "free.basic") }
+        assertEquals(3, st.level)
+
+        // In der Einheit: Nach dem Stufenwechsel werden die kommenden Aufgaben neu erzeugt.
+        val r = Random(4)
+        val gen = { level: Int, count: Int -> List(count) { FreeTopics.generate(FreeTopic.BASIC, level, r) } }
+        var s = SessionLogic.createFree(gen(1, 20), FreeRules(FreeMode.ENDLOS, 0, 0), "x", null).copy(adaptive = AdaptiveState(1))
+        var regenerated = 0
+        repeat(Adaptive.UP_AFTER) {
+            val p = s.current!!.problem
+            s = s.copy(results = s.results + ProblemResult(p, "", true, 500), phase = Phase.FLASH)
+            s = SessionLogic.adapt(s) { level, count -> regenerated = count; assertEquals(2, level); gen(level, count) }
+            s = SessionLogic.advance(s)
+        }
+        assertEquals(2, s.adaptive!!.level)
+        assertEquals(20 - Adaptive.UP_AFTER, regenerated)
+        assertEquals(20, s.total)
     }
 }

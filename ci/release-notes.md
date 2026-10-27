@@ -1,13 +1,9 @@
-**Neu: klare Bereiche, Statistik, Einstufungstest, Erinnerung, Sicherung und Farbthemen**
+**Neu: Trick-Tipp, anpassende Schwierigkeit und „Klassisch“ beim freien Training**
 
-**Drei Bereiche:** Unten wechselst du zwischen **Kletterweg** (lernen nach Plan), **Freies Training** (üben ohne Plan) und **Klassisch** (die Original-App „Mental Math“). Jeder Bereich erklärt oben kurz, wofür er da ist.
+- **„Klassisch“ gehört jetzt zum freien Training:** Unten stehen nur noch *Kletterweg* und *Freies Training*. Tippst du auf *Freies Training*, fährt daneben der Knopf *Klassisch* (die Original-App) heraus.
+- **Trick-Tipp-Knopf:** Beim Üben zeigt „💡 Trick-Tipp“, welcher Trick zur Aufgabe passt – mit den Schritten der Methode. Funktioniert im Kletterweg (Üben, Wiederholen) und im freien Training, aber nie in Prüfungen.
+- **Anpassende Schwierigkeit** im freien Training: Läuft es gut (4× in Folge schnell richtig), werden die Aufgaben schwerer; nach 2 Fehlern in Folge wieder leichter.
 
-- **Statistik** (Symbol oben rechts oder „Statistik“ auf der Startseite): Aufgaben pro Tag als Diagramm, Trefferquote, Serie und Rekord, deine **Stärken und Schwächen** und der Stand jeder Welt. In jedem Level zeigt „Dein Verlauf“, wie sich deine Prüfungszeit entwickelt.
-- **Einstufungstest:** Du kannst schon etwas? Teste eine ganze Welt auf einmal und überspringe sie.
-- **Tägliche Erinnerung** zur Uhrzeit deiner Wahl – auf Wunsch nur, wenn du an dem Tag noch nicht geübt hast.
-- **Fortschritt sichern:** als Datei speichern oder teilen und auf einem neuen Handy wieder laden.
-- **Farbthemen:** Grau, Ozean, Wald, Abendrot, Lavendel und Tiefschwarz, jeweils hell oder dunkel.
-
-Farbthema, Erinnerung und Sicherung findest du über das Zahnrad oben rechts im Kletterweg.
+**Schnell an- und ausschalten:** beide Schalter direkt im freien Training unter „Schwierigkeit“ – oder im Kletterweg über das Zahnrad → „Trainingshilfen“.
 
 **Installieren:** `MentalMathPlus.apk` unten antippen, herunterladen und öffnen. Die neue Version ersetzt die alte, dein Fortschritt bleibt erhalten.

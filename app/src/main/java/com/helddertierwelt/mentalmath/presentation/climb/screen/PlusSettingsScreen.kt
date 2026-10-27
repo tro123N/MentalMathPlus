@@ -403,6 +403,24 @@ fun PlusSettingsScreen(navController: NavController) {
             }
             CardGap()
 
+            // Trainingshilfen
+            ClimbCard(modifier = Modifier.testTag("settingsHelp")) {
+                CardTitle("Trainingshilfen")
+                SwitchRow(
+                    title = "Trick-Tipp-Knopf",
+                    subtitle = "Beim Üben zeigt ein Knopf, welcher Trick zur Aufgabe passt. In Prüfungen ist er nie zu sehen.",
+                    checked = plus.trickTips,
+                    onCheckedChange = { viewModel.setTrickTips(it) },
+                )
+                SwitchRow(
+                    title = "Anpassende Schwierigkeit",
+                    subtitle = "Freies Training: Die Aufgaben werden schwerer, wenn es gut läuft, und leichter nach Fehlern.",
+                    checked = plus.adaptive,
+                    onCheckedChange = { viewModel.setAdaptive(it) },
+                )
+            }
+            CardGap()
+
             // Ton und Vibration
             ClimbCard {
                 CardTitle("Ton und Vibration")
