@@ -20,7 +20,7 @@ class SettingsLinkUtilTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.helddertierwelt.mentalmath", appContext.packageName)
+        assertEquals("io.github.tro123n.mentalmathplus", appContext.packageName)
     }
 
     @Test

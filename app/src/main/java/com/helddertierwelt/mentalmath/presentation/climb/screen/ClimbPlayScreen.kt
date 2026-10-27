@@ -163,6 +163,7 @@ fun ClimbPlayScreen(navController: NavController) {
                     title = "${typeLabel(session.type)} · ${session.title}",
                     navigationIcon = R.drawable.close_24dp,
                     navigationTint = red,
+                    navigationDescription = "Übung beenden",
                     onNavigation = { showQuit = true },
                     actions = {
                         Text(
@@ -292,7 +293,7 @@ private fun BottomControls(
             }
         }
 
-        problem.input == InputKind.CHOICE && !session.isGuided -> {
+        session.inputKind == InputKind.CHOICE -> {
             ChoiceButtons(
                 choices = problem.choices,
                 enabled = session.phase == Phase.ANSWERING,

@@ -200,6 +200,15 @@ class ClimbViewModel @Inject constructor(
         viewModelScope.launch { repository.reset() }
     }
 
+    /** Fortschritt komplett ersetzen (für den automatischen Oberflächentest und einen späteren Import). */
+    fun importProgress(p: ClimbProgress) {
+        tickJob?.cancel()
+        advanceJob?.cancel()
+        _session.value = null
+        _summary.value = null
+        viewModelScope.launch { repository.update { p } }
+    }
+
     fun playTap() = feedbackController.play(FeedbackType.TAP)
 
     // --- Ablauf ----------------------------------------------------------------------------------

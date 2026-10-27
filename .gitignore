@@ -14,3 +14,6 @@ app-release.dm
 *.p12
 *.jks
 *.keystore
+
+# Ausgabe des Emulator-Tests
+smoke-out/

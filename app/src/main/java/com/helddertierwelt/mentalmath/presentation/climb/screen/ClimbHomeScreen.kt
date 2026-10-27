@@ -46,12 +46,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -79,6 +82,19 @@ import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 
+/** Speichert, welche Welten auf- oder zugeklappt sind (als „id=1“/„id=0“). */
+private val expandedSaver = listSaver<SnapshotStateMap<String, Boolean>, String>(
+    save = { map -> map.entries.map { "${it.key}=${if (it.value) 1 else 0}" } },
+    restore = { saved ->
+        mutableStateMapOf<String, Boolean>().apply {
+            saved.forEach { entry ->
+                val parts = entry.split('=')
+                if (parts.size == 2) put(parts[0], parts[1] == "1")
+            }
+        }
+    },
+)
+
 /** Startseite: der Kletterweg mit allen Welten und Levels. */
 @Composable
 fun ClimbHomeScreen(navController: NavController) {
@@ -91,7 +107,8 @@ fun ClimbHomeScreen(navController: NavController) {
     val worlds = climbViewModel.worlds
     val next = climbViewModel.nextSkill(progress)
     val currentWorldId = next?.let { n -> worlds.firstOrNull { w -> w.skills.any { it.id == n.id } }?.id }
-    val expanded = remember { mutableStateMapOf<String, Boolean>() }
+    // Aufgeklappte Welten bleiben erhalten, wenn man von einem Level zurückkommt.
+    val expanded = rememberSaveable(saver = expandedSaver) { mutableStateMapOf() }
 
     fun openLevel(skill: Skill) {
         climbViewModel.playTap()
@@ -107,6 +124,7 @@ fun ClimbHomeScreen(navController: NavController) {
             ClimbTopBar(
                 title = "Kletterweg",
                 navigationIcon = R.drawable.menu_24dp,
+                navigationDescription = "Menü",
                 onNavigation = {
                     settingsViewModel.playFeedback(FeedbackType.TAP)
                     settingsViewModel.toggleMenuOpen()
@@ -136,7 +154,9 @@ fun ClimbHomeScreen(navController: NavController) {
                 .padding(padding),
         ) {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag("climbList"),
                 contentPadding = PaddingValues(horizontal = 20.dp, vertical = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
@@ -295,13 +315,18 @@ private fun WorldCard(
     val stars = world.skills.sumOf { progress.of(it.id).stars }
     val done = world.skills.count { progress.of(it.id).mastered }
     val attention = world.skills.any { progress.of(it.id).let { p -> p.mastered && p.needsAttention } }
-    ClimbCard(modifier = Modifier.alpha(if (unlocked) 1f else 0.6f)) {
+    ClimbCard(
+        modifier = Modifier
+            .alpha(if (unlocked) 1f else 0.6f)
+            .testTag("world_${world.id}"),
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(dimens.components.cornerRadius))
-                .clickable { onToggle() },
+                .clickable { onToggle() }
+                .testTag("worldHeader_${world.id}"),
         ) {
             LevelBadge(
                 label = world.number.toString(),
@@ -363,6 +388,7 @@ private fun SkillRow(
             .fillMaxWidth()
             .clip(RoundedCornerShape(dimens.components.cornerRadius))
             .clickable { onClick() }
+            .testTag("skill_${skill.id}")
             .padding(vertical = 6.dp),
     ) {
         LevelBadge(

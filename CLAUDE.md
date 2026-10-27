@@ -17,7 +17,11 @@
 - Vor jedem Push `ci/release-notes.md` (kurz, Deutsch, für den Nutzer) aktualisieren – das wird der Release-Text.
 - Schlägt ein Build fehl, legt `ci/build.sh` das Log auf den Branch `ci-logs` (`logs/latest.txt`):
   `git fetch origin +refs/heads/ci-logs:refs/remotes/origin/ci-logs && git show origin/ci-logs:logs/latest.txt`
-- Lauf-Status: `curl -s https://api.github.com/repos/tro123N/MentalMathPlus/actions/runs?per_page=3`
+- Lauf-Status: `curl -s https://api.github.com/repos/tro123N/MentalMathPlus/actions/runs?per_page=3` (Jobs: `/actions/runs/<id>/jobs`)
+- **Test auf virtuellem Handy (Job `smoke`):** läuft bei jedem Push auf `plus` und `dev`. `ci/smoke-build.sh` baut Debug- und Test-APK, `ci/smoke.sh` startet `ClimbSmokeTest` (androidTest) im Emulator. Ergebnis, Logs und Bildschirmfotos liegen danach auf dem Branch `ci-smoke`:
+  `git fetch -q origin +refs/heads/ci-smoke:refs/remotes/origin/ci-smoke && git show origin/ci-smoke:summary.txt`
+  Bilder: `git archive origin/ci-smoke screens | tar -x -C <ordner>`. Welche Levels ausführlich fotografiert werden, steht in `ci/smoke-shots.txt`.
+- **Zwischenstände auf `dev` pushen** (nur Emulator-Test, kein Release). Erst wenn alles passt, `dev` in `plus` übernehmen – das erzeugt das Release für den Nutzer.
 
 ## Lokal prüfen (ohne Android SDK)
 In der Cloud-Umgebung sind Google Maven und Maven Central gesperrt; Android lässt sich nicht lokal bauen. Die reine Kotlin-Logik unter `domain/climb` hat keine Android-Abhängigkeiten und lässt sich mit `kotlinc` (GitHub-Release `JetBrains/kotlin`, z. B. 2.4.20) kompilieren und mit JUnit 4 testen (`junit-4.13.2.jar` und `hamcrest-core-1.3.jar` liegen in `/opt/gradle-*/lib`).

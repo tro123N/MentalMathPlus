@@ -42,6 +42,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -338,37 +339,45 @@ fun ClimbKeypad(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         if (extra != null) {
-            PillButton(text = extra.second, onClick = { onKey(extra.first) }, enabled = enabled)
+            PillButton(text = extra.second, onClick = { onKey(extra.first) }, enabled = enabled, modifier = Modifier.testTag("keyExtra"))
         }
         listOf(inputMode.upperNumberRow, 4..6, inputMode.lowerNumberRow).forEach { row ->
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 row.forEach { number ->
-                    NumberButton(
-                        number = number,
-                        onPress = {},
-                        onClick = { if (enabled) onKey('0' + number) },
-                    )
+                    Box(Modifier.testTag("key$number")) {
+                        NumberButton(
+                            number = number,
+                            onPress = {},
+                            onClick = { if (enabled) onKey('0' + number) },
+                        )
+                    }
                 }
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-            BackspaceButton(
-                onClick = { if (enabled) onBackspace() },
-                onPress = {},
-                inputDirectionMode = InputDirectionMode.LEFT_TO_RIGHT,
-            )
-            NumberButton(
-                number = 0,
-                onPress = {},
-                onClick = { if (enabled) onKey('0') },
-            )
-            EnterButton(
-                iconId1 = R.drawable.keyboard_double_arrow_right_24dp,
-                iconId2 = R.drawable.keyboard_tab_24dp,
-                onClick = onEnter,
-                isToggled = inputEmpty,
-                enabled = enabled,
-            )
+            Box(Modifier.testTag("keyBack")) {
+                BackspaceButton(
+                    onClick = { if (enabled) onBackspace() },
+                    onPress = {},
+                    inputDirectionMode = InputDirectionMode.LEFT_TO_RIGHT,
+                )
+            }
+            Box(Modifier.testTag("key0")) {
+                NumberButton(
+                    number = 0,
+                    onPress = {},
+                    onClick = { if (enabled) onKey('0') },
+                )
+            }
+            Box(Modifier.testTag("keyEnter")) {
+                EnterButton(
+                    iconId1 = R.drawable.keyboard_double_arrow_right_24dp,
+                    iconId2 = R.drawable.keyboard_tab_24dp,
+                    onClick = onEnter,
+                    isToggled = inputEmpty,
+                    enabled = enabled,
+                )
+            }
         }
     }
 }

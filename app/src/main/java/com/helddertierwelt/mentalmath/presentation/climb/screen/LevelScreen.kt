@@ -41,6 +41,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -105,6 +106,7 @@ fun LevelScreen(navController: NavController, skillId: String) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .testTag("levelColumn")
                 .verticalScroll(rememberScrollState())
                 .padding(20.dp),
         ) {

@@ -72,6 +72,7 @@ fun ClimbTopBar(
     navigationIcon: Int? = R.drawable.arrow_back_24dp,
     navigationTint: Color = MaterialTheme.colorScheme.onPrimary,
     onNavigation: (() -> Unit)? = null,
+    navigationDescription: String = "Zurück",
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     val dimens = MentalMathTheme.dimens
@@ -97,7 +98,7 @@ fun ClimbTopBar(
                 ) {
                     Icon(
                         painter = painterResource(navigationIcon),
-                        contentDescription = "Zurück",
+                        contentDescription = navigationDescription,
                         tint = navigationTint,
                         modifier = Modifier.size(dimens.icons.topBarAction),
                     )

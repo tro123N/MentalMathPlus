@@ -165,7 +165,7 @@ object SessionLogic {
 
         val input = s.input
         val verdict = AnswerCheck.check(expected, input)
-        val display = if (input.isEmpty()) "" else displayInput(input, problem)
+        val display = if (input.isEmpty()) "" else displayInput(input, s.inputKind, problem.choices)
         val feedback = Feedback(
             correct = verdict.correct,
             userAnswer = display,
@@ -195,7 +195,7 @@ object SessionLogic {
         val step = s.currentStep ?: return s to SessionEvent.NONE
         if (s.input.isEmpty()) return s.copy(showHint = true) to SessionEvent.NONE
         val verdict = AnswerCheck.check(step.expected, s.input)
-        val display = displayInput(s.input, problem)
+        val display = displayInput(s.input, s.inputKind, problem.choices)
         val correctText = Fmt.expected(step.expected, problem.choices)
         return if (verdict.correct) {
             val feedback = Feedback(true, display, correctText, verdict.note)
@@ -281,9 +281,9 @@ object SessionLogic {
     }
 
     /** Eingabe in Anzeigeform: Brüche und Reste lesbar machen, Auswahl als Text. */
-    fun displayInput(input: String, problem: Problem): String {
-        if (problem.input == InputKind.CHOICE) {
-            return input.toIntOrNull()?.let { problem.choices.getOrNull(it) } ?: input
+    fun displayInput(input: String, kind: InputKind, choices: List<String>): String {
+        if (kind == InputKind.CHOICE) {
+            return input.toIntOrNull()?.let { choices.getOrNull(it) } ?: input
         }
         return Fmt.input(input)
     }

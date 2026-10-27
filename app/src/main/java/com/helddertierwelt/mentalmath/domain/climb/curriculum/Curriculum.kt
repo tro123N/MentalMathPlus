@@ -33,6 +33,7 @@ object Curriculum {
             World4.world,
             World5.world,
             World6.world,
+            World7.world,
         )
     }
 

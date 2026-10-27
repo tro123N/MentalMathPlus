@@ -1,0 +1,486 @@
+/*
+Mental Math Plus - Kletterweg zum Kopfrechnen
+Copyright (C) 2026 tro123N
+Based on Mental Math, Copyright (C) 2025-2026 HeldDerTierwelt
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
+*/
+
+package com.helddertierwelt.mentalmath
+
+import android.graphics.Bitmap
+import android.util.Log
+import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onFirst
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performScrollToIndex
+import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.test.performSemanticsAction
+import androidx.lifecycle.ViewModelProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import com.helddertierwelt.mentalmath.domain.climb.curriculum.Curriculum
+import com.helddertierwelt.mentalmath.domain.climb.engine.Phase
+import com.helddertierwelt.mentalmath.domain.climb.engine.Progression
+import com.helddertierwelt.mentalmath.domain.climb.model.ClimbProgress
+import com.helddertierwelt.mentalmath.domain.climb.model.Expected
+import com.helddertierwelt.mentalmath.domain.climb.model.Skill
+import com.helddertierwelt.mentalmath.domain.climb.model.SkillProgress
+import com.helddertierwelt.mentalmath.domain.climb.model.World
+import com.helddertierwelt.mentalmath.presentation.climb.ClimbViewModel
+import org.junit.Assert.assertTrue
+import org.junit.BeforeClass
+import org.junit.FixMethodOrder
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.TestWatcher
+import org.junit.runner.Description
+import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
+import java.io.File
+import java.io.FileOutputStream
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.util.Locale
+
+/**
+ * Klickt den Kletterweg auf einem (virtuellen) Handy durch und speichert dabei Bildschirmfotos.
+ * Läuft in der GitHub-Action „smoke“; die Bilder landen auf dem Branch „ci-smoke“.
+ *
+ * Instrumentierungs-Argument „shots“: Welche Levels ausführlich fotografiert werden,
+ * z. B. „all“ oder „w7,w5.dec21“. Alle anderen werden nur kurz geöffnet (Absturztest).
+ */
+@RunWith(AndroidJUnit4::class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+class ClimbSmokeTest {
+
+    @get:Rule(order = 0)
+    val compose = createAndroidComposeRule<MainActivity>()
+
+    @get:Rule(order = 1)
+    val watcher = object : TestWatcher() {
+        override fun failed(e: Throwable?, description: Description?) {
+            try {
+                shot("FEHLER_${description?.methodName ?: "test"}")
+            } catch (t: Throwable) {
+                Log.e(TAG, "Bildschirmfoto nach Fehler nicht möglich", t)
+            }
+        }
+    }
+
+    private val shotFilter: List<String> =
+        (InstrumentationRegistry.getArguments().getString("shots") ?: "all")
+            .split(',', ' ', ';')
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+
+    private fun wantShots(skillId: String): Boolean =
+        shotFilter.any { it == "all" || it == skillId || skillId.startsWith("$it.") }
+
+    private val vm: ClimbViewModel by lazy {
+        val activity = compose.activity
+        compose.runOnUiThread { ViewModelProvider(activity)[ClimbViewModel::class.java] }
+    }
+
+    // --- Hilfen -------------------------------------------------------------------------------
+
+    private fun shot(name: String) {
+        compose.waitForIdle()
+        Thread.sleep(300)
+        val bitmap = InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot() ?: return
+        val scaled = Bitmap.createScaledBitmap(bitmap, bitmap.width / 2, bitmap.height / 2, true)
+        counter++
+        val file = File(screenDir(), String.format(Locale.ROOT, "%03d_%s.png", counter, name))
+        FileOutputStream(file).use { scaled.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        Log.i(TAG, "Bildschirmfoto ${file.name}")
+    }
+
+    private fun waitForTag(tag: String, timeout: Long = 10_000) {
+        compose.waitUntil(timeout) { compose.onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty() }
+        compose.waitForIdle()
+    }
+
+    private fun waitForHome() {
+        waitForTag("climbList", 30_000)
+        compose.waitUntil(10_000) { vm.loaded.value }
+        compose.waitForIdle()
+    }
+
+    private fun waitForSession() {
+        compose.waitUntil(10_000) { vm.session.value != null }
+        compose.waitForIdle()
+    }
+
+    private fun back() {
+        val activity = compose.activity
+        compose.runOnUiThread { activity.onBackPressedDispatcher.onBackPressed() }
+        compose.waitForIdle()
+    }
+
+    /** Fotografiert eine lange Seite in mehreren Abschnitten. */
+    private fun shootScrolling(tag: String, name: String, maxShots: Int = 6) {
+        shot("${name}_1")
+        for (i in 2..maxShots) {
+            val node = compose.onNodeWithTag(tag).fetchSemanticsNode()
+            val range = node.config.getOrNull(SemanticsProperties.VerticalScrollAxisRange) ?: return
+            if (range.value() >= range.maxValue() - 1f) return
+            val height = node.size.height.toFloat()
+            compose.onNodeWithTag(tag).performSemanticsAction(SemanticsActions.ScrollBy) { it(0f, height * 0.8f) }
+            compose.waitForIdle()
+            shot("${name}_$i")
+        }
+    }
+
+    private fun plain(v: BigDecimal): String = v.stripTrailingZeros().toPlainString().replace('.', ',')
+
+    /** So tippt man die richtige Antwort ein (null bei Auswahlaufgaben). */
+    private fun typed(e: Expected): String? = when (e) {
+        is Expected.Exact -> plain(e.value)
+        is Expected.Approx -> plain(e.value.setScale(maxOf(0, e.tolerance.scale()), RoundingMode.HALF_UP))
+        is Expected.Remainder -> if (e.remainder == 0L) "${e.quotient}" else "${e.quotient}R${e.remainder}"
+        is Expected.Frac -> "${e.numerator}/${e.denominator}"
+        is Expected.Choice -> null
+        is Expected.Digits -> e.digits
+    }
+
+    /** Eine sicher falsche Eingabe. */
+    private fun wrongTyped(e: Expected): String? = when (e) {
+        is Expected.Exact -> plain(e.value + BigDecimal.ONE)
+        is Expected.Approx -> plain(e.value.setScale(0, RoundingMode.DOWN) + BigDecimal.TEN)
+        is Expected.Remainder -> "${e.quotient + 1}"
+        is Expected.Frac -> "${e.numerator + 1}/${e.denominator}"
+        is Expected.Choice -> null
+        is Expected.Digits -> if (e.digits == "1") "2" else "1"
+    }
+
+    private fun key(c: Char) {
+        val tag = when (c) {
+            in '0'..'9' -> "key$c"
+            ',', 'R', '/' -> "keyExtra"
+            else -> error("Unbekannte Taste $c")
+        }
+        compose.onNodeWithTag(tag).performClick()
+    }
+
+    /** Beantwortet die aktuelle Eingabe über den Ziffernblock bzw. die Auswahlknöpfe. */
+    private fun answer(wrong: Boolean = false) {
+        val s = vm.session.value ?: error("Keine Übung aktiv")
+        check(s.phase == Phase.ANSWERING) { "Falsche Phase ${s.phase}" }
+        val expected = s.expected ?: error("Keine erwartete Antwort")
+        val problem = s.problem ?: error("Keine Aufgabe")
+        val before: Any?
+        if (expected is Expected.Choice) {
+            val index = if (wrong) (expected.index + 1) % problem.choices.size else expected.index
+            before = s
+            compose.onNodeWithText(problem.choices[index]).performClick()
+        } else {
+            val keys = (if (wrong) wrongTyped(expected) else typed(expected)) ?: error("Keine Eingabe für $expected")
+            keys.forEach { key(it) }
+            compose.waitForIdle()
+            val now = vm.session.value
+            check(now?.input == keys) { "Eingabe kam nicht an: erwartet $keys, angezeigt ${now?.input} (${problem.prompt.text})" }
+            before = now
+            compose.onNodeWithTag("keyEnter").performClick()
+        }
+        compose.waitUntil(5_000) { vm.session.value !== before }
+        compose.waitForIdle()
+    }
+
+    private fun waitWhileFlash() {
+        compose.waitUntil(5_000) { vm.session.value.let { it == null || it.phase != Phase.FLASH } }
+        compose.waitForIdle()
+    }
+
+    private fun pressWeiter() {
+        compose.onNodeWithText("Weiter").performClick()
+        compose.waitForIdle()
+    }
+
+    /**
+     * Löst die laufende Übung bis zum Ende.
+     * [wrongAt]: Nummern der Eingaben (ab 0), die absichtlich falsch sind.
+     * [shotAt]: Nummern der Eingaben, vor denen fotografiert wird.
+     */
+    private fun solveSession(name: String? = null, wrongAt: Set<Int> = emptySet(), shotAt: Set<Int> = emptySet(), hintAt: Int? = null) {
+        var answered = 0
+        var revealShot = false
+        repeat(600) {
+            val s = vm.session.value ?: return
+            when (s.phase) {
+                Phase.FINISHED -> return
+                Phase.FLASH -> waitWhileFlash()
+                Phase.REVEAL -> {
+                    if (name != null && !revealShot) {
+                        shot("${name}_aufgedeckt")
+                        revealShot = true
+                    }
+                    pressWeiter()
+                }
+
+                Phase.ANSWERING -> {
+                    if (name != null && answered == hintAt) {
+                        compose.onNodeWithText("Tipp").performClick()
+                        compose.waitForIdle()
+                        shot("${name}_tipp")
+                    }
+                    if (name != null && answered in shotAt) shot("${name}_$answered")
+                    answer(wrong = answered in wrongAt)
+                    if (name != null && answered in wrongAt && vm.session.value?.phase == Phase.ANSWERING) {
+                        shot("${name}_falsch_$answered")
+                    }
+                    answered++
+                }
+            }
+        }
+        error("Die Übung endet nicht")
+    }
+
+    /** Löst nur die aktuelle Aufgabe (alle Schritte). */
+    private fun solveCurrentProblem() {
+        val start = vm.session.value?.index ?: return
+        repeat(80) {
+            val s = vm.session.value ?: return
+            if (s.index != start || s.phase == Phase.FINISHED) return
+            when (s.phase) {
+                Phase.ANSWERING -> answer()
+                Phase.FLASH -> waitWhileFlash()
+                Phase.REVEAL -> pressWeiter()
+                Phase.FINISHED -> return
+            }
+        }
+    }
+
+    private fun quitSession() {
+        compose.runOnUiThread { vm.quitSession() }
+        compose.waitForIdle()
+        back()
+    }
+
+    private fun waitForResult() {
+        compose.waitUntil(10_000) { vm.summary.value != null }
+        waitForTag("resultColumn")
+    }
+
+    private fun clickButton(text: String) {
+        compose.onNodeWithText(text).performScrollTo().performClick()
+        compose.waitForIdle()
+    }
+
+    private fun openSkill(world: World, skill: Skill) {
+        val list = compose.onNodeWithTag("climbList")
+        list.performScrollToNode(hasTestTag("world_${world.id}"))
+        if (compose.onAllNodesWithTag("skill_${skill.id}").fetchSemanticsNodes().isEmpty()) {
+            compose.onNodeWithTag("worldHeader_${world.id}").performClick()
+            compose.waitForIdle()
+        }
+        list.performScrollToNode(hasTestTag("skill_${skill.id}"))
+        compose.onNodeWithTag("skill_${skill.id}").performClick()
+        waitForTag("levelColumn")
+    }
+
+    // --- Tests --------------------------------------------------------------------------------
+
+    /** Neuer Nutzer: erstes Level komplett durchspielen (lernen, geführt, üben, Prüfung). */
+    @Test
+    fun a_ersterAufstieg() {
+        waitForHome()
+        compose.runOnUiThread { vm.importProgress(ClimbProgress()) }
+        compose.waitUntil(5_000) { vm.progress.value.skills.isEmpty() && vm.session.value == null }
+        compose.waitForIdle()
+        shot("a_start")
+        val first = Curriculum.worlds.first().skills.first()
+
+        compose.onNodeWithText("Weiterklettern").performClick()
+        waitForTag("levelColumn")
+        shot("a_level")
+
+        clickButton("1. Methode lernen")
+        waitForTag("learnColumn")
+        shootScrolling("learnColumn", "a_lernen")
+        clickButton("Jetzt geführt üben")
+        waitForSession()
+        solveSession(name = "a_gefuehrt", wrongAt = setOf(3, 4), shotAt = setOf(0, 1), hintAt = 2)
+        waitForResult()
+        shootScrolling("resultColumn", "a_ergebnis_gefuehrt", maxShots = 3)
+
+        clickButton("Zum Level")
+        waitForTag("levelColumn")
+        clickButton("3. Frei üben")
+        waitForSession()
+        solveSession(name = "a_ueben", wrongAt = setOf(1), shotAt = setOf(0))
+        waitForResult()
+        shootScrolling("resultColumn", "a_ergebnis_ueben", maxShots = 3)
+
+        clickButton("Zum Level")
+        waitForTag("levelColumn")
+        clickButton("4. Prüfung")
+        waitForSession()
+        solveSession(name = "a_pruefung", shotAt = setOf(0, 5))
+        waitForResult()
+        shootScrolling("resultColumn", "a_ergebnis_pruefung", maxShots = 4)
+        assertTrue("Prüfung nicht bestanden", vm.progress.value.of(first.id).stars >= 1)
+
+        clickButton("Zum Kletterweg")
+        waitForHome()
+        shot("a_nach_pruefung")
+
+        compose.onAllNodesWithContentDescription("Freies Training").onFirst().performClick()
+        compose.waitForIdle()
+        Thread.sleep(500)
+        shot("a_freies_training")
+        back()
+        waitForHome()
+
+        compose.onAllNodesWithContentDescription("Menü").onFirst().performClick()
+        compose.waitForIdle()
+        shot("a_menue")
+        back()
+        compose.waitForIdle()
+    }
+
+    /** Fortgeschrittener Stand: alle Welten offen, jedes Level einmal öffnen und anspielen. */
+    @Test
+    fun b_alleWelten() {
+        waitForHome()
+        val now = System.currentTimeMillis()
+        val today = vm.today()
+        val skills = Curriculum.skills
+        val seeded = skills.mapIndexed { i, s ->
+            s.id to SkillProgress(
+                stars = i % 3 + 1,
+                bestAvgMs = 3_000L + i * 150L,
+                testsTaken = 2,
+                testsPassed = 2,
+                practiced = 30,
+                practicedCorrect = 27,
+                lastPracticedAt = now - Progression.DAY_MS,
+                intervalDays = 7,
+                nextReviewAt = if (i % 7 == 3) now - 3_600_000L else now + 3 * Progression.DAY_MS,
+                rusty = s.id == "w3.add2",
+            )
+        }.toMap()
+        compose.runOnUiThread {
+            vm.importProgress(ClimbProgress(skills = seeded, streakDays = 4, lastActiveDay = today, totalSolved = 1234, totalCorrect = 1180))
+        }
+        compose.waitUntil(5_000) { vm.progress.value.skills.size == skills.size }
+        compose.waitForIdle()
+        shot("b_start")
+
+        // Jede Welt aufgeklappt fotografieren (Liste: Übersicht, dann eine Karte pro Welt).
+        Curriculum.worlds.forEachIndexed { index, world ->
+            val list = compose.onNodeWithTag("climbList")
+            list.performScrollToIndex(index + 1)
+            compose.waitForIdle()
+            if (compose.onAllNodesWithTag("skill_${world.skills.first().id}").fetchSemanticsNodes().isEmpty()) {
+                compose.onNodeWithTag("worldHeader_${world.id}").performClick()
+                compose.waitForIdle()
+            }
+            list.performScrollToIndex(index + 1)
+            shot("b_welt_${world.number}")
+        }
+
+        // Jedes Level öffnen, Erklärung ansehen, eine Aufgabe geführt lösen.
+        Curriculum.worlds.forEach { world ->
+            world.skills.forEach { skill ->
+                val shots = wantShots(skill.id)
+                val name = "b_" + skill.id.replace('.', '_')
+                Log.i(TAG, "Level ${skill.id}")
+                openSkill(world, skill)
+                if (shots) shot("${name}_level")
+
+                clickButton("1. Methode lernen")
+                waitForTag("learnColumn")
+                if (shots) shootScrolling("learnColumn", "${name}_lernen")
+                back()
+                waitForTag("levelColumn")
+
+                clickButton("2. Geführt üben")
+                waitForSession()
+                if (shots) shot("${name}_gefuehrt")
+                solveCurrentProblem()
+                if (shots) shot("${name}_gefuehrt_2")
+                quitSession()
+                waitForTag("levelColumn")
+
+                if (shots) {
+                    clickButton("3. Frei üben")
+                    waitForSession()
+                    shot("${name}_ueben")
+                    answer(wrong = true)
+                    if (vm.session.value?.phase == Phase.FLASH) waitWhileFlash()
+                    shot("${name}_ueben_falsch")
+                    quitSession()
+                    waitForTag("levelColumn")
+                }
+                back()
+                waitForHome()
+            }
+        }
+
+        // Eingerostetes Level auffrischen.
+        compose.onNodeWithTag("climbList").performScrollToIndex(0)
+        compose.waitForIdle()
+        compose.onAllNodesWithText("Auffrischen:", substring = true).fetchSemanticsNodes().let { nodes ->
+            if (nodes.isNotEmpty()) {
+                compose.onNodeWithText("Auffrischen:", substring = true).performClick()
+                waitForTag("levelColumn")
+                shot("b_auffrischen_level")
+                clickButton("Auffrischen")
+                waitForSession()
+                solveSession(name = "b_auffrischen", shotAt = setOf(0))
+                waitForResult()
+                shootScrolling("resultColumn", "b_auffrischen_ergebnis", maxShots = 2)
+                clickButton("Zum Kletterweg")
+                waitForHome()
+            }
+        }
+
+        // Fällige Wiederholung.
+        compose.onNodeWithTag("climbList").performScrollToIndex(0)
+        compose.waitForIdle()
+        compose.onNodeWithText("Wiederholen", substring = true).performClick()
+        waitForSession()
+        solveSession(name = "b_wiederholung", shotAt = setOf(0))
+        waitForResult()
+        shootScrolling("resultColumn", "b_wiederholung_ergebnis", maxShots = 2)
+        clickButton("Zum Kletterweg")
+        waitForHome()
+        shot("b_ende")
+    }
+
+    companion object {
+        private const val TAG = "ClimbSmokeTest"
+        private var counter = 0
+
+        private fun screenDir(): File =
+            File(InstrumentationRegistry.getInstrumentation().targetContext.filesDir, "screens").apply { mkdirs() }
+
+        @BeforeClass
+        @JvmStatic
+        fun cleanScreens() {
+            screenDir().deleteRecursively()
+            screenDir()
+        }
+    }
+}

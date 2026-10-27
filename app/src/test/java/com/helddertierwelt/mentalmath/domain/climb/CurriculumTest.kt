@@ -20,6 +20,10 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.domain.climb
 
 import com.helddertierwelt.mentalmath.domain.climb.curriculum.Curriculum
+import com.helddertierwelt.mentalmath.domain.climb.engine.Planned
+import com.helddertierwelt.mentalmath.domain.climb.engine.Session
+import com.helddertierwelt.mentalmath.domain.climb.engine.SessionLogic
+import com.helddertierwelt.mentalmath.domain.climb.engine.SessionType
 import com.helddertierwelt.mentalmath.domain.climb.math.AnswerCheck
 import com.helddertierwelt.mentalmath.domain.climb.math.Fmt
 import com.helddertierwelt.mentalmath.domain.climb.model.Block
@@ -32,6 +36,7 @@ import org.junit.Assert.fail
 import org.junit.Test
 import java.math.BigDecimal
 import java.math.MathContext
+import java.math.RoundingMode
 import kotlin.random.Random
 
 /**
@@ -116,7 +121,48 @@ class CurriculumTest {
         else -> null
     }
 
+    /** So würde man die Antwort auf dem Ziffernblock eintippen (null bei Auswahl). */
+    private fun typed(e: Expected): String? = when (e) {
+        is Expected.Exact -> e.value.stripTrailingZeros().toPlainString().replace('.', ',')
+        is Expected.Approx -> e.value.setScale(maxOf(0, e.tolerance.scale()), RoundingMode.HALF_UP).stripTrailingZeros().toPlainString().replace('.', ',')
+        is Expected.Remainder -> if (e.remainder == 0L) "${e.quotient}" else "${e.quotient}R${e.remainder}"
+        is Expected.Frac -> "${e.numerator}/${e.denominator}"
+        is Expected.Choice -> null
+        is Expected.Digits -> e.digits
+    }
+
+    private fun kindFits(e: Expected, kind: InputKind): Boolean = when (e) {
+        is Expected.Exact, is Expected.Approx -> kind == InputKind.INTEGER || kind == InputKind.DECIMAL
+        is Expected.Remainder -> kind == InputKind.REMAINDER
+        is Expected.Frac -> kind == InputKind.FRACTION
+        is Expected.Choice -> kind == InputKind.CHOICE
+        is Expected.Digits -> kind == InputKind.DIGITS
+    }
+
+    /** Tippt die richtige Antwort wie auf dem Ziffernblock ein und prüft, dass sie ankommt und akzeptiert wird. */
+    private fun checkTypeable(p: Problem, context: String) {
+        fun typeInto(start: Session, expected: Expected, label: String) {
+            val keys = typed(expected) ?: return
+            var s = start
+            keys.forEach { c -> s = SessionLogic.type(s, c).first }
+            assertEquals("$context: „$label“ lässt sich nicht eintippen ($keys)", keys, s.input)
+            assertTrue("$context: „$label“ eingetippt als $keys wird abgelehnt", AnswerCheck.check(expected, s.input).correct)
+        }
+        assertTrue("$context: Eingabeart ${p.input} passt nicht zur Antwort", kindFits(p.expected, p.input))
+        val practice = Session(type = SessionType.PRACTICE, skillId = p.skillId, title = "", problems = listOf(Planned(p)))
+        typeInto(practice, p.expected, "Ergebnis")
+        val guided = Session(type = SessionType.GUIDED, skillId = p.skillId, title = "", problems = listOf(Planned(p)))
+        p.steps.forEachIndexed { i, step ->
+            assertTrue("$context: Schritt „${step.label}“ hat Eingabeart ${step.input}, passt nicht zur Antwort", kindFits(step.expected, step.input))
+            if (step.expected is Expected.Choice) {
+                assertTrue("$context: Auswahlschritt ohne Auswahlmöglichkeiten", (step.expected as Expected.Choice).index in p.choices.indices)
+            }
+            typeInto(guided.copy(stepIndex = i), step.expected, step.label)
+        }
+    }
+
     private fun checkProblem(p: Problem, context: String) {
+        checkTypeable(p, context)
         assertTrue("$context: keine Schritte", p.steps.isNotEmpty())
         val verdict = AnswerCheck.check(p.expected, rawInput(p.expected))
         assertTrue("$context: richtige Antwort ${rawInput(p.expected)} wird abgelehnt", verdict.correct)
@@ -167,6 +213,10 @@ class CurriculumTest {
         val ids = Curriculum.skills.map { it.id }
         assertEquals(ids.size, ids.toSet().size)
         assertTrue(Curriculum.worlds.all { it.skills.isNotEmpty() })
+        val titles = Curriculum.skills.map { it.title } + Curriculum.worlds.map { it.title }
+        val duplicates = titles.groupBy { it }.filter { it.value.size > 1 }.keys
+        assertTrue("Doppelte Titel: $duplicates", duplicates.isEmpty())
+        Curriculum.worlds.forEach { w -> w.skills.forEach { assertTrue("${it.id} gehört nicht zu ${w.id}", it.id.startsWith(w.id + ".")) } }
     }
 
     @Test
