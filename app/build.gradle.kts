@@ -26,16 +26,31 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.helddertierwelt.mentalmath"
+        // Mental Math Plus: eigene App-Kennung, damit sich die App neben dem Original installiert.
+        applicationId = "io.github.tro123n.mentalmathplus"
         minSdk = 24
         targetSdk = 36
-        versionCode = 29
-        versionName = "29"
+        versionCode = System.getenv("MMP_VERSION_CODE")?.toIntOrNull() ?: 1000
+        versionName = System.getenv("MMP_VERSION_NAME") ?: "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
+        // Signatur für Mental Math Plus (wird von ci/build.sh über Umgebungsvariablen gesetzt).
+        val plusStoreFile = System.getenv("MMP_STORE_FILE")
+        val plusStorePassword = System.getenv("MMP_STORE_PASSWORD")
+        val plusKeyAlias = System.getenv("MMP_KEY_ALIAS")
+        val plusKeyPassword = System.getenv("MMP_KEY_PASSWORD")
+        if (plusStoreFile != null && plusStorePassword != null && plusKeyAlias != null && plusKeyPassword != null) {
+            create("plusRelease") {
+                storeFile = file(plusStoreFile)
+                storePassword = plusStorePassword
+                keyAlias = plusKeyAlias
+                keyPassword = plusKeyPassword
+                storeType = "PKCS12"
+            }
+        }
         if (project.hasProperty("DEV_STORE_FILE") && project.hasProperty("DEV_STORE_PASSWORD") &&
             project.hasProperty("DEV_KEY_ALIAS") && project.hasProperty("DEV_KEY_PASSWORD")
         ) {
@@ -76,7 +91,7 @@ android {
         }
         create("foss") {
             dimension = "distribution"
-            signingConfig = signingConfigs.findByName("fossRelease")
+            signingConfig = signingConfigs.findByName("plusRelease") ?: signingConfigs.findByName("fossRelease")
         }
         create("play") {
             dimension = "distribution"

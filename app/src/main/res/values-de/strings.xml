@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Settings Screen -->
-    <string name="app_name">Mental Math</string>
+    <string name="app_name">Mental Math Plus</string>
     <string name="mode_instruction">Modus und Limit auswählen</string>
     <string name="second">s</string>
     <string name="minute">min</string>

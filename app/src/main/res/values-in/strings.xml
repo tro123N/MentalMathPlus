@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Mental Math</string>
+    <string name="app_name">Mental Math Plus</string>
     <string name="mode_instruction">Pilih mode dan batas</string>
     <string name="operator_instruction">Pilih operasi dan kesulitan</string>
     <string name="start">Mulai</string>

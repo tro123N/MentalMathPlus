@@ -49,7 +49,7 @@
     <string name="reminder_off">التذكير موقف</string>
     <string name="every_three_days">كل ٣ أيام</string>
     <string name="daily_reminder">تذكير يومي</string>
-    <string name="app_name">Mental Math</string>
+    <string name="app_name">Mental Math Plus</string>
     <string name="no_browser">لا يوجد تطبيق متاح لفتح هذا الرابط.</string>
     <string name="sound_on">الصوت مشغل</string>
     <string name="seed">البذرة: %d</string>

@@ -10,3 +10,7 @@ local.properties
 /.kotlin/
 /.idea/
 app-release.dm
+# Signaturschlüssel niemals einchecken
+*.p12
+*.jks
+*.keystore

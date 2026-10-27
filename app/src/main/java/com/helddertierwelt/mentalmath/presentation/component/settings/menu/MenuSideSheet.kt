@@ -224,7 +224,7 @@ fun MenuSideSheet(
                             intentProvider = {
                                 Intent(
                                     Intent.ACTION_VIEW,
-                                    "https://codeberg.org/Mental-Math/MentalMath/releases/tag/v${BuildConfig.VERSION_NAME}".toUri()
+                                    "https://github.com/tro123N/MentalMathPlus/releases/tag/v${BuildConfig.VERSION_NAME}".toUri()
                                 )
                             },
                             onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
@@ -506,38 +506,22 @@ fun MenuSideSheet(
                             isExpanded = expandedGroup == SettingsGroup.SUPPORT,
                             onToggle = { settingsViewModel.toggleGroup(SettingsGroup.SUPPORT) },
                             content = {
-                                // Feedback Link
+                                // Feedback Link (Mental Math Plus: Ideen und Fehler als GitHub-Issue)
                                 IntentRow(
                                     iconResId = R.drawable.feedback_24dp,
                                     contentDescription = "Feedback",
                                     text = stringResource(R.string.feedback),
                                     intentProvider = {
-                                        Intent(Intent.ACTION_SEND).apply {
-                                            selector = Intent(Intent.ACTION_SENDTO, "mailto:".toUri())
-                                            putExtra(Intent.EXTRA_EMAIL, arrayOf("mental_math_app@pm.me"))
-                                            putExtra(Intent.EXTRA_SUBJECT, "Mental Math: Feedback")
-                                        }
-                                    },
-                                    onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
-                                    errorMessage = stringResource(R.string.no_mail)
-                                )
-
-                                // Recommendation Link
-                                IntentRow(
-                                    iconResId = R.drawable.thumb_up_24dp,
-                                    contentDescription = "Recommend",
-                                    text = stringResource(R.string.recommend),
-                                    intentProvider = {
                                         Intent(
                                             Intent.ACTION_VIEW,
-                                            "market://details?id=com.helddertierwelt.mentalmath".toUri()
+                                            "https://github.com/tro123N/MentalMathPlus/issues".toUri()
                                         )
                                     },
                                     onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },
-                                    errorMessage = stringResource(R.string.no_app_store)
+                                    errorMessage = stringResource(R.string.no_browser)
                                 )
 
-                                // Donation Link
+                                // Donation Link (unterstützt den Entwickler der Original-App)
                                 IntentRow(
                                     iconResId = R.drawable.volunteer_activism_24dp,
                                     contentDescription = "Donate",
@@ -562,7 +546,7 @@ fun MenuSideSheet(
                             intentProvider = {
                                 Intent(
                                     Intent.ACTION_VIEW,
-                                    "https://mental-math.codeberg.page".toUri()
+                                    "https://github.com/tro123N/MentalMathPlus".toUri()
                                 )
                             },
                             onClickSound = { settingsViewModel.playFeedback(FeedbackType.TAP) },

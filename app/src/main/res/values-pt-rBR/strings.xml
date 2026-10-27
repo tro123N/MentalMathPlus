@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Matemática Mental</string>
+    <string name="app_name">Matemática Mental Plus</string>
     <string name="mode_instruction">Selecionar modo e limite</string>
     <string name="second">s</string>
     <string name="minute">min</string>

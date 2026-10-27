@@ -49,7 +49,7 @@ Thank you for contributing!
 -->
 <resources>
     <!-- Settings Screen -->
-    <string name="app_name">Mental Math</string>
+    <string name="app_name">Mental Math Plus</string>
     <string name="mode_instruction">Select mode and limit</string>
     <string name="second">s</string>
     <string name="minute">min</string>
