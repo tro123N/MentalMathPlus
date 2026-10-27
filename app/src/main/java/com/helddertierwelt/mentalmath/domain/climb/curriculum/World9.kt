@@ -578,7 +578,7 @@ internal object World9 {
         var digit = 0L
         while ((digit + 1) * (digit + 1) <= first) digit++
         steps += step(
-            "Erste Ziffer: größte Zahl mit Quadrat bis ${n(first)}",
+            "Erste Ziffer (Quadrat ≤ ${n(first)})",
             digit,
             "${digit} × ${digit} = ${n(digit * digit)} passt in ${n(first)}, ${digit + 1} × ${digit + 1} = ${n((digit + 1) * (digit + 1))} nicht mehr.",
         )

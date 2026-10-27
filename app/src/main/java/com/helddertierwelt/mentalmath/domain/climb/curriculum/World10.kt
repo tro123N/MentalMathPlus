@@ -238,8 +238,8 @@ internal object World10 {
         )
     }
 
-    private val pegList: String = (0..99).chunked(10).joinToString("\n") { row ->
-        row.joinToString("  ") { "$it ${Phonetic.pegs[it]}" }
+    private val pegList: String = (0..99).chunked(2).joinToString("\n") { row ->
+        row.joinToString("   ") { "${it.toString().padStart(2)} ${Phonetic.pegs[it].padEnd(8)}" }.trimEnd()
     }
 
     private val pegsSkill = Skill(
@@ -274,7 +274,7 @@ internal object World10 {
             prompt = Prompt(
                 text = "Merken!",
                 caption = "Einprägen – sobald du tippst, verschwindet die Zahl",
-                lines = listOf(pairs.joinToString(" "), words.joinToString(" · ")),
+                lines = listOf(pairs.joinToString(" ")) + words.chunked(2).map { it.joinToString(" · ") },
                 hideAfterMs = 4_000L + 2_000L * pairs.size,
             ),
             expected = Expected.Digits(digits),
