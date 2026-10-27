@@ -102,14 +102,17 @@ fun ProblemDisplay(problem: Problem, modifier: Modifier = Modifier, hidden: Bool
     }
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         problem.prompt.caption?.let {
+            // Lange Textaufgaben linksbündig und gut lesbar, kurze Hinweise klein und mittig.
+            val long = it.length > 90
             Text(
                 text = it,
                 fontSize = dimens.fonts.sideSheetEntry,
-                lineHeight = dimens.fonts.sideSheetEntry * 1.25f,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f),
+                lineHeight = dimens.fonts.sideSheetEntry * (if (long) 1.4f else 1.25f),
+                textAlign = if (long) TextAlign.Start else TextAlign.Center,
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = if (long) 1f else 0.75f),
+                modifier = if (long) Modifier.fillMaxWidth() else Modifier,
             )
-            Spacer(Modifier.height(6.dp))
+            Spacer(Modifier.height(if (long) 10.dp else 6.dp))
         }
         if (problem.prompt.lines.isNotEmpty()) {
             val mono = monoFont()
@@ -407,7 +410,9 @@ fun ClimbKeypad(
 @Composable
 fun ChoiceButtons(choices: List<String>, enabled: Boolean, onChoose: (Int) -> Unit) {
     val dimens = MentalMathTheme.dimens
-    Column(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+    // Bei vier oder fünf Antworten (Medizinertest) etwas kompakter, damit alles auf den Bildschirm passt.
+    val compact = choices.size >= 4
+    Column(verticalArrangement = Arrangement.spacedBy(if (compact) 6.dp else 10.dp), modifier = Modifier.fillMaxWidth()) {
         choices.forEachIndexed { i, choice ->
             Button(
                 onClick = { onChoose(i) },
@@ -421,9 +426,14 @@ fun ChoiceButtons(choices: List<String>, enabled: Boolean, onChoose: (Int) -> Un
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(min = dimens.components.button * 0.75f),
+                    .heightIn(min = dimens.components.button * (if (compact) 0.55f else 0.75f)),
             ) {
-                Text(text = choice, fontSize = dimens.fonts.settingsLabel)
+                Text(
+                    text = choice,
+                    fontSize = if (compact) dimens.fonts.sideSheetEntry else dimens.fonts.settingsLabel,
+                    modifier = if (compact) Modifier.fillMaxWidth() else Modifier,
+                    textAlign = if (compact) TextAlign.Start else null,
+                )
             }
         }
     }

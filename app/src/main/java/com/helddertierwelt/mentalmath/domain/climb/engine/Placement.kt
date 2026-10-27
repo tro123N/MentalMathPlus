@@ -66,7 +66,7 @@ object Placement {
 
     /** Welten, für die ein Einstufungstest noch etwas bringt: nicht vollständig geschafft. */
     fun candidates(worlds: List<World>, progress: ClimbProgress): List<World> =
-        worlds.filter { w -> w.skills.any { !progress.of(it.id).mastered } }
+        worlds.filter { w -> !w.independent && w.skills.any { !progress.of(it.id).mastered } }
 
     /** Die Welt, mit der man anfangen sollte: die erste, die noch nicht geschafft ist. */
     fun recommended(worlds: List<World>, progress: ClimbProgress): World? = candidates(worlds, progress).firstOrNull()

@@ -80,6 +80,7 @@ data class FreeConfig(
             FreeMode.UEBERLEBEN -> listOf(1, 3, 5)
             FreeMode.PRUEFUNG -> listOf(10, 20, 30)
             FreeMode.ENDLOS -> listOf(0)
+            FreeMode.SIMULATION -> listOf(1_500)
         }
     }
 }
@@ -114,6 +115,12 @@ class ClimbViewModel @Inject constructor(
     val freeConfig: StateFlow<FreeConfig> = _freeConfig.asStateFlow()
 
     private val random = Random(System.nanoTime())
+
+    /** Erzeugt bei anpassender Schwierigkeit neue Aufgaben (Stufe, Anzahl); null = freies Training. */
+    private var freeGenerator: ((Int, Int) -> List<Problem>)? = null
+
+    /** Startet die zuletzt gestartete Einheit des freien Trainings bzw. des Medizinertest-Trainings neu. */
+    private var lastFreeStart: (() -> Boolean)? = null
     private var tickJob: Job? = null
     private var advanceJob: Job? = null
     private var problemStart = 0L
@@ -186,6 +193,8 @@ class ClimbViewModel @Inject constructor(
 
     /** Freies Training mit den aktuellen Einstellungen starten. */
     fun startFree(): Boolean {
+        freeGenerator = null
+        lastFreeStart = { startFree() }
         val c = _freeConfig.value
         val topics = c.topics.toList().ifEmpty { return false }
         val adaptive = plusSettings.value.adaptive
@@ -197,6 +206,51 @@ class ClimbViewModel @Inject constructor(
         val session = SessionLogic.createFree(problems, rules, title, limit)
         begin(if (adaptive) session.copy(adaptive = AdaptiveState(c.level)) else session)
         return true
+    }
+
+    /**
+     * Testsimulation „Arithmetisches Problemlösen“: [count] Aufgaben, [seconds] Sekunden Gesamtzeit,
+     * [options] Antwortmöglichkeiten (5 wie im TMSnat, 4 wie im HAM-Nat).
+     */
+    fun startApSimulation(seconds: Int, options: Int, count: Int = 16): Boolean {
+        freeGenerator = null
+        lastFreeStart = { startApSimulation(seconds, options, count) }
+        val problems = com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks.simulation(count, options, random)
+        val title = when {
+            count < 16 -> "Kurztest"
+            options == 4 -> "HAM-Nat-Simulation"
+            else -> "TMSnat-Simulation"
+        }
+        begin(SessionLogic.createFree(problems, FreeRules(FreeMode.SIMULATION, seconds, options, FreeRules.TRACK_AP), title, null))
+        return true
+    }
+
+    /** Gemischtes Üben „Arithmetisches Problemlösen“ ohne Ende, mit Rückmeldung und Lösungsweg. */
+    fun startApPractice(categories: Set<com.helddertierwelt.mentalmath.domain.climb.curriculum.ApCategory> = emptySet()): Boolean {
+        val cats = categories.ifEmpty { com.helddertierwelt.mentalmath.domain.climb.curriculum.ApCategory.entries.toSet() }.toList()
+        val generator = { level: Int, count: Int ->
+            List(count) { com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks.mixed(5, level, random, cats) }
+        }
+        freeGenerator = generator
+        lastFreeStart = { startApPractice(categories) }
+        val adaptive = plusSettings.value.adaptive
+        val start = 2
+        val title = if (cats.size == 1) cats.first().title else "Gemischt üben"
+        val session = SessionLogic.createFree(generator(start, 400), FreeRules(FreeMode.ENDLOS, 0, if (adaptive) 0 else start, FreeRules.TRACK_AP), title, null)
+        begin(if (adaptive) session.copy(adaptive = AdaptiveState(start)) else session)
+        return true
+    }
+
+    /** „Nochmal“ nach dem freien Training oder dem Medizinertest-Training. */
+    fun restartFree(): Boolean = lastFreeStart?.invoke() ?: startFree()
+
+    /** Testsimulation: aktuelle Aufgabe überspringen und später bearbeiten. */
+    fun onSkip() {
+        val s = _session.value ?: return
+        if (!s.isSimulation || s.phase != Phase.ANSWERING) return
+        feedbackController.play(FeedbackType.TAP)
+        _session.value = SessionLogic.skip(s, currentElapsed())
+        restartProblemClock()
     }
 
     /** Trick-Tipp zur Aufgabe. */
@@ -383,9 +437,16 @@ class ClimbViewModel @Inject constructor(
         var (s, event) = result
         if (s.adaptive != null && (event == SessionEvent.CORRECT || event == SessionEvent.WRONG || event == SessionEvent.TIMEOUT)) {
             val topics = _freeConfig.value.topics.toList().ifEmpty { listOf(FreeTopic.BASIC) }
-            s = SessionLogic.adapt(s) { level, count -> freeProblems(topics, level, count) }
+            val generator = freeGenerator ?: { level: Int, count: Int -> freeProblems(topics, level, count) }
+            s = SessionLogic.adapt(s, generator)
         }
         _session.value = s
+        if (s.isSimulation && s.phase == Phase.FLASH) {
+            // Wie im echten Test: keine Rückmeldung, sofort zur nächsten Aufgabe.
+            feedbackController.play(FeedbackType.TAP)
+            scheduleAdvance(0)
+            return
+        }
         when (event) {
             SessionEvent.KEY -> feedbackController.play(FeedbackType.NUMPAD)
             SessionEvent.BACKSPACE -> feedbackController.play(FeedbackType.BACKSPACE)

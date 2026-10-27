@@ -317,4 +317,61 @@ class PlusFeaturesTest {
         assertEquals(20 - Adaptive.UP_AFTER, regenerated)
         assertEquals(20, s.total)
     }
+
+    @Test
+    fun apSimulationSkipsTimesOutAndRecords() {
+        val ap = com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks
+        val problems = ap.simulation(16, 5, Random(8))
+        val rules = FreeRules(FreeMode.SIMULATION, 1500, 5, FreeRules.TRACK_AP)
+        var s = SessionLogic.createFree(problems, rules, "TMSnat", null)
+        assertTrue(s.isSimulation)
+        val first = s.current!!.problem
+        s = SessionLogic.skip(s, 30_000)
+        assertEquals(30_000, s.usedMs)
+        assertEquals(first, s.problems.last().problem)
+        assertEquals(16, SessionLogic.open(s))
+        // Drei Aufgaben richtig beantworten.
+        repeat(3) {
+            val c = (s.expected as com.helddertierwelt.mentalmath.domain.climb.model.Expected.Choice).index
+            s = SessionLogic.choose(s, c, 60_000).first
+            assertEquals(Phase.FLASH, s.phase)
+            s = SessionLogic.advance(s)
+        }
+        assertEquals(13, SessionLogic.open(s))
+        assertFalse(SessionLogic.freeOver(s))
+        assertTrue(SessionLogic.freeOver(s, 1_500_000))
+        val done = SessionLogic.finishNow(s)
+        assertEquals(16, done.results.size)
+        assertEquals(3, done.results.count { it.correct })
+        assertEquals(13, done.results.count { it.timedOut })
+        val (p, summary) = SessionFinisher.finish(worlds, ClimbProgress(), done, now, today)
+        assertEquals(3, summary.freeScore)
+        val run = summary.apRun!!
+        assertEquals(3, run.score)
+        assertEquals(16, run.total)
+        assertEquals(5, run.options)
+        assertEquals(listOf(run), p.apRuns)
+        assertEquals(3L, p.totalSolved)
+        assertEquals(3, p.freeBest["ap_SIMULATION_1500_5"])
+        // Die beantworteten Aufgaben zählen für die Kategorien (Levels von Welt 13).
+        val answeredSkills = done.results.filter { !it.timedOut }.map { it.problem.skillId }
+        answeredSkills.forEach { assertTrue(it, p.of(it).recent.isNotEmpty()) }
+        assertTrue(answeredSkills.all { it.startsWith("w13.") })
+    }
+
+    @Test
+    fun independentWorldIsAlwaysOpen() {
+        val w13 = worlds.indexOfFirst { it.independent }
+        assertTrue(w13 >= 0)
+        val empty = ClimbProgress()
+        assertTrue(Progression.worldUnlocked(worlds, empty, w13))
+        worlds[w13].skills.forEach { assertTrue(it.id, Progression.skillUnlocked(worlds, empty, it.id)) }
+        // Der Hauptweg bleibt beim ersten Level.
+        assertEquals(worlds[0].skills[0].id, Progression.nextSkill(worlds, empty)?.id)
+        // Auch wenn alle Hauptwelten geschafft sind, schickt „Weiterklettern“ nicht in die Zusatzwelt.
+        val allMain = worlds.filter { !it.independent }.flatMap { it.skills }
+            .fold(ClimbProgress()) { acc, sk -> acc.with(sk.id) { it.copy(stars = 1) } }
+        assertNull(Progression.nextSkill(worlds, allMain))
+        assertTrue(Placement.candidates(worlds, empty).none { it.independent })
+    }
 }

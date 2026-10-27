@@ -98,4 +98,9 @@ class World(
     val title: String,
     val subtitle: String,
     val skills: List<Skill>,
+    /**
+     * Eigenständige Welt (z. B. Vorbereitung auf einen Test): immer offen, alle Levels frei,
+     * nicht Teil des Hauptwegs („Weiterklettern“).
+     */
+    val independent: Boolean = false,
 )

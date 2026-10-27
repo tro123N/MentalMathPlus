@@ -98,7 +98,8 @@ private fun typeLabel(type: SessionType): String = when (type) {
 private fun counterText(session: Session, elapsed: Long): String {
     val rules = session.free ?: return "${minOf(session.done + 1, session.total)}/${session.total}"
     return when (rules.mode) {
-        com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.ZEIT -> {
+        com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.ZEIT,
+        com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.SIMULATION -> {
             val left = ((rules.param * 1000L - session.usedMs - elapsed).coerceAtLeast(0) + 999) / 1000
             "${left / 60}:${(left % 60).toString().padStart(2, '0')}"
         }
@@ -180,7 +181,7 @@ fun ClimbPlayScreen(navController: NavController) {
         topBar = {
             Column {
                 ClimbTopBar(
-                    title = "${typeLabel(session.type)} · ${session.title}",
+                    title = if (session.free?.isAp == true) session.title else "${typeLabel(session.type)} · ${session.title}",
                     navigationIcon = R.drawable.close_24dp,
                     navigationTint = red,
                     navigationDescription = "Übung beenden",
@@ -198,7 +199,7 @@ fun ClimbPlayScreen(navController: NavController) {
                 val freeRules = session.free
                 val progressValue = if (limit != null) {
                     (elapsed.toFloat() / limit).coerceIn(0f, 1f)
-                } else if (freeRules != null && freeRules.mode == com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.ZEIT) {
+                } else if (freeRules != null && (freeRules.mode == com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.ZEIT || freeRules.mode == com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.SIMULATION)) {
                     ((session.usedMs + elapsed).toFloat() / (freeRules.param * 1000f)).coerceIn(0f, 1f)
                 } else if (freeRules != null) {
                     0f
@@ -244,12 +245,20 @@ fun ClimbPlayScreen(navController: NavController) {
                 ) {
                     session.problem?.let { problem ->
                         // Trick-Tipp: nur beim Üben, nie in Prüfungen; für jede Aufgabe neu zugeklappt.
-                        val trickAllowed = plus.trickTips && !session.isGuided &&
+                        val trickAllowed = plus.trickTips && !session.isGuided && !session.isSimulation &&
                             (session.type == SessionType.PRACTICE || session.type == SessionType.REVIEW || session.type == SessionType.FREE) &&
                             session.free?.mode != com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.PRUEFUNG
                         var showTrick by remember(session.index) { mutableStateOf(false) }
                         session.adaptive?.let { a ->
                             CaptionText("Stufe automatisch: ${listOf("Leicht", "Mittel", "Schwer")[(a.level - 1).coerceIn(0, 2)]}")
+                            Spacer(Modifier.height(8.dp))
+                        }
+                        if (session.isSimulation) {
+                            val skipped = if (session.skips > 0) " · Übersprungene kommen am Ende" else ""
+                            CaptionText(
+                                "Aufgabe ${minOf(session.results.size + 1, session.problems.size)} von ${session.problems.size}$skipped",
+                                modifier = Modifier.testTag("simProgress"),
+                            )
                             Spacer(Modifier.height(8.dp))
                         }
                         val hideMs = problem.prompt.hideAfterMs
@@ -278,7 +287,7 @@ fun ClimbPlayScreen(navController: NavController) {
                             }
                         }
                         Spacer(Modifier.height(12.dp))
-                        FlashFeedback(session = session)
+                        if (!session.isSimulation) FlashFeedback(session = session)
                         if (session.phase == Phase.REVEAL && !session.isGuided) {
                             RevealCard(session)
                         }
@@ -373,11 +382,24 @@ private fun BottomControls(
         }
 
         session.inputKind == InputKind.CHOICE -> {
-            ChoiceButtons(
-                choices = problem.choices,
-                enabled = session.phase == Phase.ANSWERING,
-                onChoose = { viewModel.onChoice(it) },
-            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+                if (session.isSimulation) {
+                    PillButton(
+                        text = "Später bearbeiten",
+                        onClick = { viewModel.onSkip() },
+                        color = accent,
+                        enabled = session.phase == Phase.ANSWERING &&
+                            com.helddertierwelt.mentalmath.domain.climb.engine.SessionLogic.open(session) > 1,
+                        modifier = Modifier.testTag("skipButton"),
+                    )
+                    Spacer(Modifier.height(8.dp))
+                }
+                ChoiceButtons(
+                    choices = problem.choices,
+                    enabled = session.phase == Phase.ANSWERING,
+                    onChoose = { viewModel.onChoice(it) },
+                )
+            }
         }
 
         else -> {

@@ -111,6 +111,17 @@ fun ClimbResultScreen(navController: NavController) {
             } else {
                 SummaryCard(summary = summary, viewModel = viewModel)
                 CardGap()
+                if (summary.free?.isAp == true) {
+                    ApCategoryCard(summary = summary, onPractice = { skillId ->
+                        viewModel.playTap()
+                        viewModel.clearSummary()
+                        navController.navigate("level/$skillId") {
+                            popUpTo("climb") { inclusive = false }
+                            launchSingleTop = true
+                        }
+                    })
+                    CardGap()
+                }
                 MessagesCard(summary = summary)
                 ProblemsCard(results = summary.results)
                 CardGap()
@@ -140,7 +151,7 @@ fun ClimbResultScreen(navController: NavController) {
                         iconTint = accent,
                         onClick = {
                             val started = when {
-                                summary.type == SessionType.FREE -> viewModel.startFree()
+                                summary.type == SessionType.FREE -> viewModel.restartFree()
                                 summary.type == SessionType.PLACEMENT -> summary.placement?.let { viewModel.startPlacement(it.worldId) } ?: false
                                 skillId != null -> viewModel.startSession(summary.type, skillId)
                                 else -> viewModel.startReview()
@@ -170,15 +181,16 @@ fun ClimbResultScreen(navController: NavController) {
                         )
                     }
                     if (summary.type == SessionType.FREE) {
+                        val ap = summary.free?.isAp == true
                         ActionButton(
-                            text = "Einstellungen",
-                            subtitle = "Aufgabenarten und Modus ändern",
+                            text = if (ap) "Zum Medizinertest-Training" else "Einstellungen",
+                            subtitle = if (ap) "Simulationen, Kategorien und Verlauf" else "Aufgabenarten und Modus ändern",
                             icon = R.drawable.tune_24dp,
                             iconTint = MaterialTheme.colorScheme.onPrimary,
                             onClick = {
                                 viewModel.playTap()
                                 viewModel.clearSummary()
-                                navController.navigate("free") {
+                                navController.navigate(if (ap) "aptraining" else "free") {
                                     popUpTo("climb") { inclusive = false }
                                     launchSingleTop = true
                                 }
@@ -243,7 +255,7 @@ private fun SummaryCard(summary: Summary, viewModel: ClimbViewModel) {
     val avgMs = if (total == 0) 0L else results.sumOf { it.timeMs } / total
     val skill = summary.skillId?.let { viewModel.skill(it) }
     ClimbCard {
-        CardTitle("${typeTitle(summary.type)} · ${summary.title}")
+        CardTitle(if (summary.free?.isAp == true) "Medizinertest · ${summary.title}" else "${typeTitle(summary.type)} · ${summary.title}")
         val outcome = summary.outcome
         val placement = summary.placement
         if (placement != null) {
@@ -280,7 +292,22 @@ private fun SummaryCard(summary: Summary, viewModel: ClimbViewModel) {
             GoalRow(ok = accuracyOk, text = "Richtig: $correct von $total (Ziel: höchstens $allowed Fehler)")
             GoalRow(ok = outcome.avgMs / 1000.0 <= goals.star1, text = "Ø Zeit: ${secondsText(outcome.avgMs / 1000.0)} (★ bei ${secondsText(goals.star1)}, ★★ bei ${secondsText(goals.star2)}, ★★★ bei ${secondsText(goals.star3)})")
         } else {
-            summary.free?.let { rules ->
+            summary.free?.takeIf { it.mode == com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.SIMULATION }?.let { rules ->
+                val run = summary.apRun
+                val usedSec = (run?.usedMs ?: 0L) / 1000
+                Text(
+                    text = "$correct von $total Punkten",
+                    fontSize = dimens.fonts.settingsLabel,
+                    color = if (correct * 4 >= total * 3) green else if (correct * 2 >= total) yellow else red,
+                )
+                CaptionText(apRating(correct, total))
+                Spacer(Modifier.height(6.dp))
+                BodyText("Zeit: ${usedSec / 60}:${(usedSec % 60).toString().padStart(2, '0')} von ${rules.param / 60}:${(rules.param % 60).toString().padStart(2, '0')} min")
+                val open = results.count { it.timedOut && it.answer.isEmpty() }
+                if (open > 0) BodyText(if (open == 1) "1 Aufgabe nicht bearbeitet" else "$open Aufgaben nicht bearbeitet", color = yellow)
+                CaptionText("${if (rules.level == 4) "4 Antworten (A–D) wie im HAM-Nat" else "5 Antworten (A–E) wie im TMSnat"}. Die Bewertung ist eine Orientierung, keine offizielle Auswertung.")
+            }
+            summary.free?.takeIf { it.mode != com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.SIMULATION }?.let { rules ->
                 val p = paramLabel(rules.mode, rules.param)
                 CaptionText(rules.mode.title + (if (p.isNotEmpty()) " · $p" else ""))
                 summary.freeEndLevel?.let { lvl ->
@@ -301,8 +328,13 @@ private fun SummaryCard(summary: Summary, viewModel: ClimbViewModel) {
                 }
                 Spacer(Modifier.height(6.dp))
             }
-            BodyText("Richtig: $correct von $total")
-            BodyText("Ø Zeit pro Aufgabe: ${secondsText(avgMs / 1000.0)}")
+            if (summary.free?.mode != com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.SIMULATION) {
+                BodyText("Richtig: $correct von $total")
+                BodyText("Ø Zeit pro Aufgabe: ${secondsText(avgMs / 1000.0)}")
+            } else {
+                val answered = results.filter { !(it.timedOut && it.answer.isEmpty()) }
+                if (answered.isNotEmpty()) BodyText("Ø Zeit pro bearbeiteter Aufgabe: ${secondsText(answered.sumOf { it.timeMs } / answered.size / 1000.0)}")
+            }
             val hints = results.sumOf { it.hintsUsed }
             if (summary.type == SessionType.GUIDED) {
                 CaptionText(if (hints == 0) "Alle Schritte ohne Hilfe gelöst." else "Hilfen gebraucht: $hints")
@@ -448,6 +480,67 @@ private fun ProblemsCard(results: List<ProblemResult>) {
                     SolutionSteps(problem = r.problem, showHints = true, modifier = Modifier.padding(start = 8.dp))
                 }
             }
+        }
+    }
+}
+
+/** Einordnung eines Simulationsergebnisses (eigene Faustregel, keine offizielle Norm). */
+fun apRating(correct: Int, total: Int): String {
+    if (total == 0) return ""
+    val share = correct.toDouble() / total
+    return when {
+        share >= 0.875 -> "Sehr stark – so kann es im Test laufen."
+        share >= 0.69 -> "Gut – mit etwas Tempo-Training ist noch mehr drin."
+        share >= 0.5 -> "Solide Grundlage – übe gezielt die schwachen Kategorien."
+        else -> "Weiter üben – nimm dir die Kategorien einzeln vor."
+    }
+}
+
+/** Ergebnis je Kategorie einer Einheit des Medizinertest-Trainings. */
+@Composable
+private fun ApCategoryCard(summary: Summary, onPractice: (String) -> Unit) {
+    val dimens = MentalMathTheme.dimens
+    val byCategory = summary.results.groupBy { com.helddertierwelt.mentalmath.domain.climb.curriculum.ApCategory.of(it.problem.skillId) }
+        .filterKeys { it != null }
+    if (byCategory.isEmpty()) return
+    ClimbCard {
+        CardTitle("Nach Kategorien")
+        com.helddertierwelt.mentalmath.domain.climb.curriculum.ApCategory.entries.forEach { c ->
+            val list = byCategory[c] ?: return@forEach
+            val ok = list.count { it.correct }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onPractice(c.skillId) }
+                    .padding(vertical = 5.dp),
+            ) {
+                Icon(
+                    painter = painterResource(if (ok == list.size) R.drawable.check_24dp else R.drawable.close_24dp),
+                    contentDescription = null,
+                    tint = if (ok == list.size) green else if (ok > 0) yellow else red,
+                    modifier = Modifier.size(dimens.icons.problemStatus * 0.7f),
+                )
+                Spacer(Modifier.width(10.dp))
+                Text(c.title, fontSize = dimens.fonts.sideSheetEntry, color = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.weight(1f))
+                CaptionText("$ok/${list.size}")
+            }
+        }
+        val weakest = byCategory.entries
+            .map { (c, list) -> c!! to list.count { it.correct }.toDouble() / list.size }
+            .filter { it.second < 1.0 }
+            .minByOrNull { it.second }
+        if (weakest != null) {
+            Spacer(Modifier.height(8.dp))
+            ActionButton(
+                text = "Üben: ${weakest.first.title}",
+                subtitle = "Erklärung, geführtes Üben und Prüfung",
+                icon = R.drawable.terrain_24dp,
+                iconTint = accent,
+                onClick = { onPractice(weakest.first.skillId) },
+            )
+        } else {
+            CaptionText("Tippe eine Kategorie an, um sie gezielt zu üben.")
         }
     }
 }

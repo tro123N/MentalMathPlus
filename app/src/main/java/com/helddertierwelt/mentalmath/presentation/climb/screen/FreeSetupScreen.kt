@@ -84,6 +84,7 @@ private fun modeIcon(mode: FreeMode): Int = when (mode) {
     FreeMode.ENDLOS -> R.drawable.play_arrow_24dp
     FreeMode.UEBERLEBEN -> R.drawable.heart_24dp
     FreeMode.PRUEFUNG -> R.drawable.trophy_24dp
+    FreeMode.SIMULATION -> R.drawable.timer_24dp
 }
 
 fun modeDescription(mode: FreeMode, param: Int): String = when (mode) {
@@ -91,6 +92,7 @@ fun modeDescription(mode: FreeMode, param: Int): String = when (mode) {
     FreeMode.ENDLOS -> "Ohne Ende – du hörst auf, wann du willst"
     FreeMode.UEBERLEBEN -> if (param == 1) "Ein Fehler und es ist vorbei" else "$param Leben – jeder Fehler kostet eines"
     FreeMode.PRUEFUNG -> "$param Aufgaben mit Zeitlimit, am Ende eine Note"
+    FreeMode.SIMULATION -> "Wie im Test: ${param / 60} min Gesamtzeit, ohne Rückmeldung"
 }
 
 fun paramLabel(mode: FreeMode, param: Int): String = when (mode) {
@@ -98,6 +100,7 @@ fun paramLabel(mode: FreeMode, param: Int): String = when (mode) {
     FreeMode.UEBERLEBEN -> if (param == 1) "1 Leben" else "$param Leben"
     FreeMode.PRUEFUNG -> "$param Aufgaben"
     FreeMode.ENDLOS -> ""
+    FreeMode.SIMULATION -> "${param / 60} min"
 }
 
 /** Kurze Beschriftung für die Auswahlknöpfe. */
@@ -106,6 +109,7 @@ private fun shortParamLabel(mode: FreeMode, param: Int): String = when (mode) {
     FreeMode.UEBERLEBEN -> "♥ $param"
     FreeMode.PRUEFUNG -> "$param"
     FreeMode.ENDLOS -> ""
+    FreeMode.SIMULATION -> "${param / 60} min"
 }
 
 /** Freies Training: Aufgabenarten, Schwierigkeit und Modus wählen, Statistik ansehen. */
@@ -145,6 +149,18 @@ fun FreeSetupScreen(navController: NavController) {
                 icon = R.drawable.tune_24dp,
                 title = "Üben ohne Plan",
                 text = "Aufgabenarten und Modus frei wählen. Zählt nicht für den Kletterweg – hier gibt es eigene Bestwerte.",
+            )
+            CardGap()
+            ActionButton(
+                text = "Medizinertest-Training",
+                subtitle = "Arithmetisches Problemlösen · TMSnat und HAM-Nat",
+                icon = R.drawable.trophy_24dp,
+                iconTint = yellow,
+                onClick = {
+                    viewModel.playTap()
+                    navController.navigate("aptraining") { launchSingleTop = true }
+                },
+                modifier = Modifier.testTag("apEntry"),
             )
             CardGap()
             ClimbCard {
@@ -216,7 +232,7 @@ fun FreeSetupScreen(navController: NavController) {
             CardGap()
             ClimbCard {
                 CardTitle("Modus")
-                FreeMode.entries.forEach { mode ->
+                FreeMode.entries.filter { it.selectable }.forEach { mode ->
                     val selected = config.mode == mode
                     Column(
                         modifier = Modifier

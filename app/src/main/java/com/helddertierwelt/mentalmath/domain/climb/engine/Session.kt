@@ -33,8 +33,8 @@ import kotlin.random.Random
 /** Eine geplante Aufgabe in einer Einheit; [limitMs] überschreibt das Zeitlimit der Einheit. */
 data class Planned(val problem: Problem, val retry: Boolean = false, val limitMs: Long? = null)
 
-/** Modi des freien Trainings. */
-enum class FreeMode(val title: String) {
+/** Modi des freien Trainings. [selectable]: im freien Training auswählbar. */
+enum class FreeMode(val title: String, val selectable: Boolean = true) {
     /** Möglichst viele Aufgaben in einer festen Zeit. */
     ZEIT("Auf Zeit"),
 
@@ -46,6 +46,9 @@ enum class FreeMode(val title: String) {
 
     /** Feste Zahl von Aufgaben mit Zeitlimit pro Aufgabe, am Ende eine Note. */
     PRUEFUNG("Prüfung"),
+
+    /** Testsimulation: feste Aufgaben, eine Gesamtzeit, keine Rückmeldung bis zum Ende, Überspringen erlaubt. */
+    SIMULATION("Testsimulation", selectable = false),
 }
 
 /** Regeln einer Einheit im freien Training. */
@@ -53,11 +56,19 @@ data class FreeRules(
     val mode: FreeMode,
     /** Sekunden (Zeit), Leben (Überleben) bzw. Aufgaben (Prüfung). */
     val param: Int,
-    /** Stufe 1 bis 3; 0 = automatisch (anpassende Schwierigkeit). */
+    /** Stufe 1 bis 3; 0 = automatisch (anpassende Schwierigkeit). Bei der Testsimulation: Zahl der Antwortmöglichkeiten. */
     val level: Int,
+    /** Bereich, z. B. „ap“ für das Medizinertest-Training; leer = freies Training. */
+    val track: String = "",
 ) {
-    /** Schlüssel für Bestwerte, z. B. „ZEIT_60“. */
-    val bestKey: String get() = "${mode.name}_${param}_$level"
+    /** Schlüssel für Bestwerte, z. B. „ZEIT_60_2“ oder „ap_SIMULATION_1500_5“. */
+    val bestKey: String get() = (if (track.isEmpty()) "" else "${track}_") + "${mode.name}_${param}_$level"
+
+    val isAp: Boolean get() = track == TRACK_AP
+
+    companion object {
+        const val TRACK_AP = "ap"
+    }
 }
 
 /** Was die Oberfläche gerade zeigt. */
@@ -118,6 +129,10 @@ data class Session(
     val worldId: String? = null,
     /** Nur im freien Training mit anpassender Schwierigkeit gesetzt. */
     val adaptive: AdaptiveState? = null,
+    /** Testsimulation: Zeit, die auf übersprungene Aufgaben verwendet wurde. */
+    val skippedMs: Long = 0,
+    /** Testsimulation: so oft wurde „Später“ gedrückt. */
+    val skips: Int = 0,
 ) {
     val current: Planned? get() = problems.getOrNull(index)
     val problem: Problem? get() = current?.problem
@@ -129,7 +144,10 @@ data class Session(
     val currentLimitMs: Long? get() = current?.limitMs ?: timeLimitMs
 
     /** Gesamte Rechenzeit der bisherigen Aufgaben (ohne Pausen und Rückmeldungen). */
-    val usedMs: Long get() = results.sumOf { it.timeMs }
+    val usedMs: Long get() = results.sumOf { it.timeMs } + skippedMs
+
+    /** Testsimulation ohne Rückmeldung nach jeder Aufgabe. */
+    val isSimulation: Boolean get() = free?.mode == FreeMode.SIMULATION
 
     /** Falsche Antworten bisher. */
     val mistakes: Int get() = results.count { !it.correct }
@@ -205,7 +223,7 @@ object SessionLogic {
     fun freeOver(s: Session, extraMs: Long = 0): Boolean {
         val rules = s.free ?: return false
         return when (rules.mode) {
-            FreeMode.ZEIT -> s.usedMs + extraMs >= rules.param * 1000L
+            FreeMode.ZEIT, FreeMode.SIMULATION -> s.usedMs + extraMs >= rules.param * 1000L
             FreeMode.UEBERLEBEN -> s.mistakes >= rules.param
             FreeMode.ENDLOS, FreeMode.PRUEFUNG -> false
         }
@@ -213,9 +231,29 @@ object SessionLogic {
 
     /** Einheit sofort beenden (Zeit um, Leben weg oder vom Nutzer beendet). */
     fun finishNow(s: Session): Session {
+        if (s.isSimulation) {
+            // Nicht bearbeitete Aufgaben zählen wie im Test als falsch.
+            val open = s.problems.drop(s.results.size).map { ProblemResult(it.problem, "", false, 0, timedOut = true) }
+            val results = s.results + open
+            return s.copy(results = results, index = s.problems.size, phase = Phase.FINISHED, input = "", feedback = null)
+        }
         val done = s.results.size
         return s.copy(problems = s.problems.take(done), index = done, phase = Phase.FINISHED, input = "", feedback = null)
     }
+
+    /** Testsimulation: aktuelle Aufgabe ans Ende stellen und später bearbeiten. */
+    fun skip(s: Session, elapsedMs: Long): Session {
+        if (!s.isSimulation || s.phase != Phase.ANSWERING) return s
+        val current = s.current ?: return s
+        if (s.index >= s.problems.lastIndex) return s
+        val list = s.problems.toMutableList()
+        list.removeAt(s.index)
+        list.add(current)
+        return s.copy(problems = list, input = "", showHint = false, skippedMs = s.skippedMs + elapsedMs, skips = s.skips + 1)
+    }
+
+    /** Wie viele Aufgaben der Testsimulation sind noch offen (einschließlich der aktuellen)? */
+    fun open(s: Session): Int = (s.problems.size - s.results.size).coerceAtLeast(0)
 
     /** Eine Taste tippen: Ziffer, ',' bei Kommazahlen, 'R' bei Rest, '/' bei Brüchen. */
     fun type(s: Session, key: Char): Pair<Session, SessionEvent> {
@@ -402,6 +440,8 @@ data class Summary(
     val placement: PlacementOutcome? = null,
     /** Freies Training mit anpassender Schwierigkeit: Stufe am Ende (1 bis 3). */
     val freeEndLevel: Int? = null,
+    /** Testsimulation: das gespeicherte Ergebnis. */
+    val apRun: com.helddertierwelt.mentalmath.domain.climb.model.ApRun? = null,
 )
 
 object SessionFinisher {
@@ -413,7 +453,7 @@ object SessionFinisher {
         now: Long,
         today: Long,
     ): Pair<ClimbProgress, Summary> {
-        session.free?.let { rules -> return finishFree(before, session, rules, today) }
+        session.free?.let { rules -> return finishFree(before, session, rules, now, today) }
         val skill = session.skillId?.let { Progression.skill(worlds, it) }
         val nextBefore = Progression.nextSkill(worlds, before)
         var p = Progression.record(before, session.results, now, today, skillDays = session.type != SessionType.GUIDED)
@@ -476,9 +516,11 @@ object SessionFinisher {
     /** Punktzahl im freien Training: richtige Antworten. */
     fun freeScore(session: Session): Int = session.results.count { it.correct }
 
-    private fun finishFree(before: ClimbProgress, session: Session, rules: FreeRules, today: Long): Pair<ClimbProgress, Summary> {
+    private fun finishFree(before: ClimbProgress, session: Session, rules: FreeRules, now: Long, today: Long): Pair<ClimbProgress, Summary> {
+        // Nicht bearbeitete Aufgaben einer Testsimulation zählen für die Punkte, aber nicht als gelöst.
+        val answered = session.results.filter { !(it.timedOut && it.answer.isEmpty() && it.timeMs == 0L) }
         var stats = before.free
-        session.results.groupBy { it.problem.skillId }.forEach { (topic, list) ->
+        answered.groupBy { it.problem.skillId }.forEach { (topic, list) ->
             val old = stats[topic] ?: com.helddertierwelt.mentalmath.domain.climb.model.FreeStat()
             stats = stats + (topic to old.copy(
                 solved = old.solved + list.size,
@@ -488,14 +530,36 @@ object SessionFinisher {
         }
         val score = freeScore(session)
         val bestBefore = before.freeBest[rules.bestKey] ?: 0
-        var p = before.copy(
+        var p = if (rules.isAp) {
+            // Medizinertest-Training: Ergebnisse zählen auch für die Sicherheit der Kategorien (Levels von Welt 13).
+            Progression.record(before, answered, now, today)
+        } else {
+            Progression.recordDay(
+                before.copy(
+                    totalSolved = before.totalSolved + answered.size,
+                    totalCorrect = before.totalCorrect + answered.count { it.correct },
+                ),
+                answered,
+                today,
+            )
+        }
+        p = p.copy(
             free = stats,
-            freeBest = if (score > bestBefore) before.freeBest + (rules.bestKey to score) else before.freeBest,
-            totalSolved = before.totalSolved + session.results.size,
-            totalCorrect = before.totalCorrect + session.results.count { it.correct },
+            freeBest = if (score > bestBefore) p.freeBest + (rules.bestKey to score) else p.freeBest,
         )
-        p = Progression.recordDay(p, session.results, today)
-        if (session.results.isNotEmpty()) p = Progression.touchStreak(p, today)
+        var run: com.helddertierwelt.mentalmath.domain.climb.model.ApRun? = null
+        if (rules.mode == FreeMode.SIMULATION) {
+            run = com.helddertierwelt.mentalmath.domain.climb.model.ApRun(
+                at = now,
+                score = score,
+                total = session.results.size,
+                usedMs = minOf(session.usedMs, rules.param * 1000L),
+                seconds = rules.param,
+                options = rules.level,
+            )
+            p = p.copy(apRuns = (p.apRuns + run).takeLast(ClimbProgress.AP_RUNS_KEPT))
+        }
+        if (answered.isNotEmpty()) p = Progression.touchStreak(p, today)
         val summary = Summary(
             type = SessionType.FREE,
             skillId = null,
@@ -512,6 +576,7 @@ object SessionFinisher {
             freeScore = score,
             freeBestBefore = bestBefore,
             freeEndLevel = session.adaptive?.level,
+            apRun = run,
         )
         return p to summary
     }

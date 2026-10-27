@@ -236,7 +236,8 @@ class CurriculumTest {
             assertEquals("$context: letzter Schritt ≠ Ergebnis", p.expected, last.expected)
         }
 
-        totalPrompts++
+        // Textaufgaben (lange Beschreibung) lassen sich nicht als Formel nachrechnen.
+        if ((p.prompt.caption?.length ?: 0) <= 60) totalPrompts++
         evaluatePrompt(p)?.let { promptValue ->
             evaluatedPrompts++
             if (p.expected is Expected.Approx) {
@@ -313,6 +314,43 @@ class CurriculumTest {
                 }
             }
         }
+    }
+
+    @Test
+    fun apTasksAreCorrectInEveryDifficulty() {
+        val cats = com.helddertierwelt.mentalmath.domain.climb.curriculum.ApCategory.entries
+        val ap = com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks
+        for (c in cats) {
+            for (d in 1..3) {
+                val random = Random(c.ordinal * 100L + d)
+                repeat(250) { i ->
+                    val t = ap.task(c, d, random)
+                    val context = "${c.name}/$d #$i (${t.text})"
+                    assertTrue("$context: Text zu kurz", t.text.length > 30)
+                    t.value?.let { v ->
+                        assertTrue("$context: Ergebnis nicht positiv", v.signum() > 0)
+                        assertTrue("$context: Ergebnis zu groß für Kopfrechnen", v < BigDecimal(2_000_000))
+                        assertTrue("$context: zu viele Nachkommastellen", v.stripTrailingZeros().scale() <= 2)
+                    }
+                    checkProblem(ap.typed(t), "$context getippt")
+                    for (options in listOf(4, 5)) {
+                        val p = ap.choice(t, options, random)
+                        checkProblem(p, "$context Auswahl $options")
+                        assertEquals("$context: Anzahl Antworten", options, p.choices.size)
+                        assertEquals("$context: doppelte Antworten ${p.choices}", options, p.choices.map { it.substringAfter(") ") }.toSet().size)
+                        val correct = (p.expected as Expected.Choice).index
+                        val expectedText = ap.optionText(t.value, t.frac, t.unit)
+                        assertEquals("$context: richtige Antwort steht nicht zur Wahl", expectedText, p.choices[correct].substringAfter(") "))
+                    }
+                }
+            }
+        }
+        // Simulation: 16 Aufgaben, alle Kategorien, nach hinten schwerer.
+        val sim = ap.simulation(16, 5, Random(5))
+        assertEquals(16, sim.size)
+        assertEquals(cats.map { it.skillId }.toSet(), sim.map { it.skillId }.toSet())
+        assertTrue(sim.all { it.input == InputKind.CHOICE && it.choices.size == 5 })
+        sim.forEachIndexed { i, p -> checkProblem(p, "Simulation #$i") }
     }
 
     @Test

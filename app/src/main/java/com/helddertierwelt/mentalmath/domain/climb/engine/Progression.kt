@@ -69,11 +69,13 @@ object Progression {
      */
     fun worldUnlocked(worlds: List<World>, progress: ClimbProgress, worldIndex: Int): Boolean =
         worldIndex <= 0 ||
+            worlds.getOrNull(worldIndex)?.independent == true ||
             worlds[worldIndex - 1].skills.all { progress.of(it.id).mastered } ||
             worlds.getOrNull(worldIndex)?.skills?.any { progress.of(it.id).mastered } == true
 
     fun skillUnlocked(worlds: List<World>, progress: ClimbProgress, skillId: String): Boolean {
         val pos = locate(worlds, skillId) ?: return false
+        if (worlds[pos.world].independent) return true
         if (!worldUnlocked(worlds, progress, pos.world)) return false
         if (pos.skill == 0) return true
         return progress.of(worlds[pos.world].skills[pos.skill - 1].id).mastered
@@ -82,6 +84,7 @@ object Progression {
     /** Das Level, auf dem dieses Level direkt aufbaut. */
     fun prerequisite(worlds: List<World>, skillId: String): Skill? {
         val pos = locate(worlds, skillId) ?: return null
+        if (worlds[pos.world].independent) return null
         return when {
             pos.skill > 0 -> worlds[pos.world].skills[pos.skill - 1]
             pos.world > 0 -> worlds[pos.world - 1].skills.lastOrNull()
@@ -92,6 +95,7 @@ object Progression {
     /** Levels, die erst aufgefrischt werden müssen, bevor die Prüfung dieses Levels möglich ist. */
     fun blockers(worlds: List<World>, progress: ClimbProgress, skillId: String): List<Skill> {
         val pos = locate(worlds, skillId) ?: return emptyList()
+        if (worlds[pos.world].independent) return emptyList()
         val earlier = worlds[pos.world].skills.take(pos.skill).toMutableList()
         if (pos.skill == 0) prerequisite(worlds, skillId)?.let { earlier += it }
         return earlier.filter { progress.of(it.id).needsAttention }
@@ -100,6 +104,7 @@ object Progression {
     /** Das nächste Level, an dem weitergeklettert werden sollte. */
     fun nextSkill(worlds: List<World>, progress: ClimbProgress): Skill? {
         worlds.forEachIndexed { wi, w ->
+            if (w.independent) return@forEachIndexed
             if (!worldUnlocked(worlds, progress, wi)) return null
             w.skills.forEach { s -> if (!progress.of(s.id).mastered) return s }
         }

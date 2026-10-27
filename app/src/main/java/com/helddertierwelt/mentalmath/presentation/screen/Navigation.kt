@@ -91,6 +91,13 @@ fun Navigation(
             }
 
             composable(
+                route = "aptraining",
+                enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+            ) {
+                com.helddertierwelt.mentalmath.presentation.climb.screen.ApTrainingScreen(navController = navController)
+            }
+
+            composable(
                 route = "stats",
                 enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
             ) {

@@ -49,7 +49,11 @@ object TrickAdvisor {
 
     fun tip(problem: Problem, worlds: List<World>): TrickTip {
         val skills = worlds.flatMap { it.skills }
-        skills.firstOrNull { it.id == problem.skillId }?.let { return fromSkill(it) }
+        val own = skills.firstOrNull { it.id == problem.skillId }
+        // Gemischte Levels: Die Methode der Aufgabe verrät die passende Kategorie.
+        val byMethod = problem.method?.let { m -> skills.firstOrNull { it.method == m } }
+        if (own != null && byMethod != null && own.method != problem.method) return fromSkill(byMethod)
+        own?.let { return fromSkill(it) }
         val id = guessSkill(problem)
             ?: problem.method?.let { m -> skills.firstOrNull { it.method.equals(m, ignoreCase = true) }?.id }
         val skill = id?.let { s -> skills.firstOrNull { it.id == s } }

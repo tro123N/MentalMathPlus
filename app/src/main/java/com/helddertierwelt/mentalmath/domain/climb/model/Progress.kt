@@ -82,6 +82,21 @@ data class TestLog(
     val stars: Int,
 )
 
+/** Eine Testsimulation „Arithmetisches Problemlösen“. */
+@Serializable
+data class ApRun(
+    /** Zeitpunkt in ms. */
+    val at: Long,
+    val score: Int,
+    val total: Int,
+    /** Verbrauchte Zeit in ms. */
+    val usedMs: Long,
+    /** Zeitlimit in Sekunden. */
+    val seconds: Int,
+    /** Anzahl der Antwortmöglichkeiten (4 = HAM-Nat, 5 = TMSnat). */
+    val options: Int,
+)
+
 /** Statistik einer Aufgabenart im freien Training. */
 @Serializable
 data class FreeStat(
@@ -109,6 +124,8 @@ data class ClimbProgress(
     val days: List<DayStat> = emptyList(),
     /** Längste Serie von Tagen in Folge. */
     val bestStreak: Int = 0,
+    /** Testsimulationen „Arithmetisches Problemlösen“, die neuesten zuletzt. */
+    val apRuns: List<ApRun> = emptyList(),
 ) {
     fun of(skillId: String): SkillProgress = skills[skillId] ?: SkillProgress()
 
@@ -124,6 +141,9 @@ data class ClimbProgress(
 
         /** So viele Prüfungen werden je Level gespeichert. */
         const val TESTS_KEPT = 30
+
+        /** So viele Testsimulationen werden gespeichert. */
+        const val AP_RUNS_KEPT = 100
     }
 }
 

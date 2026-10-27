@@ -35,6 +35,12 @@ Die App hat drei getrennte Bereiche (Leiste unten):
 - **Anpassende Schwierigkeit** (schaltbar): wird schwerer, wenn es gut läuft, und leichter nach Fehlern.
 - **Trick-Tipp-Knopf** (schaltbar, auch im Kletterweg beim Üben): zeigt, welcher Trick zur Aufgabe passt.
 
+### Medizinertest-Training (im freien Training)
+- Vorbereitung auf den Untertest **„Arithmetisches Problemlösen“** im HAM-Nat und ab 2027 im **TMSnat** (16 Aufgaben, 25 bzw. 30 Minuten, ohne Taschenrechner).
+- Unbegrenzt viele eigene Textaufgaben in 12 Kategorien (Dreisatz, Prozente, Beziehungsketten, Anteile, Einheiten und Dosierung, Tempo, gemeinsame Arbeit, Mischungen, Wachstum und Halbwertszeit, Gleichungen, Kombinatorik, Wahrscheinlichkeit) – mit Lösungswegen, typischen Fehlern als falschen Antworten und unwichtigen Zusatzangaben wie im Test.
+- **Testsimulationen** TMSnat (A–E) und HAM-Nat (A–D) mit Gesamtzeit, „Später bearbeiten“ und Auswertung nach Kategorien; Verlauf der Ergebnisse.
+- Jede Kategorie ist auch ein Level (Welt 13) mit Erklärung, geführtem Üben und Prüfung.
+
 ### 3. Klassischer Modus – die Original-App (fährt neben „Freies Training“ heraus)
 - Der unveränderte Spielmodus von „Mental Math“: Grundrechenarten mit eigenen Zahlenbereichen, Bestenliste, Verlauf und Spiele per Link.
 

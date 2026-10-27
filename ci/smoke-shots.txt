@@ -1,3 +1,5 @@
 # Welche Levels der automatische Test ausführlich fotografiert ("all", "w7", "w5.dec21" …).
 w8.shopping
-w9.columns
+w13.mix
+w13.prob
+w13.mixed

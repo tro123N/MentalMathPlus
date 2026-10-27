@@ -114,7 +114,7 @@ fun ExplanationBlocks(blocks: List<Block>) {
                             .padding(12.dp),
                     ) {
                         CaptionText("Beispiel")
-                        p.prompt.caption?.let { CaptionText(it) }
+                        p.prompt.caption?.let { if (it.length > 90) BodyText(it) else CaptionText(it) }
                         p.prompt.lines.forEach { line ->
                             Text(
                                 text = line,

@@ -41,10 +41,11 @@ In der Cloud-Umgebung sind Google Maven und Maven Central gesperrt; Android läs
 - `domain/climb/model/PlusSettings.kt` (Farbthema `Palette`, Erinnerung) und `Backup.kt` (Sicherungsdatei, `BackupCodec`); gespeichert von `data/climb/PlusSettingsRepository` (plus_settings.json).
 - Erinnerung: `data/climb/ReminderScheduler` + `ReminderWorker` (WorkManager, täglich zur gewählten Uhrzeit). Die alte Erinnerung der Original-App wird beim ersten Start übernommen und ist im Menü des klassischen Modus ausgeblendet.
 - Farbthemen: `presentation/theme/Theme.kt` (`MentalMathTheme(themeMode, palette)`, Akzentfarbe `accent` statt `blue` im Kletterweg).
+- Medizinertest-Training (Untertest „Arithmetisches Problemlösen“, HAM-Nat und ab 2027 TMSnat: 16 Aufgaben, TMSnat 25 min mit A–E, HAM-Nat 30 min mit A–D, kein Taschenrechner): `curriculum/ApTasks.kt` (12 Kategorien `ApCategory`, je 3 Stufen, Lösungswege, typische Fehler als Distraktoren, Ballast-Sätze, `choice()` für Antworten A–E/A–D, `simulation()`), `curriculum/World13.kt` (Welt 13 mit `independent = true`: immer offen, nicht Teil von „Weiterklettern“), Route „aptraining“ (`ApTrainingScreen`, Einstieg im freien Training). Testsimulation = `FreeMode.SIMULATION` (Gesamtzeit, keine Rückmeldung, `SessionLogic.skip`, offene Aufgaben zählen falsch), Ergebnisse in `ClimbProgress.apRuns`; `FreeRules.track = "ap"` zählt die Antworten auch für die Levels von Welt 13.
 - Handbuch (`HandbookScreen`, Route „handbook“) wird aus `Curriculum.worlds` erzeugt – neue Levels erscheinen automatisch; Erklärungen rendert `component/ExplanationBlocks.kt` (auch im Lernen-Bildschirm).
 
 ## Stand
-- 12 Welten / 84 Levels decken Kapitel 0–9 des Buches ab (Welt 1 Grundlagen, Welt 5 Kommazahlen als Ergänzung).
+- 12 Welten / 84 Levels decken Kapitel 0–9 des Buches ab (Welt 1 Grundlagen, Welt 5 Kommazahlen als Ergänzung); dazu Welt 13 (13 Levels) als eigenständiges Medizinertest-Training.
 - Freies Training mit 9 Aufgabenarten, 3 Stufen, Modi Zeit/Endlos/Überleben/Prüfung und Statistik; der klassische Modus der Original-App ist über „Klassischer Modus“ erreichbar.
 - Lokale Tests: `CurriculumTest` rechnet jeden Lösungsweg nach und prüft, dass jede Antwort eintippbar ist; `World12Test` prüft die Wochentagsmethode gegen den echten Kalender.
 - Statistik mit Diagrammen (Canvas, `component/Charts.kt`), Einstufungstest, tägliche Erinnerung, Sicherung (speichern/teilen/laden) und Farbthemen sind eingebaut.

@@ -749,6 +749,64 @@ class ClimbSmokeTest {
         waitForHome()
     }
 
+    /** Medizinertest-Training: Infos, Kurztest-Simulation mit „Später“, Verlauf, gemischtes Üben mit Trick-Tipp. */
+    @Test
+    fun i_medizinertest() {
+        waitForHome()
+        compose.runOnUiThread { vm.importProgress(ClimbProgress()) }
+        compose.waitUntil(5_000) { vm.progress.value.skills.isEmpty() && vm.session.value == null }
+        compose.onNodeWithTag("tab_free").performClick()
+        waitForTag("freeColumn")
+        shot("i_freies_training")
+        compose.onNodeWithTag("apEntry").performScrollTo().performClick()
+        waitForTag("apColumn")
+        shootScrolling("apColumn", "i_training", maxShots = 6)
+
+        compose.onNodeWithTag("simShort").performScrollTo().performClick()
+        waitForSession()
+        shot("i_sim_0")
+        compose.onNodeWithTag("skipButton").performClick()
+        compose.waitForIdle()
+        shot("i_sim_spaeter")
+        var answered = 0
+        repeat(80) {
+            val s = vm.session.value ?: return@repeat
+            when (s.phase) {
+                Phase.ANSWERING -> {
+                    if (answered == 3) shot("i_sim_3")
+                    answer(wrong = answered % 4 == 1)
+                    answered++
+                }
+                Phase.FLASH -> waitWhileFlash()
+                Phase.REVEAL -> pressWeiter()
+                Phase.FINISHED -> Unit
+            }
+        }
+        waitForResult()
+        assertTrue("Keine gespeicherte Simulation", vm.summary.value?.apRun != null)
+        shootScrolling("resultColumn", "i_ergebnis", maxShots = 5)
+        clickButton("Zum Medizinertest-Training")
+        waitForTag("apColumn")
+        compose.onNodeWithTag("apHistory").performScrollTo()
+        compose.waitForIdle()
+        shot("i_verlauf")
+
+        compose.onNodeWithTag("apPracticeButton").performScrollTo().performClick()
+        waitForSession()
+        compose.onNodeWithTag("trickButton").performClick()
+        compose.waitForIdle()
+        shot("i_ueben_trick")
+        answer(wrong = true)
+        compose.waitForIdle()
+        shot("i_ueben_falsch")
+        if (vm.session.value?.phase == Phase.FLASH) waitWhileFlash()
+        compose.runOnUiThread { vm.endFree() }
+        waitForResult()
+        shot("i_ueben_ergebnis")
+        clickButton("Zum Kletterweg")
+        waitForHome()
+    }
+
     companion object {
         private const val TAG = "ClimbSmokeTest"
         private var counter = 0
