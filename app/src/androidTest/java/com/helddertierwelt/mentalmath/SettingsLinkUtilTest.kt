@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.helddertierwelt.mentalmath.data.entity.GameRecord
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil
+import com.helddertierwelt.mentalmath.domain.settings.enums.GameMode
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -27,7 +28,7 @@ class SettingsLinkUtilTest {
     fun testGameStringSerializerAndDeserializer() {
         val original = GameRecord(
             id = 42,
-            gameMode = false,
+            gameMode = GameMode.PROBLEMS,
             modeLimit = 5,
             additionRangeStart = 2,
             additionRangeEnd = 7,
