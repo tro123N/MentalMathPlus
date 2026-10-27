@@ -1,0 +1,6 @@
+commit: f4396ac0c451e2207bab0880d1fda5f4b65aad7c
+run: 2
+
+
+----- letzte 400 Zeilen -----
+ci/build.sh: line 69: ./gradlew: Permission denied
