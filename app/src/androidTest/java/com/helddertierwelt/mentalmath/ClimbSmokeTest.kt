@@ -595,7 +595,8 @@ class ClimbSmokeTest {
         }.toMap()
         val allDays = (0 until 30).mapNotNull { k ->
             val d = today - 29 + k
-            if (k % 5 == 3) null else DayStat(d, 8 + (k * 7) % 31, 6 + (k * 5) % 25, 60_000L)
+            val solved = 8 + (k * 7) % 31
+            if (k % 5 == 3) null else DayStat(d, solved, minOf(solved, 6 + (k * 5) % 25), 60_000L)
         }
         compose.runOnUiThread {
             vm.importProgress(
@@ -707,6 +708,17 @@ class ClimbSmokeTest {
         shot("h_klassisch_dunkel")
         back()
         waitForHome()
+
+        // Helles Farbthema ansehen.
+        compose.onNodeWithTag("action_settings").performClick()
+        waitForTag("settingsColumn")
+        compose.onNodeWithTag("palette_ABENDROT").performScrollTo().performClick()
+        compose.onNodeWithTag("theme_LIGHT").performScrollTo().performClick()
+        compose.waitUntil(5_000) { vm.plusSettings.value.palette == "ABENDROT" }
+        back()
+        waitForHome()
+        Thread.sleep(500)
+        shot("h_start_hell_abendrot")
 
         // Zurück zum Standard.
         compose.onNodeWithTag("action_settings").performClick()

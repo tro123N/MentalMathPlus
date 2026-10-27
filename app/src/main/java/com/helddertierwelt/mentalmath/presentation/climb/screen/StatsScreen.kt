@@ -137,7 +137,7 @@ fun StatsScreen(navController: NavController) {
                     val streak = viewModel.streak(progress)
                     StatTile(
                         if (streak == 1) "1 Tag" else "$streak Tage",
-                        "in Folge · Rekord ${progress.bestStreak}",
+                        "in Folge · Rekord ${maxOf(progress.bestStreak, progress.streakDays)}",
                         Modifier.weight(1f),
                     )
                     StatTile(Stats.activeDays(progress).toString(), "Übungstage", Modifier.weight(1f))
@@ -173,12 +173,13 @@ fun StatsScreen(navController: NavController) {
                         color = accent,
                     )
                     val active = days.filter { it.solved > 0 }
-                    CaptionText("${active.sumOf { it.solved }} Aufgaben an ${active.size} Tagen · Ø ${active.sumOf { it.solved } / active.size.coerceAtLeast(1)} pro Übungstag")
+                    val dayWord = if (active.size == 1) "1 Tag" else "${active.size} Tagen"
+                    CaptionText("${active.sumOf { it.solved }} Aufgaben an $dayWord · Ø ${active.sumOf { it.solved } / active.size.coerceAtLeast(1)} pro Übungstag")
                     if (active.size >= 2) {
                         Spacer(Modifier.height(12.dp))
                         CaptionText("Richtig in Prozent (an Übungstagen)")
                         LineChart(
-                            values = active.map { 100f * it.correct / it.solved },
+                            values = active.map { (100f * it.correct / it.solved).coerceIn(0f, 100f) },
                             color = green,
                             labels = active.mapIndexed { i, d -> if (i == 0 || i == active.lastIndex) dayLabel(d.day) else "" },
                             height = 120.dp,
@@ -291,12 +292,12 @@ private fun FormRow(form: Form, onClick: () -> Unit) {
         }
         val pct = (form.accuracy * 100).roundToInt()
         val time = form.medianSec?.let { " · Ø ${secondsText(it)}" } ?: ""
+        val state = if (form.needsAttention) "${form.label}, eingerostet" else form.label
         BarRow(
-            label = "$pct % richtig$time",
+            label = "$pct % richtig$time · $state",
             fraction = form.score / 100f,
             value = "${form.score}",
             color = formColor(form.score),
         )
-        CaptionText(if (form.needsAttention) "${form.label} · eingerostet" else form.label)
     }
 }

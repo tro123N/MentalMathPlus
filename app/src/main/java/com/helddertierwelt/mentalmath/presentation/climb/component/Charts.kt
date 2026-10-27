@@ -22,6 +22,7 @@ package com.helddertierwelt.mentalmath.presentation.climb.component
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -182,10 +183,11 @@ fun LineChart(
             drawCircle(color, radius = 4.dp.toPx(), center = Offset(x(i), y(v)))
             drawCircle(dotFill, radius = 2.dp.toPx(), center = Offset(x(i), y(v)))
         }
+        // Letzten Wert links oberhalb des letzten Punkts beschriften, damit er die Ziel-Linien rechts nicht verdeckt.
         val last = values.last()
         val lastLayout = measurer.measure(valueText(last), labelStyle.copy(color = color))
-        val lx = (x(values.lastIndex) - lastLayout.size.width / 2f).coerceIn(0f, size.width - lastLayout.size.width)
-        val ly = (y(last) - lastLayout.size.height - 4.dp.toPx()).coerceAtLeast(0f)
+        val lx = (x(values.lastIndex) - lastLayout.size.width - 6.dp.toPx()).coerceIn(0f, size.width - lastLayout.size.width)
+        val ly = (y(last) - lastLayout.size.height - 2.dp.toPx()).coerceAtLeast(0f)
         drawText(lastLayout, topLeft = Offset(lx, ly))
         labels.forEachIndexed { i, label ->
             if (label.isNotEmpty() && i < values.size) {
@@ -223,14 +225,16 @@ fun ShareBar(fraction: Float, color: Color, modifier: Modifier = Modifier, heigh
 @Composable
 fun RowGap(width: Dp = 10.dp) = Spacer(Modifier.width(width))
 
-/** Zeile aus Beschriftung, Balken und Wert. */
+/** Beschriftung, darunter Balken und Wert. */
 @Composable
 fun BarRow(label: String, fraction: Float, value: String, color: Color, modifier: Modifier = Modifier) {
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier.fillMaxWidth()) {
-        CaptionText(label, modifier = Modifier.weight(0.42f))
-        RowGap(8.dp)
-        ShareBar(fraction, color, modifier = Modifier.weight(0.4f))
-        RowGap(8.dp)
-        CaptionText(value, modifier = Modifier.weight(0.18f))
+    Column(modifier = modifier.fillMaxWidth()) {
+        CaptionText(label)
+        Spacer(Modifier.height(3.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            ShareBar(fraction, color, modifier = Modifier.weight(1f))
+            RowGap(10.dp)
+            CaptionText(value)
+        }
     }
 }

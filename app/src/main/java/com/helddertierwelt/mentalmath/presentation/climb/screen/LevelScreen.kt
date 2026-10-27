@@ -275,12 +275,11 @@ private fun LevelHistoryCard(
             val pct = kotlin.math.round(form.accuracy * 100).toInt()
             val time = form.medianSec?.let { " · Ø ${secondsText(it)}" } ?: ""
             com.helddertierwelt.mentalmath.presentation.climb.component.BarRow(
-                label = "Sicherheit: ${form.label}",
+                label = "Sicherheit: ${form.label} (letzte ${form.sample} Aufgaben: $pct % richtig$time)",
                 fraction = form.score / 100f,
                 value = "${form.score}",
                 color = formColor(form.score),
             )
-            CaptionText("Letzte ${form.sample} Aufgaben: $pct % richtig$time")
             Spacer(Modifier.height(10.dp))
         }
         if (tests.isNotEmpty()) {

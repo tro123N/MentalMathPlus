@@ -350,14 +350,14 @@ fun PlusSettingsScreen(navController: NavController) {
                     }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf(7 to 0, 12 to 0, 18 to 0, 20 to 0).forEach { (h, m) ->
-                        PillButton(
+                    listOf(7, 12, 18, 20).forEach { h ->
+                        TimeChip(
                             text = "$h:00",
+                            selected = plus.reminderHour == h && plus.reminderMinute == 0,
                             onClick = {
                                 viewModel.playTap()
-                                viewModel.setReminder(plus.reminderOn, h, m)
+                                viewModel.setReminder(plus.reminderOn, h, 0)
                             },
-                            color = if (plus.reminderHour == h && plus.reminderMinute == m) accent else MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
                             modifier = Modifier.weight(1f),
                         )
                     }
@@ -522,6 +522,26 @@ fun PlusSettingsScreen(navController: NavController) {
             dismissButton = {
                 TextButton(onClick = { pendingBackup = null }) { Text("Abbrechen", color = MaterialTheme.colorScheme.onPrimary) }
             },
+        )
+    }
+}
+
+@Composable
+private fun TimeChip(text: String, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val dimens = MentalMathTheme.dimens
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .clip(RoundedCornerShape(dimens.components.cornerRadius * 2))
+            .background(if (selected) accent.copy(alpha = 0.18f) else MaterialTheme.colorScheme.background)
+            .clickable { onClick() }
+            .padding(vertical = 8.dp),
+    ) {
+        Text(
+            text = text,
+            fontSize = dimens.fonts.sideSheetEntry,
+            color = if (selected) accent else MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+            maxLines = 1,
         )
     }
 }
