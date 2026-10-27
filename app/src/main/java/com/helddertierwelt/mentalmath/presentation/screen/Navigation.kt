@@ -84,6 +84,13 @@ fun Navigation(
             }
 
             composable(
+                route = "handbook",
+                enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+            ) {
+                com.helddertierwelt.mentalmath.presentation.climb.screen.HandbookScreen(navController = navController)
+            }
+
+            composable(
                 route = "free",
                 enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
             ) {

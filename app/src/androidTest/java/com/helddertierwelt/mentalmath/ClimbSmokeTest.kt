@@ -37,6 +37,7 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performSemanticsAction
+import androidx.compose.ui.test.performTextInput
 import androidx.lifecycle.ViewModelProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -505,6 +506,32 @@ class ClimbSmokeTest {
         compose.onNodeWithText("Statistik").performScrollTo()
         compose.waitForIdle()
         shot("c_statistik")
+        back()
+        waitForHome()
+    }
+
+    /** Handbuch: öffnen, einen Eintrag aufklappen, suchen, zum Level springen. */
+    @Test
+    fun d_handbuch() {
+        waitForHome()
+        compose.onAllNodesWithText("Handbuch").onFirst().performScrollTo().performClick()
+        waitForTag("handbookList")
+        shot("d_handbuch")
+        val list = compose.onNodeWithTag("handbookList")
+        Curriculum.worlds.forEach { world ->
+            list.performScrollToNode(hasTestTag("hb_${world.skills.first().id}"))
+        }
+        val skill = Curriculum.worlds.first { it.number == 3 }.skills.first()
+        list.performScrollToNode(hasTestTag("hb_${skill.id}"))
+        compose.onNodeWithTag("hb_${skill.id}").performClick()
+        compose.waitForIdle()
+        shootScrolling("handbookList", "d_eintrag", maxShots = 3)
+        list.performScrollToIndex(0)
+        compose.onNodeWithTag("handbookSearch").performTextInput("Wochentag")
+        compose.waitForIdle()
+        shot("d_suche")
+        val hits = Curriculum.worlds.flatMap { it.skills }.filter { "wochentag" in (it.title + it.method + it.summary).lowercase() }
+        assertTrue("Suche findet nichts", hits.isEmpty() || compose.onAllNodesWithTag("hb_${hits.first().id}").fetchSemanticsNodes().isNotEmpty())
         back()
         waitForHome()
     }

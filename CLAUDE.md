@@ -34,7 +34,8 @@ In der Cloud-Umgebung sind Google Maven und Maven Central gesperrt; Android läs
 - `data/climb` – Speicherung des Fortschritts als JSON-Datei.
 - `domain/climb/free` – Aufgabenarten des freien Trainings (FreeTopics); Modi und Regeln in `engine/Session.kt` (FreeMode, FreeRules).
 - `domain/climb/math/Phonetic.kt` – phonetischer Code mit eigenen Merkwörtern 0–99 (nicht die Liste aus dem Buch!).
-- `presentation/climb` – ViewModel und Compose-Oberfläche im Stil der App (Startseite „climb“, Level, Lernen, Spielen, Ergebnis, „free“).
+- `presentation/climb` – ViewModel und Compose-Oberfläche im Stil der App (Startseite „climb“, Level, Lernen, Spielen, Ergebnis, „free“, „handbook“).
+- Handbuch (`HandbookScreen`, Route „handbook“) wird aus `Curriculum.worlds` erzeugt – neue Levels erscheinen automatisch; Erklärungen rendert `component/ExplanationBlocks.kt` (auch im Lernen-Bildschirm).
 
 ## Stand
 - 12 Welten / 84 Levels decken Kapitel 0–9 des Buches ab (Welt 1 Grundlagen, Welt 5 Kommazahlen als Ergänzung).

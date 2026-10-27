@@ -181,6 +181,10 @@ fun ClimbHomeScreen(navController: NavController) {
                             climbViewModel.playTap()
                             navController.navigate("free") { launchSingleTop = true }
                         },
+                        onHandbook = {
+                            climbViewModel.playTap()
+                            navController.navigate("handbook") { launchSingleTop = true }
+                        },
                     )
                 }
                 worlds.forEachIndexed { index, world ->
@@ -228,6 +232,7 @@ private fun OverviewCard(
     onReview: () -> Unit,
     onRefresh: (Skill) -> Unit,
     onFreeTraining: () -> Unit,
+    onHandbook: () -> Unit,
 ) {
     val dimens = MentalMathTheme.dimens
     val all = viewModel.worlds.flatMap { it.skills }
@@ -288,6 +293,14 @@ private fun OverviewCard(
             iconTint = blue,
             enabled = mastered > 0,
             onClick = onReview,
+        )
+        Spacer(Modifier.height(8.dp))
+        ActionButton(
+            text = "Handbuch",
+            subtitle = "Alle Tricks zum Nachschlagen",
+            icon = R.drawable.book_24dp,
+            iconTint = blue,
+            onClick = onHandbook,
         )
         Spacer(Modifier.height(8.dp))
         ActionButton(

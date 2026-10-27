@@ -58,6 +58,7 @@ import com.helddertierwelt.mentalmath.presentation.climb.component.ActionButton
 import com.helddertierwelt.mentalmath.presentation.climb.component.BodyText
 import com.helddertierwelt.mentalmath.presentation.climb.component.CaptionText
 import com.helddertierwelt.mentalmath.presentation.climb.component.CardGap
+import com.helddertierwelt.mentalmath.presentation.climb.component.ExplanationBlocks
 import com.helddertierwelt.mentalmath.presentation.climb.component.CardTitle
 import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbCard
 import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbTopBar
@@ -99,92 +100,7 @@ fun LearnScreen(navController: NavController, skillId: String) {
                 CardTitle(skill.method)
                 CaptionText("Im Buch: ${skill.book.label}")
                 Spacer(Modifier.height(10.dp))
-                skill.explanation.forEach { block ->
-                    when (block) {
-                        is Block.Text -> {
-                            BodyText(block.text)
-                            Spacer(Modifier.height(10.dp))
-                        }
-
-                        is Block.Steps -> {
-                            block.items.forEachIndexed { i, item ->
-                                Row(modifier = Modifier.padding(vertical = 3.dp)) {
-                                    Text(
-                                        text = "${i + 1}.",
-                                        fontSize = dimens.fonts.sideSheetEntry,
-                                        color = blue,
-                                        modifier = Modifier.width(28.dp),
-                                    )
-                                    BodyText(item, modifier = Modifier.weight(1f))
-                                }
-                            }
-                            Spacer(Modifier.height(10.dp))
-                        }
-
-                        is Block.Formula -> {
-                            Text(
-                                text = block.text,
-                                fontFamily = mono,
-                                fontSize = dimens.fonts.sideSheetEntry,
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(MaterialTheme.colorScheme.background, RoundedCornerShape(dimens.components.cornerRadius))
-                                    .padding(horizontal = 12.dp, vertical = 10.dp),
-                            )
-                            Spacer(Modifier.height(10.dp))
-                        }
-
-                        is Block.Tip -> {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(yellow.copy(alpha = 0.12f), RoundedCornerShape(dimens.components.cornerRadius))
-                                    .padding(12.dp),
-                                verticalAlignment = Alignment.Top,
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.lightbulb_24dp),
-                                    contentDescription = "Tipp",
-                                    tint = yellow,
-                                    modifier = Modifier.size(dimens.icons.problemStatus),
-                                )
-                                Spacer(Modifier.width(10.dp))
-                                BodyText(block.text, modifier = Modifier.weight(1f))
-                            }
-                            Spacer(Modifier.height(10.dp))
-                        }
-
-                        is Block.Example -> {
-                            val p = block.problem
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(MaterialTheme.colorScheme.background, RoundedCornerShape(dimens.components.cornerRadius))
-                                    .padding(12.dp),
-                            ) {
-                                CaptionText("Beispiel")
-                                p.prompt.caption?.let { CaptionText(it) }
-                                p.prompt.lines.forEach { line ->
-                                    Text(
-                                        text = line,
-                                        fontFamily = mono,
-                                        fontSize = dimens.fonts.sideSheetEntry,
-                                        color = MaterialTheme.colorScheme.onPrimary,
-                                    )
-                                }
-                                Text(
-                                    text = p.prompt.text,
-                                    fontSize = dimens.fonts.settingsLabel,
-                                    color = MaterialTheme.colorScheme.onPrimary,
-                                    modifier = Modifier.padding(vertical = 4.dp),
-                                )
-                                SolutionSteps(problem = p, showHints = true)
-                            }
-                            Spacer(Modifier.height(10.dp))
-                        }
-                    }
-                }
+                ExplanationBlocks(skill.explanation)
             }
             CardGap()
             ActionButton(
