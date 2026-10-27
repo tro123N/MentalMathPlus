@@ -1,13 +1,14 @@
-**Der Kletterweg ist da – Etappe 1**
+**Der ganze Kletterweg – jetzt mit allen Kapiteln des Buches**
 
-Die App startet jetzt mit dem **Kletterweg**: Welten und Levels, die dich Schritt für Schritt vom Zahlengefühl bis zu zweistellig × zweistellig bringen – mit den Methoden aus *Mathe-Magie* (Kapitel 0 bis 3) und Kommazahlen.
+Sechs neue Welten, insgesamt **12 Welten mit 84 Levels**:
 
-- **6 Welten, 36 Levels:** Zahlengefühl · Blitztricks (Kap. 0) · Plus und Minus (Kap. 1) · Mal einstellig (Kap. 2) · Kommazahlen (z. B. 0,7 × 86) · Zweistellig mal zweistellig (Kap. 3)
-- **Jedes Level in vier Stufen:** Methode lernen → geführt üben (Zwischenschritte eintippen) → frei üben → Prüfung auf Zeit
-- **Sterne:** Ein Stern zum Bestehen, mehr Sterne für schnellere Zeiten. Erst dann öffnet sich das nächste Level.
-- **Zurück zur Grundlage:** Zweimal durch eine Prüfung gefallen? Dann frischst du zuerst das Level davor auf.
-- **Wiederholen:** Geschaffte Levels kommen nach 1, 3, 7, 14 … Tagen wieder dran. Wer dabei schlechter wird, muss auffrischen.
-- **Lösungsweg** zu jeder Aufgabe – nach Fehlern und im Ergebnis zum Aufklappen.
-- Das **freie Training** der Original-App erreichst du oben rechts.
+- **Welt 7 · Teilen und Brüche** (Kap. 4): Division mit Rest, durch 5 teilen, Vereinfachen, Brüche als Dezimalzahl, Teilbarkeit, Bruchrechnen
+- **Welt 8 · Überschlagen und Alltag** (Kap. 5): Summen, Einkauf, Quotienten und Produkte schätzen, Wurzeln, Trinkgeld, 19 % MwSt, 70er-Regel, Kreditrate
+- **Welt 9 · Papier, Stift und Proben** (Kap. 6): Zahlenkolonnen, 9er- und 11er-Probe, Kreuzmultiplikation, Wurzeln Ziffer für Ziffer
+- **Welt 10 · Zahlen merken** (Kap. 7): der Ziffern-Laut-Code mit eigenen Merkwörtern von 0 bis 99, lange Zahlen merken
+- **Welt 11 · Profi-Multiplikation** (Kap. 8): vier- und fünfstellige Quadrate, dreistellig × dreistellig, fünfstellig × fünfstellig
+- **Welt 12 · Mathe-Magie** (Kap. 9): 1089-Trick, magische Quadrate, Kubikwurzeln, Wochentag zu jedem Datum
 
-**Installieren:** `MentalMathPlus.apk` unten antippen, herunterladen und öffnen. Die neue Version ersetzt die alte.
+Außerdem: Beim geführten Üben bleibt der aktuelle Schritt immer sichtbar, Schätzaufgaben zeigen „≈“, Ja/Nein-Fragen funktionieren auch im geführten Modus.
+
+**Installieren:** `MentalMathPlus.apk` unten antippen, herunterladen und öffnen. Die neue Version ersetzt die alte, dein Fortschritt bleibt erhalten.

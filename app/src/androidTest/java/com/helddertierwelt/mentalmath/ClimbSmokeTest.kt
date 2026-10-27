@@ -469,6 +469,46 @@ class ClimbSmokeTest {
         shot("b_ende")
     }
 
+    /** Freies Training: Aufgabenarten wählen, Überleben-Modus spielen, Statistik ansehen. */
+    @Test
+    fun c_freiesTraining() {
+        waitForHome()
+        compose.onAllNodesWithContentDescription("Freies Training").onFirst().performClick()
+        waitForTag("freeColumn")
+        listOf("PERCENT", "WORD", "ALGEBRA", "GEOMETRY", "NUMBER_THEORY", "FOUR_OPS").forEach { topic ->
+            compose.onNodeWithTag("topic_$topic").performScrollTo().performClick()
+        }
+        compose.onNodeWithTag("mode_UEBERLEBEN").performScrollTo().performClick()
+        compose.waitForIdle()
+        shootScrolling("freeColumn", "c_einstellungen", maxShots = 4)
+        clickButton("Los geht's")
+        waitForSession()
+        var answered = 0
+        repeat(200) {
+            val s = vm.session.value ?: return@repeat
+            if (s.phase == Phase.FINISHED) return@repeat
+            when (s.phase) {
+                Phase.ANSWERING -> {
+                    if (answered < 8) shot("c_aufgabe_$answered")
+                    answer(wrong = answered >= 8)
+                    answered++
+                }
+                Phase.FLASH -> waitWhileFlash()
+                Phase.REVEAL -> pressWeiter()
+                Phase.FINISHED -> Unit
+            }
+        }
+        waitForResult()
+        shootScrolling("resultColumn", "c_ergebnis", maxShots = 3)
+        clickButton("Einstellungen")
+        waitForTag("freeColumn")
+        compose.onNodeWithText("Statistik").performScrollTo()
+        compose.waitForIdle()
+        shot("c_statistik")
+        back()
+        waitForHome()
+    }
+
     companion object {
         private const val TAG = "ClimbSmokeTest"
         private var counter = 0

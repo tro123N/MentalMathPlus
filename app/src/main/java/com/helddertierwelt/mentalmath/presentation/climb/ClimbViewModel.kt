@@ -26,6 +26,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.helddertierwelt.mentalmath.data.climb.ClimbRepository
 import com.helddertierwelt.mentalmath.domain.climb.curriculum.Curriculum
+import com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode
+import com.helddertierwelt.mentalmath.domain.climb.engine.FreeRules
 import com.helddertierwelt.mentalmath.domain.climb.engine.Phase
 import com.helddertierwelt.mentalmath.domain.climb.engine.Progression
 import com.helddertierwelt.mentalmath.domain.climb.engine.Session
@@ -34,6 +36,8 @@ import com.helddertierwelt.mentalmath.domain.climb.engine.SessionFinisher
 import com.helddertierwelt.mentalmath.domain.climb.engine.SessionLogic
 import com.helddertierwelt.mentalmath.domain.climb.engine.SessionType
 import com.helddertierwelt.mentalmath.domain.climb.engine.Summary
+import com.helddertierwelt.mentalmath.domain.climb.free.FreeTopic
+import com.helddertierwelt.mentalmath.domain.climb.free.FreeTopics
 import com.helddertierwelt.mentalmath.domain.climb.model.ClimbProgress
 import com.helddertierwelt.mentalmath.domain.climb.model.Skill
 import com.helddertierwelt.mentalmath.domain.climb.model.World
@@ -52,6 +56,24 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 /** Steuert den Kletterweg: Fortschritt, laufende Übungseinheit, Zeitmessung und Ergebnis. */
+/** Einstellungen des freien Trainings. */
+data class FreeConfig(
+    val topics: Set<FreeTopic> = setOf(FreeTopic.BASIC),
+    val level: Int = 2,
+    val mode: FreeMode = FreeMode.ZEIT,
+    val param: Int = 60,
+) {
+    companion object {
+        /** Wählbare Werte je Modus: Sekunden, Leben bzw. Aufgaben. */
+        fun options(mode: FreeMode): List<Int> = when (mode) {
+            FreeMode.ZEIT -> listOf(60, 120, 300)
+            FreeMode.UEBERLEBEN -> listOf(1, 3, 5)
+            FreeMode.PRUEFUNG -> listOf(10, 20, 30)
+            FreeMode.ENDLOS -> listOf(0)
+        }
+    }
+}
+
 @HiltViewModel
 class ClimbViewModel @Inject constructor(
     private val repository: ClimbRepository,
@@ -72,6 +94,9 @@ class ClimbViewModel @Inject constructor(
     /** Auswertung der zuletzt beendeten Einheit. */
     private val _summary = MutableStateFlow<Summary?>(null)
     val summary: StateFlow<Summary?> = _summary.asStateFlow()
+
+    private val _freeConfig = MutableStateFlow(FreeConfig())
+    val freeConfig: StateFlow<FreeConfig> = _freeConfig.asStateFlow()
 
     private val random = Random(System.nanoTime())
     private var tickJob: Job? = null
@@ -127,6 +152,36 @@ class ClimbViewModel @Inject constructor(
         if (mastered.isEmpty()) return false
         begin(SessionLogic.createReview(mastered, random, "Gemischtes Training").copy(type = SessionType.PRACTICE))
         return true
+    }
+
+    fun setFreeConfig(config: FreeConfig) {
+        _freeConfig.value = config
+    }
+
+    /** Freies Training mit den aktuellen Einstellungen starten. */
+    fun startFree(): Boolean {
+        val c = _freeConfig.value
+        val topics = c.topics.toList().ifEmpty { return false }
+        val count = if (c.mode == FreeMode.PRUEFUNG) c.param else 400
+        val problems = List(count) { FreeTopics.generate(topics[random.nextInt(topics.size)], c.level, random) }
+        val limit = if (c.mode == FreeMode.PRUEFUNG) 5_000L + 7_000L * c.level else null
+        val title = if (topics.size == 1) topics.first().title else "${topics.size} Aufgabenarten"
+        begin(SessionLogic.createFree(problems, FreeRules(c.mode, c.param, c.level), title, limit))
+        return true
+    }
+
+    /** Freies Training beenden und auswerten (Endlos-Modus oder vorzeitig). */
+    fun endFree() {
+        val s = _session.value ?: return
+        if (s.results.isEmpty()) {
+            quitSession()
+            return
+        }
+        advanceJob?.cancel()
+        val done = SessionLogic.finishNow(s)
+        _session.value = done
+        restartProblemClock()
+        finish(done)
     }
 
     private fun begin(s: Session) {
@@ -293,6 +348,12 @@ class ClimbViewModel @Inject constructor(
                 val elapsed = currentElapsed()
                 _elapsedMs.value = elapsed
                 val limit = s.timeLimitMs
+                if (s.free != null && SessionLogic.freeOver(s, elapsed)) {
+                    val done = SessionLogic.finishNow(s)
+                    _session.value = done
+                    finish(done)
+                    break
+                }
                 if (limit != null && elapsed >= limit) {
                     apply(SessionLogic.timeout(s, limit))
                 }

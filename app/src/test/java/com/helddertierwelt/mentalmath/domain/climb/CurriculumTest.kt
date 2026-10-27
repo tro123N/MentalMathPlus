@@ -303,6 +303,19 @@ class CurriculumTest {
     }
 
     @Test
+    fun freeTopicsAreCorrect() {
+        for (topic in com.helddertierwelt.mentalmath.domain.climb.free.FreeTopic.entries) {
+            for (level in 1..3) {
+                val random = Random(topic.ordinal * 10L + level)
+                repeat(300) { i ->
+                    val p = com.helddertierwelt.mentalmath.domain.climb.free.FreeTopics.generate(topic, level, random)
+                    checkProblem(p, "$topic/$level #$i (${p.prompt.text} ${p.prompt.caption ?: ""})")
+                }
+            }
+        }
+    }
+
+    @Test
     fun explanationExamplesAreCorrect() {
         for (skill in Curriculum.skills) {
             skill.explanation.filterIsInstance<Block.Example>().forEach { ex ->

@@ -35,6 +35,8 @@ object Num {
         return if (x == 0L) 1L else x
     }
 
+    fun pow2(k: Int): Long = 1L shl k
+
     fun pow10(k: Int): Long {
         var r = 1L
         repeat(k) { r *= 10L }

@@ -38,6 +38,9 @@ enum class SessionType {
 
     /** Gemischte Wiederholung fälliger Levels. */
     REVIEW,
+
+    /** Freies Training mit eigenen Aufgabenarten und Modi. */
+    FREE,
 }
 
 /** Ergebnis einer einzelnen Aufgabe. */

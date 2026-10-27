@@ -133,7 +133,7 @@ fun ClimbHomeScreen(navController: NavController) {
                     IconButton(
                         onClick = {
                             climbViewModel.playTap()
-                            navController.navigate("settings") { launchSingleTop = true }
+                            navController.navigate("free") { launchSingleTop = true }
                         },
                         modifier = Modifier.padding(end = 16.dp),
                     ) {
@@ -179,7 +179,7 @@ fun ClimbHomeScreen(navController: NavController) {
                         },
                         onFreeTraining = {
                             climbViewModel.playTap()
-                            navController.navigate("settings") { launchSingleTop = true }
+                            navController.navigate("free") { launchSingleTop = true }
                         },
                     )
                 }
@@ -292,7 +292,7 @@ private fun OverviewCard(
         Spacer(Modifier.height(8.dp))
         ActionButton(
             text = "Freies Training",
-            subtitle = "Der klassische Modus mit eigenen Einstellungen",
+            subtitle = "Aufgabenarten, Modi und Statistik",
             icon = R.drawable.tune_24dp,
             iconTint = MaterialTheme.colorScheme.onPrimary,
             onClick = onFreeTraining,

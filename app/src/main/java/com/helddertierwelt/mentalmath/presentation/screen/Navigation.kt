@@ -84,6 +84,13 @@ fun Navigation(
             }
 
             composable(
+                route = "free",
+                enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+            ) {
+                com.helddertierwelt.mentalmath.presentation.climb.screen.FreeSetupScreen(navController = navController)
+            }
+
+            composable(
                 route = "climbplay",
                 enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
             ) {

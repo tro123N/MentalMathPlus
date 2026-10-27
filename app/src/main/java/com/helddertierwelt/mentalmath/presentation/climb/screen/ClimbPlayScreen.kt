@@ -87,6 +87,21 @@ private fun typeLabel(type: SessionType): String = when (type) {
     SessionType.TEST -> "Prüfung"
     SessionType.REFRESH -> "Auffrischen"
     SessionType.REVIEW -> "Wiederholung"
+    SessionType.FREE -> "Frei"
+}
+
+/** Anzeige oben rechts: Fortschritt, Restzeit oder Leben. */
+private fun counterText(session: Session, elapsed: Long): String {
+    val rules = session.free ?: return "${minOf(session.done + 1, session.total)}/${session.total}"
+    return when (rules.mode) {
+        com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.ZEIT -> {
+            val left = ((rules.param * 1000L - session.usedMs - elapsed).coerceAtLeast(0) + 999) / 1000
+            "${left / 60}:${(left % 60).toString().padStart(2, '0')}"
+        }
+        com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.UEBERLEBEN -> "♥ ${(rules.param - session.mistakes).coerceAtLeast(0)}"
+        com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.ENDLOS -> "${session.results.count { it.correct }} ✓"
+        com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.PRUEFUNG -> "${minOf(session.done + 1, session.total)}/${session.total}"
+    }
 }
 
 /** Die laufende Übungseinheit: Aufgabe, Eingabe, Rückmeldung. */
@@ -167,7 +182,7 @@ fun ClimbPlayScreen(navController: NavController) {
                     onNavigation = { showQuit = true },
                     actions = {
                         Text(
-                            text = "${minOf(session.done + 1, session.total)}/${session.total}",
+                            text = counterText(session, if (session.phase == Phase.ANSWERING) elapsed else 0L),
                             fontSize = dimens.fonts.settingsLabel,
                             color = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.padding(end = 20.dp),
@@ -175,8 +190,13 @@ fun ClimbPlayScreen(navController: NavController) {
                     },
                 )
                 val limit = session.timeLimitMs
+                val freeRules = session.free
                 val progressValue = if (limit != null) {
                     (elapsed.toFloat() / limit).coerceIn(0f, 1f)
+                } else if (freeRules != null && freeRules.mode == com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.ZEIT) {
+                    ((session.usedMs + elapsed).toFloat() / (freeRules.param * 1000f)).coerceIn(0f, 1f)
+                } else if (freeRules != null) {
+                    0f
                 } else {
                     session.done.toFloat() / session.total.coerceAtLeast(1)
                 }
@@ -251,7 +271,7 @@ fun ClimbPlayScreen(navController: NavController) {
             onDismissRequest = { showQuit = false },
             onConfirm = {
                 showQuit = false
-                leave()
+                if (session.free != null && session.results.isNotEmpty()) viewModel.endFree() else leave()
             },
             onCancel = {
                 viewModel.playTap()

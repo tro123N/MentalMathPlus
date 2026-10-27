@@ -51,6 +51,14 @@ data class SkillProgress(
     val needsAttention: Boolean get() = rusty || refreshPending
 }
 
+/** Statistik einer Aufgabenart im freien Training. */
+@Serializable
+data class FreeStat(
+    val solved: Int = 0,
+    val correct: Int = 0,
+    val totalMs: Long = 0,
+)
+
 /** Gesamter Fortschritt im Kletterweg. */
 @Serializable
 data class ClimbProgress(
@@ -62,6 +70,10 @@ data class ClimbProgress(
     val lastActiveDay: Long = -1,
     val totalSolved: Long = 0,
     val totalCorrect: Long = 0,
+    /** Statistik des freien Trainings je Aufgabenart (Schlüssel z. B. „free.percent“). */
+    val free: Map<String, FreeStat> = emptyMap(),
+    /** Bestwerte des freien Trainings je Modus (Schlüssel z. B. „ZEIT_60“). */
+    val freeBest: Map<String, Int> = emptyMap(),
 ) {
     fun of(skillId: String): SkillProgress = skills[skillId] ?: SkillProgress()
 

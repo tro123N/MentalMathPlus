@@ -33,6 +33,32 @@ import kotlin.random.Random
 /** Eine geplante Aufgabe in einer Einheit. */
 data class Planned(val problem: Problem, val retry: Boolean = false)
 
+/** Modi des freien Trainings. */
+enum class FreeMode(val title: String) {
+    /** Möglichst viele Aufgaben in einer festen Zeit. */
+    ZEIT("Auf Zeit"),
+
+    /** Ohne Ende, bis man aufhört. */
+    ENDLOS("Endlos"),
+
+    /** Bis die Leben aufgebraucht sind. */
+    UEBERLEBEN("Überleben"),
+
+    /** Feste Zahl von Aufgaben mit Zeitlimit pro Aufgabe, am Ende eine Note. */
+    PRUEFUNG("Prüfung"),
+}
+
+/** Regeln einer Einheit im freien Training. */
+data class FreeRules(
+    val mode: FreeMode,
+    /** Sekunden (Zeit), Leben (Überleben) bzw. Aufgaben (Prüfung). */
+    val param: Int,
+    val level: Int,
+) {
+    /** Schlüssel für Bestwerte, z. B. „ZEIT_60“. */
+    val bestKey: String get() = "${mode.name}_${param}_$level"
+}
+
 /** Was die Oberfläche gerade zeigt. */
 enum class Phase {
     /** Eingabe läuft. */
@@ -85,11 +111,19 @@ data class Session(
     val timeLimitMs: Long? = null,
     /** Schlüssel der Aufgaben, die schon einmal wiederholt eingeplant wurden. */
     val retried: Set<String> = emptySet(),
+    /** Nur im freien Training gesetzt. */
+    val free: FreeRules? = null,
 ) {
     val current: Planned? get() = problems.getOrNull(index)
     val problem: Problem? get() = current?.problem
     val isGuided: Boolean get() = type == SessionType.GUIDED
-    val isExam: Boolean get() = type == SessionType.TEST || type == SessionType.REFRESH
+    val isExam: Boolean get() = type == SessionType.TEST || type == SessionType.REFRESH || type == SessionType.FREE
+
+    /** Gesamte Rechenzeit der bisherigen Aufgaben (ohne Pausen und Rückmeldungen). */
+    val usedMs: Long get() = results.sumOf { it.timeMs }
+
+    /** Falsche Antworten bisher. */
+    val mistakes: Int get() = results.count { !it.correct }
 
     /** Der Schritt, der im geführten Üben gerade dran ist. */
     val currentStep: Step? get() = if (isGuided) problem?.steps?.getOrNull(stepIndex) else null
@@ -119,6 +153,7 @@ object SessionLogic {
             SessionType.TEST -> skill.goals.testSize
             SessionType.REFRESH -> Progression.REFRESH_SIZE
             SessionType.REVIEW -> Progression.REVIEW_PER_SKILL
+            SessionType.FREE -> skill.practiceCount
         }
         val problems = SessionPlanner.problems(skill, count, random, avoid).map { Planned(it) }
         val limit = if (type == SessionType.TEST || type == SessionType.REFRESH) (skill.goals.timeLimit * 1000).toLong() else null
@@ -128,6 +163,33 @@ object SessionLogic {
     fun createReview(skills: List<Skill>, random: Random, title: String): Session {
         val problems = SessionPlanner.review(skills, Progression.REVIEW_PER_SKILL, random).map { Planned(it) }
         return Session(type = SessionType.REVIEW, skillId = null, title = title, problems = problems)
+    }
+
+    /** Freies Training: Aufgaben werden vorab erzeugt, das Ende bestimmen die Regeln. */
+    fun createFree(problems: List<Problem>, rules: FreeRules, title: String, timeLimitMs: Long?): Session =
+        Session(
+            type = SessionType.FREE,
+            skillId = null,
+            title = title,
+            problems = problems.map { Planned(it) },
+            timeLimitMs = timeLimitMs,
+            free = rules,
+        )
+
+    /** Ist eine Einheit im freien Training nach ihren Regeln vorbei? */
+    fun freeOver(s: Session, extraMs: Long = 0): Boolean {
+        val rules = s.free ?: return false
+        return when (rules.mode) {
+            FreeMode.ZEIT -> s.usedMs + extraMs >= rules.param * 1000L
+            FreeMode.UEBERLEBEN -> s.mistakes >= rules.param
+            FreeMode.ENDLOS, FreeMode.PRUEFUNG -> false
+        }
+    }
+
+    /** Einheit sofort beenden (Zeit um, Leben weg oder vom Nutzer beendet). */
+    fun finishNow(s: Session): Session {
+        val done = s.results.size
+        return s.copy(problems = s.problems.take(done), index = done, phase = Phase.FINISHED, input = "", feedback = null)
     }
 
     /** Eine Taste tippen: Ziffer, ',' bei Kommazahlen, 'R' bei Rest, '/' bei Brüchen. */
@@ -250,6 +312,7 @@ object SessionLogic {
     /** Weiter zur nächsten Aufgabe (oder zum nächsten Schritt nach einem aufgedeckten Schritt). */
     fun advance(s: Session, elapsedMs: Long = 0): Session {
         if (s.phase == Phase.ANSWERING || s.phase == Phase.FINISHED) return s
+        if (s.free != null && freeOver(s)) return finishNow(s)
         if (s.isGuided && s.phase == Phase.REVEAL) {
             val problem = s.problem ?: return s
             if (s.stepIndex < problem.steps.lastIndex) {
@@ -306,6 +369,10 @@ data class Summary(
     val becameRusty: List<Skill>,
     /** Die Auffrischung wurde bestanden. */
     val refreshed: Boolean,
+    /** Freies Training: Regeln, Punktzahl und bisheriger Bestwert. */
+    val free: FreeRules? = null,
+    val freeScore: Int = 0,
+    val freeBestBefore: Int = 0,
 )
 
 object SessionFinisher {
@@ -317,6 +384,7 @@ object SessionFinisher {
         now: Long,
         today: Long,
     ): Pair<ClimbProgress, Summary> {
+        session.free?.let { rules -> return finishFree(before, session, rules, today) }
         val skill = session.skillId?.let { Progression.skill(worlds, it) }
         val nextBefore = Progression.nextSkill(worlds, before)
         var p = Progression.record(before, session.results, now)
@@ -335,7 +403,7 @@ object SessionFinisher {
             }
 
             SessionType.REVIEW -> p = Progression.afterReview(worlds, p, session.results.filter { !it.retry }, now)
-            SessionType.GUIDED, SessionType.PRACTICE -> Unit
+            SessionType.GUIDED, SessionType.PRACTICE, SessionType.FREE -> Unit
         }
         if (session.results.isNotEmpty()) p = Progression.touchStreak(p, today)
 
@@ -360,6 +428,47 @@ object SessionFinisher {
             sentBackTo = sentBackTo,
             becameRusty = becameRusty,
             refreshed = refreshed,
+        )
+        return p to summary
+    }
+
+    /** Punktzahl im freien Training: richtige Antworten. */
+    fun freeScore(session: Session): Int = session.results.count { it.correct }
+
+    private fun finishFree(before: ClimbProgress, session: Session, rules: FreeRules, today: Long): Pair<ClimbProgress, Summary> {
+        var stats = before.free
+        session.results.groupBy { it.problem.skillId }.forEach { (topic, list) ->
+            val old = stats[topic] ?: com.helddertierwelt.mentalmath.domain.climb.model.FreeStat()
+            stats = stats + (topic to old.copy(
+                solved = old.solved + list.size,
+                correct = old.correct + list.count { it.correct },
+                totalMs = old.totalMs + list.sumOf { it.timeMs },
+            ))
+        }
+        val score = freeScore(session)
+        val bestBefore = before.freeBest[rules.bestKey] ?: 0
+        var p = before.copy(
+            free = stats,
+            freeBest = if (score > bestBefore) before.freeBest + (rules.bestKey to score) else before.freeBest,
+            totalSolved = before.totalSolved + session.results.size,
+            totalCorrect = before.totalCorrect + session.results.count { it.correct },
+        )
+        if (session.results.isNotEmpty()) p = Progression.touchStreak(p, today)
+        val summary = Summary(
+            type = SessionType.FREE,
+            skillId = null,
+            title = session.title,
+            results = session.results,
+            outcome = null,
+            starsBefore = 0,
+            starsAfter = 0,
+            unlocked = null,
+            sentBackTo = null,
+            becameRusty = emptyList(),
+            refreshed = false,
+            free = rules,
+            freeScore = score,
+            freeBestBefore = bestBefore,
         )
         return p to summary
     }

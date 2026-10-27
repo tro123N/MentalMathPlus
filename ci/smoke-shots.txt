@@ -1,7 +1,6 @@
 # Welche Levels der automatische Test auf dem virtuellen Handy ausführlich fotografiert.
 # Eine Angabe pro Zeile: "all" = alle, "w7" = ganze Welt 7, "w5.dec21" = ein einzelnes Level.
 # Alle anderen Levels werden trotzdem kurz geöffnet und angespielt (Absturztest).
-w10.pegs
-w10.memory
-w11
-w12
+w12.magic
+w12.weekday
+w11.square4

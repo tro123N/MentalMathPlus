@@ -139,10 +139,10 @@ fun ClimbResultScreen(navController: NavController) {
                         icon = R.drawable.refresh_24dp,
                         iconTint = blue,
                         onClick = {
-                            val started = if (skillId != null) {
-                                viewModel.startSession(summary.type, skillId)
-                            } else {
-                                viewModel.startReview()
+                            val started = when {
+                                summary.type == SessionType.FREE -> viewModel.startFree()
+                                skillId != null -> viewModel.startSession(summary.type, skillId)
+                                else -> viewModel.startReview()
                             }
                             if (started) {
                                 navController.navigate("climbplay") {
@@ -168,6 +168,22 @@ fun ClimbResultScreen(navController: NavController) {
                             },
                         )
                     }
+                    if (summary.type == SessionType.FREE) {
+                        ActionButton(
+                            text = "Einstellungen",
+                            subtitle = "Aufgabenarten und Modus ändern",
+                            icon = R.drawable.tune_24dp,
+                            iconTint = MaterialTheme.colorScheme.onPrimary,
+                            onClick = {
+                                viewModel.playTap()
+                                viewModel.clearSummary()
+                                navController.navigate("free") {
+                                    popUpTo("climb") { inclusive = false }
+                                    launchSingleTop = true
+                                }
+                            },
+                        )
+                    }
                     ActionButton(
                         text = "Zum Kletterweg",
                         icon = R.drawable.terrain_24dp,
@@ -187,6 +203,21 @@ private fun typeTitle(type: SessionType): String = when (type) {
     SessionType.TEST -> "Prüfung"
     SessionType.REFRESH -> "Auffrischung"
     SessionType.REVIEW -> "Wiederholung"
+    SessionType.FREE -> "Freies Training"
+}
+
+/** Schulnote aus dem Anteil richtiger Antworten. */
+fun grade(correct: Int, total: Int): Int {
+    if (total == 0) return 6
+    val pct = correct * 100.0 / total
+    return when {
+        pct >= 92 -> 1
+        pct >= 81 -> 2
+        pct >= 67 -> 3
+        pct >= 50 -> 4
+        pct >= 30 -> 5
+        else -> 6
+    }
 }
 
 @Composable
@@ -217,6 +248,24 @@ private fun SummaryCard(summary: Summary, viewModel: ClimbViewModel) {
             GoalRow(ok = accuracyOk, text = "Richtig: $correct von $total (Ziel: höchstens $allowed Fehler)")
             GoalRow(ok = outcome.avgMs / 1000.0 <= goals.star1, text = "Ø Zeit: ${secondsText(outcome.avgMs / 1000.0)} (★ bei ${secondsText(goals.star1)}, ★★ bei ${secondsText(goals.star2)}, ★★★ bei ${secondsText(goals.star3)})")
         } else {
+            summary.free?.let { rules ->
+                val p = paramLabel(rules.mode, rules.param)
+                CaptionText(rules.mode.title + (if (p.isNotEmpty()) " · $p" else ""))
+                if (rules.mode == com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.PRUEFUNG) {
+                    Text(
+                        text = "Note ${grade(correct, total)}",
+                        fontSize = dimens.fonts.settingsLabel,
+                        color = if (grade(correct, total) <= 4) green else red,
+                    )
+                } else {
+                    Text(
+                        text = "${summary.freeScore} richtig",
+                        fontSize = dimens.fonts.settingsLabel,
+                        color = green,
+                    )
+                }
+                Spacer(Modifier.height(6.dp))
+            }
             BodyText("Richtig: $correct von $total")
             BodyText("Ø Zeit pro Aufgabe: ${secondsText(avgMs / 1000.0)}")
             val hints = results.sumOf { it.hintsUsed }
@@ -253,6 +302,9 @@ private fun MessagesCard(summary: Summary) {
             outcome.passed -> messages += "Wieder bestanden." to green
             else -> messages += "Fast! Übe noch ein wenig und versuch es dann noch einmal." to yellow
         }
+    }
+    if (summary.free != null && summary.freeScore > summary.freeBestBefore && summary.freeBestBefore > 0) {
+        messages += "Neuer Bestwert! Vorher: ${summary.freeBestBefore}" to green
     }
     summary.unlocked?.let { messages += "Neu freigeschaltet: ${it.title}" to green }
     summary.sentBackTo?.let {
