@@ -34,6 +34,11 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.helddertierwelt.mentalmath.presentation.climb.screen.ClimbHomeScreen
+import com.helddertierwelt.mentalmath.presentation.climb.screen.ClimbPlayScreen
+import com.helddertierwelt.mentalmath.presentation.climb.screen.ClimbResultScreen
+import com.helddertierwelt.mentalmath.presentation.climb.screen.LearnScreen
+import com.helddertierwelt.mentalmath.presentation.climb.screen.LevelScreen
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 
 @Composable
@@ -51,8 +56,47 @@ fun Navigation(
     ) {
         NavHost(
             navController = navController,
-            startDestination = "settings",
+            startDestination = "climb",
         ) {
+            // Mental Math Plus: Kletterweg
+            composable(route = "climb") {
+                ClimbHomeScreen(navController = navController)
+            }
+
+            composable(
+                route = "level/{skillId}",
+                enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+            ) { entry ->
+                LevelScreen(
+                    navController = navController,
+                    skillId = entry.arguments?.getString("skillId") ?: "",
+                )
+            }
+
+            composable(
+                route = "learn/{skillId}",
+                enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+            ) { entry ->
+                LearnScreen(
+                    navController = navController,
+                    skillId = entry.arguments?.getString("skillId") ?: "",
+                )
+            }
+
+            composable(
+                route = "climbplay",
+                enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+            ) {
+                ClimbPlayScreen(navController = navController)
+            }
+
+            composable(
+                route = "climbresult",
+                enterTransition = { fadeIn() },
+            ) {
+                ClimbResultScreen(navController = navController)
+            }
+
             composable(
                 route = "settings",
                 enterTransition = { if (!showLoadedGameRecord) fadeIn() else null },

@@ -42,6 +42,7 @@ fun SettingsTopBar(
     onScoreClick: () -> Unit,
     scoreEnabled: Boolean,
     isGreyedOut: Boolean,
+    onClimbClick: (() -> Unit)? = null,
 ) {
     val dimens = MentalMathTheme.dimens
     TopAppBar(
@@ -66,6 +67,16 @@ fun SettingsTopBar(
             }
         },
         actions = {
+            if (onClimbClick != null) {
+                IconButton(onClick = onClimbClick) {
+                    Icon(
+                        painterResource(R.drawable.terrain_24dp),
+                        contentDescription = "Kletterweg",
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(dimens.icons.topBarAction),
+                    )
+                }
+            }
             IconButton(
                 enabled = scoreEnabled,
                 onClick = onScoreClick,

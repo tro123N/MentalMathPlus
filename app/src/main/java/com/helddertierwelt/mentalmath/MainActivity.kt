@@ -47,6 +47,7 @@ import com.helddertierwelt.mentalmath.presentation.viewmodel.GameViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.MainActivityViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.ResultViewModel
 import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
+import com.helddertierwelt.mentalmath.presentation.climb.ClimbViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -57,6 +58,7 @@ class MainActivity : ComponentActivity() {
     private val settingsViewModel: SettingsViewModel by viewModels()
     private val resultViewModel: ResultViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by viewModels()
+    private val climbViewModel: ClimbViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Splash Screen as long as settings are loading
@@ -74,6 +76,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             lifecycle.addObserver(gameViewModel)
+            lifecycle.addObserver(climbViewModel)
             val navController = rememberNavController()
             val settings by settingsViewModel.settingsState.collectAsState()
             MentalMathTheme(themeMode = settings.themeMode) {

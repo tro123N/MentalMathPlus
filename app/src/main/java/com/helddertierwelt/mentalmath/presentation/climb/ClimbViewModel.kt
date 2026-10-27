@@ -1,0 +1,305 @@
+/*
+Mental Math Plus - Kletterweg zum Kopfrechnen
+Copyright (C) 2026 tro123N
+Based on Mental Math, Copyright (C) 2025-2026 HeldDerTierwelt
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
+*/
+
+package com.helddertierwelt.mentalmath.presentation.climb
+
+import android.os.SystemClock
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.helddertierwelt.mentalmath.data.climb.ClimbRepository
+import com.helddertierwelt.mentalmath.domain.climb.curriculum.Curriculum
+import com.helddertierwelt.mentalmath.domain.climb.engine.Phase
+import com.helddertierwelt.mentalmath.domain.climb.engine.Progression
+import com.helddertierwelt.mentalmath.domain.climb.engine.Session
+import com.helddertierwelt.mentalmath.domain.climb.engine.SessionEvent
+import com.helddertierwelt.mentalmath.domain.climb.engine.SessionFinisher
+import com.helddertierwelt.mentalmath.domain.climb.engine.SessionLogic
+import com.helddertierwelt.mentalmath.domain.climb.engine.SessionType
+import com.helddertierwelt.mentalmath.domain.climb.engine.Summary
+import com.helddertierwelt.mentalmath.domain.climb.model.ClimbProgress
+import com.helddertierwelt.mentalmath.domain.climb.model.Skill
+import com.helddertierwelt.mentalmath.domain.climb.model.World
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackController
+import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import java.util.TimeZone
+import javax.inject.Inject
+import kotlin.random.Random
+
+/** Steuert den Kletterweg: Fortschritt, laufende Übungseinheit, Zeitmessung und Ergebnis. */
+@HiltViewModel
+class ClimbViewModel @Inject constructor(
+    private val repository: ClimbRepository,
+    private val feedbackController: FeedbackController,
+) : ViewModel(), DefaultLifecycleObserver {
+
+    val worlds: List<World> = Curriculum.worlds
+    val progress: StateFlow<ClimbProgress> = repository.progress
+    val loaded: StateFlow<Boolean> = repository.loaded
+
+    private val _session = MutableStateFlow<Session?>(null)
+    val session: StateFlow<Session?> = _session.asStateFlow()
+
+    /** Vergangene Zeit für die aktuelle Aufgabe in ms. */
+    private val _elapsedMs = MutableStateFlow(0L)
+    val elapsedMs: StateFlow<Long> = _elapsedMs.asStateFlow()
+
+    /** Auswertung der zuletzt beendeten Einheit. */
+    private val _summary = MutableStateFlow<Summary?>(null)
+    val summary: StateFlow<Summary?> = _summary.asStateFlow()
+
+    private val random = Random(System.nanoTime())
+    private var tickJob: Job? = null
+    private var advanceJob: Job? = null
+    private var problemStart = 0L
+    private var pausedAt: Long? = null
+
+    // --- Abfragen für die Oberfläche ----------------------------------------------------------
+
+    fun skill(id: String): Skill? = Curriculum.skill(id)
+
+    fun now(): Long = System.currentTimeMillis()
+
+    fun today(): Long {
+        val n = now()
+        return (n + TimeZone.getDefault().getOffset(n)) / Progression.DAY_MS
+    }
+
+    fun dueSkills(p: ClimbProgress): List<Skill> = Progression.dueSkills(worlds, p, now())
+
+    fun refreshSkills(p: ClimbProgress): List<Skill> = Progression.needsRefresh(worlds, p)
+
+    fun isUnlocked(p: ClimbProgress, skillId: String): Boolean = Progression.skillUnlocked(worlds, p, skillId)
+
+    fun isWorldUnlocked(p: ClimbProgress, worldIndex: Int): Boolean = Progression.worldUnlocked(worlds, p, worldIndex)
+
+    fun blockers(p: ClimbProgress, skillId: String): List<Skill> = Progression.blockers(worlds, p, skillId)
+
+    fun nextSkill(p: ClimbProgress): Skill? = Progression.nextSkill(worlds, p)
+
+    fun streak(p: ClimbProgress): Int = Progression.visibleStreak(p, today())
+
+    // --- Einheiten starten --------------------------------------------------------------------
+
+    fun startSession(type: SessionType, skillId: String): Boolean {
+        val skill = Curriculum.skill(skillId) ?: return false
+        begin(SessionLogic.create(type, skill, random))
+        return true
+    }
+
+    /** Wiederholung der fälligen Levels; ist nichts fällig, gemischtes Training aus gelernten Levels. */
+    fun startReview(): Boolean {
+        val p = progress.value
+        val due = Progression.dueSkills(worlds, p, now()).take(Progression.REVIEW_MAX_SKILLS)
+        if (due.isNotEmpty()) {
+            begin(SessionLogic.createReview(due, random, "Wiederholung"))
+            return true
+        }
+        val mastered = worlds.flatMap { it.skills }
+            .filter { p.of(it.id).mastered && !p.of(it.id).needsAttention }
+            .shuffled(random)
+            .take(Progression.REVIEW_MAX_SKILLS)
+        if (mastered.isEmpty()) return false
+        begin(SessionLogic.createReview(mastered, random, "Gemischtes Training").copy(type = SessionType.PRACTICE))
+        return true
+    }
+
+    private fun begin(s: Session) {
+        advanceJob?.cancel()
+        _summary.value = null
+        _session.value = s
+        feedbackController.play(FeedbackType.START)
+        restartProblemClock()
+        startTicking()
+    }
+
+    // --- Eingaben -------------------------------------------------------------------------------
+
+    fun onKey(key: Char) {
+        val s = _session.value ?: return
+        apply(SessionLogic.type(s, key))
+    }
+
+    fun onBackspace() {
+        val s = _session.value ?: return
+        apply(SessionLogic.backspace(s))
+    }
+
+    fun onSubmit() {
+        val s = _session.value ?: return
+        if (s.phase != Phase.ANSWERING) return
+        apply(SessionLogic.submit(s, currentElapsed()))
+    }
+
+    fun onChoice(index: Int) {
+        val s = _session.value ?: return
+        apply(SessionLogic.choose(s, index, currentElapsed()))
+    }
+
+    fun onToggleHint() {
+        val s = _session.value ?: return
+        feedbackController.play(FeedbackType.TAP)
+        _session.value = SessionLogic.toggleHint(s)
+    }
+
+    fun onRevealStep() {
+        val s = _session.value ?: return
+        feedbackController.play(FeedbackType.TAP)
+        _session.value = SessionLogic.revealStep(s)
+    }
+
+    /** „Weiter“ nach einer gezeigten Lösung oder während der kurzen Rückmeldung. */
+    fun onContinue() {
+        advanceJob?.cancel()
+        feedbackController.play(FeedbackType.TAP)
+        doAdvance()
+    }
+
+    fun quitSession() {
+        tickJob?.cancel()
+        advanceJob?.cancel()
+        _session.value = null
+        feedbackController.play(FeedbackType.STOP)
+    }
+
+    fun clearSummary() {
+        _summary.value = null
+        _session.value = null
+    }
+
+    fun resetProgress() {
+        tickJob?.cancel()
+        advanceJob?.cancel()
+        _session.value = null
+        _summary.value = null
+        viewModelScope.launch { repository.reset() }
+    }
+
+    fun playTap() = feedbackController.play(FeedbackType.TAP)
+
+    // --- Ablauf ----------------------------------------------------------------------------------
+
+    private fun apply(result: Pair<Session, SessionEvent>) {
+        val (s, event) = result
+        _session.value = s
+        when (event) {
+            SessionEvent.KEY -> feedbackController.play(FeedbackType.NUMPAD)
+            SessionEvent.BACKSPACE -> feedbackController.play(FeedbackType.BACKSPACE)
+            SessionEvent.STEP_CORRECT, SessionEvent.CORRECT -> feedbackController.play(FeedbackType.CORRECT)
+            SessionEvent.STEP_WRONG, SessionEvent.WRONG -> feedbackController.play(FeedbackType.WRONG)
+            SessionEvent.TIMEOUT -> feedbackController.play(FeedbackType.TIMEOUT)
+            SessionEvent.NONE -> Unit
+        }
+        if (s.phase == Phase.FLASH) {
+            val wait = if (s.feedback?.correct == true) 450L else 1300L
+            scheduleAdvance(wait)
+        }
+    }
+
+    private fun scheduleAdvance(delayMs: Long) {
+        advanceJob?.cancel()
+        advanceJob = viewModelScope.launch {
+            delay(delayMs)
+            doAdvance()
+        }
+    }
+
+    private fun doAdvance() {
+        val s = _session.value ?: return
+        if (s.phase == Phase.ANSWERING || s.phase == Phase.FINISHED) return
+        val before = s.index
+        val next = SessionLogic.advance(s, currentElapsed())
+        _session.value = next
+        if (next.index != before || next.phase == Phase.FINISHED) restartProblemClock()
+        if (next.phase == Phase.FINISHED) finish(next)
+    }
+
+    private fun finish(s: Session) {
+        tickJob?.cancel()
+        viewModelScope.launch {
+            var summary: Summary? = null
+            repository.update { p ->
+                val (updated, sum) = SessionFinisher.finish(worlds, p, s, now(), today())
+                summary = sum
+                updated
+            }
+            _summary.value = summary
+            val results = s.results
+            val accuracy = if (results.isEmpty()) 0.0 else results.count { it.correct }.toDouble() / results.size
+            val sound = when {
+                summary?.outcome?.passed == false -> FeedbackType.RESULT_BAD
+                accuracy >= 0.999 -> FeedbackType.RESULT_PERFECT
+                accuracy >= 0.8 -> FeedbackType.RESULT_GOOD
+                accuracy >= 0.6 -> FeedbackType.RESULT_OKAY
+                else -> FeedbackType.RESULT_BAD
+            }
+            delay(300)
+            feedbackController.play(sound)
+        }
+    }
+
+    // --- Zeitmessung ---------------------------------------------------------------------------
+
+    private fun restartProblemClock() {
+        problemStart = SystemClock.elapsedRealtime()
+        if (pausedAt != null) pausedAt = problemStart
+        _elapsedMs.value = 0L
+    }
+
+    private fun currentElapsed(): Long = ((pausedAt ?: SystemClock.elapsedRealtime()) - problemStart).coerceAtLeast(0L)
+
+    private fun startTicking() {
+        tickJob?.cancel()
+        tickJob = viewModelScope.launch {
+            while (isActive) {
+                delay(100)
+                val s = _session.value ?: break
+                if (s.phase == Phase.FINISHED) break
+                if (pausedAt != null || s.phase != Phase.ANSWERING) continue
+                val elapsed = currentElapsed()
+                _elapsedMs.value = elapsed
+                val limit = s.timeLimitMs
+                if (limit != null && elapsed >= limit) {
+                    apply(SessionLogic.timeout(s, limit))
+                }
+            }
+        }
+    }
+
+    override fun onPause(owner: LifecycleOwner) {
+        super.onPause(owner)
+        if (_session.value != null && pausedAt == null) pausedAt = SystemClock.elapsedRealtime()
+    }
+
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
+        val p = pausedAt ?: return
+        problemStart += SystemClock.elapsedRealtime() - p
+        pausedAt = null
+    }
+}

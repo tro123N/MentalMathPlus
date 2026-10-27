@@ -60,6 +60,7 @@ import com.helddertierwelt.mentalmath.presentation.component.settings.SettingsTo
 import com.helddertierwelt.mentalmath.presentation.component.settings.StartButton
 import com.helddertierwelt.mentalmath.presentation.component.settings.menu.MenuSideSheet
 import com.helddertierwelt.mentalmath.presentation.component.settings.score.ScoreSideSheet
+import com.helddertierwelt.mentalmath.presentation.climb.ClimbViewModel
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
@@ -86,6 +87,14 @@ fun SettingsScreen(
     val resultViewModel: ResultViewModel = hiltViewModel(viewModelStoreOwner)
     val historyViewModel: HistoryViewModel = hiltViewModel(viewModelStoreOwner)
     val mainActivityViewModel: MainActivityViewModel = hiltViewModel(viewModelStoreOwner)
+    val climbViewModel: ClimbViewModel = hiltViewModel(viewModelStoreOwner)
+
+    fun openClimb() {
+        navController.navigate("climb") {
+            popUpTo(0) { inclusive = true }
+            launchSingleTop = true
+        }
+    }
 
     // variables
     val settingsState = settingsViewModel.settingsState.collectAsState().value
@@ -129,7 +138,11 @@ fun SettingsScreen(
                     settingsViewModel.toggleScoreOpen()
                 },
                 scoreEnabled = hasGamesWithScore && !isSliderActive,
-                isGreyedOut = !hasGamesWithScore
+                isGreyedOut = !hasGamesWithScore,
+                onClimbClick = {
+                    settingsViewModel.playFeedback(FeedbackType.TAP)
+                    openClimb()
+                }
             )
         },
         content = { padding ->
@@ -365,6 +378,7 @@ fun SettingsScreen(
                     resultViewModel.resetStatistics()
                     historyViewModel.resetHistory()
                     mainActivityViewModel.resetMainActivity()
+                    climbViewModel.resetProgress()
                 },
                 onCancel = {
                     settingsViewModel.playFeedback(FeedbackType.TAP)
@@ -377,6 +391,10 @@ fun SettingsScreen(
     }
 
     BackHandler {
-        (context as? android.app.Activity)?.moveTaskToBack(true)
+        if (settingsViewModel.isMenuOpen.value) {
+            settingsViewModel.toggleMenuOpen()
+        } else {
+            openClimb()
+        }
     }
 }
