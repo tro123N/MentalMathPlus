@@ -325,7 +325,7 @@ private fun ProblemsCard(results: List<ProblemResult>) {
                                 Spacer(Modifier.width(8.dp))
                             }
                             Text(
-                                text = "= " + Fmt.expected(r.problem.expected, r.problem.choices),
+                                text = Fmt.answer(r.problem.expected, r.problem.choices),
                                 fontSize = dimens.fonts.caption,
                                 color = if (r.correct) green else MaterialTheme.colorScheme.onPrimary,
                             )

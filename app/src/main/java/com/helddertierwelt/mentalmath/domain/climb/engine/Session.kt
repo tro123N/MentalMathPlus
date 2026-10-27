@@ -169,7 +169,7 @@ object SessionLogic {
         val feedback = Feedback(
             correct = verdict.correct,
             userAnswer = display,
-            correctAnswer = Fmt.expected(problem.expected, problem.choices),
+            correctAnswer = Fmt.spoken(problem.expected, problem.choices),
             note = verdict.note,
         )
         val result = ProblemResult(problem, display, verdict.correct, elapsedMs, retry = planned.retry)
@@ -196,7 +196,7 @@ object SessionLogic {
         if (s.input.isEmpty()) return s.copy(showHint = true) to SessionEvent.NONE
         val verdict = AnswerCheck.check(step.expected, s.input)
         val display = displayInput(s.input, s.inputKind, problem.choices)
-        val correctText = Fmt.expected(step.expected, problem.choices)
+        val correctText = Fmt.spoken(step.expected, problem.choices)
         return if (verdict.correct) {
             val feedback = Feedback(true, display, correctText, verdict.note)
             if (s.stepIndex >= problem.steps.lastIndex) {
@@ -227,7 +227,7 @@ object SessionLogic {
             revealedInProblem = true,
             hintsUsed = s.hintsUsed + 1,
             input = "",
-            feedback = Feedback(false, "", Fmt.expected(step.expected, problem.choices)),
+            feedback = Feedback(false, "", Fmt.spoken(step.expected, problem.choices)),
         )
     }
 
@@ -243,7 +243,7 @@ object SessionLogic {
         val planned = s.current ?: return s to SessionEvent.NONE
         val problem = planned.problem
         val result = ProblemResult(problem, "", false, elapsedMs, timedOut = true, retry = planned.retry)
-        val feedback = Feedback(false, "", Fmt.expected(problem.expected, problem.choices), timedOut = true)
+        val feedback = Feedback(false, "", Fmt.spoken(problem.expected, problem.choices), timedOut = true)
         return s.copy(results = s.results + result, feedback = feedback, phase = Phase.FLASH) to SessionEvent.TIMEOUT
     }
 

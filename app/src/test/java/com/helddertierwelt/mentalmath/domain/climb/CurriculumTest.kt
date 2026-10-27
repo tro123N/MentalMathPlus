@@ -99,6 +99,20 @@ class CurriculumTest {
             val b = num(it.groupValues[3])!!
             return if (it.groupValues[2] == "+") a + b else a - b
         }
+        Regex("^√($numberPattern)$").matchEntire(text)?.let { m -> return BigDecimal(Math.sqrt(num(m.groupValues[1])!!.toDouble())) }
+        Regex("^($numberPattern) \\+ ($numberPattern) \\+ ($numberPattern)$").matchEntire(text)?.let { m ->
+            return num(m.groupValues[1])!! + num(m.groupValues[2])!! + num(m.groupValues[3])!!
+        }
+        Regex("^([0-9]+),([0-9]+) % von ($numberPattern) €$").matchEntire(text)?.let { m ->
+            val pct = BigDecimal("${m.groupValues[1]}.${m.groupValues[2]}")
+            return pct.multiply(num(m.groupValues[3])!!).divide(BigDecimal(100))
+        }
+        Regex("^([0-9]+) % von ($numberPattern) €$").matchEntire(text)?.let { m ->
+            return num(m.groupValues[1])!!.multiply(num(m.groupValues[2])!!).divide(BigDecimal(100))
+        }
+        if (text == "Ungefähr wie viel?" && p.prompt.lines.isNotEmpty()) {
+            return p.prompt.lines.map { num(it.removeSuffix(" €"))!! }.fold(BigDecimal.ZERO) { a, b -> a + b }
+        }
         Regex("^($numberPattern) \\+ \\?$").matchEntire(text)?.let { m ->
             val target = p.prompt.caption?.let { c -> Regex("($numberPattern)$").find(c)?.groupValues?.get(1) }?.let { num(it) }
             if (target != null) return target - num(m.groupValues[1])!!
@@ -170,7 +184,13 @@ class CurriculumTest {
         val last = p.steps.last()
         val pv = value(p.expected)
         val lv = value(last.expected)
-        if (pv != null && lv != null) {
+        if (p.expected is Expected.Approx) {
+            // Schätzaufgabe: Wer dem Lösungsweg folgt, muss eine akzeptierte Antwort bekommen.
+            assertTrue(
+                "$context: Ergebnis des Lösungswegs (${rawInput(last.expected)}) liegt außerhalb der Toleranz",
+                AnswerCheck.check(p.expected, rawInput(last.expected)).correct,
+            )
+        } else if (pv != null && lv != null) {
             assertEquals("$context: letzter Schritt ≠ Ergebnis", 0, pv.compareTo(lv))
         } else {
             assertEquals("$context: letzter Schritt ≠ Ergebnis", p.expected, last.expected)
@@ -179,7 +199,10 @@ class CurriculumTest {
         totalPrompts++
         evaluatePrompt(p)?.let { promptValue ->
             evaluatedPrompts++
-            if (pv != null) {
+            if (p.expected is Expected.Approx) {
+                val typedExact = promptValue.round(MathContext(15)).stripTrailingZeros().toPlainString().replace('.', ',')
+                assertTrue("$context: genauer Wert $typedExact wird nicht akzeptiert", AnswerCheck.check(p.expected, typedExact).correct)
+            } else if (pv != null) {
                 assertEquals("$context: Aufgabe „${p.prompt.text}“ ergibt $promptValue, erwartet ${pv}", 0, promptValue.compareTo(pv))
             }
         }
@@ -189,7 +212,7 @@ class CurriculumTest {
             assertTrue("$context: Schritt ${i + 1} „${s.label}“ wird mit richtiger Antwort abgelehnt", AnswerCheck.check(s.expected, rawInput(s.expected)).correct)
             if (sv != null) {
                 assertTrue("$context: negativer Zwischenschritt „${s.label}“", sv.signum() >= 0)
-                if (s.input == InputKind.INTEGER) {
+                if (s.input == InputKind.INTEGER && s.expected is Expected.Exact) {
                     assertTrue("$context: Ganzzahl-Schritt „${s.label}“ hat Nachkommastellen ($sv)", sv.stripTrailingZeros().scale() <= 0)
                 }
                 totalSteps++
@@ -199,7 +222,7 @@ class CurriculumTest {
                 }
             }
         }
-        if (p.input == InputKind.INTEGER && pv != null) {
+        if (p.input == InputKind.INTEGER && p.expected is Expected.Exact && pv != null) {
             assertTrue("$context: Ganzzahl-Aufgabe mit Nachkommastellen", pv.stripTrailingZeros().scale() <= 0)
         }
         if (p.input == InputKind.CHOICE) {

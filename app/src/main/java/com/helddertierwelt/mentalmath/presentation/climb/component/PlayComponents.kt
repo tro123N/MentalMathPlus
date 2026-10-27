@@ -54,6 +54,7 @@ import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.climb.engine.Phase
 import com.helddertierwelt.mentalmath.domain.climb.engine.Session
 import com.helddertierwelt.mentalmath.domain.climb.math.Fmt
+import com.helddertierwelt.mentalmath.domain.climb.model.Expected
 import com.helddertierwelt.mentalmath.domain.climb.model.InputKind
 import com.helddertierwelt.mentalmath.domain.climb.model.Problem
 import com.helddertierwelt.mentalmath.domain.settings.enums.InputDirectionMode
@@ -187,7 +188,7 @@ fun SolutionSteps(
         }
         problem.steps.take(upTo).forEach { step ->
             Text(
-                text = "${step.label} = ${Fmt.expected(step.expected, problem.choices)}",
+                text = Fmt.equation(step.label, step.expected, problem.choices),
                 fontFamily = mono,
                 fontSize = dimens.fonts.sideSheetEntry,
                 lineHeight = dimens.fonts.sideSheetEntry * 1.3f,
@@ -231,7 +232,7 @@ fun GuidedSteps(session: Session, modifier: Modifier = Modifier) {
                     )
                     Spacer(Modifier.width(6.dp))
                     Text(
-                        text = "${step.label} = ${Fmt.expected(step.expected, problem.choices)}",
+                        text = Fmt.equation(step.label, step.expected, problem.choices),
                         fontFamily = mono,
                         fontSize = dimens.fonts.sideSheetEntry,
                         color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
@@ -242,7 +243,7 @@ fun GuidedSteps(session: Session, modifier: Modifier = Modifier) {
                     val revealed = session.phase == Phase.REVEAL
                     val finished = session.phase == Phase.FLASH
                     val value = when {
-                        revealed -> Fmt.expected(step.expected, problem.choices)
+                        revealed -> Fmt.value(step.expected, problem.choices)
                         finished -> session.feedback?.userAnswer ?: ""
                         else -> Fmt.input(session.input).ifEmpty { "?" }
                     }
@@ -260,7 +261,7 @@ fun GuidedSteps(session: Session, modifier: Modifier = Modifier) {
                             .padding(horizontal = 10.dp, vertical = 6.dp),
                     ) {
                         Text(
-                            text = "${step.label} = ",
+                            text = "${step.label} ${if (step.expected is Expected.Approx) "≈" else "="} ",
                             fontFamily = mono,
                             fontSize = dimens.fonts.settingsLabel,
                             color = MaterialTheme.colorScheme.onPrimary,

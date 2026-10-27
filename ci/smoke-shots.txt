@@ -4,4 +4,8 @@
 w1.complement
 w5.dec21
 w6.addmethod
-w7
+w7.div1
+w7.fracdec
+w7.divisible
+w7.fracadd
+w8

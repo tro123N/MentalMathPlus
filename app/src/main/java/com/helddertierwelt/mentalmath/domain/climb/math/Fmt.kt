@@ -70,6 +70,30 @@ object Fmt {
         is Expected.Digits -> expected.digits
     }
 
+    /** „Beschriftung = Wert“, bei Schätzungen „Beschriftung ≈ Wert“. */
+    fun equation(label: String, expected: Expected, choices: List<String> = emptyList()): String = when (expected) {
+        is Expected.Approx -> "$label ≈ ${dec(expected.value, expected.places)}"
+        else -> "$label = ${expected(expected, choices)}"
+    }
+
+    /** Ergebnis mit Gleichheitszeichen: „= 42“ bzw. „≈ 42“ bei Schätzungen. */
+    fun answer(expected: Expected, choices: List<String> = emptyList()): String = when (expected) {
+        is Expected.Approx -> expected(expected, choices)
+        else -> "= " + expected(expected, choices)
+    }
+
+    /** Nur der Wert, ohne „≈“ (wenn das Zeichen schon davor steht). */
+    fun value(expected: Expected, choices: List<String> = emptyList()): String = when (expected) {
+        is Expected.Approx -> dec(expected.value, expected.places)
+        else -> expected(expected, choices)
+    }
+
+    /** Für Sätze wie „Richtig wäre …“: bei Schätzungen „etwa 42“. */
+    fun spoken(expected: Expected, choices: List<String> = emptyList()): String = when (expected) {
+        is Expected.Approx -> "etwa " + dec(expected.value, expected.places)
+        else -> expected(expected, choices)
+    }
+
     /** Eingabe so anzeigen, wie sie getippt wurde, aber mit „R“ und Bruchstrich lesbar. */
     fun input(raw: String): String = raw.replace("R", " R ").replace("/", "/")
 
