@@ -32,4 +32,12 @@ In der Cloud-Umgebung sind Google Maven und Maven Central gesperrt; Android läs
 - `domain/climb/engine` – Bewertung (Sterne), Freischalten, Auffrischen/Zurückstufen, Wiederholungsplan.
 - `domain/climb/curriculum` – eine Datei pro Welt mit Generatoren, Lösungswegen und Erklärungstexten.
 - `data/climb` – Speicherung des Fortschritts als JSON-Datei.
-- `presentation/climb` – ViewModel und Compose-Oberfläche im Stil der App.
+- `domain/climb/free` – Aufgabenarten des freien Trainings (FreeTopics); Modi und Regeln in `engine/Session.kt` (FreeMode, FreeRules).
+- `domain/climb/math/Phonetic.kt` – phonetischer Code mit eigenen Merkwörtern 0–99 (nicht die Liste aus dem Buch!).
+- `presentation/climb` – ViewModel und Compose-Oberfläche im Stil der App (Startseite „climb“, Level, Lernen, Spielen, Ergebnis, „free“).
+
+## Stand
+- 12 Welten / 84 Levels decken Kapitel 0–9 des Buches ab (Welt 1 Grundlagen, Welt 5 Kommazahlen als Ergänzung).
+- Freies Training mit 9 Aufgabenarten, 3 Stufen, Modi Zeit/Endlos/Überleben/Prüfung und Statistik; der klassische Modus der Original-App ist über „Klassischer Modus“ erreichbar.
+- Lokale Tests: `CurriculumTest` rechnet jeden Lösungsweg nach und prüft, dass jede Antwort eintippbar ist; `World12Test` prüft die Wochentagsmethode gegen den echten Kalender.
+- Ideen für später: Einstufungstest zum Überspringen von Welten, Fortschritt sichern/importieren (`ClimbViewModel.importProgress` existiert schon), Erinnerungen.
