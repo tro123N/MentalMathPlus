@@ -66,6 +66,7 @@ export MMP_KEY_PASSWORD="$KEY_PASSWORD"
 export MMP_VERSION_CODE="$((1000 + RUN))"
 export MMP_VERSION_NAME="$VERSION"
 
+chmod +x ./gradlew
 ./gradlew --no-daemon --stacktrace :app:testFossDebugUnitTest :app:assembleFossRelease 2>&1 | tee "$LOG"
 status=${PIPESTATUS[0]}
 if [ "$status" -ne 0 ]; then
