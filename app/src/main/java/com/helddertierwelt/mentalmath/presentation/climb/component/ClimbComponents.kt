@@ -217,7 +217,7 @@ fun LevelBadge(
 ) {
     val ringColor = when {
         attention -> yellow
-        highlighted -> com.helddertierwelt.mentalmath.presentation.theme.blue
+        highlighted -> com.helddertierwelt.mentalmath.presentation.theme.accent
         mastered -> com.helddertierwelt.mentalmath.presentation.theme.green
         else -> MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.25f)
     }

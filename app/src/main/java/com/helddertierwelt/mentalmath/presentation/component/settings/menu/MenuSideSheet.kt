@@ -74,7 +74,6 @@ import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.BuildConfig
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler
-import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler.calculateAnchorTime
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.settings.AppLocale
 import com.helddertierwelt.mentalmath.domain.settings.SettingsGroup
@@ -123,7 +122,6 @@ fun MenuSideSheet(
     var isInteractionEnabled by remember { mutableStateOf(true) }
     var isFirstRender by remember { mutableStateOf(true) }
     val isRandomGameButtonClicked = settingsViewModel.isRandomGameButtonClicked.collectAsState().value
-    val notificationToastText = stringResource(R.string.notification_toast_text)
     val vibrationToastText = stringResource(R.string.vibration_toast_text)
 
     LaunchedEffect(Unit) {
@@ -435,52 +433,7 @@ fun MenuSideSheet(
                                     )
                                 )
 
-                                // Notifications
-                                CycleToggleRow(
-                                    currentValue = settingsViewModel.settingsState.collectAsState().value.notificationMode,
-                                    onValueChange = {
-                                        settingsViewModel.playFeedback(FeedbackType.TAP)
-                                        if (it == NotificationMode.OFF || settingsViewModel.isPermissionGranted(context)) {
-                                            settingsViewModel.setNotificationMode(it)
-                                            NotificationScheduler.scheduleNotificationWork(
-                                                context,
-                                                it,
-                                                calculateAnchorTime(it)
-                                            )
-                                            if (it == NotificationMode.DAILY) {
-                                                Toast.makeText(
-                                                    context,
-                                                    notificationToastText,
-                                                    Toast.LENGTH_LONG
-                                                ).show()
-                                            }
-                                        } else {
-                                            settingsViewModel.showPopUp(SettingsViewModel.PopUp.NotificationPermission)
-                                        }
-                                    },
-                                    options = listOf(
-                                        ToggleOption(
-                                            NotificationMode.OFF,
-                                            R.drawable.notifications_off_24dp,
-                                            R.string.reminder_off
-                                        ),
-                                        ToggleOption(
-                                            NotificationMode.DAILY,
-                                            R.drawable.notifications_active_24dp,
-                                            R.string.daily_reminder
-                                        ),
-                                        ToggleOption(
-                                            NotificationMode.THREEDAILY,
-                                            R.drawable.notifications_active_24dp,
-                                            R.string.every_three_days
-                                        ),
-                                        ToggleOption(
-                                            NotificationMode.WEEKLY,
-                                            R.drawable.notifications_active_24dp,
-                                            R.string.weekly_reminder
-                                        )
-                                    )
-                                )
+                                // Mental Math Plus: Die Erinnerung steht jetzt in den Einstellungen des Kletterwegs.
 
                                 // Language
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

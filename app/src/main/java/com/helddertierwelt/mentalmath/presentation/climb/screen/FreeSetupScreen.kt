@@ -60,6 +60,9 @@ import com.helddertierwelt.mentalmath.domain.climb.model.ClimbProgress
 import com.helddertierwelt.mentalmath.presentation.climb.ClimbViewModel
 import com.helddertierwelt.mentalmath.presentation.climb.FreeConfig
 import com.helddertierwelt.mentalmath.presentation.climb.component.ActionButton
+import com.helddertierwelt.mentalmath.presentation.climb.component.AreaIntro
+import com.helddertierwelt.mentalmath.presentation.climb.component.PlusBottomBar
+import com.helddertierwelt.mentalmath.presentation.climb.component.PlusTab
 import com.helddertierwelt.mentalmath.presentation.climb.component.BodyText
 import com.helddertierwelt.mentalmath.presentation.climb.component.CaptionText
 import com.helddertierwelt.mentalmath.presentation.climb.component.CardGap
@@ -68,7 +71,7 @@ import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbCard
 import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbTopBar
 import com.helddertierwelt.mentalmath.presentation.climb.component.PillButton
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
-import com.helddertierwelt.mentalmath.presentation.theme.blue
+import com.helddertierwelt.mentalmath.presentation.theme.accent
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 
@@ -123,7 +126,10 @@ fun FreeSetupScreen(navController: NavController) {
         viewModel.setFreeConfig(c)
     }
 
-    Scaffold(topBar = { ClimbTopBar(title = "Freies Training", onNavigation = { back() }) }) { padding ->
+    Scaffold(
+        topBar = { ClimbTopBar(title = "Freies Training", navigationIcon = null) },
+        bottomBar = { PlusBottomBar(navController, PlusTab.FREE, onTap = { viewModel.playTap() }) },
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -132,6 +138,12 @@ fun FreeSetupScreen(navController: NavController) {
                 .verticalScroll(rememberScrollState())
                 .padding(20.dp),
         ) {
+            AreaIntro(
+                icon = R.drawable.tune_24dp,
+                title = "Üben ohne Plan",
+                text = "Aufgabenarten und Modus frei wählen. Zählt nicht für den Kletterweg – hier gibt es eigene Bestwerte.",
+            )
+            CardGap()
             ClimbCard {
                 CardTitle("Aufgabenarten")
                 CaptionText("Mehrere auswählen, dann wird gemischt.")
@@ -173,7 +185,7 @@ fun FreeSetupScreen(navController: NavController) {
                         PillButton(
                             text = name,
                             onClick = { update(config.copy(level = level)) },
-                            color = if (config.level == level) blue else MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
+                            color = if (config.level == level) accent else MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
                             modifier = Modifier.weight(1f),
                         )
                     }
@@ -216,7 +228,7 @@ fun FreeSetupScreen(navController: NavController) {
                                     PillButton(
                                         text = shortParamLabel(mode, option),
                                         onClick = { update(config.copy(param = option)) },
-                                        color = if (config.param == option) blue else MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
+                                        color = if (config.param == option) accent else MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
                                         modifier = Modifier.weight(1f),
                                     )
                                 }
@@ -237,17 +249,6 @@ fun FreeSetupScreen(navController: NavController) {
             )
             CardGap()
             StatsCard(progress)
-            CardGap()
-            ActionButton(
-                text = "Klassischer Modus",
-                subtitle = "Das freie Training der Original-App",
-                icon = R.drawable.tune_24dp,
-                iconTint = MaterialTheme.colorScheme.onPrimary,
-                onClick = {
-                    viewModel.playTap()
-                    navController.navigate("settings") { launchSingleTop = true }
-                },
-            )
             Spacer(Modifier.height(24.dp))
         }
     }

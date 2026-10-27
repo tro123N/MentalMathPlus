@@ -91,8 +91,29 @@ fun Navigation(
             }
 
             composable(
-                route = "free",
+                route = "stats",
                 enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+            ) {
+                com.helddertierwelt.mentalmath.presentation.climb.screen.StatsScreen(navController = navController)
+            }
+
+            composable(
+                route = "placement",
+                enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+            ) {
+                com.helddertierwelt.mentalmath.presentation.climb.screen.PlacementScreen(navController = navController)
+            }
+
+            composable(
+                route = "plussettings",
+                enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+            ) {
+                com.helddertierwelt.mentalmath.presentation.climb.screen.PlusSettingsScreen(navController = navController)
+            }
+
+            composable(
+                route = "free",
+                enterTransition = { fadeIn() },
             ) {
                 com.helddertierwelt.mentalmath.presentation.climb.screen.FreeSetupScreen(navController = navController)
             }

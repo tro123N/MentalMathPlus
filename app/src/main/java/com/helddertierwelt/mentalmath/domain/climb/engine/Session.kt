@@ -30,8 +30,8 @@ import com.helddertierwelt.mentalmath.domain.climb.model.Step
 import com.helddertierwelt.mentalmath.domain.climb.model.World
 import kotlin.random.Random
 
-/** Eine geplante Aufgabe in einer Einheit. */
-data class Planned(val problem: Problem, val retry: Boolean = false)
+/** Eine geplante Aufgabe in einer Einheit; [limitMs] überschreibt das Zeitlimit der Einheit. */
+data class Planned(val problem: Problem, val retry: Boolean = false, val limitMs: Long? = null)
 
 /** Modi des freien Trainings. */
 enum class FreeMode(val title: String) {
@@ -113,11 +113,17 @@ data class Session(
     val retried: Set<String> = emptySet(),
     /** Nur im freien Training gesetzt. */
     val free: FreeRules? = null,
+    /** Nur beim Einstufungstest gesetzt: die geprüfte Welt. */
+    val worldId: String? = null,
 ) {
     val current: Planned? get() = problems.getOrNull(index)
     val problem: Problem? get() = current?.problem
     val isGuided: Boolean get() = type == SessionType.GUIDED
-    val isExam: Boolean get() = type == SessionType.TEST || type == SessionType.REFRESH || type == SessionType.FREE
+    val isExam: Boolean
+        get() = type == SessionType.TEST || type == SessionType.REFRESH || type == SessionType.FREE || type == SessionType.PLACEMENT
+
+    /** Zeitlimit der aktuellen Aufgabe. */
+    val currentLimitMs: Long? get() = current?.limitMs ?: timeLimitMs
 
     /** Gesamte Rechenzeit der bisherigen Aufgaben (ohne Pausen und Rückmeldungen). */
     val usedMs: Long get() = results.sumOf { it.timeMs }
@@ -154,6 +160,7 @@ object SessionLogic {
             SessionType.REFRESH -> Progression.REFRESH_SIZE
             SessionType.REVIEW -> Progression.REVIEW_PER_SKILL
             SessionType.FREE -> skill.practiceCount
+            SessionType.PLACEMENT -> Placement.PER_SKILL
         }
         val problems = SessionPlanner.problems(skill, count, random, avoid).map { Planned(it) }
         val limit = if (type == SessionType.TEST || type == SessionType.REFRESH) (skill.goals.timeLimit * 1000).toLong() else null
@@ -373,6 +380,8 @@ data class Summary(
     val free: FreeRules? = null,
     val freeScore: Int = 0,
     val freeBestBefore: Int = 0,
+    /** Einstufungstest: Auswertung. */
+    val placement: PlacementOutcome? = null,
 )
 
 object SessionFinisher {
@@ -387,9 +396,10 @@ object SessionFinisher {
         session.free?.let { rules -> return finishFree(before, session, rules, today) }
         val skill = session.skillId?.let { Progression.skill(worlds, it) }
         val nextBefore = Progression.nextSkill(worlds, before)
-        var p = Progression.record(before, session.results, now)
+        var p = Progression.record(before, session.results, now, today, skillDays = session.type != SessionType.GUIDED)
         var outcome: Outcome? = null
         var refreshed = false
+        var placement: PlacementOutcome? = null
         when (session.type) {
             SessionType.TEST -> if (skill != null) {
                 outcome = Evaluation.outcome(skill.goals, session.results)
@@ -403,6 +413,16 @@ object SessionFinisher {
             }
 
             SessionType.REVIEW -> p = Progression.afterReview(worlds, p, session.results.filter { !it.retry }, now)
+            SessionType.PLACEMENT -> {
+                val world = worlds.firstOrNull { it.id == session.worldId }
+                if (world != null) {
+                    val result = Placement.evaluate(world, session.results)
+                    val newly = if (result.passed) world.skills.count { !p.of(it.id).mastered } else 0
+                    if (result.passed) p = Progression.applyPlacement(world, p, now)
+                    placement = result.copy(newlyMastered = newly)
+                }
+            }
+
             SessionType.GUIDED, SessionType.PRACTICE, SessionType.FREE -> Unit
         }
         if (session.results.isNotEmpty()) p = Progression.touchStreak(p, today)
@@ -428,6 +448,7 @@ object SessionFinisher {
             sentBackTo = sentBackTo,
             becameRusty = becameRusty,
             refreshed = refreshed,
+            placement = placement,
         )
         return p to summary
     }
@@ -453,6 +474,7 @@ object SessionFinisher {
             totalSolved = before.totalSolved + session.results.size,
             totalCorrect = before.totalCorrect + session.results.count { it.correct },
         )
+        p = Progression.recordDay(p, session.results, today)
         if (session.results.isNotEmpty()) p = Progression.touchStreak(p, today)
         val summary = Summary(
             type = SessionType.FREE,

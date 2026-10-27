@@ -70,7 +70,7 @@ import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbTopBar
 import com.helddertierwelt.mentalmath.presentation.climb.component.SolutionSteps
 import com.helddertierwelt.mentalmath.presentation.climb.component.StarRow
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
-import com.helddertierwelt.mentalmath.presentation.theme.blue
+import com.helddertierwelt.mentalmath.presentation.theme.accent
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
@@ -137,10 +137,11 @@ fun ClimbResultScreen(navController: NavController) {
                         text = "Nochmal",
                         subtitle = "Gleiche Übung mit neuen Aufgaben",
                         icon = R.drawable.refresh_24dp,
-                        iconTint = blue,
+                        iconTint = accent,
                         onClick = {
                             val started = when {
                                 summary.type == SessionType.FREE -> viewModel.startFree()
+                                summary.type == SessionType.PLACEMENT -> summary.placement?.let { viewModel.startPlacement(it.worldId) } ?: false
                                 skillId != null -> viewModel.startSession(summary.type, skillId)
                                 else -> viewModel.startReview()
                             }
@@ -204,6 +205,7 @@ private fun typeTitle(type: SessionType): String = when (type) {
     SessionType.REFRESH -> "Auffrischung"
     SessionType.REVIEW -> "Wiederholung"
     SessionType.FREE -> "Freies Training"
+    SessionType.PLACEMENT -> "Einstufungstest"
 }
 
 /** Eine Zeile für die Aufgabenliste: Aufgabe mit kurzer Beschreibung, ohne doppelte Fragezeichen. */
@@ -243,7 +245,25 @@ private fun SummaryCard(summary: Summary, viewModel: ClimbViewModel) {
     ClimbCard {
         CardTitle("${typeTitle(summary.type)} · ${summary.title}")
         val outcome = summary.outcome
-        if (outcome != null && skill != null) {
+        val placement = summary.placement
+        if (placement != null) {
+            Text(
+                text = if (placement.passed) "Bestanden – Welt übersprungen" else "Noch nicht bestanden",
+                fontSize = dimens.fonts.settingsLabel,
+                color = if (placement.passed) green else red,
+            )
+            Spacer(Modifier.height(10.dp))
+            GoalRow(
+                ok = placement.accuracyOk,
+                text = "Richtig: ${placement.correct} von ${placement.total} (Ziel: höchstens ${placement.allowedMistakes} " +
+                    (if (placement.allowedMistakes == 1) "Fehler)" else "Fehler)"),
+            )
+            val pct = if (placement.pace > 99) "–" else "${kotlin.math.round(placement.pace * 100).toInt()} %"
+            GoalRow(
+                ok = placement.paceOk,
+                text = "Tempo: $pct der Zeit für einen Stern (Ziel: höchstens 100 %)",
+            )
+        } else if (outcome != null && skill != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 StarRow(stars = outcome.stars, size = dimens.icons.scoreHeader * 0.6f)
                 Spacer(Modifier.width(12.dp))
@@ -317,6 +337,22 @@ private fun MessagesCard(summary: Summary) {
     }
     if (summary.free != null && summary.freeScore > summary.freeBestBefore && summary.freeBestBefore > 0) {
         messages += "Neuer Bestwert! Vorher: ${summary.freeBestBefore}" to green
+    }
+    summary.placement?.let { placement ->
+        messages += if (placement.passed) {
+            val levels = if (placement.newlyMastered == 1) "1 Level gilt" else "${placement.newlyMastered} Levels gelten"
+            Pair(
+                "$levels jetzt als geschafft (je ein Stern). In den nächsten Tagen kommen sie in die Wiederholung – " +
+                    "so zeigt sich, ob alles sitzt. Mehr Sterne holst du dir in den Prüfungen der Levels.",
+                green,
+            )
+        } else {
+            Pair(
+                "Kein Problem: Klettere die Welt Level für Level – dort lernst du jede Methode in Ruhe. " +
+                    "Den Test kannst du jederzeit wiederholen.",
+                yellow,
+            )
+        }
     }
     summary.unlocked?.let { messages += "Neu freigeschaltet: ${it.title}" to green }
     summary.sentBackTo?.let {

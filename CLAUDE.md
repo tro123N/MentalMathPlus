@@ -34,11 +34,17 @@ In der Cloud-Umgebung sind Google Maven und Maven Central gesperrt; Android läs
 - `data/climb` – Speicherung des Fortschritts als JSON-Datei.
 - `domain/climb/free` – Aufgabenarten des freien Trainings (FreeTopics); Modi und Regeln in `engine/Session.kt` (FreeMode, FreeRules).
 - `domain/climb/math/Phonetic.kt` – phonetischer Code mit eigenen Merkwörtern 0–99 (nicht die Liste aus dem Buch!).
-- `presentation/climb` – ViewModel und Compose-Oberfläche im Stil der App (Startseite „climb“, Level, Lernen, Spielen, Ergebnis, „free“, „handbook“).
+- `presentation/climb` – ViewModel und Compose-Oberfläche im Stil der App (Startseite „climb“, Level, Lernen, Spielen, Ergebnis, „free“, „handbook“, „stats“, „placement“, „plussettings“).
+- Drei Bereiche mit Leiste unten (`PlusBottomBar`, `PlusTab`): Kletterweg („climb“), Freies Training („free“), Klassischer Modus der Original-App („settings“). Wechsel über `NavController.openTab`, „Zurück“ führt immer zum Kletterweg.
+- `domain/climb/engine/Stats.kt` (Sicherheit je Level, Stärken/Schwächen, Tagesreihen), `Placement.kt` (Einstufungstest je Welt), `Reminder.kt` (Text der Erinnerung).
+- `domain/climb/model/PlusSettings.kt` (Farbthema `Palette`, Erinnerung) und `Backup.kt` (Sicherungsdatei, `BackupCodec`); gespeichert von `data/climb/PlusSettingsRepository` (plus_settings.json).
+- Erinnerung: `data/climb/ReminderScheduler` + `ReminderWorker` (WorkManager, täglich zur gewählten Uhrzeit). Die alte Erinnerung der Original-App wird beim ersten Start übernommen und ist im Menü des klassischen Modus ausgeblendet.
+- Farbthemen: `presentation/theme/Theme.kt` (`MentalMathTheme(themeMode, palette)`, Akzentfarbe `accent` statt `blue` im Kletterweg).
 - Handbuch (`HandbookScreen`, Route „handbook“) wird aus `Curriculum.worlds` erzeugt – neue Levels erscheinen automatisch; Erklärungen rendert `component/ExplanationBlocks.kt` (auch im Lernen-Bildschirm).
 
 ## Stand
 - 12 Welten / 84 Levels decken Kapitel 0–9 des Buches ab (Welt 1 Grundlagen, Welt 5 Kommazahlen als Ergänzung).
 - Freies Training mit 9 Aufgabenarten, 3 Stufen, Modi Zeit/Endlos/Überleben/Prüfung und Statistik; der klassische Modus der Original-App ist über „Klassischer Modus“ erreichbar.
 - Lokale Tests: `CurriculumTest` rechnet jeden Lösungsweg nach und prüft, dass jede Antwort eintippbar ist; `World12Test` prüft die Wochentagsmethode gegen den echten Kalender.
-- Ideen für später: Einstufungstest zum Überspringen von Welten, Fortschritt sichern/importieren (`ClimbViewModel.importProgress` existiert schon), Erinnerungen.
+- Statistik mit Diagrammen (Canvas, `component/Charts.kt`), Einstufungstest, tägliche Erinnerung, Sicherung (speichern/teilen/laden) und Farbthemen sind eingebaut.
+- Ideen für später (vom Nutzer noch nicht gewählt): Tagesaufgabe mit Serie, Trick-Tipp-Knopf, anpassende Schwierigkeit, Erfolge, Audio-Modus.

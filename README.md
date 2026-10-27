@@ -20,13 +20,25 @@ Beim ersten Installieren fragt Android, ob der Browser Apps installieren darf. U
 
 ## Funktionen
 
-- **Kletterweg:** 12 Welten mit 84 Levels nach den Kapiteln 0–9 des Buchs. Jedes Level hat eine Erklärung, geführtes Üben (Zwischenschritte eintippen), freies Üben und eine Prüfung auf Zeit.
-- **Handbuch:** alle Tricks und Methoden zum Nachschlagen, nach Welten geordnet und durchsuchbar. Es entsteht automatisch aus den Levels und wächst mit jedem neuen Level mit.
+Die App hat drei getrennte Bereiche (Leiste unten):
+
+### 1. Kletterweg – lernen nach Plan (neu in Mental Math Plus)
+- **12 Welten mit 84 Levels** nach den Kapiteln 0–9 des Buchs. Jedes Level: Erklärung, geführtes Üben (Zwischenschritte eintippen), freies Üben und eine Prüfung auf Zeit.
 - **Ziele und Sterne:** Ein Level gilt als geschafft, wenn Genauigkeit und Durchschnittszeit stimmen. Schneller heißt mehr Sterne.
 - **Auffrischen statt Vergessen:** Gelernte Levels kommen in Abständen wieder dran. Wer schlechter wird, frischt die Grundlage auf, bevor es weitergeht.
-- **Lösungswege:** Zu jeder Aufgabe zeigt die App den Rechenweg nach der passenden Methode.
-- **Freies Training:** neun Aufgabenarten in drei Stufen mit den Modi Auf Zeit, Endlos, Überleben und Prüfung, dazu eine Statistik.
-- **Klassischer Modus:** der bisherige Spielmodus der Original-App mit Bestenliste und Verlauf.
+- **Einstufungstest:** Welten überspringen, die man schon kann.
+- **Handbuch:** alle Tricks zum Nachschlagen, durchsuchbar; wächst mit jedem neuen Level automatisch mit.
+- **Statistik:** Verlauf als Diagramm, Stärken und Schwächen, Fortschritt je Welt und je Level.
+
+### 2. Freies Training – üben ohne Plan (neu in Mental Math Plus)
+- Neun Aufgabenarten in drei Stufen mit den Modi Auf Zeit, Endlos, Überleben und Prüfung, eigene Bestwerte. Zählt nicht für den Kletterweg.
+
+### 3. Klassischer Modus – die Original-App
+- Der unveränderte Spielmodus von „Mental Math“: Grundrechenarten mit eigenen Zahlenbereichen, Bestenliste, Verlauf und Spiele per Link.
+
+### Für alle Bereiche
+- **Einstellungen:** Farbthemen (hell/dunkel und fünf Farben), tägliche Erinnerung zur gewünschten Uhrzeit, Ton und Vibration.
+- **Fortschritt sichern:** als Datei speichern oder teilen und auf einem anderen Handy wieder laden.
 
 ## Herkunft, Urheber und Lizenz
 

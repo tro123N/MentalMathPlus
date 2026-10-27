@@ -27,6 +27,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,6 +39,8 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil.deserialize
 import com.helddertierwelt.mentalmath.domain.settings.SettingsLinkUtil.isValidQueryParameter
+import com.helddertierwelt.mentalmath.data.notification.NotificationScheduler
+import com.helddertierwelt.mentalmath.domain.settings.enums.NotificationMode
 import com.helddertierwelt.mentalmath.domain.settings.enums.ThemeMode
 import com.helddertierwelt.mentalmath.presentation.component.popup.AlreadyPlayedPopUp
 import com.helddertierwelt.mentalmath.presentation.component.popup.DeepLinkPopUp
@@ -79,7 +82,23 @@ class MainActivity : ComponentActivity() {
             lifecycle.addObserver(climbViewModel)
             val navController = rememberNavController()
             val settings by settingsViewModel.settingsState.collectAsState()
-            MentalMathTheme(themeMode = settings.themeMode) {
+            val plusSettings by climbViewModel.plusSettings.collectAsState()
+            val settingsLoaded by settingsViewModel.isLoaded.collectAsState()
+            val plusLoaded by climbViewModel.plusSettingsLoaded.collectAsState()
+
+            // Mental Math Plus: Die Erinnerung der Original-App einmalig in die neue tägliche Erinnerung übernehmen.
+            LaunchedEffect(settingsLoaded, plusLoaded) {
+                if (settingsLoaded && plusLoaded && !climbViewModel.plusSettings.value.oldReminderMigrated) {
+                    val wasOn = settingsViewModel.settingsState.value.notificationMode != NotificationMode.OFF
+                    if (wasOn) {
+                        settingsViewModel.setNotificationMode(NotificationMode.OFF)
+                        NotificationScheduler.cancelNotificationWork(this@MainActivity)
+                    }
+                    climbViewModel.markOldReminderMigrated(enableReminder = wasOn)
+                }
+            }
+
+            MentalMathTheme(themeMode = settings.themeMode, palette = plusSettings.paletteValue) {
 
                 // set system bar colors
                 val darkTheme =

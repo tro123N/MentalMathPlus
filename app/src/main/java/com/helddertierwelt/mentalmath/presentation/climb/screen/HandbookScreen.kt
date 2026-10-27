@@ -66,7 +66,7 @@ import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbCard
 import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbTopBar
 import com.helddertierwelt.mentalmath.presentation.climb.component.ExplanationBlocks
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
-import com.helddertierwelt.mentalmath.presentation.theme.blue
+import com.helddertierwelt.mentalmath.presentation.theme.accent
 
 /** Alles, was in einer Erklärung als Text vorkommt – für die Suche. */
 private fun searchText(skill: Skill): String = buildString {
@@ -127,7 +127,7 @@ fun HandbookScreen(navController: NavController) {
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedTextColor = MaterialTheme.colorScheme.onPrimary,
                             unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
-                            focusedBorderColor = blue,
+                            focusedBorderColor = accent,
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -178,7 +178,7 @@ fun HandbookScreen(navController: NavController) {
                                     text = "Zum Level",
                                     subtitle = "Üben und Prüfung",
                                     icon = R.drawable.terrain_24dp,
-                                    iconTint = blue,
+                                    iconTint = accent,
                                     onClick = {
                                         viewModel.playTap()
                                         navController.navigate("level/${skill.id}")

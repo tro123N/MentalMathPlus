@@ -43,11 +43,12 @@ fun SettingsTopBar(
     scoreEnabled: Boolean,
     isGreyedOut: Boolean,
     onClimbClick: (() -> Unit)? = null,
+    title: String? = null,
 ) {
     val dimens = MentalMathTheme.dimens
     TopAppBar(
         title = {
-            Text(text = stringResource(R.string.app_name), fontSize = dimens.fonts.title)
+            Text(text = title ?: stringResource(R.string.app_name), fontSize = dimens.fonts.title)
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,

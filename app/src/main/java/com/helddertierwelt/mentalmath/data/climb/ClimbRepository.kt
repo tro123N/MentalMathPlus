@@ -109,5 +109,18 @@ class ClimbRepository @Inject constructor(
     companion object {
         private const val TAG = "ClimbRepository"
         const val FILE_NAME = "climb_progress.json"
+
+        /** Gespeicherten Fortschritt direkt lesen (für die Erinnerung, die ohne laufende App startet). */
+        fun readStored(context: Context): ClimbProgress = try {
+            val f = File(context.filesDir, FILE_NAME)
+            if (f.exists()) {
+                Json { ignoreUnknownKeys = true }.decodeFromString(ClimbProgress.serializer(), f.readText())
+            } else {
+                ClimbProgress()
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Fortschritt konnte nicht gelesen werden", e)
+            ClimbProgress()
+        }
     }
 }

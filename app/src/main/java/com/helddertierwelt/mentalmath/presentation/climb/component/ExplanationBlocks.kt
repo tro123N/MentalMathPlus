@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.climb.model.Block
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
-import com.helddertierwelt.mentalmath.presentation.theme.blue
+import com.helddertierwelt.mentalmath.presentation.theme.accent
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 
 /** Erklärung einer Methode: Texte, Schritte, Formeln, Tipps und durchgerechnete Beispiele. */
@@ -62,7 +62,7 @@ fun ExplanationBlocks(blocks: List<Block>) {
                             Text(
                                 text = "${i + 1}.",
                                 fontSize = dimens.fonts.sideSheetEntry,
-                                color = blue,
+                                color = accent,
                                 modifier = Modifier.width(28.dp),
                             )
                             BodyText(item, modifier = Modifier.weight(1f))

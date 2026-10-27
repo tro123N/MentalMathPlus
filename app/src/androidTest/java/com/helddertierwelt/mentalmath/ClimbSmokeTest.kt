@@ -45,6 +45,8 @@ import com.helddertierwelt.mentalmath.domain.climb.curriculum.Curriculum
 import com.helddertierwelt.mentalmath.domain.climb.engine.Phase
 import com.helddertierwelt.mentalmath.domain.climb.engine.Progression
 import com.helddertierwelt.mentalmath.domain.climb.model.ClimbProgress
+import com.helddertierwelt.mentalmath.domain.climb.model.DayStat
+import com.helddertierwelt.mentalmath.domain.climb.model.TestLog
 import com.helddertierwelt.mentalmath.domain.climb.model.Expected
 import com.helddertierwelt.mentalmath.domain.climb.model.Skill
 import com.helddertierwelt.mentalmath.domain.climb.model.SkillProgress
@@ -346,18 +348,16 @@ class ClimbSmokeTest {
         waitForHome()
         shot("a_nach_pruefung")
 
-        compose.onAllNodesWithContentDescription("Freies Training").onFirst().performClick()
+        compose.onNodeWithTag("tab_classic").performClick()
+        waitForTag("classicIntro")
+        compose.onAllNodesWithContentDescription("menu").onFirst().performClick()
         compose.waitForIdle()
         Thread.sleep(500)
-        shot("a_freies_training")
+        shot("a_klassisch_menue")
+        back()
+        compose.waitForIdle()
         back()
         waitForHome()
-
-        compose.onAllNodesWithContentDescription("Menü").onFirst().performClick()
-        compose.waitForIdle()
-        shot("a_menue")
-        back()
-        compose.waitForIdle()
     }
 
     /** Fortgeschrittener Stand: alle Welten offen, jedes Level einmal öffnen und anspielen. */
@@ -391,13 +391,13 @@ class ClimbSmokeTest {
         // Jede Welt aufgeklappt fotografieren (Liste: Übersicht, dann eine Karte pro Welt).
         Curriculum.worlds.forEachIndexed { index, world ->
             val list = compose.onNodeWithTag("climbList")
-            list.performScrollToIndex(index + 1)
+            list.performScrollToIndex(index + 2)
             compose.waitForIdle()
             if (compose.onAllNodesWithTag("skill_${world.skills.first().id}").fetchSemanticsNodes().isEmpty()) {
                 compose.onNodeWithTag("worldHeader_${world.id}").performClick()
                 compose.waitForIdle()
             }
-            list.performScrollToIndex(index + 1)
+            list.performScrollToIndex(index + 2)
             shot("b_welt_${world.number}")
         }
 
@@ -474,7 +474,7 @@ class ClimbSmokeTest {
     @Test
     fun c_freiesTraining() {
         waitForHome()
-        compose.onAllNodesWithContentDescription("Freies Training").onFirst().performClick()
+        compose.onNodeWithTag("tab_free").performClick()
         waitForTag("freeColumn")
         listOf("PERCENT", "WORD", "ALGEBRA", "GEOMETRY", "NUMBER_THEORY", "FOUR_OPS").forEach { topic ->
             compose.onNodeWithTag("topic_$topic").performScrollTo().performClick()
@@ -514,7 +514,7 @@ class ClimbSmokeTest {
     @Test
     fun d_handbuch() {
         waitForHome()
-        compose.onAllNodesWithText("Handbuch").onFirst().performScrollTo().performClick()
+        compose.onNodeWithTag("mini_handbook").performScrollTo().performClick()
         waitForTag("handbookList")
         shot("d_handbuch")
         val list = compose.onNodeWithTag("handbookList")
@@ -532,6 +532,189 @@ class ClimbSmokeTest {
         shot("d_suche")
         val hits = Curriculum.worlds.flatMap { it.skills }.filter { "wochentag" in (it.title + it.method + it.summary).lowercase() }
         assertTrue("Suche findet nichts", hits.isEmpty() || compose.onAllNodesWithTag("hb_${hits.first().id}").fetchSemanticsNodes().isNotEmpty())
+        back()
+        waitForHome()
+    }
+
+    /** Die drei Bereiche: Kletterweg, freies Training, klassischer Modus. */
+    @Test
+    fun e_bereiche() {
+        waitForHome()
+        compose.onNodeWithTag("climbList").performScrollToIndex(0)
+        shot("e_kletterweg")
+        compose.onNodeWithTag("tab_free").performClick()
+        waitForTag("freeColumn")
+        shot("e_freies_training")
+        compose.onNodeWithTag("tab_classic").performClick()
+        waitForTag("classicIntro")
+        shot("e_klassisch")
+        compose.onNodeWithTag("tab_climb").performClick()
+        waitForHome()
+        compose.onNodeWithTag("tab_classic").performClick()
+        waitForTag("classicIntro")
+        back()
+        waitForHome()
+    }
+
+    /** Statistik mit Verlauf, Stärken und Schwächen; Verlauf eines Levels. */
+    @Test
+    fun f_statistik() {
+        waitForHome()
+        val now = System.currentTimeMillis()
+        val today = vm.today()
+        val skills = Curriculum.skills
+        val seeded = skills.take(24).mapIndexed { i, s ->
+            val g = s.goals
+            val speed = g.star3 + (g.star1 - g.star3) * (i % 5) / 3.5
+            val recent = List(12) { j -> if ((i + j) % 6 == 0 && i % 4 == 1) -2_000L else (speed * 1000).toLong() + j * 37L }
+            val tests = List(5) { t ->
+                TestLog(
+                    at = now - (5 - t) * 3 * Progression.DAY_MS,
+                    avgMs = ((g.star1 * 1.15 - t * (g.star1 - g.star3) / 4.5) * 1000).toLong(),
+                    correct = 10,
+                    total = 10,
+                    stars = minOf(3, t / 2 + 1),
+                )
+            }
+            val days = (0 until 8).map { k -> DayStat(today - 20 + k * 3, 6 + (i + k) % 9, 5 + (i + k) % 8, 40_000L) }
+            s.id to SkillProgress(
+                stars = 1 + i % 3,
+                testsTaken = 5,
+                testsPassed = 5,
+                bestAvgMs = tests.minOf { it.avgMs },
+                practiced = 60,
+                practicedCorrect = 54,
+                lastPracticedAt = now - Progression.DAY_MS,
+                intervalDays = 3,
+                nextReviewAt = now + Progression.DAY_MS,
+                rusty = i == 7,
+                recent = recent,
+                tests = tests,
+                days = days,
+            )
+        }.toMap()
+        val allDays = (0 until 30).mapNotNull { k ->
+            val d = today - 29 + k
+            if (k % 5 == 3) null else DayStat(d, 8 + (k * 7) % 31, 6 + (k * 5) % 25, 60_000L)
+        }
+        compose.runOnUiThread {
+            vm.importProgress(
+                ClimbProgress(
+                    skills = seeded,
+                    streakDays = 6,
+                    bestStreak = 11,
+                    lastActiveDay = today,
+                    totalSolved = 2345,
+                    totalCorrect = 2101,
+                    days = allDays,
+                ),
+            )
+        }
+        compose.waitUntil(5_000) { vm.progress.value.skills.size == seeded.size }
+        compose.waitForIdle()
+        compose.onNodeWithTag("action_stats").performClick()
+        waitForTag("statsColumn")
+        shootScrolling("statsColumn", "f_statistik", maxShots = 6)
+        back()
+        waitForHome()
+        val world = Curriculum.worlds.first()
+        openSkill(world, world.skills.first())
+        compose.onNodeWithTag("levelHistory").performScrollTo()
+        compose.waitForIdle()
+        shot("f_level_verlauf")
+        back()
+        waitForHome()
+    }
+
+    /** Einstufungstest für Welt 1 von Anfang an. */
+    @Test
+    fun g_einstufung() {
+        waitForHome()
+        compose.runOnUiThread { vm.importProgress(ClimbProgress()) }
+        compose.waitUntil(5_000) { vm.progress.value.skills.isEmpty() && vm.session.value == null }
+        compose.waitForIdle()
+        compose.onNodeWithTag("mini_placement").performScrollTo().performClick()
+        waitForTag("placementColumn")
+        shootScrolling("placementColumn", "g_einstufung", maxShots = 3)
+        compose.onNodeWithTag("place_w1").performScrollTo().performClick()
+        waitForSession()
+        solveSession(name = "g_test", shotAt = setOf(0, 7))
+        waitForResult()
+        val placement = vm.summary.value?.placement
+        Log.i(TAG, "Einstufung: $placement")
+        assertTrue("Keine Auswertung des Einstufungstests", placement != null)
+        shootScrolling("resultColumn", "g_ergebnis", maxShots = 2)
+        clickButton("Zum Kletterweg")
+        waitForHome()
+        shot("g_nach_einstufung")
+    }
+
+    /** Einstellungen: Farbthema, dunkler Modus, Erinnerung, Sicherung. */
+    @Test
+    fun h_einstellungen() {
+        waitForHome()
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            instrumentation.uiAutomation.grantRuntimePermission(
+                instrumentation.targetContext.packageName,
+                android.Manifest.permission.POST_NOTIFICATIONS,
+            )
+        }
+        compose.onNodeWithTag("action_settings").performClick()
+        waitForTag("settingsColumn")
+        shot("h_einstellungen")
+        compose.onNodeWithTag("palette_WALD").performScrollTo().performClick()
+        compose.waitUntil(5_000) { vm.plusSettings.value.palette == "WALD" }
+        compose.onNodeWithTag("theme_DARK").performScrollTo().performClick()
+        compose.waitForIdle()
+        Thread.sleep(500)
+        compose.onNodeWithTag("settingsLook").performScrollTo()
+        compose.waitForIdle()
+        shot("h_dunkel_wald")
+        compose.onNodeWithTag("reminderSwitch").performScrollTo().performClick()
+        compose.waitUntil(5_000) { vm.plusSettings.value.reminderOn }
+        compose.onNodeWithTag("timePlus").performClick()
+        compose.waitUntil(5_000) { vm.plusSettings.value.reminderMinute == 15 }
+        compose.onNodeWithTag("settingsReminder").performScrollTo()
+        compose.waitForIdle()
+        shot("h_erinnerung")
+        compose.onNodeWithTag("reminderTest").performScrollTo().performClick()
+        compose.waitForIdle()
+
+        // Sicherung ohne Dateiauswahl: als Text schreiben, lesen und wieder einspielen.
+        val before = vm.progress.value
+        val text = vm.backupText()
+        val backup = vm.readBackup(text).getOrThrow()
+        assertTrue("Sicherung verändert den Fortschritt", backup.progress == before)
+        compose.runOnUiThread { vm.importProgress(ClimbProgress()) }
+        compose.waitUntil(5_000) { vm.progress.value.skills.isEmpty() }
+        compose.runOnUiThread { vm.restoreBackup(backup) }
+        compose.waitUntil(5_000) { vm.progress.value == before }
+        compose.onNodeWithTag("settingsLook").performScrollTo()
+        compose.waitForIdle()
+        shootScrolling("settingsColumn", "h_alles", maxShots = 6)
+
+        back()
+        waitForHome()
+        shot("h_start_dunkel")
+        compose.onNodeWithTag("action_stats").performClick()
+        waitForTag("statsColumn")
+        shot("h_statistik_dunkel")
+        back()
+        waitForHome()
+        compose.onNodeWithTag("tab_classic").performClick()
+        waitForTag("classicIntro")
+        shot("h_klassisch_dunkel")
+        back()
+        waitForHome()
+
+        // Zurück zum Standard.
+        compose.onNodeWithTag("action_settings").performClick()
+        waitForTag("settingsColumn")
+        compose.onNodeWithTag("palette_STANDARD").performScrollTo().performClick()
+        compose.onNodeWithTag("theme_SYSTEM").performScrollTo().performClick()
+        compose.onNodeWithTag("reminderSwitch").performScrollTo().performClick()
+        compose.waitUntil(5_000) { !vm.plusSettings.value.reminderOn && vm.plusSettings.value.palette == "STANDARD" }
         back()
         waitForHome()
     }

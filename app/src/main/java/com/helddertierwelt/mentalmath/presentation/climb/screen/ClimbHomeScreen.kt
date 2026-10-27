@@ -65,22 +65,24 @@ import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.climb.model.ClimbProgress
 import com.helddertierwelt.mentalmath.domain.climb.model.Skill
 import com.helddertierwelt.mentalmath.domain.climb.model.World
-import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import com.helddertierwelt.mentalmath.presentation.climb.ClimbViewModel
+import com.helddertierwelt.mentalmath.domain.climb.engine.Placement
 import com.helddertierwelt.mentalmath.presentation.climb.component.ActionButton
+import com.helddertierwelt.mentalmath.presentation.climb.component.AreaIntro
+import com.helddertierwelt.mentalmath.presentation.climb.component.MiniAction
+import com.helddertierwelt.mentalmath.presentation.climb.component.PlusBottomBar
+import com.helddertierwelt.mentalmath.presentation.climb.component.PlusTab
 import com.helddertierwelt.mentalmath.presentation.climb.component.BodyText
 import com.helddertierwelt.mentalmath.presentation.climb.component.CaptionText
 import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbCard
 import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbTopBar
 import com.helddertierwelt.mentalmath.presentation.climb.component.LevelBadge
 import com.helddertierwelt.mentalmath.presentation.climb.component.StarRow
-import com.helddertierwelt.mentalmath.presentation.component.settings.menu.MenuSideSheet
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
-import com.helddertierwelt.mentalmath.presentation.theme.blue
+import com.helddertierwelt.mentalmath.presentation.theme.accent
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
-import com.helddertierwelt.mentalmath.presentation.viewmodel.SettingsViewModel
 
 /** Speichert, welche Welten auf- oder zugeklappt sind (als „id=1“/„id=0“). */
 private val expandedSaver = listSaver<SnapshotStateMap<String, Boolean>, String>(
@@ -102,7 +104,6 @@ fun ClimbHomeScreen(navController: NavController) {
     val context = LocalContext.current
     val owner = LocalActivity.current as ViewModelStoreOwner
     val climbViewModel: ClimbViewModel = hiltViewModel(owner)
-    val settingsViewModel: SettingsViewModel = hiltViewModel(owner)
     val progress by climbViewModel.progress.collectAsState()
     val worlds = climbViewModel.worlds
     val next = climbViewModel.nextSkill(progress)
@@ -119,27 +120,37 @@ fun ClimbHomeScreen(navController: NavController) {
         }
     }
 
+    fun openRoute(route: String) {
+        climbViewModel.playTap()
+        navController.navigate(route) { launchSingleTop = true }
+    }
+
     Scaffold(
         topBar = {
             ClimbTopBar(
                 title = "Kletterweg",
-                navigationIcon = R.drawable.menu_24dp,
-                navigationDescription = "Menü",
-                onNavigation = {
-                    settingsViewModel.playFeedback(FeedbackType.TAP)
-                    settingsViewModel.toggleMenuOpen()
-                },
+                navigationIcon = null,
                 actions = {
                     IconButton(
-                        onClick = {
-                            climbViewModel.playTap()
-                            navController.navigate("free") { launchSingleTop = true }
-                        },
-                        modifier = Modifier.padding(end = 16.dp),
+                        onClick = { openRoute("stats") },
+                        modifier = Modifier.testTag("action_stats"),
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.tune_24dp),
-                            contentDescription = "Freies Training",
+                            painter = painterResource(R.drawable.bar_chart_24dp),
+                            contentDescription = "Statistik",
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.size(dimens.icons.topBarAction),
+                        )
+                    }
+                    IconButton(
+                        onClick = { openRoute("plussettings") },
+                        modifier = Modifier
+                            .padding(end = 12.dp)
+                            .testTag("action_settings"),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.settings_24dp),
+                            contentDescription = "Einstellungen",
                             tint = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.size(dimens.icons.topBarAction),
                         )
@@ -147,6 +158,7 @@ fun ClimbHomeScreen(navController: NavController) {
                 },
             )
         },
+        bottomBar = { PlusBottomBar(navController, PlusTab.CLIMB, onTap = { climbViewModel.playTap() }) },
     ) { padding ->
         Box(
             modifier = Modifier
@@ -160,6 +172,13 @@ fun ClimbHomeScreen(navController: NavController) {
                 contentPadding = PaddingValues(horizontal = 20.dp, vertical = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
+                item {
+                    AreaIntro(
+                        icon = R.drawable.terrain_24dp,
+                        title = "Lernen nach Plan",
+                        text = "Die Methoden aus „Mathe-Magie“ Schritt für Schritt: jedes Level verstehen, üben und die Prüfung bestehen.",
+                    )
+                }
                 item {
                     OverviewCard(
                         viewModel = climbViewModel,
@@ -177,14 +196,9 @@ fun ClimbHomeScreen(navController: NavController) {
                             climbViewModel.playTap()
                             navController.navigate("level/${skill.id}")
                         },
-                        onFreeTraining = {
-                            climbViewModel.playTap()
-                            navController.navigate("free") { launchSingleTop = true }
-                        },
-                        onHandbook = {
-                            climbViewModel.playTap()
-                            navController.navigate("handbook") { launchSingleTop = true }
-                        },
+                        onHandbook = { openRoute("handbook") },
+                        onPlacement = { openRoute("placement") },
+                        onStats = { openRoute("stats") },
                     )
                 }
                 worlds.forEachIndexed { index, world ->
@@ -210,16 +224,11 @@ fun ClimbHomeScreen(navController: NavController) {
                     Spacer(Modifier.height(24.dp))
                 }
             }
-            MenuSideSheet(navController = navController)
         }
     }
 
     BackHandler {
-        if (settingsViewModel.isMenuOpen.value) {
-            settingsViewModel.toggleMenuOpen()
-        } else {
-            (context as? android.app.Activity)?.moveTaskToBack(true)
-        }
+        (context as? android.app.Activity)?.moveTaskToBack(true)
     }
 }
 
@@ -231,8 +240,9 @@ private fun OverviewCard(
     onContinue: (Skill) -> Unit,
     onReview: () -> Unit,
     onRefresh: (Skill) -> Unit,
-    onFreeTraining: () -> Unit,
     onHandbook: () -> Unit,
+    onPlacement: () -> Unit,
+    onStats: () -> Unit,
 ) {
     val dimens = MentalMathTheme.dimens
     val all = viewModel.worlds.flatMap { it.skills }
@@ -290,26 +300,40 @@ private fun OverviewCard(
             text = if (due.isNotEmpty()) "Wiederholen (${due.size} fällig)" else "Gemischt trainieren",
             subtitle = if (due.isNotEmpty()) "Gelerntes frisch halten" else "Aufgaben aus allen geschafften Levels",
             icon = R.drawable.history_24dp,
-            iconTint = blue,
+            iconTint = accent,
             enabled = mastered > 0,
             onClick = onReview,
         )
-        Spacer(Modifier.height(8.dp))
-        ActionButton(
-            text = "Handbuch",
-            subtitle = "Alle Tricks zum Nachschlagen",
-            icon = R.drawable.book_24dp,
-            iconTint = blue,
-            onClick = onHandbook,
-        )
-        Spacer(Modifier.height(8.dp))
-        ActionButton(
-            text = "Freies Training",
-            subtitle = "Aufgabenarten, Modi und Statistik",
-            icon = R.drawable.tune_24dp,
-            iconTint = MaterialTheme.colorScheme.onPrimary,
-            onClick = onFreeTraining,
-        )
+        Spacer(Modifier.height(12.dp))
+        val canPlace = Placement.candidates(viewModel.worlds, progress).isNotEmpty()
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            MiniAction(
+                icon = R.drawable.book_24dp,
+                label = "Handbuch",
+                onClick = onHandbook,
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag("mini_handbook"),
+            )
+            if (canPlace) {
+                MiniAction(
+                    icon = R.drawable.keyboard_double_arrow_right_24dp,
+                    label = "Einstufung",
+                    onClick = onPlacement,
+                    modifier = Modifier
+                        .weight(1f)
+                        .testTag("mini_placement"),
+                )
+            }
+            MiniAction(
+                icon = R.drawable.bar_chart_24dp,
+                label = "Statistik",
+                onClick = onStats,
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag("mini_stats"),
+            )
+        }
     }
 }
 

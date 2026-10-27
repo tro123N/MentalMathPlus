@@ -20,8 +20,11 @@ along with this program.  If not, see https://www.gnu.org/licenses/gpl-3.0.md.
 package com.helddertierwelt.mentalmath.domain.climb.engine
 
 import com.helddertierwelt.mentalmath.domain.climb.model.ClimbProgress
+import com.helddertierwelt.mentalmath.domain.climb.model.DayStat
 import com.helddertierwelt.mentalmath.domain.climb.model.Skill
+import com.helddertierwelt.mentalmath.domain.climb.model.TestLog
 import com.helddertierwelt.mentalmath.domain.climb.model.World
+import com.helddertierwelt.mentalmath.domain.climb.model.addDay
 import kotlin.math.max
 import kotlin.math.min
 
@@ -60,8 +63,14 @@ object Progression {
     fun skill(worlds: List<World>, skillId: String): Skill? =
         locate(worlds, skillId)?.let { worlds[it.world].skills[it.skill] }
 
+    /**
+     * Eine Welt ist offen, wenn die Welt davor geschafft ist – oder wenn in ihr schon ein Level
+     * geschafft wurde (z. B. über einen Einstufungstest).
+     */
     fun worldUnlocked(worlds: List<World>, progress: ClimbProgress, worldIndex: Int): Boolean =
-        worldIndex <= 0 || worlds[worldIndex - 1].skills.all { progress.of(it.id).mastered }
+        worldIndex <= 0 ||
+            worlds[worldIndex - 1].skills.all { progress.of(it.id).mastered } ||
+            worlds.getOrNull(worldIndex)?.skills?.any { progress.of(it.id).mastered } == true
 
     fun skillUnlocked(worlds: List<World>, progress: ClimbProgress, skillId: String): Boolean {
         val pos = locate(worlds, skillId) ?: return false
@@ -97,8 +106,26 @@ object Progression {
         return null
     }
 
-    /** Alle Ergebnisse einer Einheit in die Statistik übernehmen. */
-    fun record(progress: ClimbProgress, results: List<ProblemResult>, now: Long): ClimbProgress {
+    /** Tagesstatistik einer Liste von Ergebnissen. */
+    fun dayStat(day: Long, results: List<ProblemResult>): DayStat =
+        DayStat(day = day, solved = results.size, correct = results.count { it.correct }, totalMs = results.sumOf { it.timeMs })
+
+    /** Ergebnisse in die Tagesstatistik aller Bereiche übernehmen. */
+    fun recordDay(progress: ClimbProgress, results: List<ProblemResult>, today: Long): ClimbProgress =
+        if (results.isEmpty()) progress else progress.copy(days = progress.days.addDay(dayStat(today, results), ClimbProgress.DAYS_KEPT))
+
+    /**
+     * Alle Ergebnisse einer Einheit in die Statistik übernehmen.
+     * [skillDays]: auch die Tagesstatistik der Levels fortschreiben (nicht beim geführten Üben,
+     * dessen Zeiten mehrere Zwischenschritte enthalten).
+     */
+    fun record(
+        progress: ClimbProgress,
+        results: List<ProblemResult>,
+        now: Long,
+        today: Long = now / DAY_MS,
+        skillDays: Boolean = true,
+    ): ClimbProgress {
         var p = progress
         results.groupBy { it.problem.skillId }.forEach { (skillId, list) ->
             p = p.with(skillId) { sp ->
@@ -108,10 +135,12 @@ object Progression {
                     practiced = sp.practiced + list.size,
                     practicedCorrect = sp.practicedCorrect + list.count { it.correct },
                     lastPracticedAt = now,
-                    recent = newRecent,
+                    recent = if (skillDays) newRecent else sp.recent,
+                    days = if (skillDays) sp.days.addDay(dayStat(today, list), ClimbProgress.SKILL_DAYS) else sp.days,
                 )
             }
         }
+        p = recordDay(p, results, today)
         return p.copy(
             totalSolved = p.totalSolved + results.size,
             totalCorrect = p.totalCorrect + results.count { it.correct },
@@ -142,6 +171,10 @@ object Progression {
             } else {
                 sp.copy(testsTaken = sp.testsTaken + 1, failStreak = sp.failStreak + 1)
             }
+        }
+        p = p.with(skillId) { sp ->
+            val log = TestLog(at = now, avgMs = outcome.avgMs, correct = outcome.correct, total = outcome.total, stars = outcome.stars)
+            sp.copy(tests = (sp.tests + log).takeLast(ClimbProgress.TESTS_KEPT))
         }
         if (!outcome.passed && p.of(skillId).failStreak >= FAILS_BEFORE_REFRESH) {
             val pre = prerequisite(worlds, skillId)
@@ -212,11 +245,41 @@ object Progression {
     fun needsRefresh(worlds: List<World>, progress: ClimbProgress): List<Skill> =
         worlds.flatMap { it.skills }.filter { progress.of(it.id).let { sp -> sp.mastered && sp.needsAttention } }
 
-    fun touchStreak(progress: ClimbProgress, today: Long): ClimbProgress = when (progress.lastActiveDay) {
-        today -> progress
-        today - 1 -> progress.copy(streakDays = progress.streakDays + 1, lastActiveDay = today)
-        else -> progress.copy(streakDays = 1, lastActiveDay = today)
+    fun touchStreak(progress: ClimbProgress, today: Long): ClimbProgress {
+        val p = when (progress.lastActiveDay) {
+            today -> progress
+            today - 1 -> progress.copy(streakDays = progress.streakDays + 1, lastActiveDay = today)
+            else -> progress.copy(streakDays = 1, lastActiveDay = today)
+        }
+        return if (p.streakDays > p.bestStreak) p.copy(bestStreak = p.streakDays) else p
     }
+
+    /**
+     * Einstufungstest bestanden: Alle noch offenen Levels der Welt gelten als geschafft (ein Stern).
+     * Sie kommen bald in die Wiederholung, damit sich zeigt, ob sie wirklich sitzen.
+     */
+    fun applyPlacement(world: World, progress: ClimbProgress, now: Long): ClimbProgress {
+        var p = progress
+        world.skills.forEach { skill ->
+            if (!p.of(skill.id).mastered) {
+                p = p.with(skill.id) { sp ->
+                    sp.copy(
+                        stars = 1,
+                        placed = true,
+                        rusty = false,
+                        refreshPending = false,
+                        failStreak = 0,
+                        intervalDays = PLACEMENT_INTERVAL,
+                        nextReviewAt = now + PLACEMENT_INTERVAL * DAY_MS,
+                    )
+                }
+            }
+        }
+        return p
+    }
+
+    /** Übersprungene Levels kommen nach so vielen Tagen in die Wiederholung. */
+    const val PLACEMENT_INTERVAL = 3
 
     /** Tage in Folge, wie sie heute angezeigt werden sollen (0, wenn die Serie gerissen ist). */
     fun visibleStreak(progress: ClimbProgress, today: Long): Int =

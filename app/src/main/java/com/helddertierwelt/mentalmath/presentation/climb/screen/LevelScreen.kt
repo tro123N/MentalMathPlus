@@ -60,7 +60,7 @@ import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbCard
 import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbTopBar
 import com.helddertierwelt.mentalmath.presentation.climb.component.StarRow
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
-import com.helddertierwelt.mentalmath.presentation.theme.blue
+import com.helddertierwelt.mentalmath.presentation.theme.accent
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 
@@ -177,15 +177,21 @@ fun LevelScreen(navController: NavController, skillId: String) {
                     val best = if (sp.bestAvgMs > 0) " · Bestzeit ${secondsText(sp.bestAvgMs / 1000.0)}" else ""
                     CaptionText("Prüfungen: ${sp.testsPassed} von ${sp.testsTaken} bestanden$best")
                 }
+                if (sp.placed) {
+                    Spacer(Modifier.height(4.dp))
+                    CaptionText("Per Einstufungstest übersprungen – hol dir in der Prüfung mehr Sterne.")
+                }
             }
             CardGap()
+
+            LevelHistoryCard(skill = skill, sp = sp)
 
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 ActionButton(
                     text = "1. Methode lernen",
                     subtitle = "Erklärung mit Beispiel",
                     icon = R.drawable.book_24dp,
-                    iconTint = blue,
+                    iconTint = accent,
                     enabled = unlocked,
                     onClick = {
                         viewModel.playTap()
@@ -196,7 +202,7 @@ fun LevelScreen(navController: NavController, skillId: String) {
                     text = "2. Geführt üben",
                     subtitle = "${skill.guidedCount} Aufgaben, Zwischenschritte eintippen",
                     icon = R.drawable.list_numbered_24dp,
-                    iconTint = blue,
+                    iconTint = accent,
                     enabled = unlocked,
                     onClick = { start(SessionType.GUIDED) },
                 )
@@ -251,4 +257,81 @@ fun secondsText(seconds: Double): String {
     } else {
         String.format(java.util.Locale.GERMANY, "%.1f s", total)
     }
+}
+
+/** Verlauf eines Levels: Sicherheit, Prüfungszeiten und Übungstage. Erscheint erst, wenn es Daten gibt. */
+@Composable
+private fun LevelHistoryCard(
+    skill: com.helddertierwelt.mentalmath.domain.climb.model.Skill,
+    sp: com.helddertierwelt.mentalmath.domain.climb.model.SkillProgress,
+) {
+    val form = com.helddertierwelt.mentalmath.domain.climb.engine.Stats.form(skill, sp)
+    val tests = sp.tests.filter { it.avgMs > 0 }
+    val days = sp.days.filter { it.solved > 0 }.takeLast(14)
+    if (form == null && tests.isEmpty() && days.size < 2) return
+    ClimbCard(modifier = Modifier.testTag("levelHistory")) {
+        CardTitle("Dein Verlauf")
+        if (form != null) {
+            val pct = kotlin.math.round(form.accuracy * 100).toInt()
+            val time = form.medianSec?.let { " · Ø ${secondsText(it)}" } ?: ""
+            com.helddertierwelt.mentalmath.presentation.climb.component.BarRow(
+                label = "Sicherheit: ${form.label}",
+                fraction = form.score / 100f,
+                value = "${form.score}",
+                color = formColor(form.score),
+            )
+            CaptionText("Letzte ${form.sample} Aufgaben: $pct % richtig$time")
+            Spacer(Modifier.height(10.dp))
+        }
+        if (tests.isNotEmpty()) {
+            CaptionText("Prüfungen: Durchschnittszeit pro Aufgabe")
+            val goals = skill.goals
+            com.helddertierwelt.mentalmath.presentation.climb.component.LineChart(
+                values = tests.map { it.avgMs / 1000f },
+                color = accent,
+                guides = listOf(
+                    com.helddertierwelt.mentalmath.presentation.climb.component.ChartGuide(goals.star1.toFloat(), "★", yellow),
+                    com.helddertierwelt.mentalmath.presentation.climb.component.ChartGuide(goals.star2.toFloat(), "★★", yellow),
+                    com.helddertierwelt.mentalmath.presentation.climb.component.ChartGuide(goals.star3.toFloat(), "★★★", yellow),
+                ),
+                labels = tests.mapIndexed { i, t -> if (i == 0 || i == tests.lastIndex) shortDate(t.at) else "" },
+                valueText = { secondsText(it.toDouble()) },
+            )
+            val trend = com.helddertierwelt.mentalmath.domain.climb.engine.Stats.testTrendPercent(sp)
+            if (trend != null) {
+                CaptionText(
+                    when {
+                        trend < 0 -> "Seit der ersten Prüfung ${-trend} % schneller."
+                        trend > 0 -> "Seit der ersten Prüfung $trend % langsamer."
+                        else -> "So schnell wie bei der ersten Prüfung."
+                    },
+                )
+            }
+            Spacer(Modifier.height(10.dp))
+        }
+        if (days.size >= 2) {
+            CaptionText("Gelöste Aufgaben an deinen letzten Übungstagen")
+            com.helddertierwelt.mentalmath.presentation.climb.component.BarChart(
+                values = days.map { it.solved.toFloat() },
+                labels = days.mapIndexed { i, d -> if (i == 0 || i == days.lastIndex) shortDay(d.day) else "" },
+                color = accent,
+                height = 110.dp,
+            )
+        }
+    }
+    CardGap()
+}
+
+/** Zeitpunkt (ms) als „27.10.“. */
+private fun shortDate(ms: Long): String {
+    val c = java.util.Calendar.getInstance()
+    c.timeInMillis = ms
+    return "${c.get(java.util.Calendar.DAY_OF_MONTH)}.${c.get(java.util.Calendar.MONTH) + 1}."
+}
+
+/** Tag seit 1970 (Ortszeit) als „27.10.“. */
+private fun shortDay(day: Long): String {
+    val c = java.util.Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC"))
+    c.timeInMillis = day * 86_400_000L
+    return "${c.get(java.util.Calendar.DAY_OF_MONTH)}.${c.get(java.util.Calendar.MONTH) + 1}."
 }

@@ -42,6 +42,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -61,6 +62,8 @@ import com.helddertierwelt.mentalmath.presentation.component.settings.StartButto
 import com.helddertierwelt.mentalmath.presentation.component.settings.menu.MenuSideSheet
 import com.helddertierwelt.mentalmath.presentation.component.settings.score.ScoreSideSheet
 import com.helddertierwelt.mentalmath.presentation.climb.ClimbViewModel
+import com.helddertierwelt.mentalmath.presentation.climb.component.PlusBottomBar
+import com.helddertierwelt.mentalmath.presentation.climb.component.PlusTab
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.blue
 import com.helddertierwelt.mentalmath.presentation.theme.green
@@ -139,10 +142,14 @@ fun SettingsScreen(
                 },
                 scoreEnabled = hasGamesWithScore && !isSliderActive,
                 isGreyedOut = !hasGamesWithScore,
-                onClimbClick = {
-                    settingsViewModel.playFeedback(FeedbackType.TAP)
-                    openClimb()
-                }
+                title = "Klassischer Modus",
+            )
+        },
+        bottomBar = {
+            PlusBottomBar(
+                navController = navController,
+                current = PlusTab.CLASSIC,
+                onTap = { settingsViewModel.playFeedback(FeedbackType.TAP) },
             )
         },
         content = { padding ->
@@ -159,6 +166,14 @@ fun SettingsScreen(
                     verticalArrangement = Arrangement.SpaceBetween,
                     horizontalAlignment = Alignment.Start
                 ) {
+                    // Mental Math Plus: kurz erklären, was dieser Bereich ist.
+                    Text(
+                        text = "Die Original-App „Mental Math“: Grundrechenarten mit eigenen Zahlenbereichen, Bestenliste und Verlauf.",
+                        fontSize = dimens.fonts.caption,
+                        lineHeight = dimens.fonts.caption * 1.3f,
+                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
+                        modifier = Modifier.testTag("classicIntro"),
+                    )
                     Text(
                         text = stringResource(R.string.mode_instruction),
                         fontSize = dimens.fonts.settingsLabel,
@@ -379,6 +394,7 @@ fun SettingsScreen(
                     historyViewModel.resetHistory()
                     mainActivityViewModel.resetMainActivity()
                     climbViewModel.resetProgress()
+                    climbViewModel.resetPlusSettings()
                 },
                 onCancel = {
                     settingsViewModel.playFeedback(FeedbackType.TAP)

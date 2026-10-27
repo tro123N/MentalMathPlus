@@ -75,7 +75,7 @@ import com.helddertierwelt.mentalmath.presentation.climb.component.ProblemDispla
 import com.helddertierwelt.mentalmath.presentation.climb.component.SolutionSteps
 import com.helddertierwelt.mentalmath.presentation.component.popup.QuitGamePopUp
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
-import com.helddertierwelt.mentalmath.presentation.theme.blue
+import com.helddertierwelt.mentalmath.presentation.theme.accent
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
@@ -88,6 +88,7 @@ private fun typeLabel(type: SessionType): String = when (type) {
     SessionType.REFRESH -> "Auffrischen"
     SessionType.REVIEW -> "Wiederholung"
     SessionType.FREE -> "Frei"
+    SessionType.PLACEMENT -> "Einstufung"
 }
 
 /** Anzeige oben rechts: Fortschritt, Restzeit oder Leben. */
@@ -189,7 +190,7 @@ fun ClimbPlayScreen(navController: NavController) {
                         )
                     },
                 )
-                val limit = session.timeLimitMs
+                val limit = session.currentLimitMs
                 val freeRules = session.free
                 val progressValue = if (limit != null) {
                     (elapsed.toFloat() / limit).coerceIn(0f, 1f)
@@ -205,7 +206,7 @@ fun ClimbPlayScreen(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(4.dp),
-                    color = if (limit != null && progressValue > 0.75f) red else blue,
+                    color = if (limit != null && progressValue > 0.75f) red else accent,
                     trackColor = MaterialTheme.colorScheme.background,
                     drawStopIndicator = {},
                     strokeCap = StrokeCap.Butt,
@@ -342,7 +343,7 @@ private fun BottomControls(
                         PillButton(
                             text = "Schritt zeigen",
                             onClick = { viewModel.onRevealStep() },
-                            color = blue,
+                            color = accent,
                             enabled = session.phase == Phase.ANSWERING,
                         )
                     }

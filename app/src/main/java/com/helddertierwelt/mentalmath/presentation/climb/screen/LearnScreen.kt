@@ -64,7 +64,7 @@ import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbCard
 import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbTopBar
 import com.helddertierwelt.mentalmath.presentation.climb.component.SolutionSteps
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
-import com.helddertierwelt.mentalmath.presentation.theme.blue
+import com.helddertierwelt.mentalmath.presentation.theme.accent
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 
 /** Erklärung einer Methode in eigenen Worten, mit durchgerechneten Beispielen. */
@@ -107,7 +107,7 @@ fun LearnScreen(navController: NavController, skillId: String) {
                 text = "Jetzt geführt üben",
                 subtitle = "Die Methode Schritt für Schritt anwenden",
                 icon = R.drawable.list_numbered_24dp,
-                iconTint = blue,
+                iconTint = accent,
                 onClick = {
                     if (viewModel.startSession(SessionType.GUIDED, skill.id)) navController.navigate("climbplay")
                 },

@@ -1,9 +1,13 @@
-**Neu: das Handbuch**
+**Neu: klare Bereiche, Statistik, Einstufungstest, Erinnerung, Sicherung und Farbthemen**
 
-Auf der Startseite gibt es jetzt den Knopf **„Handbuch“**. Dort stehen alle Tricks und Methoden des Kletterwegs zum Nachschlagen – nach Welten geordnet, mit Buchverweis, Erklärung und Beispielen. Über das Suchfeld findest du schnell eine Methode (z. B. „Quadrat“, „Prozent“, „Wochentag“). Auch Levels, die noch gesperrt sind, kannst du schon nachlesen. Mit „Zum Level“ geht es direkt zum Üben.
+**Drei Bereiche:** Unten wechselst du zwischen **Kletterweg** (lernen nach Plan), **Freies Training** (üben ohne Plan) und **Klassisch** (die Original-App „Mental Math“). Jeder Bereich erklärt oben kurz, wofür er da ist.
 
-Das Handbuch entsteht automatisch aus den Levels: Jede neue Methode erscheint dort von selbst.
+- **Statistik** (Symbol oben rechts oder „Statistik“ auf der Startseite): Aufgaben pro Tag als Diagramm, Trefferquote, Serie und Rekord, deine **Stärken und Schwächen** und der Stand jeder Welt. In jedem Level zeigt „Dein Verlauf“, wie sich deine Prüfungszeit entwickelt.
+- **Einstufungstest:** Du kannst schon etwas? Teste eine ganze Welt auf einmal und überspringe sie.
+- **Tägliche Erinnerung** zur Uhrzeit deiner Wahl – auf Wunsch nur, wenn du an dem Tag noch nicht geübt hast.
+- **Fortschritt sichern:** als Datei speichern oder teilen und auf einem neuen Handy wieder laden.
+- **Farbthemen:** Grau, Ozean, Wald, Abendrot, Lavendel und Tiefschwarz, jeweils hell oder dunkel.
 
-Außerdem: Die Projektbeschreibung sagt jetzt deutlich, dass Mental Math Plus ein Hobbyprojekt ist, das mit KI erstellt wurde, und nennt die Original-App „Mental Math“ von HeldDerTierwelt.
+Farbthema, Erinnerung und Sicherung findest du über das Zahnrad oben rechts im Kletterweg.
 
 **Installieren:** `MentalMathPlus.apk` unten antippen, herunterladen und öffnen. Die neue Version ersetzt die alte, dein Fortschritt bleibt erhalten.

@@ -41,6 +41,9 @@ enum class SessionType {
 
     /** Freies Training mit eigenen Aufgabenarten und Modi. */
     FREE,
+
+    /** Einstufungstest: eine ganze Welt auf einmal prüfen und bei Erfolg überspringen. */
+    PLACEMENT,
 }
 
 /** Ergebnis einer einzelnen Aufgabe. */

@@ -63,7 +63,7 @@ import com.helddertierwelt.mentalmath.presentation.component.game.BackspaceButto
 import com.helddertierwelt.mentalmath.presentation.component.game.EnterButton
 import com.helddertierwelt.mentalmath.presentation.component.game.NumberButton
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
-import com.helddertierwelt.mentalmath.presentation.theme.blue
+import com.helddertierwelt.mentalmath.presentation.theme.accent
 import com.helddertierwelt.mentalmath.presentation.theme.green
 import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
@@ -196,7 +196,7 @@ fun SolutionSteps(
             Text(
                 text = it,
                 fontSize = dimens.fonts.caption,
-                color = blue,
+                color = accent,
                 modifier = Modifier.padding(bottom = 4.dp),
             )
         }

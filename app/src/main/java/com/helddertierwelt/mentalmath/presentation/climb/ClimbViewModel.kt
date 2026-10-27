@@ -25,10 +25,12 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.helddertierwelt.mentalmath.data.climb.ClimbRepository
+import com.helddertierwelt.mentalmath.data.climb.PlusSettingsRepository
 import com.helddertierwelt.mentalmath.domain.climb.curriculum.Curriculum
 import com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode
 import com.helddertierwelt.mentalmath.domain.climb.engine.FreeRules
 import com.helddertierwelt.mentalmath.domain.climb.engine.Phase
+import com.helddertierwelt.mentalmath.domain.climb.engine.Placement
 import com.helddertierwelt.mentalmath.domain.climb.engine.Progression
 import com.helddertierwelt.mentalmath.domain.climb.engine.Session
 import com.helddertierwelt.mentalmath.domain.climb.engine.SessionEvent
@@ -38,7 +40,11 @@ import com.helddertierwelt.mentalmath.domain.climb.engine.SessionType
 import com.helddertierwelt.mentalmath.domain.climb.engine.Summary
 import com.helddertierwelt.mentalmath.domain.climb.free.FreeTopic
 import com.helddertierwelt.mentalmath.domain.climb.free.FreeTopics
+import com.helddertierwelt.mentalmath.domain.climb.model.Backup
+import com.helddertierwelt.mentalmath.domain.climb.model.BackupCodec
 import com.helddertierwelt.mentalmath.domain.climb.model.ClimbProgress
+import com.helddertierwelt.mentalmath.domain.climb.model.Palette
+import com.helddertierwelt.mentalmath.domain.climb.model.PlusSettings
 import com.helddertierwelt.mentalmath.domain.climb.model.Skill
 import com.helddertierwelt.mentalmath.domain.climb.model.World
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackController
@@ -77,12 +83,17 @@ data class FreeConfig(
 @HiltViewModel
 class ClimbViewModel @Inject constructor(
     private val repository: ClimbRepository,
+    private val settingsRepository: PlusSettingsRepository,
     private val feedbackController: FeedbackController,
 ) : ViewModel(), DefaultLifecycleObserver {
 
     val worlds: List<World> = Curriculum.worlds
     val progress: StateFlow<ClimbProgress> = repository.progress
     val loaded: StateFlow<Boolean> = repository.loaded
+
+    /** Einstellungen von Mental Math Plus (Farbthema, Erinnerung). */
+    val plusSettings: StateFlow<PlusSettings> = settingsRepository.settings
+    val plusSettingsLoaded: StateFlow<Boolean> = settingsRepository.loaded
 
     private val _session = MutableStateFlow<Session?>(null)
     val session: StateFlow<Session?> = _session.asStateFlow()
@@ -151,6 +162,13 @@ class ClimbViewModel @Inject constructor(
             .take(Progression.REVIEW_MAX_SKILLS)
         if (mastered.isEmpty()) return false
         begin(SessionLogic.createReview(mastered, random, "Gemischtes Training").copy(type = SessionType.PRACTICE))
+        return true
+    }
+
+    /** Einstufungstest für eine Welt starten. */
+    fun startPlacement(worldId: String): Boolean {
+        val world = worlds.firstOrNull { it.id == worldId } ?: return false
+        begin(Placement.create(world, random))
         return true
     }
 
@@ -255,13 +273,80 @@ class ClimbViewModel @Inject constructor(
         viewModelScope.launch { repository.reset() }
     }
 
-    /** Fortschritt komplett ersetzen (für den automatischen Oberflächentest und einen späteren Import). */
+    /** Fortschritt komplett ersetzen (für den automatischen Oberflächentest und beim Laden einer Sicherung). */
     fun importProgress(p: ClimbProgress) {
         tickJob?.cancel()
         advanceJob?.cancel()
         _session.value = null
         _summary.value = null
         viewModelScope.launch { repository.update { p } }
+    }
+
+    // --- Einstellungen und Sicherung -------------------------------------------------------------
+
+    fun setPalette(palette: Palette) {
+        feedbackController.play(FeedbackType.TAP)
+        viewModelScope.launch { settingsRepository.update { it.copy(palette = palette.name) } }
+    }
+
+    fun setReminder(on: Boolean, hour: Int = plusSettings.value.reminderHour, minute: Int = plusSettings.value.reminderMinute) {
+        viewModelScope.launch {
+            settingsRepository.update { it.copy(reminderOn = on, reminderHour = hour.mod(24), reminderMinute = minute.mod(60)) }
+        }
+    }
+
+    fun setReminderOnlyIfIdle(value: Boolean) {
+        feedbackController.play(FeedbackType.TAP)
+        viewModelScope.launch { settingsRepository.update { it.copy(reminderOnlyIfIdle = value) } }
+    }
+
+    /** Die Erinnerung der Original-App wurde übernommen (oder war aus). */
+    fun markOldReminderMigrated(enableReminder: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.update {
+                if (enableReminder) it.copy(oldReminderMigrated = true, reminderOn = true) else it.copy(oldReminderMigrated = true)
+            }
+        }
+    }
+
+    /** Einstellungen von Mental Math Plus zurücksetzen (beim Zurücksetzen der ganzen App). */
+    fun resetPlusSettings() {
+        viewModelScope.launch { settingsRepository.update { PlusSettings(oldReminderMigrated = true) } }
+    }
+
+    /** Sicherung als Text (JSON) mit Fortschritt und Einstellungen. */
+    fun backupText(): String = BackupCodec.encode(BackupCodec.create(progress.value, plusSettings.value, now()))
+
+    /** Dateiname für die Sicherung, z. B. „MentalMathPlus-Sicherung-2026-10-27.json“. */
+    fun backupFileName(): String {
+        val c = java.util.Calendar.getInstance()
+        val date = String.format(
+            java.util.Locale.ROOT,
+            "%04d-%02d-%02d",
+            c.get(java.util.Calendar.YEAR),
+            c.get(java.util.Calendar.MONTH) + 1,
+            c.get(java.util.Calendar.DAY_OF_MONTH),
+        )
+        return "MentalMathPlus-Sicherung-$date.json"
+    }
+
+    fun readBackup(text: String): Result<Backup> = BackupCodec.decode(text)
+
+    /** Sicherung übernehmen: Fortschritt ersetzen, Farbthema und Erinnerung übernehmen. */
+    fun restoreBackup(backup: Backup) {
+        importProgress(backup.progress)
+        val s = backup.settings ?: return
+        viewModelScope.launch {
+            settingsRepository.update {
+                it.copy(
+                    palette = s.palette,
+                    reminderOn = s.reminderOn,
+                    reminderHour = s.reminderHour,
+                    reminderMinute = s.reminderMinute,
+                    reminderOnlyIfIdle = s.reminderOnlyIfIdle,
+                )
+            }
+        }
     }
 
     fun playTap() = feedbackController.play(FeedbackType.TAP)
@@ -347,7 +432,7 @@ class ClimbViewModel @Inject constructor(
                 if (pausedAt != null || s.phase != Phase.ANSWERING) continue
                 val elapsed = currentElapsed()
                 _elapsedMs.value = elapsed
-                val limit = s.timeLimitMs
+                val limit = s.currentLimitMs
                 if (s.free != null && SessionLogic.freeOver(s, elapsed)) {
                     val done = SessionLogic.finishNow(s)
                     _session.value = done

@@ -46,10 +46,41 @@ data class SkillProgress(
     val refreshPending: Boolean = false,
     /** Letzte Ergebnisse: positive Zahl = richtig in so vielen ms, negative Zahl = falsch. */
     val recent: List<Long> = emptyList(),
+    /** Tagesstatistik dieses Levels (ohne geführtes Üben), die letzten [ClimbProgress.SKILL_DAYS] Übungstage. */
+    val days: List<DayStat> = emptyList(),
+    /** Die letzten Prüfungen dieses Levels. */
+    val tests: List<TestLog> = emptyList(),
+    /** Das Level wurde über einen Einstufungstest übersprungen. */
+    val placed: Boolean = false,
 ) {
     val mastered: Boolean get() = stars >= 1
     val needsAttention: Boolean get() = rusty || refreshPending
 }
+
+/** Gelöste Aufgaben an einem Tag. */
+@Serializable
+data class DayStat(
+    /** Tag seit 1.1.1970 in Ortszeit. */
+    val day: Long,
+    val solved: Int = 0,
+    val correct: Int = 0,
+    /** Summe der Rechenzeiten in ms. */
+    val totalMs: Long = 0,
+) {
+    operator fun plus(other: DayStat): DayStat =
+        copy(solved = solved + other.solved, correct = correct + other.correct, totalMs = totalMs + other.totalMs)
+}
+
+/** Eine abgelegte Prüfung. */
+@Serializable
+data class TestLog(
+    /** Zeitpunkt in ms. */
+    val at: Long,
+    val avgMs: Long,
+    val correct: Int,
+    val total: Int,
+    val stars: Int,
+)
 
 /** Statistik einer Aufgabenart im freien Training. */
 @Serializable
@@ -74,9 +105,39 @@ data class ClimbProgress(
     val free: Map<String, FreeStat> = emptyMap(),
     /** Bestwerte des freien Trainings je Modus (Schlüssel z. B. „ZEIT_60“). */
     val freeBest: Map<String, Int> = emptyMap(),
+    /** Gelöste Aufgaben pro Tag (alle Bereiche), die letzten [DAYS_KEPT] Übungstage. */
+    val days: List<DayStat> = emptyList(),
+    /** Längste Serie von Tagen in Folge. */
+    val bestStreak: Int = 0,
 ) {
     fun of(skillId: String): SkillProgress = skills[skillId] ?: SkillProgress()
 
     fun with(skillId: String, update: (SkillProgress) -> SkillProgress): ClimbProgress =
         copy(skills = skills + (skillId to update(of(skillId))))
+
+    companion object {
+        /** So viele Übungstage werden insgesamt gespeichert. */
+        const val DAYS_KEPT = 400
+
+        /** So viele Übungstage werden je Level gespeichert. */
+        const val SKILL_DAYS = 60
+
+        /** So viele Prüfungen werden je Level gespeichert. */
+        const val TESTS_KEPT = 30
+    }
+}
+
+/** Einen Tageseintrag in eine nach Tagen sortierte Liste einrechnen und auf [keep] Einträge kürzen. */
+fun List<DayStat>.addDay(entry: DayStat, keep: Int): List<DayStat> {
+    val last = lastOrNull()
+    val merged = when {
+        last == null || last.day < entry.day -> this + entry
+        last.day == entry.day -> dropLast(1) + (last + entry)
+        else -> {
+            // Älterer Tag (z. B. nach Zeitumstellung): an der richtigen Stelle einrechnen.
+            val existing = indexOfFirst { it.day == entry.day }
+            if (existing >= 0) mapIndexed { i, d -> if (i == existing) d + entry else d } else (this + entry).sortedBy { it.day }
+        }
+    }
+    return if (merged.size > keep) merged.takeLast(keep) else merged
 }
