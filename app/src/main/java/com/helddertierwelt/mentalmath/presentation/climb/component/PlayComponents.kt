@@ -85,8 +85,21 @@ fun problemFontSize(text: String): TextUnit {
 
 /** Die Aufgabe: kleine Überschrift, optionale Zeilen und die große Hauptzeile. */
 @Composable
-fun ProblemDisplay(problem: Problem, modifier: Modifier = Modifier) {
+fun ProblemDisplay(problem: Problem, modifier: Modifier = Modifier, hidden: Boolean = false) {
     val dimens = MentalMathTheme.dimens
+    if (hidden) {
+        Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = "Jetzt aus dem Gedächtnis!",
+                fontSize = dimens.fonts.sideSheetEntry,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f),
+            )
+            Spacer(Modifier.height(6.dp))
+            Text(text = "?", fontSize = dimens.fonts.problem, color = MaterialTheme.colorScheme.onPrimary)
+        }
+        return
+    }
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         problem.prompt.caption?.let {
             Text(
@@ -100,11 +113,12 @@ fun ProblemDisplay(problem: Problem, modifier: Modifier = Modifier) {
         }
         if (problem.prompt.lines.isNotEmpty()) {
             val mono = monoFont()
+            val lineSize = if (problem.prompt.lines.size > 4) dimens.fonts.sideSheetEntry else dimens.fonts.settingsLabel
             problem.prompt.lines.forEach { line ->
                 Text(
                     text = line,
                     fontFamily = mono,
-                    fontSize = dimens.fonts.settingsLabel,
+                    fontSize = lineSize,
                     color = MaterialTheme.colorScheme.onPrimary,
                 )
             }
@@ -220,8 +234,10 @@ fun GuidedSteps(session: Session, modifier: Modifier = Modifier) {
     val dimens = MentalMathTheme.dimens
     val problem = session.problem ?: return
     val mono = monoFont()
-    Column(modifier = modifier.fillMaxWidth()) {
+    val remaining = problem.steps.size - session.stepIndex - 1
+    Column(modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         problem.steps.forEachIndexed { i, step ->
+            val labelSize = if (step.label.length > 22) dimens.fonts.sideSheetEntry else dimens.fonts.settingsLabel
             when {
                 i < session.stepIndex -> Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -263,13 +279,14 @@ fun GuidedSteps(session: Session, modifier: Modifier = Modifier) {
                         Text(
                             text = "${step.label} ${if (step.expected is Expected.Approx) "≈" else "="} ",
                             fontFamily = mono,
-                            fontSize = dimens.fonts.settingsLabel,
+                            fontSize = labelSize,
                             color = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.weight(1f, fill = false),
                         )
                         Text(
                             text = value,
                             fontFamily = mono,
-                            fontSize = dimens.fonts.settingsLabel,
+                            fontSize = labelSize,
                             color = color,
                         )
                     }
@@ -287,11 +304,14 @@ fun GuidedSteps(session: Session, modifier: Modifier = Modifier) {
                     }
                 }
 
-                else -> Text(
-                    text = "…",
-                    fontSize = dimens.fonts.sideSheetEntry,
-                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.3f),
+                i == session.stepIndex + 1 -> Text(
+                    text = if (remaining == 1) "… noch 1 Schritt" else "… noch $remaining Schritte",
+                    fontSize = dimens.fonts.caption,
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.4f),
+                    modifier = Modifier.padding(top = 4.dp),
                 )
+
+                else -> Unit
             }
         }
     }

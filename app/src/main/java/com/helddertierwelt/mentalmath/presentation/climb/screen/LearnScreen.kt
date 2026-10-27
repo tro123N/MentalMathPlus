@@ -165,6 +165,14 @@ fun LearnScreen(navController: NavController, skillId: String) {
                             ) {
                                 CaptionText("Beispiel")
                                 p.prompt.caption?.let { CaptionText(it) }
+                                p.prompt.lines.forEach { line ->
+                                    Text(
+                                        text = line,
+                                        fontFamily = mono,
+                                        fontSize = dimens.fonts.sideSheetEntry,
+                                        color = MaterialTheme.colorScheme.onPrimary,
+                                    )
+                                }
                                 Text(
                                     text = p.prompt.text,
                                     fontSize = dimens.fonts.settingsLabel,

@@ -35,6 +35,8 @@ object Curriculum {
             World6.world,
             World7.world,
             World8.world,
+            World9.world,
+            World10.world,
         )
     }
 

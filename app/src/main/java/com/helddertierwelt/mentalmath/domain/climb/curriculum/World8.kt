@@ -142,9 +142,9 @@ internal object World8 {
             skillId = "w8.shopping",
             key = prices.joinToString(","),
             prompt = Prompt(
-                text = "Ungefähr wie viel?",
+                text = "Summe?",
                 caption = "Einkauf überschlagen – höchstens 1 € daneben",
-                lines = prices.map { Fmt.money(cents(it)) },
+                lines = prices.map { Fmt.money(cents(it)).padStart(7) }.chunked(3).map { it.joinToString("  ") },
                 unit = "€",
             ),
             expected = approx(cents(exactTotal), BigDecimal.ONE, 2),

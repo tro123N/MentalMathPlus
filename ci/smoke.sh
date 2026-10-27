@@ -19,6 +19,10 @@ SHOTS="$(grep -v '^#' ci/smoke-shots.txt 2>/dev/null | tr -s ' \n' ',' | sed 's/
 status=1
 if [ -n "$APP" ] && [ -n "$TEST" ]; then
   adb wait-for-device
+  # Fehlerdialoge des Emulators („Pixel Launcher reagiert nicht“) unterdrücken.
+  adb shell settings put global hide_error_dialogs 1 || true
+  adb shell am force-stop com.google.android.apps.nexuslauncher || true
+  adb shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS > /dev/null 2>&1 || true
   adb install -r -g "$APP" && adb install -r -g "$TEST" && {
     adb shell cmd locale set-app-locales "$PKG" --locales de-DE || true
     adb logcat -c || true

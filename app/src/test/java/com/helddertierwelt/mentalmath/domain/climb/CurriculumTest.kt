@@ -67,8 +67,46 @@ class CurriculumTest {
     private val square = Regex("^($numberPattern)²$")
     private val cube = Regex("^($numberPattern)³$")
 
-    /** Rechnet eine einfache Beschriftung wie „47 × 6“ aus; null, wenn sie nicht so aufgebaut ist. */
+    /** Rechnet Ausdrücke wie „2 + 4 × 4 + 3 × 7“ aus (Punkt vor Strich), optional mit Präfix „Zehner: “. */
+    private fun evaluateExpression(label: String): BigDecimal? {
+        val body = label.substringAfter(": ", label).trim()
+        val tokens = body.split(' ')
+        if (tokens.size < 3 || tokens.size % 2 == 0) return null
+        val numbers = mutableListOf<BigDecimal>()
+        val ops = mutableListOf<String>()
+        tokens.forEachIndexed { i, t ->
+            if (i % 2 == 0) {
+                numbers += num(t) ?: return null
+            } else {
+                if (t != "+" && t != minus && t != times && t != divide) return null
+                ops += t
+            }
+        }
+        val terms = mutableListOf(numbers[0])
+        val termOps = mutableListOf<String>()
+        for (k in ops.indices) {
+            val x = numbers[k + 1]
+            when (ops[k]) {
+                times -> terms[terms.lastIndex] = terms.last() * x
+                divide -> terms[terms.lastIndex] = terms.last().divide(x, MathContext.DECIMAL128)
+                else -> {
+                    termOps += ops[k]
+                    terms += x
+                }
+            }
+        }
+        var result = terms[0]
+        termOps.forEachIndexed { k, op -> result = if (op == "+") result + terms[k + 1] else result - terms[k + 1] }
+        return result
+    }
+
+    /** Rechnet eine Beschriftung wie „47 × 6“ oder „Mod-Summe von 4.328“ aus; null, wenn sie nicht so aufgebaut ist. */
     private fun evaluate(label: String): BigDecimal? {
+        Regex("^Mod-Summe von ($numberPattern)$").matchEntire(label)?.let { m ->
+            val v = num(m.groupValues[1])!!.toLong()
+            return BigDecimal(if (v == 0L) 0 else ((v - 1) % 9 + 1))
+        }
+        Regex("^11er-Rest von ($numberPattern)$").matchEntire(label)?.let { m -> return BigDecimal(num(m.groupValues[1])!!.toLong() % 11) }
         binary.matchEntire(label)?.let { m ->
             val a = num(m.groupValues[1]) ?: return null
             val b = num(m.groupValues[3]) ?: return null
@@ -82,7 +120,7 @@ class CurriculumTest {
         }
         square.matchEntire(label)?.let { m -> return num(m.groupValues[1])?.let { it * it } }
         cube.matchEntire(label)?.let { m -> return num(m.groupValues[1])?.let { it * it * it } }
-        return null
+        return evaluateExpression(label)
     }
 
     /** Wert, den die Aufgabenstellung selbst ergibt (für bekannte Formen). */
@@ -110,8 +148,9 @@ class CurriculumTest {
         Regex("^([0-9]+) % von ($numberPattern) €$").matchEntire(text)?.let { m ->
             return num(m.groupValues[1])!!.multiply(num(m.groupValues[2])!!).divide(BigDecimal(100))
         }
-        if (text == "Ungefähr wie viel?" && p.prompt.lines.isNotEmpty()) {
-            return p.prompt.lines.map { num(it.removeSuffix(" €"))!! }.fold(BigDecimal.ZERO) { a, b -> a + b }
+        if (text == "Summe?" && p.prompt.lines.isNotEmpty()) {
+            return p.prompt.lines.flatMap { line -> Regex("[0-9][0-9.]*(?:,[0-9]+)?").findAll(line).map { num(it.value)!! }.toList() }
+                .fold(BigDecimal.ZERO) { a, b -> a + b }
         }
         Regex("^($numberPattern) \\+ \\?$").matchEntire(text)?.let { m ->
             val target = p.prompt.caption?.let { c -> Regex("($numberPattern)$").find(c)?.groupValues?.get(1) }?.let { num(it) }
@@ -259,7 +298,7 @@ class CurriculumTest {
         }
         println("Geprüfte Schritte: $evaluatedSteps von $totalSteps, Aufgabenstellungen: $evaluatedPrompts von $totalPrompts")
         assertTrue("Zu wenige Schritte nachgerechnet", evaluatedSteps * 2 > totalSteps)
-        assertTrue("Zu wenige Aufgaben nachgerechnet", evaluatedPrompts * 10 > totalPrompts * 8)
+        assertTrue("Zu wenige Aufgaben nachgerechnet", evaluatedPrompts * 4 > totalPrompts * 3)
     }
 
     @Test

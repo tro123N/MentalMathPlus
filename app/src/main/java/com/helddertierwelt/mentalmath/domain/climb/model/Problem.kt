@@ -78,6 +78,11 @@ data class Prompt(
     val lines: List<String> = emptyList(),
     /** Einheit hinter dem Eingabefeld, z. B. „€“. */
     val unit: String? = null,
+    /**
+     * Merkaufgaben: Die Zeilen verschwinden, sobald getippt wird – spätestens nach so vielen ms.
+     * null = immer sichtbar.
+     */
+    val hideAfterMs: Long? = null,
 )
 
 /** Ein Zwischenschritt im geführten Üben. */

@@ -239,13 +239,13 @@ private fun OverviewCard(
 
     ClimbCard {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Column(modifier = Modifier.weight(1f)) {
+            Column(modifier = Modifier.weight(1f).padding(end = 12.dp)) {
                 Text(
                     text = "$mastered von ${all.size} Levels",
                     fontSize = dimens.fonts.settingsLabel,
                     color = MaterialTheme.colorScheme.onPrimary,
                 )
-                CaptionText("$starsTotal von ${all.size * 3} Sternen · ${progress.totalSolved} Aufgaben gelöst")
+                CaptionText("$starsTotal von ${all.size * 3} Sternen · ${com.helddertierwelt.mentalmath.domain.climb.math.Fmt.int(progress.totalSolved)} Aufgaben gelöst")
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Icon(

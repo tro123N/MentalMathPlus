@@ -200,6 +200,11 @@ fun ClimbPlayScreen(navController: NavController) {
                 .padding(horizontal = dimens.components.gameScreenPadding, vertical = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            val scroll = rememberScrollState()
+            // Bei langen Lösungswegen immer den aktuellen Schritt zeigen.
+            LaunchedEffect(session.index, session.stepIndex, session.phase) {
+                scroll.animateScrollTo(scroll.maxValue)
+            }
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -208,12 +213,15 @@ fun ClimbPlayScreen(navController: NavController) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .verticalScroll(rememberScrollState()),
+                        .verticalScroll(scroll),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
                     session.problem?.let { problem ->
-                        ProblemDisplay(problem = problem)
+                        val hideMs = problem.prompt.hideAfterMs
+                        val hidden = hideMs != null && session.phase == Phase.ANSWERING &&
+                            (session.input.isNotEmpty() || session.stepIndex > 0 || elapsed >= hideMs)
+                        ProblemDisplay(problem = problem, hidden = hidden)
                         Spacer(Modifier.height(16.dp))
                         if (session.isGuided) {
                             GuidedSteps(session = session)
