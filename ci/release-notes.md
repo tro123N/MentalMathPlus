@@ -9,6 +9,8 @@ Sechs neue Welten, insgesamt **12 Welten mit 84 Levels**:
 - **Welt 11 · Profi-Multiplikation** (Kap. 8): vier- und fünfstellige Quadrate, dreistellig × dreistellig, fünfstellig × fünfstellig
 - **Welt 12 · Mathe-Magie** (Kap. 9): 1089-Trick, magische Quadrate, Kubikwurzeln, Wochentag zu jedem Datum
 
+**Neues freies Training** (oben rechts oder „Freies Training“ auf der Startseite): neun Aufgabenarten – Grundrechenarten, zwei Rechenzeichen, lange Terme, Prozente, Textaufgaben, Gleichungen, Potenzen und Wurzeln, Geometrie, Zahlentheorie – in drei Stufen. Modi: **Auf Zeit**, **Endlos**, **Überleben** und **Prüfung mit Note**, dazu eine Statistik mit Bestwerten. Der klassische Modus der Original-App ist weiterhin dabei.
+
 Außerdem: Beim geführten Üben bleibt der aktuelle Schritt immer sichtbar, Schätzaufgaben zeigen „≈“, Ja/Nein-Fragen funktionieren auch im geführten Modus.
 
 **Installieren:** `MentalMathPlus.apk` unten antippen, herunterladen und öffnen. Die neue Version ersetzt die alte, dein Fortschritt bleibt erhalten.
