@@ -128,7 +128,7 @@ fun AiSettingsScreen(navController: NavController) {
 
             ClimbCard(modifier = Modifier.testTag("aiModels")) {
                 CardTitle("Modell")
-                BodyText("Gemma 4 E4B ist das klügste Modell, das zuverlässig auf Handys läuft. Gemma 4 E2B ist kleiner und schneller.")
+                BodyText("Gemma 4 E4B ist die beste Wahl für die meisten Handys. Gemma 4 12B ist noch klüger, aber ein Experiment: Es braucht sehr viel Arbeitsspeicher und antwortet langsamer. Klappt es auf der Grafikeinheit nicht, nimmt die App beim nächsten Mal den Prozessor.")
                 Spacer(Modifier.height(10.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     AiModel.entries.filter { it.phone || models[it] !is ModelState.Missing }.forEach { m ->

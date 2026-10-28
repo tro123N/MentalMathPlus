@@ -196,9 +196,8 @@ class AiTest {
         assertEquals("6,9 GB", AiModel.GEMMA4_12B.sizeLabel)
         assertEquals("2,6 GB", AiModel.GEMMA4_E2B.sizeLabel)
         assertTrue(AiModel.GEMMA4_12B.experimental)
-        // 12B läuft auf Handys nicht zuverlässig: nie gewählt, nie als Ersatz genommen.
-        assertFalse(AiModel.GEMMA4_12B.phone)
-        assertEquals(AiModel.GEMMA4_E4B, AiModel.chosen("gemma4-12b"))
+        assertTrue(AiModel.entries.all { it.phone })
+        assertEquals(AiModel.GEMMA4_12B, AiModel.chosen("gemma4-12b"))
         assertEquals(AiModel.GEMMA4_E2B, AiModel.chosen("gemma4-e2b"))
         assertEquals(AiModel.GEMMA4_E4B, AiModel.chosen(null))
         assertTrue(AiModel.fallbackOrder.all { it.phone })

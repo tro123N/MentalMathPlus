@@ -71,18 +71,18 @@ enum class AiModel(
     GEMMA4_12B(
         id = "gemma4-12b",
         title = "Gemma 4 12B",
-        badge = "Nur für Computer",
-        summary = "Für Computer gedacht: Auf Handys reicht der Speicher der Grafikeinheit nicht – die App wird sehr langsam oder beendet. Lösche die Datei, um 6,9 GB frei zu machen.",
+        badge = "Experiment · am klügsten",
+        summary = "Das größte Gemma-4-Modell: deutlich klüger, aber langsam und sehr speicherhungrig (eigentlich für Computer gedacht). Klappt es auf der Grafikeinheit nicht, nimmt die App den Prozessor. Schließe vorher andere Apps.",
         repo = "litert-community/gemma-4-12B-it-litert-lm",
         revision = "7a0b1ce0ea821bcd01c5f72af84155e02191152f",
         file = "gemma-4-12B-it.litertlm",
         bytes = 6_883_278_368L,
         sha256 = "58fd31b778ca2c21c80d634fb34fc5a89d11d563a38dfd3cbf1b40dbf252a8b6",
         minRamGb = 16,
-        contextTokens = 8_192,
+        // Kleineres Gedächtnis spart Arbeitsspeicher.
+        contextTokens = 4_096,
         thinkingBudget = 1_024,
         experimental = true,
-        phone = false,
     ),
     GEMMA4_E2B(
         id = "gemma4-e2b",
@@ -118,7 +118,7 @@ enum class AiModel(
         fun chosen(id: String?): AiModel = of(id)?.takeIf { it.phone } ?: DEFAULT
 
         /** Reihenfolge, in der bei Problemen auf ein anderes, schon geladenes Modell ausgewichen wird. */
-        val fallbackOrder: List<AiModel> = listOf(GEMMA4_E4B, GEMMA4_E2B)
+        val fallbackOrder: List<AiModel> = listOf(GEMMA4_E4B, GEMMA4_E2B, GEMMA4_12B)
 
         /** Bytes als Gigabyte mit einer Nachkommastelle, z. B. „6,9 GB“ (wie das Handy Speicher anzeigt). */
         fun gigabytes(bytes: Long): String = String.format(Locale.GERMANY, "%.1f GB", bytes / 1e9)

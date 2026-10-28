@@ -1,6 +1,6 @@
 **Mental Math Plus 2.1.1 – Korrekturen am KI-Coach**
 
-- **Gemma 4 12B wird nicht mehr angeboten.** Es ist für Computer gedacht: Auf Handys reicht der Speicher der Grafikeinheit nicht, die App wurde sehr langsam oder beendet. Hast du es geladen, kannst du es in den KI-Einstellungen löschen (6,9 GB). Das klügste Modell fürs Handy ist **Gemma 4 E4B**.
+- **Gemma 4 12B stürzt nicht mehr immer wieder ab:** Wurde die App beim Laden auf der Grafikeinheit beendet, lädt sie das Modell beim nächsten Mal auf den Prozessor (langsamer, braucht weniger Speicher). Außerdem nutzt 12B jetzt ein kleineres Gesprächsgedächtnis, das spart Speicher.
 - **Der Chat geht nicht mehr verloren**, wenn du die App während einer Antwort verlässt: Frage und Antwort werden laufend gespeichert, und die KI schreibt im Hintergrund zu Ende.
 
 ---
@@ -18,6 +18,7 @@ Neu: ein **KI-Coach**, der direkt auf deinem Handy läuft – ohne Internet, kos
 
 **So geht's:** Oben auf der Startseite auf ✨ tippen und ein Modell laden (einmalig, am besten im WLAN):
 - **Gemma 4 E4B** – empfohlen, 3,7 GB
+- **Gemma 4 12B** – Experiment, am klügsten, 6,9 GB, braucht sehr viel Arbeitsspeicher
 - **Gemma 4 E2B** – klein und schnell, 2,6 GB
 
 Hinweis: Die App fragt jetzt nach Internet – nur für diesen Download. Die KI braucht Android 12 oder neuer.

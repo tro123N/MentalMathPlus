@@ -146,10 +146,14 @@ class AiEngine @Inject constructor(
             val combo = runCatching { marker.readText().trim() }.getOrDefault("")
             marker.delete()
             if (combo.isNotEmpty()) {
-                runCatching { badFile.appendText(combo + "\n") }
+                // Auf der Grafikeinheit abgestürzt: dort gar nicht mehr versuchen (mit und ohne MTP),
+                // sonst stürzt die App beim nächsten Mal gleich wieder ab.
+                val parts = combo.split('|')
+                val lines = if (parts.size == 3 && parts[1] == "GPU") listOf("${parts[0]}|GPU|true", "${parts[0]}|GPU|false") else listOf(combo)
+                runCatching { badFile.appendText(lines.joinToString("\n") + "\n") }
                 val model = AiModel.of(combo.substringBefore('|'))
                 _crashNote.value = "Beim letzten Laden von ${model?.title ?: "der KI"} wurde die App beendet – vermutlich reichte der Arbeitsspeicher nicht. " +
-                    if (model != null && !model.phone) "Dieses Modell ist für Computer gedacht und wird nicht mehr angeboten – nimm Gemma 4 E4B." else "Die App versucht es jetzt sparsamer."
+                    if (combo.contains("|GPU|")) "Die App nimmt jetzt den Prozessor – das ist langsamer, braucht aber weniger Speicher." else "Die App versucht es jetzt sparsamer."
             }
         }
     }
