@@ -43,6 +43,7 @@ write_summary() {
     echo "Bilder: $(ls "$OUT/screens" | wc -l)"
     [ -f "$OUT/apk-info.txt" ] && cat "$OUT/apk-info.txt"
     [ -f "$OUT/model-info.txt" ] && cat "$OUT/model-info.txt"
+    [ -f "$OUT/model-push.txt" ] && grep -v "^\[" "$OUT/model-push.txt" | tail -n 12
     echo
     echo "----- Tests ohne KI -----"
     tail -n 60 "$OUT/instrument.txt" 2>/dev/null
@@ -64,19 +65,30 @@ if [ -n "$APP" ] && [ -n "$TEST" ]; then
     adb shell cmd locale set-app-locales "$PKG" --locales de-DE || true
     # KI-Modell für den KI-Test in den App-Ordner legen (wie nach einem Download).
     MODEL="smoke-model/gemma-4-E2B-it.litertlm"
+    PUSHLOG="$OUT/model-push.txt"
     have_model=0
     if [ -f "$MODEL" ]; then
       MDIR="/sdcard/Android/data/$PKG/files/models"
-      adb shell mkdir -p "$MDIR" || true
-      if timeout 600 adb push "$MODEL" "$MDIR/" > /dev/null; then
-        echo "KI-Modell aufgespielt."
-        have_model=1
-      else
-        echo "KI-Modell konnte nicht aufgespielt werden."
-      fi
-      adb shell ls -l "$MDIR" || true
-      adb shell df -h /data | tail -n 1 || true
+      # Der Speicher des virtuellen Handys ist kurz nach dem Start manchmal noch nicht bereit:
+      # bis zu dreimal versuchen und alles protokollieren.
+      for attempt in 1 2 3; do
+        timeout 60 adb shell mkdir -p "$MDIR" >> "$PUSHLOG" 2>&1 || true
+        timeout 900 adb push "$MODEL" "$MDIR/" >> "$PUSHLOG" 2>&1
+        rc=$?
+        if [ "$rc" -eq 0 ]; then
+          echo "KI-Modell aufgespielt (Versuch $attempt)." | tee -a "$PUSHLOG"
+          have_model=1
+          break
+        fi
+        echo "KI-Modell aufspielen fehlgeschlagen (Versuch $attempt, Status $rc)." | tee -a "$PUSHLOG"
+        sleep 30
+      done
+      timeout 30 adb shell ls -l "$MDIR" >> "$PUSHLOG" 2>&1 || true
+      timeout 30 adb shell df -h /data >> "$PUSHLOG" 2>&1 || true
       rm -f "$MODEL"
+    else
+      echo "Keine Modelldatei $MODEL gefunden." | tee -a "$PUSHLOG"
+      ls -la smoke-model >> "$PUSHLOG" 2>&1 || true
     fi
 
     # 1) Alle Tests außer dem KI-Gespräch.
