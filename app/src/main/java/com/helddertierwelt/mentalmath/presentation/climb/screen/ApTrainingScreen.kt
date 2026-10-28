@@ -373,7 +373,7 @@ private fun ForecastCard(outcome: ApForecast.Outcome?, onPractice: (String) -> U
 
             is ApForecast.Outcome.NeedMore -> {
                 val parts = buildList {
-                    if (outcome.results > 0) add(if (outcome.results == 1) "noch 1 Aufgabe" else "noch ${outcome.results} Aufgaben")
+                    if (outcome.results > 0) add(if (outcome.results == 1) "1 gelöste Aufgabe" else "${outcome.results} gelöste Aufgaben")
                     if (outcome.categories > 0) add(if (outcome.categories == 1) "Ergebnisse in 1 weiteren Kategorie" else "Ergebnisse in ${outcome.categories} weiteren Kategorien")
                 }
                 BodyText("Aus deinen Ergebnissen spielt die App 10.000 Tests durch und schätzt so deine Punkte im TMSnat. Dafür fehlen noch ${parts.joinToString(" und ")}.")

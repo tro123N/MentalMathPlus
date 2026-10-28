@@ -42,6 +42,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.helddertierwelt.mentalmath.domain.climb.curriculum.ApCategory
+import com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks
+import com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode
+import com.helddertierwelt.mentalmath.domain.climb.engine.FreeRules
+import com.helddertierwelt.mentalmath.domain.climb.engine.SessionFinisher
+import com.helddertierwelt.mentalmath.domain.climb.engine.SessionLogic
 import com.helddertierwelt.mentalmath.domain.climb.curriculum.Curriculum
 import com.helddertierwelt.mentalmath.domain.climb.engine.Phase
 import com.helddertierwelt.mentalmath.domain.climb.engine.Progression
@@ -927,6 +932,53 @@ class ClimbSmokeTest {
         solveAll()
         waitForResult()
         shootScrolling("resultColumn", "j_fehlertraining_ergebnis", maxShots = 3)
+        clickButton("Zum Kletterweg")
+        waitForHome()
+    }
+
+    /** Zeitanalyse mit realistischen Zeiten (eine durchgerechnete TMSnat-Simulation) und aufgeklappter Fehlererklärung. */
+    @Test
+    fun k_zeitanalyse() {
+        waitForHome()
+        compose.runOnUiThread { vm.importProgress(ClimbProgress()) }
+        compose.waitUntil(5_000) { vm.progress.value.skills.isEmpty() && vm.session.value == null }
+        compose.onNodeWithTag("tab_free").performClick()
+        waitForTag("freeColumn")
+        compose.onNodeWithTag("apEntry").performScrollTo().performClick()
+        waitForTag("apColumn")
+        compose.onNodeWithTag("simTms").performScrollTo().performClick()
+        waitForSession()
+        // Sekunden je Bearbeitung: negativ = falsch (typischer Fehler), 0 = nach 150 s „Später bearbeiten“.
+        val plan = listOf(52, 68, -75, 0, 47, 88, 61, -150, 72, 95, 83, -110, 99, 70)
+        var s = SessionLogic.createFree(
+            ApTasks.simulation(16, 5, kotlin.random.Random(5)),
+            FreeRules(FreeMode.SIMULATION, 1_500, 5, FreeRules.TRACK_AP),
+            "TMSnat-Simulation",
+            null,
+        )
+        for (sec in plan) {
+            if (sec == 0) {
+                s = SessionLogic.skip(s, 150_000)
+                continue
+            }
+            val problem = s.problem!!
+            val correct = (s.expected as Expected.Choice).index
+            val choice = if (sec > 0) correct else problem.mistakes.firstOrNull()?.let { (it.answer as Expected.Choice).index } ?: ((correct + 1) % problem.choices.size)
+            s = SessionLogic.advance(SessionLogic.choose(s, choice, kotlin.math.abs(sec) * 1_000L).first)
+        }
+        val done = SessionLogic.finishNow(s, 40_000)
+        val summary = SessionFinisher.finish(vm.worlds, vm.progress.value, done, vm.now(), vm.today()).second
+        compose.runOnUiThread { vm.showFinishedForTest(done, summary) }
+        waitForResult()
+        compose.onNodeWithTag("apTime").performScrollTo()
+        compose.waitForIdle()
+        shot("k_zeiteinteilung")
+        val hints = compose.onAllNodesWithText("Typischer Fehler – antippen für die Erklärung").fetchSemanticsNodes()
+        if (hints.isNotEmpty()) {
+            compose.onAllNodesWithText("Typischer Fehler – antippen für die Erklärung").onFirst().performScrollTo().performClick()
+            compose.waitForIdle()
+            shot("k_fehler_aufgeklappt")
+        }
         clickButton("Zum Kletterweg")
         waitForHome()
     }

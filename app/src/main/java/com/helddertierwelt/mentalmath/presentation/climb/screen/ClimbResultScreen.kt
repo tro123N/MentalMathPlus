@@ -327,7 +327,11 @@ private fun SummaryCard(summary: Summary, viewModel: ClimbViewModel) {
             }
             summary.free?.takeIf { it.mode != com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.SIMULATION }?.let { rules ->
                 val p = paramLabel(rules.mode, rules.param)
-                CaptionText(rules.mode.title + (if (p.isNotEmpty()) " · $p" else ""))
+                if (summary.title == ClimbViewModel.REVIEW_TITLE) {
+                    CaptionText("Richtig gelöste Aufgabentypen kommen nach 1, 3 und 7 Tagen noch einmal, falsch gelöste bleiben fällig.")
+                } else {
+                    CaptionText(rules.mode.title + (if (p.isNotEmpty()) " · $p" else ""))
+                }
                 summary.freeEndLevel?.let { lvl ->
                     CaptionText("Stufe automatisch angepasst – zuletzt: ${listOf("Leicht", "Mittel", "Schwer")[(lvl - 1).coerceIn(0, 2)]}")
                 }

@@ -371,6 +371,14 @@ class ClimbViewModel @Inject constructor(
         viewModelScope.launch { repository.reset() }
     }
 
+    /** Nur für den automatischen Oberflächentest: eine fertig gerechnete Einheit samt Auswertung anzeigen. */
+    fun showFinishedForTest(session: Session, summary: Summary) {
+        tickJob?.cancel()
+        advanceJob?.cancel()
+        _session.value = session
+        _summary.value = summary
+    }
+
     /** Fortschritt komplett ersetzen (für den automatischen Oberflächentest und beim Laden einer Sicherung). */
     fun importProgress(p: ClimbProgress) {
         tickJob?.cancel()
