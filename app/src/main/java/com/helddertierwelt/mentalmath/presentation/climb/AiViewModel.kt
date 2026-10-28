@@ -368,7 +368,7 @@ class AiViewModel @Inject constructor(
                     (engine.status.value as? EngineStatus.Failed)?.message ?: "Es ist noch kein KI-Modell auf dem Handy. Lade zuerst eins herunter.",
                 )
                 if (!engine.isCurrent(session)) _activity.value = "Bereitet das Gespräch vor …"
-                val s = prepareSession(model, exclude = setOf(user.id, replyId))
+                var s = prepareSession(model, exclude = setOf(user.id, replyId))
                 // Hat die Person seit der letzten Antwort weiter geübt, bekommt die KI einen kurzen Hinweis.
                 val now = repository.progress.value
                 val note = lastProgress?.let { AiPrompt.progressNote(it, now) }
@@ -376,31 +376,25 @@ class AiViewModel @Inject constructor(
                 val prompt = if (note != null) note + "\n\n" + user.modelText else user.modelText
                 val ready = engine.status.value as? EngineStatus.Ready
                 val thinking = settings.value.aiThinking && ready?.thinking != false
-                _activity.value = if (thinking) "Denkt nach …" else "Schreibt …"
-                AiAgent.answer(s, prompt, thinking) { context() }.collect { e ->
-                    when (e) {
-                        is AgentEvent.Text -> {
-                            text.append(e.text)
-                            _activity.value = null
-                            updateMessage(replyId) { it.copy(text = text.toString()) }
-                        }
-                        is AgentEvent.Thought -> {
-                            thought.append(e.text)
-                            updateMessage(replyId) { it.copy(thought = thought.toString()) }
-                        }
-                        is AgentEvent.ToolStarted -> _activity.value = toolActivity(e.name)
-                        is AgentEvent.ToolFinished -> {
-                            val o = e.outcome
-                            o.quiz?.let { q -> _chat.update { it.copy(quiz = q) } }
-                            updateMessage(replyId) { m ->
-                                m.copy(
-                                    tools = if (o.label.isEmpty()) m.tools else m.tools + AiToolUse(o.name, o.label, o.ok),
-                                    actions = o.action?.let { a -> if (a in m.actions) m.actions else m.actions + a } ?: m.actions,
-                                )
-                            }
-                            // Nach dem Werkzeug geht es mit Denken oder Schreiben weiter.
-                            if (text.isEmpty()) _activity.value = if (thinking) "Denkt nach …" else "Schreibt …"
-                        }
+                var attempt = 0
+                while (true) {
+                    _activity.value = if (thinking) "Denkt nach …" else "Schreibt …"
+                    try {
+                        collectAnswer(s, prompt, thinking, replyId, text, thought)
+                        break
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Throwable) {
+                        // Steht noch kein Text da (z. B. war ein Werkzeugaufruf des Modells nicht lesbar),
+                        // einmal still mit einem frischen Gespräch neu versuchen – mit neuem Startwert
+                        // kommt dabei eine andere Antwort heraus.
+                        if (attempt > 0 || text.isNotEmpty()) throw e
+                        attempt++
+                        session = null
+                        thought.setLength(0)
+                        updateMessage(replyId) { it.copy(thought = "", tools = emptyList(), actions = emptyList()) }
+                        _activity.value = "Versucht es noch einmal …"
+                        s = prepareSession(model, exclude = setOf(user.id, replyId))
                     }
                 }
                 val final = AiText.clean(text.toString())
@@ -430,6 +424,36 @@ class AiViewModel @Inject constructor(
                 _busy.value = false
                 _activity.value = null
                 save()
+            }
+        }
+    }
+
+    /** Eine Antwort des Modells (mit Werkzeugen) abholen und laufend in die Nachricht [replyId] schreiben. */
+    private suspend fun collectAnswer(s: LlmSession, prompt: String, thinking: Boolean, replyId: Long, text: StringBuilder, thought: StringBuilder) {
+        AiAgent.answer(s, prompt, thinking) { context() }.collect { e ->
+            when (e) {
+                is AgentEvent.Text -> {
+                    text.append(e.text)
+                    _activity.value = null
+                    updateMessage(replyId) { it.copy(text = text.toString()) }
+                }
+                is AgentEvent.Thought -> {
+                    thought.append(e.text)
+                    updateMessage(replyId) { it.copy(thought = thought.toString()) }
+                }
+                is AgentEvent.ToolStarted -> _activity.value = toolActivity(e.name)
+                is AgentEvent.ToolFinished -> {
+                    val o = e.outcome
+                    o.quiz?.let { q -> _chat.update { it.copy(quiz = q) } }
+                    updateMessage(replyId) { m ->
+                        m.copy(
+                            tools = if (o.label.isEmpty()) m.tools else m.tools + AiToolUse(o.name, o.label, o.ok),
+                            actions = o.action?.let { a -> if (a in m.actions) m.actions else m.actions + a } ?: m.actions,
+                        )
+                    }
+                    // Nach dem Werkzeug geht es mit Denken oder Schreiben weiter.
+                    if (text.isEmpty()) _activity.value = if (thinking) "Denkt nach …" else "Schreibt …"
+                }
             }
         }
     }

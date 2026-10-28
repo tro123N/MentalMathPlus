@@ -284,7 +284,14 @@ class AiEngine @Inject constructor(
                     tools = tools,
                     // Für Tests ein fester Startwert: gleiche Frage → gleiche Antwort, ohne die Endlosschleifen,
                     // in die kleine Modelle beim reinen „immer das wahrscheinlichste Wort“ geraten.
-                    samplerConfig = SamplerConfig(topK = 40, topP = 0.95, temperature = 0.7, seed = if (deterministic) 42 else 0),
+                    // Sonst jedes Mal ein neuer Startwert (LiteRT-LM nimmt die Zahl direkt als Startwert,
+                    // mit 0 käme nach „Nochmal“ genau dieselbe Antwort wieder).
+                    samplerConfig = SamplerConfig(
+                        topK = 40,
+                        topP = 0.95,
+                        temperature = 0.7,
+                        seed = if (deterministic) 42 else kotlin.random.Random.nextInt(1, Int.MAX_VALUE),
+                    ),
                     automaticToolCalling = false,
                     maxOutputToken = maxOutput(model),
                 ),
@@ -353,7 +360,7 @@ class AiEngine @Inject constructor(
         /** So viele Tokens darf die eigentliche Antwort (ohne Denken) lang werden. */
         const val ANSWER_TOKENS = 1_536
 
-        /** Für Tests: immer das wahrscheinlichste Wort nehmen (gleiche Frage → gleiche Antwort). */
+        /** Für Tests: fester Startwert beim Auswählen der Wörter (gleiche Frage → gleiche Antwort). */
         @Volatile
         var deterministic: Boolean = false
 
