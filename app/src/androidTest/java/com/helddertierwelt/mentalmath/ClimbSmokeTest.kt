@@ -362,6 +362,69 @@ class ClimbSmokeTest {
     // --- Tests --------------------------------------------------------------------------------
 
     /** Neuer Nutzer: erstes Level komplett durchspielen (lernen, geführt, üben, Prüfung). */
+    /**
+     * Die Textbausteine der KI auf dem Gerät prüfen: Android rechnet reguläre Ausdrücke mit ICU,
+     * das strenger ist als Java auf dem Rechner (z. B. bei „}“).
+     */
+    @Test
+    fun a0_kiTexteAufDemGeraet() {
+        val latex = mapOf(
+            "Das sind $\\frac{3}{4}$ der Menge." to "Das sind 3/4 der Menge.",
+            "\\(96 \\div 0{,}8 = 120\\)" to "96 : 0,8 = 120",
+            "x^2 und 10^{3}" to "x² und 10³",
+            "Fertig.<end_of_turn>" to "Fertig.",
+            "\\left( 3 + 4 \\right) \\cdot 2 \\leq 20" to "( 3 + 4 ) · 2 ≤ 20",
+            "$250 \\text{ ml}$" to "250 ml",
+            "\\boxed{120 €}" to "**120 €**",
+            "\\textbf{fett}" to "**fett**",
+            "$\\sqrt{2} \\approx 1{,}41$" to "√2 ≈ 1,41",
+            "\\[ a = b \\]" to "a = b",
+            "20^\\circ" to "20°",
+            "Das kostet 5 $ oder 6 $." to "Das kostet 5 $ oder 6 $.",
+        )
+        for ((input, expected) in latex) assertEquals(input, expected, com.helddertierwelt.mentalmath.domain.climb.ai.AiText.clean(input))
+        val md = com.helddertierwelt.mentalmath.domain.climb.ai.AiMarkdown.parse("## Titel\n**fett** und *kursiv*\n- Punkt\n1. Eins\n| a | b |\n|---|---|\n| 1 | 2 |\n---\n> Zitat")
+        assertEquals(7, md.size)
+        for ((expr, result) in listOf("96 : 0,8" to "120", "15 % von 240" to "36", "3 x 4" to "12", "5!" to "120", "1.234,5" to "1234,5", "60 km/h * 2,5" to "150", "sqrt(144)" to "12", "2^-3" to "0,125")) {
+            val r = com.helddertierwelt.mentalmath.domain.climb.ai.Calculator.evaluate(expr)
+            assertEquals(expr, result, (r as com.helddertierwelt.mentalmath.domain.climb.ai.Calculator.Result.Ok).text)
+        }
+        assertEquals("w2.times11a", com.helddertierwelt.mentalmath.domain.climb.ai.AiLookup.search(Curriculum.worlds, "mal 11").first().skill.id)
+        assertEquals(ApCategory.PERCENT, com.helddertierwelt.mentalmath.domain.climb.ai.AiLookup.category("Prozente"))
+        // Jede Aufgabenart lässt sich im Chat beantworten.
+        for (w in Curriculum.worlds) for (sk in w.skills) {
+            val p = sk.generate(kotlin.random.Random(7))
+            if (p.prompt.hideAfterMs != null) continue
+            val answer = when (val e = p.expected) {
+                is Expected.Choice -> "Ich sage " + p.choices[e.index].replace(Regex("^\\([A-E]\\)\\s*"), "")
+                is Expected.Remainder -> "${e.quotient} Rest ${e.remainder}"
+                else -> "Ich glaube " + Fmt.spoken(e, p.choices)
+            }
+            val input = com.helddertierwelt.mentalmath.domain.climb.ai.AiQuiz.normalizeAnswer(answer, p)
+            assertTrue("${sk.id}: $answer", input != null && com.helddertierwelt.mentalmath.domain.climb.math.AnswerCheck.check(p.expected, input).correct)
+        }
+        // Jedes Werkzeug läuft auf dem Gerät.
+        val ctx = com.helddertierwelt.mentalmath.domain.climb.ai.AiContext(ClimbProgress(), com.helddertierwelt.mentalmath.domain.climb.model.PlusSettings(), System.currentTimeMillis(), vm.today())
+        val calls = listOf(
+            "calculate" to """{"expression": "17 * 23"}""",
+            "get_tmsnat_status" to "{}",
+            "get_climb_status" to "{}",
+            "search_methods" to """{"query": "Prozente"}""",
+            "create_task" to """{"topic": "Dreisatz"}""",
+            "prepare_practice" to """{"categories": ["Prozente"]}""",
+            "prepare_simulation" to """{"variant": "kurztest"}""",
+            "prepare_error_training" to "{}",
+            "open_level" to """{"level": "Additionsmethode", "mode": "lernen"}""",
+            "change_setting" to """{"setting": "reminder", "value": "18:30"}""",
+        )
+        for ((name, args) in calls) {
+            val out = com.helddertierwelt.mentalmath.domain.climb.ai.AiToolbox.execute(name, args, ctx)
+            assertTrue("$name: ${out.result}", out.ok || name == "prepare_error_training")
+        }
+        val prompt = com.helddertierwelt.mentalmath.domain.climb.ai.AiPrompt.system(ctx)
+        assertTrue(prompt.contains("Mental Math Plus"))
+    }
+
     @Test
     fun a_ersterAufstieg() {
         waitForHome()
@@ -1020,13 +1083,33 @@ class ClimbSmokeTest {
         aiLog(sb.toString())
     }
 
+    /**
+     * Bildschirmfoto, ohne auf Ruhe in der Oberfläche zu warten – während die KI lädt oder schreibt,
+     * drehen sich Ladeanzeigen ohne Ende, dann würde waitForIdle nie fertig.
+     */
+    private fun shotNow(name: String) {
+        Thread.sleep(800)
+        val bitmap = InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot() ?: return
+        val scaled = Bitmap.createScaledBitmap(bitmap, bitmap.width / 2, bitmap.height / 2, true)
+        counter++
+        val file = File(screenDir(), String.format(Locale.ROOT, "%03d_%s.png", counter, name))
+        FileOutputStream(file).use { scaled.compress(Bitmap.CompressFormat.PNG, 100, it) }
+    }
+
+    /** Wie [waitForTag], aber ohne waitForIdle (siehe [shotNow]). */
+    private fun waitForTagNoIdle(tag: String, timeout: Long = 10_000) {
+        compose.waitUntil(timeout) { compose.onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty() }
+    }
+
     /** Wartet, bis die KI fertig geantwortet hat; nach 25 s gibt es ein Zwischenbild. */
     private fun waitForAiReply(name: String, timeoutMs: Long = 600_000) {
         val started = System.currentTimeMillis()
         compose.waitUntil(15_000) { ai.busy.value || ai.chat.value.messages.lastOrNull()?.status != AiStatus.STREAMING }
         compose.waitUntil(timeoutMs) { !ai.busy.value || System.currentTimeMillis() - started > 25_000 }
-        if (ai.busy.value) shot("${name}_laeuft")
+        if (ai.busy.value) shotNow("${name}_laeuft")
         compose.waitUntil(timeoutMs) { !ai.busy.value }
+        // Noch einen Moment, bis die letzte Ladeanzeige verschwunden ist.
+        compose.waitUntil(10_000) { ai.activity.value == null }
         aiLog("Dauer „$name“: ${(System.currentTimeMillis() - started) / 1000} s")
         compose.waitForIdle()
         shot(name)
@@ -1053,7 +1136,6 @@ class ClimbSmokeTest {
             ai.setThinking(false)
         }
         compose.onNodeWithTag("action_ai").performClick()
-        compose.waitForIdle()
         // Das Modell spielt ci/smoke.sh auf; die App prüft es beim ersten Öffnen (Prüfsumme).
         compose.waitUntil(300_000) {
             ai.models.value[AiModel.GEMMA4_E2B].let { it is ModelState.Ready || it is ModelState.Missing || it is ModelState.Failed }
@@ -1067,8 +1149,11 @@ class ClimbSmokeTest {
             waitForHome()
             return
         }
-        waitForTag("aiList", 30_000)
+        waitForTagNoIdle("aiList", 30_000)
+        shotNow("l_ki_laedt")
+        val loadStart = System.currentTimeMillis()
         compose.waitUntil(420_000) { ai.engineStatus.value.let { it is EngineStatus.Ready || it is EngineStatus.Failed } }
+        aiLog("Laden dauerte ${(System.currentTimeMillis() - loadStart) / 1000} s")
         shot("l_ki_start")
         val status = ai.engineStatus.value
         aiLog("KI geladen: $status")

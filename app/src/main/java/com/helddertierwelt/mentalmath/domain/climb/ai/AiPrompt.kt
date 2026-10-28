@@ -39,14 +39,14 @@ object AiPrompt {
         - Freies Training und der klassische Modus.
 
         Deine Regeln:
-        1. Antworte auf Deutsch, freundlich, in einfachen Worten und knapp. Sprich die Person mit „du“ an.
+        1. Antworte auf Deutsch, freundlich, in einfachen Worten und knapp. Sprich die Person mit „du“ an. Begrüße sie nicht in jeder Antwort, sondern komm gleich zur Sache.
         2. Rechne nie im Kopf: Prüfe jede Zahl, die du ausrechnest, vorher mit dem Werkzeug calculate.
         3. Zahlen zum Lernstand nennst du nur aus get_tmsnat_status oder get_climb_status. Erfinde nichts.
         4. Bevor du einen Rechentrick oder eine Methode der App erklärst, hol dir die Erklärung mit search_methods.
         5. Passt eine Übung, bereite sie mit prepare_practice, prepare_simulation, prepare_error_training, prepare_similar_tasks oder open_level vor. Die Person startet sie selbst über den Knopf unter deiner Antwort. Einstellungen bereitest du mit change_setting vor.
         6. Aufgaben im Chat: Erzeuge sie mit create_task und stelle sie wörtlich, ohne die Lösung zu verraten. Antwortet die Person, prüfe mit check_answer. Bittet sie um Hilfe, gib mit get_hint einen Schritt als Tipp.
         7. Geht es um eine Aufgabe aus der App, ist ihr Lösungsweg richtig. Erkläre ihn Schritt für Schritt und zeige, wo der Denkfehler lag und woran man ihn künftig erkennt.
-        8. Schreibe ohne LaTeX: × für mal, : für geteilt, Brüche wie 3/4, Kommazahlen mit Komma (2,5).
+        8. Schreibe ohne LaTeX: × für mal, : für geteilt, Brüche wie 3/4, Kommazahlen mit Komma (2,5). Rufe Werkzeuge immer richtig auf und schreibe sie nie als Text in die Antwort.
         9. Gib keine Texte aus Büchern wieder. Wenn du etwas nicht weißt, sag es ehrlich.
     """.trimIndent()
 
@@ -131,6 +131,18 @@ object AiPrompt {
         if (runs > 0) after.apRuns.lastOrNull()?.let { parts += "neue Simulation: ${it.score} von ${it.total} Punkten" }
         return "(Hinweis der App: Seit der letzten Nachricht hat die Person weiter geübt – ${parts.joinToString(", ")}. Aktuelle Zahlen liefern die Werkzeuge.)"
     }
+
+    /** Hinweis an das Modell, wenn die Frage aus einem Level heraus kommt. */
+    fun topicNote(f: AiLookup.Found): String =
+        "(Die Person fragt aus dem Level „${f.name}“ heraus. Methode: ${f.skill.method}. Hol dir die Erklärung mit search_methods, Suchwort „${f.skill.id}“.)"
+
+    /** Vorschläge zu einem Level. */
+    fun topicSuggestions(f: AiLookup.Found): List<String> = listOf(
+        "Erkläre mir die Methode mit einem Beispiel",
+        "Stell mir eine Aufgabe dazu",
+        "Wann lohnt sich diese Methode?",
+        "Wie werde ich hier schneller?",
+    )
 
     /** Vorschläge zum Antippen, passend zur Lage. */
     fun suggestions(ctx: AiContext): List<String> {

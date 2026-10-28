@@ -57,6 +57,7 @@ fi
   echo "shots: ${SHOTS}"
   if [ "$status" -eq 0 ]; then echo "Ergebnis: OK"; else echo "Ergebnis: FEHLER"; fi
   echo "Bilder: $(ls "$OUT/screens" | wc -l)"
+  [ -f "$OUT/apk-info.txt" ] && cat "$OUT/apk-info.txt"
   echo
   tail -n 80 "$OUT/instrument.txt"
 } > "$OUT/summary.txt"

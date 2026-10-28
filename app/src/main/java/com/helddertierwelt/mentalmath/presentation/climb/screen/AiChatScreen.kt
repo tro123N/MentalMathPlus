@@ -68,11 +68,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -109,6 +112,7 @@ import com.helddertierwelt.mentalmath.presentation.climb.component.SwitchRow
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.accent
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
+import kotlinx.coroutines.flow.first
 
 /** Kurzer Text zum Zustand der KI, z. B. „Gemma 4 E4B · Grafikeinheit“. */
 private fun statusText(status: EngineStatus, model: AiModel?): String = when (status) {
@@ -132,9 +136,12 @@ fun AiChatScreen(navController: NavController) {
     val models by ai.models.collectAsState()
     val settings by ai.settings.collectAsState()
     val focus by ai.focus.collectAsState()
+    val topic by ai.topic.collectAsState()
     val notice by ai.notice.collectAsState()
     val crashNote by ai.crashNote.collectAsState()
     val context = LocalContext.current
+    val keyboard = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     var input by rememberSaveable { mutableStateOf("") }
 
     // Modell im Speicher halten, solange der Bildschirm sichtbar ist; danach nach einer Weile freigeben.
@@ -248,6 +255,9 @@ fun AiChatScreen(navController: NavController) {
         if (text.isBlank() || busy) return
         ai.send(text)
         input = ""
+        // Tastatur einklappen, damit die Antwort Platz hat.
+        keyboard?.hide()
+        focusManager.clearFocus()
     }
 
     Scaffold(
@@ -257,7 +267,7 @@ fun AiChatScreen(navController: NavController) {
                 onNavigation = { back() },
                 actions = {
                     if (active != null) {
-                        IconButton(onClick = { ai.newChat() }, enabled = chat.messages.isNotEmpty() || focus != null, modifier = Modifier.testTag("aiNewChat")) {
+                        IconButton(onClick = { ai.newChat() }, enabled = chat.messages.isNotEmpty() || focus != null || topic != null, modifier = Modifier.testTag("aiNewChat")) {
                             Icon(
                                 painter = painterResource(R.drawable.add_24dp),
                                 contentDescription = "Neues Gespräch",
@@ -316,6 +326,11 @@ fun AiChatScreen(navController: NavController) {
                     val listState = rememberLazyListState()
                     val messages = chat.messages
                     val last = messages.lastOrNull()
+                    // Beim Öffnen (und bei einer neuen Aufgabe) ans Ende springen.
+                    LaunchedEffect(focus, topic) {
+                        val total = snapshotFlow { listState.layoutInfo.totalItemsCount }.first { it > 0 }
+                        listState.scrollToItem(total - 1)
+                    }
                     // Beim Schreiben unten bleiben (außer die Person hat nach oben gescrollt).
                     LaunchedEffect(messages.size, last?.text?.length, last?.thought?.length, last?.actions?.size, last?.status) {
                         val total = listState.layoutInfo.totalItemsCount
@@ -337,7 +352,7 @@ fun AiChatScreen(navController: NavController) {
                                 NoteCard(note, onClose = { ai.clearCrashNote() })
                             }
                         }
-                        if (messages.isEmpty() && focus == null) {
+                        if (messages.isEmpty() && focus == null && topic == null) {
                             item(key = "welcome") {
                                 ClimbCard(modifier = Modifier.testTag("aiWelcome")) {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -367,6 +382,18 @@ fun AiChatScreen(navController: NavController) {
                                     onRetry = { ai.retry() },
                                     onCopy = { copy(it) },
                                 )
+                            }
+                        }
+                        val t = topic
+                        if (t != null && focus == null) {
+                            item(key = "topic") {
+                                ClimbCard(modifier = Modifier.testTag("aiTopic")) {
+                                    CaptionText("Frage zu diesem Level")
+                                    Spacer(Modifier.height(4.dp))
+                                    BodyText(ai.topicName(t) ?: t)
+                                    Spacer(Modifier.height(10.dp))
+                                    AiSuggestions(ai.suggestions(), enabled = !busy, onPick = { send(it) })
+                                }
                             }
                         }
                         val f = focus

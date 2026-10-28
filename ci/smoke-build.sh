@@ -27,6 +27,22 @@ if [ "$status" -ne 0 ]; then
 fi
 rm -f "$OUT/build.log"
 
+# Release-Build (wie für das Release, nur ohne Signatur): prüft R8 vorab und zeigt Größe und ABIs.
+./gradlew --no-daemon --stacktrace :app:assembleFossRelease 2>&1 | tee "$OUT/release.log"
+rstatus=${PIPESTATUS[0]}
+REL="$(ls app/build/outputs/apk/foss/release/*.apk 2>/dev/null | head -n 1)"
+{
+  echo "Release-Build: $([ "$rstatus" -eq 0 ] && echo OK || echo FEHLGESCHLAGEN)"
+  if [ -n "$REL" ]; then
+    echo "APK: $(basename "$REL") $(du -h "$REL" | cut -f1)"
+    unzip -l "$REL" | grep -E "\.so$" | awk '{printf "%8.1f MB  %s\n", $1/1048576, $4}'
+  else
+    grep -E "^e: |What went wrong|FAILED|Execution failed|R8|Missing class" "$OUT/release.log" | head -n 80
+  fi
+} > "$OUT/apk-info.txt"
+cat "$OUT/apk-info.txt"
+rm -f "$OUT/release.log"
+
 # KI-Test: das kleine Gemma-4-Modell (E2B, 2,6 GB) für das virtuelle Handy laden und prüfen.
 # Klappt der Download nicht, läuft der Test ohne KI-Gespräch weiter.
 MODEL_DIR=smoke-model

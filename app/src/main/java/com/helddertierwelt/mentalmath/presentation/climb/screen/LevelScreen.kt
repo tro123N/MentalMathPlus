@@ -70,6 +70,7 @@ fun LevelScreen(navController: NavController, skillId: String) {
     val dimens = MentalMathTheme.dimens
     val owner = LocalActivity.current as ViewModelStoreOwner
     val viewModel: ClimbViewModel = hiltViewModel(owner)
+    val aiViewModel: com.helddertierwelt.mentalmath.presentation.climb.AiViewModel = hiltViewModel(owner)
     val progress by viewModel.progress.collectAsState()
     val skill = viewModel.skill(skillId)
 
@@ -240,6 +241,21 @@ fun LevelScreen(navController: NavController, skillId: String) {
             if (!unlocked) {
                 Spacer(Modifier.height(12.dp))
                 CaptionText("Dieses Level wird frei, sobald du das Level davor mit mindestens einem Stern geschafft hast.")
+            }
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                Spacer(Modifier.height(10.dp))
+                ActionButton(
+                    text = "KI-Coach fragen",
+                    subtitle = "Fragen zur Methode, Beispiele und Tipps – offline auf dem Handy",
+                    icon = R.drawable.auto_awesome_24dp,
+                    iconTint = accent,
+                    onClick = {
+                        viewModel.playTap()
+                        aiViewModel.setTopic(skill.id)
+                        navController.navigate("ai")
+                    },
+                    modifier = Modifier.testTag("levelAskAi"),
+                )
             }
             Spacer(Modifier.height(24.dp))
         }

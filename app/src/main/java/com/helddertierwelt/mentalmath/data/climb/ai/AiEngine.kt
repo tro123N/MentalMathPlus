@@ -195,15 +195,17 @@ class AiEngine @Inject constructor(
             ModelInfo.from(path).use { info ->
                 (info as? ModelInfo.Llm)?.let {
                     mtp = it.hasSpeculativeDecodingSupport()
-                    supportsThinking = it.supportsThinking()
-                    supportsTools = it.supportsFunctionCalling()
+                    // Nur zur Info: Die Gemma-4-Dateien melden Denken und Werkzeuge hier nicht,
+                    // können beides aber (Werkzeugaufrufe in <|tool_call>…<tool_call|>).
+                    Log.i(TAG, "Modellinfo: MTP=$mtp, Denken=${it.supportsThinking()}, Werkzeuge=${it.supportsFunctionCalling()}")
                 }
             }
         } catch (t: Throwable) {
             Log.w(TAG, "Modellinfo nicht lesbar", t)
-            supportsThinking = true
-            supportsTools = true
         }
+        // Alle Modelle im Katalog (Gemma 4) können denken und Werkzeuge benutzen.
+        supportsThinking = true
+        supportsTools = true
         val bad = badCombos()
         data class Attempt(val backend: String, val mtp: Boolean)
         val attempts = buildList {

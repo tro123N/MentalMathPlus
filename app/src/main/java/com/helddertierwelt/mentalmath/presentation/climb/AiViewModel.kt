@@ -33,6 +33,8 @@ import com.helddertierwelt.mentalmath.domain.climb.ai.AiAgent
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiContext
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiConversation
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiHistory
+import com.helddertierwelt.mentalmath.domain.climb.ai.AiLookup
+import com.helddertierwelt.mentalmath.domain.climb.curriculum.Curriculum
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiMessage
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiModel
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiPrompt
@@ -91,6 +93,10 @@ class AiViewModel @Inject constructor(
     val focus: StateFlow<AiTaskContext?> = _focus.asStateFlow()
     private var focusSent = false
 
+    /** Level, aus dem heraus gefragt wird (ID), null = kein bestimmtes. */
+    private val _topic = MutableStateFlow<String?>(null)
+    val topic: StateFlow<String?> = _topic.asStateFlow()
+
     /** Die KI schreibt gerade. */
     private val _busy = MutableStateFlow(false)
     val busy: StateFlow<Boolean> = _busy.asStateFlow()
@@ -138,11 +144,16 @@ class AiViewModel @Inject constructor(
      */
     fun activeModel(): AiModel? {
         val selected = selectedModel
-        if (store.isReady(selected) && !engine.crashedEverywhere(selected)) return selected
-        return AiModel.fallbackOrder.firstOrNull { store.isReady(it) && !engine.crashedEverywhere(it) }
+        fun usable(m: AiModel) = store.isReady(m) && !engine.crashedEverywhere(m) && m !in failedThisRun
+        if (usable(selected)) return selected
+        return AiModel.fallbackOrder.firstOrNull { usable(it) }
     }
 
+    /** Modelle, die sich in diesem Programmlauf nicht laden ließen (nicht bei jeder Nachricht neu versuchen). */
+    private val failedThisRun = mutableSetOf<AiModel>()
+
     fun select(model: AiModel) {
+        failedThisRun -= model
         feedbackController.play(FeedbackType.TAP)
         viewModelScope.launch { settingsRepository.update { it.copy(aiModel = model.id) } }
     }
@@ -205,6 +216,7 @@ class AiViewModel @Inject constructor(
     /** Abstürze vergessen und alles noch einmal versuchen. */
     fun resetEngine() {
         feedbackController.play(FeedbackType.TAP)
+        failedThisRun.clear()
         engine.forgetCrashes()
         viewModelScope.launch {
             session = null
@@ -267,13 +279,27 @@ class AiViewModel @Inject constructor(
         )
     }
 
-    fun suggestions(): List<String> = AiPrompt.suggestions(context())
+    fun suggestions(): List<String> {
+        val found = _topic.value?.let { AiLookup.locate(Curriculum.worlds, it) }
+        return if (found != null && _focus.value == null) AiPrompt.topicSuggestions(found) else AiPrompt.suggestions(context())
+    }
 
     /** Gespräch über eine Aufgabe aus der App beginnen (null = allgemeines Gespräch). */
     fun setFocus(task: AiTaskContext?) {
         _focus.value = task
         focusSent = false
+        _topic.value = null
     }
+
+    /** Gespräch zu einem Level beginnen (aus dem Level-Bildschirm). */
+    fun setTopic(skillId: String?) {
+        _topic.value = skillId
+        _focus.value = null
+        focusSent = false
+    }
+
+    /** Name des Levels, aus dem gefragt wird, z. B. „Welt 6, Level 1: Additionsmethode“. */
+    fun topicName(skillId: String): String? = AiLookup.locate(Curriculum.worlds, skillId)?.name
 
     private fun historyBudget(model: AiModel): Int =
         (engine.contextTokens(model) - engine.reserveTokens(model) - SYSTEM_TOKENS).coerceIn(400, 6_000)
@@ -314,8 +340,19 @@ class AiViewModel @Inject constructor(
         val before = _chat.value
         val userId = before.nextId
         val replyId = before.nextId + 1
-        val question = if (withTask) AiPrompt.taskQuestion(focus!!, text) else text
-        val user = AiMessage(userId, AiRole.USER, text, prompt = question.takeIf { it != text }, task = if (withTask) focus!!.card else null)
+        val topic = _topic.value?.takeIf { !withTask }?.let { AiLookup.locate(Curriculum.worlds, it) }
+        if (topic != null) _topic.value = null
+        val question = when {
+            withTask -> AiPrompt.taskQuestion(focus!!, text)
+            topic != null -> AiPrompt.topicNote(topic) + "\n\n" + text
+            else -> text
+        }
+        val card = when {
+            withTask -> focus!!.card
+            topic != null -> topic.name
+            else -> null
+        }
+        val user = AiMessage(userId, AiRole.USER, text, prompt = question.takeIf { it != text }, task = card)
         val reply = AiMessage(replyId, AiRole.ASSISTANT, "", status = AiStatus.STREAMING)
         _chat.value = before.copy(messages = before.messages + user + reply, nextId = before.nextId + 2)
         run(user, replyId)
@@ -327,11 +364,9 @@ class AiViewModel @Inject constructor(
             val text = StringBuilder()
             val thought = StringBuilder()
             try {
-                val model = activeModel() ?: throw UserFacing("Es ist noch kein KI-Modell auf dem Handy. Lade zuerst eins herunter.")
-                if (engine.status.value !is EngineStatus.Ready || engine.loadedModel != model) _activity.value = "Lädt die KI …"
-                if (!engine.load(model, settings.value.aiFast)) {
-                    throw UserFacing((engine.status.value as? EngineStatus.Failed)?.message ?: "Die KI konnte nicht geladen werden.")
-                }
+                val model = loadWithFallback() ?: throw UserFacing(
+                    (engine.status.value as? EngineStatus.Failed)?.message ?: "Es ist noch kein KI-Modell auf dem Handy. Lade zuerst eins herunter.",
+                )
                 if (!engine.isCurrent(session)) _activity.value = "Bereitet das Gespräch vor …"
                 val s = prepareSession(model, exclude = setOf(user.id, replyId))
                 // Hat die Person seit der letzten Antwort weiter geübt, bekommt die KI einen kurzen Hinweis.
@@ -399,6 +434,28 @@ class AiViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Gewähltes Modell laden. Klappt das nicht (z. B. reicht beim 12B-Modell der Speicher nicht),
+     * wird ein anderes, schon geladenes Modell genommen. Null, wenn keins geht.
+     */
+    private suspend fun loadWithFallback(): AiModel? {
+        val first = activeModel() ?: return null
+        if (engine.status.value !is EngineStatus.Ready || engine.loadedModel != first) _activity.value = "Lädt die KI …"
+        if (engine.load(first, settings.value.aiFast)) return first
+        failedThisRun += first
+        val reason = (engine.status.value as? EngineStatus.Failed)?.message
+        for (other in AiModel.fallbackOrder) {
+            if (other == first || !store.isReady(other) || engine.crashedEverywhere(other)) continue
+            _activity.value = "Lädt ${other.title} …"
+            if (engine.load(other, settings.value.aiFast)) {
+                _notice.value = "${first.title} ließ sich nicht laden" + (reason?.let { " ($it)" } ?: "") + ". Ich antworte mit ${other.title}."
+                return other
+            }
+            failedThisRun += other
+        }
+        return null
+    }
+
     /** Laufende Antwort abbrechen. */
     fun stop() {
         feedbackController.play(FeedbackType.TAP)
@@ -426,6 +483,7 @@ class AiViewModel @Inject constructor(
         stop()
         session = null
         _focus.value = null
+        _topic.value = null
         focusSent = false
         _chat.value = AiConversation()
         viewModelScope.launch { chats.clear() }

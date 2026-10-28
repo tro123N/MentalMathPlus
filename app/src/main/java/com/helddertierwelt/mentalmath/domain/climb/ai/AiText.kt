@@ -41,7 +41,14 @@ object AiText {
     private val superscripts = mapOf('0' to '⁰', '1' to '¹', '2' to '²', '3' to '³', '4' to '⁴', '5' to '⁵', '6' to '⁶', '7' to '⁷', '8' to '⁸', '9' to '⁹', '-' to '⁻')
 
     /** Antwort des Modells säubern: Steuerzeichen entfernen, LaTeX in lesbare Zeichen umwandeln. */
-    fun clean(raw: String): String {
+    fun clean(raw: String): String = try {
+        cleanUnsafe(raw)
+    } catch (e: Exception) {
+        // Lieber den Rohtext zeigen, als beim Anzeigen abzustürzen.
+        raw
+    }
+
+    private fun cleanUnsafe(raw: String): String {
         var s = specialTokens.replace(raw, "")
         s = s.replace("\r", "")
         s = mathSegments(s)
@@ -54,11 +61,11 @@ object AiText {
     /** Text in Mathe-Klammern ($…$, \(…\), \[…\]) ohne Klammern und geschweifte Klammern übernehmen. */
     private fun mathSegments(text: String): String {
         var s = text
-        s = Regex("\\\\\\[(.+?)\\\\]", RegexOption.DOT_MATCHES_ALL).replace(s) { "\n" + mathBody(it.groupValues[1]) + "\n" }
+        s = Regex("\\\\\\[(.+?)\\\\\\]", RegexOption.DOT_MATCHES_ALL).replace(s) { "\n" + mathBody(it.groupValues[1]) + "\n" }
         s = Regex("\\\\\\((.+?)\\\\\\)", RegexOption.DOT_MATCHES_ALL).replace(s) { mathBody(it.groupValues[1]) }
         s = Regex("\\$\\$(.+?)\\$\\$", RegexOption.DOT_MATCHES_ALL).replace(s) { "\n" + mathBody(it.groupValues[1]) + "\n" }
         // Einzelne $…$ nur, wenn der Inhalt nach Formel aussieht (kein Dollarbetrag).
-        s = Regex("\\$(?=\\S)([^$\\n]{1,200}?)(?<=\\S)\\$").replace(s) { m ->
+        s = Regex("\\$(?=\\S)([^\\$\\n]{1,200}?)(?<=\\S)\\$").replace(s) { m ->
             val body = m.groupValues[1]
             if (body.contains('\\') || body.contains('^') || body.contains('_') || body.contains('=') || body.any { it.isDigit() }) mathBody(body) else m.value
         }
@@ -92,16 +99,16 @@ object AiText {
             s = s.substring(0, i.range.first) + "√" + wrap(a) + s.substring(end + 1)
         }
         // \text{…}, \mathrm{…}, \textbf{…} → Inhalt
-        s = Regex("\\\\(?:text|mathrm|textrm|mathit|operatorname|mbox)\\s*\\{([^{}]*)}").replace(s) { it.groupValues[1] }
-        s = Regex("\\\\(?:textbf|mathbf|boldsymbol)\\s*\\{([^{}]*)}").replace(s) { "**" + it.groupValues[1] + "**" }
-        s = Regex("\\\\boxed\\s*\\{([^{}]*)}").replace(s) { "**" + it.groupValues[1] + "**" }
-        s = Regex("\\\\([a-zA-Z]+|[%{},;:! $])").replace(s) { m ->
+        s = Regex("\\\\(?:text|mathrm|textrm|mathit|operatorname|mbox)\\s*\\{([^\\{\\}]*)\\}").replace(s) { it.groupValues[1] }
+        s = Regex("\\\\(?:textbf|mathbf|boldsymbol)\\s*\\{([^\\{\\}]*)\\}").replace(s) { "**" + it.groupValues[1] + "**" }
+        s = Regex("\\\\boxed\\s*\\{([^\\{\\}]*)\\}").replace(s) { "**" + it.groupValues[1] + "**" }
+        s = Regex("\\\\([a-zA-Z]+|[%\\{\\},;:! \\$])").replace(s) { m ->
             val name = m.groupValues[1]
             commands[name] ?: if (name.first().isLetter()) name else m.value
         }
         // Hochzahlen: x^2 → x², x^{12} → x¹², ^\circ → °
-        s = Regex("\\^\\{?°}?").replace(s, "°")
-        s = Regex("\\^\\{(-?\\d{1,3})}").replace(s) { m -> m.groupValues[1].map { superscripts[it] ?: it }.joinToString("") }
+        s = Regex("\\^\\{?°\\}?").replace(s, "°")
+        s = Regex("\\^\\{(-?\\d{1,3})\\}").replace(s) { m -> m.groupValues[1].map { superscripts[it] ?: it }.joinToString("") }
         s = Regex("(?<=[\\w)])\\^(-?\\d{1,2})(?!\\d)").replace(s) { m -> m.groupValues[1].map { superscripts[it] ?: it }.joinToString("") }
         return s
     }

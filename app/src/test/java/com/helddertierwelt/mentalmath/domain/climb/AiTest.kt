@@ -496,6 +496,19 @@ class AiTest {
     }
 
     @Test
+    fun levelTopicPointsTheModelToTheMethod() {
+        val f = AiLookup.locate(Curriculum.worlds, "w6.addmethod")!!
+        assertEquals("Welt 6, Level 1: Additionsmethode", f.name)
+        val note = AiPrompt.topicNote(f)
+        assertTrue(note.contains("Welt 6, Level 1: Additionsmethode"))
+        assertTrue(note.contains("w6.addmethod"))
+        // Das genannte Suchwort findet genau dieses Level.
+        val hit = run(AiToolbox.SEARCH_METHODS, """{"query": "w6.addmethod"}""").result["treffer"]!!.jsonArray[0].jsonObject
+        assertEquals("w6.addmethod", hit.str("id"))
+        assertEquals(4, AiPrompt.topicSuggestions(f).size)
+    }
+
+    @Test
     fun progressNoteOnlyWhenSomethingChanged() {
         val a = apProgress()
         assertNull(AiPrompt.progressNote(a, a))

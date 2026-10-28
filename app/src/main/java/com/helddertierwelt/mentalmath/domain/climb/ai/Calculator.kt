@@ -201,7 +201,7 @@ object Calculator {
         // Zeichen nach einem „=“ (z. B. „3 * 4 = ?“) und Fragezeichen ignorieren.
         s = s.replace("?", " ")
         // Einheiten und andere Wörter überlesen (sqrt bleibt erhalten).
-        s = Regex("[a-zäöüßµ€\$]+").replace(s) { m -> if (m.value == "sqrt") " sqrt " else " " }
+        s = Regex("[a-zäöüßµ€\\$]+").replace(s) { m -> if (m.value == "sqrt") " sqrt " else " " }
         return s
     }
 
