@@ -1,156 +1,76 @@
-# <a href="https://codeberg.org/Mental-Math/MentalMath"><img src="./fastlane/metadata/android/en-US/images/icon_transparent.svg" alt="Mental Math Icon" height="25"></a> Mental Math
-<p align="center">
-  <img src="fastlane/metadata/android/en-US/images/featureGraphic.png" alt="Main Screen" width="100%">
-</p>
+# Mental Math Plus
 
-## App Overview
-"Mental Math" is a simple and clean Android app for mental arithmetic training. You can practice on your own or challenge friends to compete and improve your skills. The app is [open source](https://codeberg.org/Mental-Math/MentalMath) and respects your privacy.
+[![Neueste Version](https://img.shields.io/github/v/release/tro123N/MentalMathPlus?label=Version&sort=semver)](https://github.com/tro123N/MentalMathPlus/releases/latest)
 
-<p align="center">
-  <a href="https://f-droid.org/packages/com.helddertierwelt.mentalmath/">
-    <img src="fastlane/metadata/android/en-US/images/badges/fdroid-badge.png" alt="Get it on F-Droid" height="80">
-  </a>
-  <a href="https://play.google.com/store/apps/details?id=com.helddertierwelt.mentalmath">
-    <img src="fastlane/metadata/android/en-US/images/badges/google-play-badge.png" alt="Get it on Google Play" height="80">
-  </a>
-  <a href="https://codeberg.org/Mental-Math/MentalMath/releases">
-    <img src="fastlane/metadata/android/en-US/images/badges/codeberg-badge.png" alt="Get it on Codeberg" height="80">
-  </a>
-</p>
+> **Hinweis: Dieses Projekt wurde mit KI erstellt.** Alle Erweiterungen dieses Forks – Code, Erklärungstexte und Dokumentation – wurden von der KI **Claude (Anthropic)** geschrieben. Es ist ein **privates Hobbyprojekt** ohne kommerzielle Absicht, ohne Gewährleistung und ohne professionelle Prüfung. Fehler sind möglich.
+>
+> **Inhaber und Betreuer dieses Forks:** [tro123N](https://github.com/tro123N). Er hat die Idee, die Wünsche und die Entscheidungen beigesteuert, programmiert aber nicht selbst.
+>
+> **Die eigentliche App „Mental Math“** stammt von **HeldDerTierwelt** und wird auf [Codeberg](https://codeberg.org/Mental-Math/MentalMath) entwickelt. Mental Math Plus baut darauf auf; Ehre und Rechte am Original gehören ihm.
 
-## Features
-#### Customizable Training
-Select which arithmetic operations to include (+, −, ×, ÷). For each operation, choose from nine difficulty levels to customize your training precisely to your skill level.
+Kopfrechnen Schritt für Schritt lernen: ein **Kletterweg** aus Welten und Levels, der die Rechenmethoden aus dem Buch *Mathe-Magie* (Arthur Benjamin & Michael Shermer) trainiert – vom Zahlengefühl bis zum Quadrieren fünfstelliger Zahlen. Dazu kommen ein freies Training und der klassische Modus der Original-App.
 
-#### Two Game Modes
-• Practice Mode lets you complete a fixed number of problems (10, 20, 30, 40, or 50).  
-• Timed Mode challenges you to solve as many problems as possible within a time limit (1, 2, 3, 4, or 5 minutes).
-• Survival Mode challenges you to survive 100 problems with 3 lives and a decreasing time limit for each problem.
+Diese App ist ein inoffizieller Fork. Sie steht in keiner Verbindung zu den Autoren oder dem Verlag des Buchs und auch nicht zum Entwickler der Original-App. Alle Erklärungen in der App sind eigene Texte; das Buch selbst ist nicht enthalten.
 
-#### Challenge your Friends
-You can share a game link to:  
-**1.** Replay a completed game with the exact same problems to compare scores with friends.  
-**2.** Start a new game with preset settings for a fair and fresh challenge for everyone.
+## Download
 
-#### Difficulty Calculation
-Problem difficulty is determined using [algorithms](https://codeberg.org/Mental-Math/MentalMathEvaluator) based on column addition, column subtraction, long multiplication, and long division, creating realistic and well-balanced exercises.
+Die jeweils neueste Version (Android-APK):
 
-#### Detailed Results
-After each game, view a detailed summary that includes your selected settings, your performance (accuracy, speed, and score), and a complete list of all your problems and answers for review.
+**https://github.com/tro123N/MentalMathPlus/releases/latest/download/MentalMathPlus.apk**
 
-#### Personal Leaderboard
-Your top 10 results are displayed separately for each combination of settings, allowing you to easily track your progress. You can also review detailed summaries of your top games at any time.
+Beim ersten Installieren fragt Android, ob der Browser Apps installieren darf. Updates installieren sich über die vorhandene Version, der Fortschritt bleibt erhalten.
 
-#### Game History
-Explore the complete history of all your scored games. You can sort the list by time or numerically to find specific games. Anytime, you can revisit any match to view a detailed summary of its results.
+## Funktionen
 
-#### Practice Reminders
-Set up periodic reminders to support regular mental math practice. Notifications are sent in the evening (around 6 p.m.) and can be scheduled daily, every three days, or weekly.
+Die App hat drei getrennte Bereiche (Leiste unten):
 
-#### Customizable Interface
-Choose your preferred keypad (numeric or phone-style), display math problems horizontally or vertically, and adjust the input direction (left-to-right or right-to-left) to suit your preferences.
+### 1. Kletterweg – lernen nach Plan (neu in Mental Math Plus)
+- **12 Welten mit 84 Levels** nach den Kapiteln 0–9 des Buchs. Jedes Level: Erklärung, geführtes Üben (Zwischenschritte eintippen), freies Üben und eine Prüfung auf Zeit.
+- **Ziele und Sterne:** Ein Level gilt als geschafft, wenn Genauigkeit und Durchschnittszeit stimmen. Schneller heißt mehr Sterne.
+- **Auffrischen statt Vergessen:** Gelernte Levels kommen in Abständen wieder dran. Wer schlechter wird, frischt die Grundlage auf, bevor es weitergeht.
+- **Einstufungstest:** Welten überspringen, die man schon kann.
+- **Handbuch:** alle Tricks zum Nachschlagen, durchsuchbar; wächst mit jedem neuen Level automatisch mit.
+- **Statistik:** Verlauf als Diagramm, Stärken und Schwächen, Fortschritt je Welt und je Level.
 
-#### Sound & Vibration
-Choose sound and/or vibration as feedback during games for clearer, more immediate feedback. Both options can be enabled or disabled independently. Vibration may depend on your device or system settings.
+### 2. Freies Training – üben ohne Plan (neu in Mental Math Plus)
+- Neun Aufgabenarten in drei Stufen mit den Modi Auf Zeit, Endlos, Überleben und Prüfung, eigene Bestwerte. Zählt nicht für den Kletterweg.
+- **Anpassende Schwierigkeit** (schaltbar): wird schwerer, wenn es gut läuft, und leichter nach Fehlern.
+- **Trick-Tipp-Knopf** (schaltbar, auch im Kletterweg beim Üben): zeigt, welcher Trick zur Aufgabe passt.
 
-#### Clean Design
-A simple and minimalist app design with no unnecessary elements or distractions, designed to keep your focus fully on mental math training. Supports both light and dark modes.
+### TMSnat-Training (im freien Training)
+- Vorbereitung auf den TMSnat-Untertest **„Arithmetisches Problemlösen“** (ab 2027; der Untertest stammt aus dem HAM-Nat): 16 Aufgaben in 25 Minuten, Antworten A–E, ohne Taschenrechner.
+- Unbegrenzt viele eigene Textaufgaben in 12 Kategorien (Dreisatz, Prozente, Beziehungsketten, Anteile, Einheiten und Dosierung, Tempo, gemeinsame Arbeit, Mischungen, Wachstum und Halbwertszeit, Gleichungen, Kombinatorik, Wahrscheinlichkeit) – mit Lösungswegen, typischen Fehlern als falschen Antworten und unwichtigen Zusatzangaben wie im Test.
+- **Testsimulation** wie im TMSnat (16 Aufgaben, 25 Minuten), dazu Kurztest und Tempo-Test (20 Minuten); mit Gesamtzeit, „Später bearbeiten“, Auswertung nach Kategorien und Verlauf der Ergebnisse.
+- **Gemischt üben** ohne Ende: nach einem Fehler erscheint sofort der Lösungsweg.
+- Jede Kategorie ist auch ein Level (Welt 13) mit Erklärung, geführtem Üben und Prüfung.
 
-#### Open Source, Private, Free & Ad-free
-"Mental Math" is fully [open source](https://codeberg.org/Mental-Math/MentalMath), free to use, and does not contain any ads. It also does not collect, store, or process any personal data, nor does it use trackers or third-party services.
+### 3. Klassischer Modus – die Original-App (fährt neben „Freies Training“ heraus)
+- Der unveränderte Spielmodus von „Mental Math“: Grundrechenarten mit eigenen Zahlenbereichen, Bestenliste, Verlauf und Spiele per Link.
 
-## Screenshots
-<p align="center">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/01.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/02.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/03.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/04.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/05.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/06.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/07.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/08.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/09.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/10.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/11.png" alt="Main Screen" width="30%">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/12.png" alt="Main Screen" width="30%">
-</p>
+### Für alle Bereiche
+- **Einstellungen:** Farbthemen (hell/dunkel und fünf Farben), tägliche Erinnerung zur gewünschten Uhrzeit, Ton und Vibration.
+- **Fortschritt sichern:** als Datei speichern oder teilen und auf einem anderen Handy wieder laden.
 
-## Certificate Verification
-To verify the APK’s authenticity, compare the SHA-256 fingerprint of its signing certificate with the values below. A matching fingerprint confirms that the APK was signed with an official developer key.
+## Versionen
 
-- FOSS Release:  
-  `DE:19:7B:4C:F2:B8:58:80:E0:21:11:59:B6:0B:6E:3C:39:F9:6F:F0:68:68:AE:48:39:C4:2D:8A:4D:6F:3F:E5`
+Die Versionsnummer zeigt, wie groß eine Änderung ist:
 
-- Google Play Store Release:  
-  `4D:C3:38:FD:7C:2D:9D:CB:8C:9F:B1:76:AB:90:D3:D3:E0:B1:97:AB:D5:21:EC:05:E5:BD:BB:D7:60:B8:21:AE`
+- **erste Zahl** (z. B. **2**.0): großer Umbau oder ein ganz neuer Bereich,
+- **zweite Zahl** (z. B. 2.**1**): neue Funktionen,
+- **dritte Zahl** (z. B. 2.1.**1**): nur Fehlerkorrekturen.
 
-## Build Instructions
-Clone the repository and navigate to the project directory:
+Bis Version 1.0.24 war die letzte Zahl nur ein Zähler der automatischen Builds – deshalb die Sprünge (1.0.15 → 1.0.18 → 1.0.20 → 1.0.24). Ab Version 2.0 gilt die Zählung oben. Was sich in jeder Version geändert hat, steht unter [Releases](https://github.com/tro123N/MentalMathPlus/releases).
 
-```bash
-git clone https://codeberg.org/Mental-Math/MentalMath.git
-cd MentalMath
-```
+## Herkunft, Urheber und Lizenz
 
-Make sure you have the required Android SDK and JDK (Java 17) installed. The project uses multiple product flavors (dev, foss, and play). To build a specific version, use one of the following commands:
+- **Original:** [Mental Math](https://codeberg.org/Mental-Math/MentalMath) von HeldDerTierwelt (© 2025–2026), lizenziert unter der [GNU GPL v3](LICENSE.md).
+- **Fork „Mental Math Plus“:** betreut von [tro123N](https://github.com/tro123N), Code und Texte erzeugt mit der KI Claude (Anthropic). Alle Änderungen stehen ebenfalls unter der GPL v3.
+- **Buch:** Die Methoden folgen *Mathe-Magie* von Arthur Benjamin und Michael Shermer (Heyne). Die App verweist nur auf Kapitel und Abschnitte; Texte, Wortlisten und Übungen aus dem Buch sind nicht enthalten.
 
-```bash
-./gradlew assembleDevRelease
-./gradlew assembleFossRelease
-./gradlew assemblePlayRelease
-```
+## Entwicklung
 
-For successful signing, configure the keys in your `gradle.properties` file (compare signingConfigs in `build.gradle.kts`). If no keys are provided, the build will be unsigned. Since the original signing keys are private, using your own keys will break the [app links](https://developer.android.com/training/app-links/about?hl=de) for sharing a game. To make them work, follow these steps:
-
-- Replace all instances of `mental-math.codeberg.page` relating to app links with your own domain.
-- On your website, create an `assetlinks.json` file and place it at `https://<your-domain>/.well-known/assetlinks.json`
-- Add the SHA-256 fingerprint of your key to the `assetlinks.json` like this:
-
-```json
-{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "com.helddertierwelt.mentalmath",
-    "sha256_cert_fingerprints": [
-      "YOUR_SHA256_FINGERPRINT"
-    ]
-  }
-}
-```
-
-## Privacy Policy
-Your privacy is important. Here are the key facts:
-
-- "Mental Math" does not collect, store, or process any personal data and does not use trackers, ads, or third-party services.
-- Android may require a brief internet connection once to verify the domain used for the app’s game links. Apart from that, no internet connection is required.
-- By default, no permissions are required. Enabling vibration feedback requires permission to vibrate. Enabling reminders requires notification permission and uses system features to ensure reminders survive device restarts and trigger reliably.
-
-## Contributing
-Contributions are welcome. There are several ways to support "Mental Math":
-
-[![Übersetzungsstatus](https://hosted.weblate.org/widget/mental-math/android-app/287x66-grey.png)](https://hosted.weblate.org/engage/mental-math/)
-
-- Help translate the app on [Weblate](https://hosted.weblate.org/projects/mental-math) or follow the instructions in [`strings.xml`](https://codeberg.org/Mental-Math/MentalMath/src/branch/main/app/src/main/res/values/strings.xml) to contribute manually.
-- If you find a bug, have an idea for a new feature, or want to suggest an improvement, please [open an issue](https://codeberg.org/Mental-Math/MentalMath/issues/new).
-- General feedback of any kind is appreciated and can be sent via email (see "Contact" section below).
-- A positive review on [Google Play](https://play.google.com/store/apps/details?id=com.helddertierwelt.mentalmath) is a simple but effective way to support the project.
-
-## Donation
-If you enjoy this app, you can support me via [Ko-fi](https://ko-fi.com/mental_math). It means a lot to me ❤️.
-
-## Contact
-Feel free to contact me for questions, feedback, issues or any other reason:
-
-Alexander Goy  
-aka HeldDerTierwelt  
-mental_math_app@pm.me
-
-## License Information
-Mental Math © 2025-2026 HeldDerTierwelt  
-This project is licensed under the [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.html).
-
-<p align="center">
-  <br>
-  <img src="fastlane/metadata/android/en-US/images/icon_transparent.svg" alt="Mental Math Icon" width="200">
-</p>
+- Die Weiterentwicklung liegt auf dem Branch `plus`. Jeder Push dorthin baut über GitHub Actions eine signierte APK (`.github/workflows/build.yml`, Logik in `ci/build.sh`) und veröffentlicht sie unter *Releases*.
+- Die Versionsnummer steht in `ci/version.txt` (z. B. `2.1`). Gibt es diese Version schon, zählt der Build automatisch die dritte Zahl hoch (`2.1.1`, `2.1.2` …).
+- Der Branch `main` enthält den unveränderten Import der Original-App; nur diese README wird nach jedem Release dorthin übernommen, damit sie auf der Startseite des Repositorys erscheint.
+- Der Signaturschlüssel liegt nicht im Repository, sondern als Repository-Secret `SIGNING_KEY` (Format: `<Passwort>.<Keystore als Base64>`).
+- Lokal bauen: `./gradlew assembleFossRelease` (Android SDK und JDK 21 nötig).
