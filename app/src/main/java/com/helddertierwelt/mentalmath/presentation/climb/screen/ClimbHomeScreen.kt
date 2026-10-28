@@ -245,7 +245,7 @@ private fun OverviewCard(
     onStats: () -> Unit,
 ) {
     val dimens = MentalMathTheme.dimens
-    // Nur der Hauptweg zählt hier; Zusatzwelten wie das Medizinertest-Training haben eigene Übersichten.
+    // Nur der Hauptweg zählt hier; Zusatzwelten wie das TMSnat-Training haben eigene Übersichten.
     val all = viewModel.worlds.filter { !it.independent }.flatMap { it.skills }
     val mastered = all.count { progress.of(it.id).mastered }
     val starsTotal = all.sumOf { progress.of(it.id).stars }

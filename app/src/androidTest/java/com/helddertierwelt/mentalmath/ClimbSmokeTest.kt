@@ -749,7 +749,7 @@ class ClimbSmokeTest {
         waitForHome()
     }
 
-    /** Medizinertest-Training: Infos, Kurztest-Simulation mit „Später“, Verlauf, gemischtes Üben mit Trick-Tipp. */
+    /** TMSnat-Training: Infos, Kurztest-Simulation mit „Später“, Verlauf, gemischtes Üben mit Trick-Tipp und Lösungsweg. */
     @Test
     fun i_medizinertest() {
         waitForHome()
@@ -785,7 +785,7 @@ class ClimbSmokeTest {
         waitForResult()
         assertTrue("Keine gespeicherte Simulation", vm.summary.value?.apRun != null)
         shootScrolling("resultColumn", "i_ergebnis", maxShots = 5)
-        clickButton("Zum Medizinertest-Training")
+        clickButton("Zum TMSnat-Training")
         waitForTag("apColumn")
         compose.onNodeWithTag("apHistory").performScrollTo()
         compose.waitForIdle()
@@ -798,8 +798,15 @@ class ClimbSmokeTest {
         shot("i_ueben_trick")
         answer(wrong = true)
         compose.waitForIdle()
+        // Nach einem Fehler kommt der Lösungsweg, weiter geht es erst mit „Weiter“.
+        assertTrue("Kein Lösungsweg nach falscher Antwort", vm.session.value?.phase == Phase.REVEAL)
         shot("i_ueben_falsch")
-        if (vm.session.value?.phase == Phase.FLASH) waitWhileFlash()
+        val before = vm.session.value?.index
+        pressWeiter()
+        compose.waitUntil(5_000) { vm.session.value?.let { it.phase == Phase.ANSWERING && it.index != before } == true }
+        answer()
+        waitWhileFlash()
+        shot("i_ueben_weiter")
         compose.runOnUiThread { vm.endFree() }
         waitForResult()
         shot("i_ueben_ergebnis")

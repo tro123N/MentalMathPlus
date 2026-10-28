@@ -152,8 +152,8 @@ fun FreeSetupScreen(navController: NavController) {
             )
             CardGap()
             ActionButton(
-                text = "Medizinertest-Training",
-                subtitle = "Arithmetisches Problemlösen · TMSnat und HAM-Nat",
+                text = "TMSnat-Training",
+                subtitle = "Arithmetisches Problemlösen · 16 Aufgaben in 25 min",
                 icon = R.drawable.trophy_24dp,
                 iconTint = yellow,
                 onClick = {

@@ -360,6 +360,37 @@ class PlusFeaturesTest {
     }
 
     @Test
+    fun apPracticeShowsSolutionAfterMistake() {
+        val ap = com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks
+        val problems = List(20) { ap.mixed(5, 2, Random(40 + it)) }
+        val rules = FreeRules(FreeMode.ENDLOS, 0, 2, FreeRules.TRACK_AP)
+        var s = SessionLogic.createFree(problems, rules, "Gemischt üben", null)
+        assertTrue(s.showsSolution)
+        assertFalse(s.isExam)
+        // Falsch: Lösungsweg zeigen, keine Wiederholung derselben Aufgabe einplanen.
+        val c = (s.expected as com.helddertierwelt.mentalmath.domain.climb.model.Expected.Choice).index
+        s = SessionLogic.choose(s, (c + 1) % s.problem!!.choices.size, 20_000).first
+        assertEquals(Phase.REVEAL, s.phase)
+        assertEquals(20, s.problems.size)
+        s = SessionLogic.advance(s)
+        assertEquals(Phase.ANSWERING, s.phase)
+        assertEquals(1, s.index)
+        // Richtig: kurze Rückmeldung wie bisher.
+        val c2 = (s.expected as com.helddertierwelt.mentalmath.domain.climb.model.Expected.Choice).index
+        s = SessionLogic.choose(s, c2, 20_000).first
+        assertEquals(Phase.FLASH, s.phase)
+        // Testsimulation und normales freies Training bleiben ohne Lösungsweg.
+        val sim = SessionLogic.createFree(problems, FreeRules(FreeMode.SIMULATION, 1500, 5, FreeRules.TRACK_AP), "TMSnat-Simulation", null)
+        assertTrue(sim.isExam)
+        assertFalse(sim.showsSolution)
+        val free = SessionLogic.createFree(problems, FreeRules(FreeMode.ENDLOS, 0, 2), "Frei", null)
+        assertTrue(free.isExam)
+        assertEquals("TMSnat-Simulation", ap.simulationName(16, 1500))
+        assertEquals("Kurztest", ap.simulationName(8, 750))
+        assertEquals("Tempo-Test", ap.simulationName(16, 1200))
+    }
+
+    @Test
     fun independentWorldIsAlwaysOpen() {
         val w13 = worlds.indexOfFirst { it.independent }
         assertTrue(w13 >= 0)

@@ -410,7 +410,7 @@ fun ClimbKeypad(
 @Composable
 fun ChoiceButtons(choices: List<String>, enabled: Boolean, onChoose: (Int) -> Unit) {
     val dimens = MentalMathTheme.dimens
-    // Bei vier oder fünf Antworten (Medizinertest) etwas kompakter, damit alles auf den Bildschirm passt.
+    // Bei vier oder fünf Antworten (TMSnat-Training) etwas kompakter, damit alles auf den Bildschirm passt.
     val compact = choices.size >= 4
     Column(verticalArrangement = Arrangement.spacedBy(if (compact) 6.dp else 10.dp), modifier = Modifier.fillMaxWidth()) {
         choices.forEachIndexed { i, choice ->

@@ -50,6 +50,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.climb.curriculum.ApCategory
+import com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks
 import com.helddertierwelt.mentalmath.domain.climb.engine.Stats
 import com.helddertierwelt.mentalmath.domain.climb.model.ApRun
 import com.helddertierwelt.mentalmath.presentation.climb.ClimbViewModel
@@ -67,6 +68,7 @@ import com.helddertierwelt.mentalmath.presentation.climb.component.SwitchRow
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.accent
 import com.helddertierwelt.mentalmath.presentation.theme.green
+import com.helddertierwelt.mentalmath.presentation.theme.red
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 import kotlin.math.roundToInt
 
@@ -76,13 +78,12 @@ private fun runDate(ms: Long): String {
     return "${c.get(java.util.Calendar.DAY_OF_MONTH)}.${c.get(java.util.Calendar.MONTH) + 1}."
 }
 
-private fun runName(run: ApRun): String = when {
-    run.total < 16 -> "Kurztest"
-    run.options == 4 -> "HAM-Nat"
-    else -> "TMSnat"
-}
+private fun runName(run: ApRun): String = ApTasks.simulationName(run.total, run.seconds)
 
-/** Medizinertest-Training: alles für den Untertest „Arithmetisches Problemlösen“ (TMSnat, HAM-Nat). */
+/** Minuten und Sekunden, z. B. „12:30“. */
+private fun mmss(seconds: Long): String = "${seconds / 60}:${(seconds % 60).toString().padStart(2, '0')}"
+
+/** TMSnat-Training: alles für den Untertest „Arithmetisches Problemlösen“ (stammt aus dem HAM-Nat). */
 @Composable
 fun ApTrainingScreen(navController: NavController) {
     val dimens = MentalMathTheme.dimens
@@ -106,7 +107,7 @@ fun ApTrainingScreen(navController: NavController) {
         navController.navigate("level/$id")
     }
 
-    Scaffold(topBar = { ClimbTopBar(title = "Medizinertest-Training", onNavigation = { back() }) }) { padding ->
+    Scaffold(topBar = { ClimbTopBar(title = "TMSnat-Training", onNavigation = { back() }) }) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -117,13 +118,16 @@ fun ApTrainingScreen(navController: NavController) {
         ) {
             ClimbCard(modifier = Modifier.testTag("apInfo")) {
                 CardTitle("Arithmetisches Problemlösen")
-                BodyText("Textaufgaben, die du ohne Taschenrechner lösen musst – ein Untertest im HAM-Nat und ab 2027 im neuen TMSnat.")
+                BodyText("Der letzte Untertest des TMSnat: Textaufgaben, die du ohne Taschenrechner löst.")
                 Spacer(Modifier.height(10.dp))
-                InfoRow("TMSnat (ab 2027)", "16 Aufgaben in 25 Minuten, also gut 90 Sekunden pro Aufgabe. Es ist der letzte Untertest des Testtags.")
-                InfoRow("HAM-Nat (bis 2026)", "16 Aufgaben, empfohlen sind 30 Minuten; 4 Antworten (A–D).")
-                InfoRow("Hilfsmittel", "Kein Taschenrechner. Nebenrechnungen im Testheft sind erlaubt.")
+                InfoRow("Aus dem HAM-Nat übernommen", "Ab 2027 ersetzt der TMSnat den TMS und den HAM-Nat. Diesen Untertest gab es vorher im HAM-Nat – es ist derselbe Aufgabentyp, nur mit weniger Zeit. Der letzte HAM-Nat fand im September 2026 statt.")
+                InfoRow("Ablauf", "16 Aufgaben in 25 Minuten (im HAM-Nat waren es 30), also gut 90 Sekunden pro Aufgabe. Zu jeder Aufgabe gibt es fünf Antworten (A–E), genau eine ist richtig.")
+                InfoRow("Punkte", "Für falsche Antworten gibt es nach bisherigen Angaben keinen Abzug – lass also keine Aufgabe leer.")
+                InfoRow("Hilfsmittel", "Kein Taschenrechner. Notizen im Testheft sind erlaubt – nimm beim Üben ruhig Stift und Papier dazu.")
                 InfoRow("Inhalte", "Mathe der Mittelstufe in Textaufgaben: Dreisatz, Prozente, Anteile, Einheiten, Tempo, gemeinsame Arbeit, Mischungen, Wachstum, Gleichungen, Kombinatorik, Wahrscheinlichkeit – oft mit unwichtigen Zusatzangaben.")
-                CaptionText("Stand: Oktober 2026, nach der offiziellen Übersicht zum TMSnat vom 26.06.2026. Einzelheiten wie die Zahl der Antworten im TMSnat können sich noch ändern.")
+                InfoRow("Termine", "Der erste TMSnat ist für den 8./9. Mai 2027 geplant, danach jeweils im Frühjahr und Herbst. Die Anmeldung beginnt voraussichtlich im Februar 2027.")
+                InfoRow("Offizielle Infos", "tms-info.org verweist für die Aufgabengruppen aus dem HAM-Nat auf das HAM-Nat-Portal (viamint.de). Es geht auch ohne Anmeldung.")
+                CaptionText("Stand: Oktober 2026, nach tms-info.org und der offiziellen Übersicht zum TMSnat vom 26.06.2026. Bis zum ersten Test können sich Einzelheiten noch ändern.")
             }
             CardGap()
 
@@ -133,28 +137,28 @@ fun ApTrainingScreen(navController: NavController) {
                 Spacer(Modifier.height(8.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     ActionButton(
-                        text = "TMSnat · 16 Aufgaben · 25 min",
-                        subtitle = "5 Antworten (A–E)",
+                        text = "TMSnat-Simulation · 16 Aufgaben · 25 min",
+                        subtitle = "Genau wie im Test, Antworten A–E",
                         icon = R.drawable.trophy_24dp,
                         iconTint = yellow,
-                        onClick = { play(viewModel.startApSimulation(1_500, 5)) },
+                        onClick = { play(viewModel.startApSimulation(ApTasks.TEST_SECONDS)) },
                         modifier = Modifier.testTag("simTms"),
                     )
                     ActionButton(
-                        text = "HAM-Nat · 16 Aufgaben · 30 min",
-                        subtitle = "4 Antworten (A–D)",
-                        icon = R.drawable.trophy_24dp,
-                        iconTint = accent,
-                        onClick = { play(viewModel.startApSimulation(1_800, 4)) },
-                        modifier = Modifier.testTag("simHam"),
-                    )
-                    ActionButton(
                         text = "Kurztest · 8 Aufgaben · 12½ min",
-                        subtitle = "Für zwischendurch, 5 Antworten",
+                        subtitle = "Halber Test für zwischendurch",
                         icon = R.drawable.timer_24dp,
                         iconTint = accent,
-                        onClick = { play(viewModel.startApSimulation(750, 5, 8)) },
+                        onClick = { play(viewModel.startApSimulation(ApTasks.TEST_SECONDS / 2, ApTasks.TEST_COUNT / 2)) },
                         modifier = Modifier.testTag("simShort"),
+                    )
+                    ActionButton(
+                        text = "Tempo-Test · 16 Aufgaben · 20 min",
+                        subtitle = "Weniger Zeit als im Test – für eine Zeitreserve am Testtag",
+                        icon = R.drawable.whatshot_24dp,
+                        iconTint = red,
+                        onClick = { play(viewModel.startApSimulation(1_200)) },
+                        modifier = Modifier.testTag("simFast"),
                     )
                 }
             }
@@ -232,7 +236,7 @@ fun ApTrainingScreen(navController: NavController) {
                 CardTitle("Deine Simulationen")
                 val runs = progress.apRuns
                 if (runs.isEmpty()) {
-                    BodyText("Noch keine Simulation. Starte mit dem Kurztest oder gleich mit einer ganzen Simulation.")
+                    BodyText("Noch keine Simulation. Starte mit dem Kurztest oder gleich mit der TMSnat-Simulation.")
                 } else {
                     val recent = runs.takeLast(20)
                     if (recent.size >= 2) {
@@ -247,14 +251,14 @@ fun ApTrainingScreen(navController: NavController) {
                         Spacer(Modifier.height(8.dp))
                     }
                     runs.takeLast(5).reversed().forEach { run ->
-                        val sec = run.usedMs / 1000
                         BodyText("${runDate(run.at)} · ${runName(run)}: ${run.score} von ${run.total} Punkten")
-                        CaptionText("Zeit ${sec / 60}:${(sec % 60).toString().padStart(2, '0')} von ${run.seconds / 60} min · ${apRating(run.score, run.total)}")
+                        CaptionText("Zeit ${mmss(run.usedMs / 1000)} von ${mmss(run.seconds.toLong())} min · ${apRating(run.score, run.total)}")
                         Spacer(Modifier.height(4.dp))
                     }
-                    listOf(5 to "TMSnat", 4 to "HAM-Nat").forEach { (options, name) ->
-                        runs.filter { it.options == options && it.total == 16 }.maxByOrNull { it.score }?.let { best ->
-                            CaptionText("Bestes Ergebnis $name: ${best.score} von 16")
+                    val full = runs.filter { it.total == ApTasks.TEST_COUNT }
+                    listOf("TMSnat-Simulation", "Tempo-Test").forEach { name ->
+                        full.filter { runName(it) == name }.maxByOrNull { it.score }?.let { best ->
+                            CaptionText("Bestes Ergebnis $name: ${best.score} von ${best.total}")
                         }
                     }
                 }

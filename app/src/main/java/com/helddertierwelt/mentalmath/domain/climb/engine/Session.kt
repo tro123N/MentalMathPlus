@@ -58,7 +58,7 @@ data class FreeRules(
     val param: Int,
     /** Stufe 1 bis 3; 0 = automatisch (anpassende Schwierigkeit). Bei der Testsimulation: Zahl der Antwortmöglichkeiten. */
     val level: Int,
-    /** Bereich, z. B. „ap“ für das Medizinertest-Training; leer = freies Training. */
+    /** Bereich, z. B. „ap“ für das TMSnat-Training (Arithmetisches Problemlösen); leer = freies Training. */
     val track: String = "",
 ) {
     /** Schlüssel für Bestwerte, z. B. „ZEIT_60_2“ oder „ap_SIMULATION_1500_5“. */
@@ -138,7 +138,11 @@ data class Session(
     val problem: Problem? get() = current?.problem
     val isGuided: Boolean get() = type == SessionType.GUIDED
     val isExam: Boolean
-        get() = type == SessionType.TEST || type == SessionType.REFRESH || type == SessionType.FREE || type == SessionType.PLACEMENT
+        get() = (type == SessionType.TEST || type == SessionType.REFRESH || type == SessionType.FREE || type == SessionType.PLACEMENT) &&
+            !showsSolution
+
+    /** Gemischtes Üben im TMSnat-Training: nach einem Fehler den Lösungsweg zeigen, weiter mit „Weiter“. */
+    val showsSolution: Boolean get() = free?.isAp == true && free.mode == FreeMode.ENDLOS
 
     /** Zeitlimit der aktuellen Aufgabe. */
     val currentLimitMs: Long? get() = current?.limitMs ?: timeLimitMs
@@ -305,7 +309,8 @@ object SessionLogic {
         } else if (verdict.correct) {
             next.copy(phase = Phase.FLASH) to SessionEvent.CORRECT
         } else {
-            if (problem.key !in s.retried) {
+            // Im freien Training keine Wiederholung derselben Aufgabe (bei Antworten A–E würde man sich nur den Buchstaben merken).
+            if (s.free == null && problem.key !in s.retried) {
                 val at = minOf(s.index + 1 + RETRY_DISTANCE, s.problems.size)
                 val list = s.problems.toMutableList()
                 list.add(at, Planned(problem, retry = true))
@@ -531,7 +536,7 @@ object SessionFinisher {
         val score = freeScore(session)
         val bestBefore = before.freeBest[rules.bestKey] ?: 0
         var p = if (rules.isAp) {
-            // Medizinertest-Training: Ergebnisse zählen auch für die Sicherheit der Kategorien (Levels von Welt 13).
+            // TMSnat-Training: Ergebnisse zählen auch für die Sicherheit der Kategorien (Levels von Welt 13).
             Progression.record(before, answered, now, today)
         } else {
             Progression.recordDay(

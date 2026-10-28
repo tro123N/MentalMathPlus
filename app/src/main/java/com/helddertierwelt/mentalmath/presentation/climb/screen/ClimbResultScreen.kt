@@ -183,7 +183,7 @@ fun ClimbResultScreen(navController: NavController) {
                     if (summary.type == SessionType.FREE) {
                         val ap = summary.free?.isAp == true
                         ActionButton(
-                            text = if (ap) "Zum Medizinertest-Training" else "Einstellungen",
+                            text = if (ap) "Zum TMSnat-Training" else "Einstellungen",
                             subtitle = if (ap) "Simulationen, Kategorien und Verlauf" else "Aufgabenarten und Modus ändern",
                             icon = R.drawable.tune_24dp,
                             iconTint = MaterialTheme.colorScheme.onPrimary,
@@ -255,7 +255,13 @@ private fun SummaryCard(summary: Summary, viewModel: ClimbViewModel) {
     val avgMs = if (total == 0) 0L else results.sumOf { it.timeMs } / total
     val skill = summary.skillId?.let { viewModel.skill(it) }
     ClimbCard {
-        CardTitle(if (summary.free?.isAp == true) "Medizinertest · ${summary.title}" else "${typeTitle(summary.type)} · ${summary.title}")
+        CardTitle(
+            when {
+                summary.free?.isAp != true -> "${typeTitle(summary.type)} · ${summary.title}"
+                summary.title.startsWith("TMSnat") -> summary.title
+                else -> "TMSnat · ${summary.title}"
+            },
+        )
         val outcome = summary.outcome
         val placement = summary.placement
         if (placement != null) {
@@ -305,7 +311,7 @@ private fun SummaryCard(summary: Summary, viewModel: ClimbViewModel) {
                 BodyText("Zeit: ${usedSec / 60}:${(usedSec % 60).toString().padStart(2, '0')} von ${rules.param / 60}:${(rules.param % 60).toString().padStart(2, '0')} min")
                 val open = results.count { it.timedOut && it.answer.isEmpty() }
                 if (open > 0) BodyText(if (open == 1) "1 Aufgabe nicht bearbeitet" else "$open Aufgaben nicht bearbeitet", color = yellow)
-                CaptionText("${if (rules.level == 4) "4 Antworten (A–D) wie im HAM-Nat" else "5 Antworten (A–E) wie im TMSnat"}. Die Bewertung ist eine Orientierung, keine offizielle Auswertung.")
+                CaptionText("${if (rules.param < 1_500) "Im echten Test hast du 25 Minuten für 16 Aufgaben. " else ""}Die Bewertung ist eine Orientierung, keine offizielle Auswertung.")
             }
             summary.free?.takeIf { it.mode != com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.SIMULATION }?.let { rules ->
                 val p = paramLabel(rules.mode, rules.param)
@@ -496,7 +502,7 @@ fun apRating(correct: Int, total: Int): String {
     }
 }
 
-/** Ergebnis je Kategorie einer Einheit des Medizinertest-Trainings. */
+/** Ergebnis je Kategorie einer Einheit des TMSnat-Trainings. */
 @Composable
 private fun ApCategoryCard(summary: Summary, onPractice: (String) -> Unit) {
     val dimens = MentalMathTheme.dimens

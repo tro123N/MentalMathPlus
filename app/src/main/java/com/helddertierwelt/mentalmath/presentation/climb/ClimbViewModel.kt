@@ -119,7 +119,7 @@ class ClimbViewModel @Inject constructor(
     /** Erzeugt bei anpassender Schwierigkeit neue Aufgaben (Stufe, Anzahl); null = freies Training. */
     private var freeGenerator: ((Int, Int) -> List<Problem>)? = null
 
-    /** Startet die zuletzt gestartete Einheit des freien Trainings bzw. des Medizinertest-Trainings neu. */
+    /** Startet die zuletzt gestartete Einheit des freien Trainings bzw. des TMSnat-Trainings neu. */
     private var lastFreeStart: (() -> Boolean)? = null
     private var tickJob: Job? = null
     private var advanceJob: Job? = null
@@ -209,18 +209,14 @@ class ClimbViewModel @Inject constructor(
     }
 
     /**
-     * Testsimulation „Arithmetisches Problemlösen“: [count] Aufgaben, [seconds] Sekunden Gesamtzeit,
-     * [options] Antwortmöglichkeiten (5 wie im TMSnat, 4 wie im HAM-Nat).
+     * Testsimulation des TMSnat-Untertests „Arithmetisches Problemlösen“: [count] Aufgaben,
+     * [seconds] Sekunden Gesamtzeit (im Test 16 Aufgaben in 25 Minuten), [options] Antwortmöglichkeiten (A–E).
      */
-    fun startApSimulation(seconds: Int, options: Int, count: Int = 16): Boolean {
+    fun startApSimulation(seconds: Int, count: Int = 16, options: Int = 5): Boolean {
         freeGenerator = null
-        lastFreeStart = { startApSimulation(seconds, options, count) }
+        lastFreeStart = { startApSimulation(seconds, count, options) }
         val problems = com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks.simulation(count, options, random)
-        val title = when {
-            count < 16 -> "Kurztest"
-            options == 4 -> "HAM-Nat-Simulation"
-            else -> "TMSnat-Simulation"
-        }
+        val title = com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks.simulationName(count, seconds)
         begin(SessionLogic.createFree(problems, FreeRules(FreeMode.SIMULATION, seconds, options, FreeRules.TRACK_AP), title, null))
         return true
     }
@@ -241,7 +237,7 @@ class ClimbViewModel @Inject constructor(
         return true
     }
 
-    /** „Nochmal“ nach dem freien Training oder dem Medizinertest-Training. */
+    /** „Nochmal“ nach dem freien Training oder dem TMSnat-Training. */
     fun restartFree(): Boolean = lastFreeStart?.invoke() ?: startFree()
 
     /** Testsimulation: aktuelle Aufgabe überspringen und später bearbeiten. */

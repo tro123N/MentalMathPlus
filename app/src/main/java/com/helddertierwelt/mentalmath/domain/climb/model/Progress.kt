@@ -93,7 +93,7 @@ data class ApRun(
     val usedMs: Long,
     /** Zeitlimit in Sekunden. */
     val seconds: Int,
-    /** Anzahl der Antwortmöglichkeiten (4 = HAM-Nat, 5 = TMSnat). */
+    /** Anzahl der Antwortmöglichkeiten (im TMSnat 5, A–E). */
     val options: Int,
 )
 

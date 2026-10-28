@@ -31,7 +31,7 @@ import java.math.MathContext
 import kotlin.random.Random
 
 /**
- * Kategorien des Untertests „Arithmetisches Problemlösen“ (HAM-Nat, ab 2027 TMSnat).
+ * Kategorien des TMSnat-Untertests „Arithmetisches Problemlösen“ (aus dem HAM-Nat übernommen).
  * Jede Kategorie ist ein Level in Welt 13; die Aufgaben sind eigene Textaufgaben.
  */
 enum class ApCategory(val skillId: String, val title: String, val method: String) {
@@ -553,6 +553,14 @@ object ApTasks {
         )
     }
 
+    private fun timesWord(m: Long): String = when (m) {
+        2L -> "doppelt"
+        3L -> "dreimal"
+        4L -> "viermal"
+        5L -> "fünfmal"
+        else -> "${n(m)}-mal"
+    }
+
     private fun percentRelation(r: Random): ApTask {
         repeat(200) {
             val p = r.pick(listOf(10L, 20L, 25L, 40L, 50L))
@@ -567,7 +575,7 @@ object ApTasks {
                 key = "rel:$p,$m,$pb",
                 text = compose(
                     listOf(
-                        "Nach einer Preissenkung um ${n(p)} % kostet ein Desinfektionsmittel ${if (m == 2L) "doppelt" else "${n(m)}-mal"} so viel wie ein Pflaster-Set.",
+                        "Nach einer Preissenkung um ${n(p)} % kostet ein Desinfektionsmittel ${timesWord(m)} so viel wie ein Pflaster-Set.",
                         "Das Pflaster-Set kostet ${n(pb)} €.",
                     ),
                     "Wie viel kostete das Desinfektionsmittel vor der Preissenkung?",
@@ -1276,7 +1284,7 @@ object ApTasks {
             val net = l / a - l / b
             if (net <= 0 || l % net != 0L) return@repeat
             val hours = l / net
-            if (hours > 60) return@repeat
+            if (hours > 30) return@repeat
             val wrong = mutableListOf(bd(b - a), bd(a + b))
             val sum = l / a + l / b
             if (l % sum == 0L) wrong += bd(l / sum)
@@ -1971,9 +1979,21 @@ object ApTasks {
 
     // --- Zusammenstellungen -------------------------------------------------------------------
 
+    /** Der Untertest im TMSnat: 16 Aufgaben in 25 Minuten (im HAM-Nat waren es 30 Minuten). */
+    const val TEST_COUNT = 16
+    const val TEST_SECONDS = 1_500
+
+    /** Name einer Testsimulation nach Zahl der Aufgaben und Gesamtzeit in Sekunden. */
+    fun simulationName(count: Int, seconds: Int): String = when {
+        count < TEST_COUNT -> "Kurztest"
+        seconds < TEST_SECONDS -> "Tempo-Test"
+        seconds > TEST_SECONDS -> "Simulation mit mehr Zeit"
+        else -> "TMSnat-Simulation"
+    }
+
     /**
      * Aufgaben wie in einer Testsimulation: alle Kategorien kommen vor, die Aufgaben werden
-     * nach hinten schwerer (wie im echten Untertest).
+     * nach hinten schwerer.
      */
     fun simulation(count: Int, options: Int, r: Random): List<Problem> {
         val categories = ApCategory.entries.shuffled(r).toMutableList()

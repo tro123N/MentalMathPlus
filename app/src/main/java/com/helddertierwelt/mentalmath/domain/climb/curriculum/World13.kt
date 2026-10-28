@@ -27,13 +27,13 @@ import com.helddertierwelt.mentalmath.domain.climb.model.World
 import kotlin.random.Random
 
 /**
- * Welt 13 (Ergänzung, nicht aus dem Buch): Vorbereitung auf den Untertest „Arithmetisches
- * Problemlösen“ des HAM-Nat und des TMSnat (ab 2027). Eigene Textaufgaben in zwölf Kategorien
- * und ein gemischtes Level mit Antwortmöglichkeiten wie im Test.
+ * Welt 13 (Ergänzung, nicht aus dem Buch): Vorbereitung auf den TMSnat-Untertest „Arithmetisches
+ * Problemlösen“ (ab 2027; der Untertest stammt aus dem HAM-Nat). Eigene Textaufgaben in zwölf
+ * Kategorien und ein gemischtes Level mit Antwortmöglichkeiten wie im Test.
  */
 object World13 {
 
-    private val book = BookRef(null, "Ergänzung: Medizinertest (TMSnat, HAM-Nat)")
+    private val book = BookRef(null, "Ergänzung: TMSnat (Untertest aus dem HAM-Nat)")
 
     private fun example(category: ApCategory, seed: Long) =
         Block.Example(ApTasks.typed(ApTasks.task(category, 2, Random(seed))))
@@ -99,7 +99,7 @@ object World13 {
                 "Auf Einzelgaben verteilen: Tagesdosis ÷ Anzahl der Gaben.",
                 "Infusion: Menge ÷ Zeit. Tropfen pro Minute = ml pro Stunde × Tropfen pro ml ÷ 60.",
             ),
-            "Falsche Antworten unterscheiden sich im Test oft genau um den Faktor 10 oder 1.000. Prüfe am Ende die Größenordnung: Niemand nimmt 60 Tabletten am Tag.",
+            "Typische falsche Antworten liegen genau um den Faktor 10 oder 1.000 daneben. Prüfe am Ende die Größenordnung: Niemand nimmt 60 Tabletten am Tag.",
         ),
         ApCategory.SPEED to Text(
             "Weg = Tempo × Zeit – mit Durchschnitt, Begegnung und Einholen.",
@@ -214,7 +214,7 @@ object World13 {
         book = book,
         summary = "Alle Aufgabenarten durcheinander, mit Antwortmöglichkeiten A bis E.",
         explanation = listOf(
-            Block.Text("Im Test kommen alle Aufgabenarten durcheinander – mit fünf Antwortmöglichkeiten im TMSnat und vier im HAM-Nat. Hier übst du genau das: erst die Art der Aufgabe erkennen, dann den passenden Weg wählen."),
+            Block.Text("Im Test kommen alle Aufgabenarten durcheinander, jeweils mit fünf Antwortmöglichkeiten (A bis E). Hier übst du genau das: erst die Art der Aufgabe erkennen, dann den passenden Weg wählen."),
             Block.Steps(
                 listOf(
                     "Lesen und die Frage festhalten: Was ist gesucht, in welcher Einheit?",
@@ -236,8 +236,8 @@ object World13 {
     val world = World(
         id = "w13",
         number = 13,
-        title = "Medizinertest: Arithmetisches Problemlösen",
-        subtitle = "Ergänzung · TMSnat und HAM-Nat",
+        title = "TMSnat: Arithmetisches Problemlösen",
+        subtitle = "Ergänzung · Untertest aus dem HAM-Nat",
         skills = ApCategory.entries.mapIndexed { i, c -> skillFor(c, 1300L + i) } + mixed,
         independent = true,
     )
