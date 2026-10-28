@@ -139,6 +139,14 @@ android {
     }
 }
 
+// Mental Math Plus: Die KI-Bibliothek für x86_64 (25 MB) braucht nur der Emulator-Test mit dem
+// Debug-Build – im Release fehlt sie, damit die APK für Handys (arm64) kleiner bleibt.
+androidComponents {
+    onVariants(selector().withBuildType("release")) { variant ->
+        variant.packaging.jniLibs.excludes.add("**/x86_64/liblitertlm_jni.so")
+    }
+}
+
 tasks.matching { it.name.contains("Profile", ignoreCase = true) }.configureEach {
     enabled = false
 }
