@@ -47,11 +47,21 @@ Die App hat drei getrennte Bereiche (Leiste unten):
 - **Gemischt üben** ohne Ende: nach einem Fehler erscheint sofort der Lösungsweg.
 - Countdown bis zum ersten TMSnat; jede Kategorie ist auch ein Level (Welt 13) mit Erklärung, geführtem Üben und Prüfung.
 
+### KI-Coach – eine KI direkt auf dem Handy (ab Version 2.1)
+- Ein Sprachmodell von Google (**Gemma 4**) läuft komplett auf dem Handy, über [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM): **ohne Internet, kostenlos, Gespräche und Lernstand bleiben auf dem Gerät.** Das Modell wird einmal heruntergeladen.
+- Er **kennt den Lernstand** (Kletterweg und TMSnat-Training), **erklärt Aufgaben und Fehler** Schritt für Schritt – bei Aufgaben der App immer anhand ihres geprüften Lösungswegs – und **stellt Aufgaben im Chat**, prüft die Antworten und gibt auf Wunsch Tipps.
+- Er **greift in die App ein**, aber nur auf Knopfdruck: Er bereitet Übungen, Testsimulationen, das Fehlertraining, ähnliche Aufgaben, Levels und Einstellungen (z. B. die tägliche Erinnerung) vor; die Person startet sie selbst.
+- Jede Rechnung prüft die KI mit einem eingebauten **exakten Rechner** (Bruchrechnung statt Rundungsfehler).
+- **Denkmodus** („Gründlich“) für schwierige Fragen, umschaltbar auf „Schnell“.
+- Modelle: **Gemma 4 E4B** (empfohlen, 3,7 GB), **Gemma 4 12B** (Experiment, am klügsten, 6,9 GB, für Handys mit 16 GB Arbeitsspeicher) und **Gemma 4 E2B** (klein und schnell, 2,6 GB). Lizenz der Modelle: Apache 2.0. Braucht Android 12 oder neuer.
+- Einstieg: ✨ oben auf der Startseite, im TMSnat-Training, nach einem Fehler beim Üben („KI-Coach fragen“) und in der Aufgabenliste jedes Ergebnisses.
+
 ### 3. Klassischer Modus – die Original-App (fährt neben „Freies Training“ heraus)
 - Der unveränderte Spielmodus von „Mental Math“: Grundrechenarten mit eigenen Zahlenbereichen, Bestenliste, Verlauf und Spiele per Link.
 
 ### Für alle Bereiche
-- **Einstellungen:** Farbthemen (hell/dunkel und fünf Farben), tägliche Erinnerung zur gewünschten Uhrzeit, Ton und Vibration.
+- **Einstellungen:** Farbthemen (hell/dunkel und fünf Farben), tägliche Erinnerung zur gewünschten Uhrzeit, Ton und Vibration, KI-Coach (Modell, Denkmodus, Speicher).
+- **Berechtigungen:** Benachrichtigungen (Erinnerung), Vibration und – nur für den Download des KI-Modells – Internet.
 - **Fortschritt sichern:** als Datei speichern oder teilen und auf einem anderen Handy wieder laden.
 
 ## Versionen
@@ -69,6 +79,7 @@ Bis Version 1.0.24 war die letzte Zahl nur ein Zähler der automatischen Builds 
 - **Original:** [Mental Math](https://codeberg.org/Mental-Math/MentalMath) von HeldDerTierwelt (© 2025–2026), lizenziert unter der [GNU GPL v3](LICENSE.md).
 - **Fork „Mental Math Plus“:** betreut von [tro123N](https://github.com/tro123N), Code und Texte erzeugt mit der KI Claude (Anthropic). Alle Änderungen stehen ebenfalls unter der GPL v3.
 - **Buch:** Die Methoden folgen *Mathe-Magie* von Arthur Benjamin und Michael Shermer (Heyne). Die App verweist nur auf Kapitel und Abschnitte; Texte, Wortlisten und Übungen aus dem Buch sind nicht enthalten.
+- **KI:** Die Modelle Gemma 4 (Google, Apache 2.0) werden nicht mit der App verteilt, sondern bei Bedarf von Hugging Face (Konto `litert-community`) geladen. Die Laufzeit LiteRT-LM (Google) steht ebenfalls unter Apache 2.0.
 
 ## Entwicklung
 

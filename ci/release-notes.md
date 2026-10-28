@@ -1,16 +1,19 @@
-**Mental Math Plus 2.0 – das TMSnat-Training wird schlauer**
+**Mental Math Plus 2.1 – der KI-Coach**
 
-Ab jetzt sind die Versionsnummern logisch: **2.0** ist ein großer Schritt, neue Funktionen heißen 2.1, 2.2 …, reine Fehlerkorrekturen 2.1.1 usw. Bis 1.0.24 war die letzte Zahl nur ein Build-Zähler.
+Neu: ein **KI-Coach**, der direkt auf deinem Handy läuft – ohne Internet, kostenlos, und nichts verlässt dein Handy. Dahinter steckt Gemma 4 von Google.
 
-Neu im **TMSnat-Training** (Freies Training → TMSnat-Training):
+- **Kennt deinen Lernstand** im Kletterweg und im TMSnat-Training und sagt dir, was sich gerade am meisten lohnt.
+- **Erklärt Aufgaben und Fehler** Schritt für Schritt – nach einem Fehler beim Üben oder in der Aufgabenliste jedes Ergebnisses mit „KI-Coach fragen“.
+- **Stellt dir Aufgaben im Chat**, prüft deine Antwort und gibt dir auf Wunsch einen Tipp.
+- **Bereitet Übungen vor:** gezielt üben, Simulation, Fehlertraining, ähnliche Aufgaben, Levels – und Einstellungen wie die tägliche Erinnerung. Du startest alles selbst mit einem Knopf.
+- **Rechnet nie im Kopf:** Jede Rechnung prüft die KI mit einem eingebauten, exakten Rechner.
+- **Gründlich oder schnell:** Im Denkmodus überlegt die KI vor der Antwort (klüger, etwas langsamer).
 
-- **Typische Fehler erklärt:** Die falschen Antworten entstehen aus typischen Denkfehlern. Wählst du so eine Antwort, sagt dir die App genau, was schiefging – zum Beispiel „Das ist die Tagesdosis – sie muss noch auf 3 Gaben verteilt werden.“ Das klappt beim Üben, in den Levels von Welt 13 und in der Auswertung jeder Simulation.
-- **Zeitanalyse nach jeder Simulation:** Zeit pro Aufgabe als Diagramm gegen das Ziel von 94 Sekunden, Zeitfresser, beide Hälften im Vergleich und passende Tipps.
-- **Punkt-Prognose:** Aus deinen Ergebnissen spielt die App 10.000 Tests durch und schätzt deine Punkte im TMSnat – mit Bereich, Tempo und der Kategorie, in der Üben am meisten bringt.
-- **Fehlertraining:** Aufgabentypen, die du falsch hattest, kommen mit neuen Zahlen wieder – sofort, dann nach 1, 3 und 7 Tagen, bis sie sitzen.
-- **Countdown** bis zum ersten TMSnat (geplant am 8./9. Mai 2027).
-- Die richtige Antwort steht jetzt gleich oft bei A, B, C, D und E – so lernst du kein falsches Muster.
+**So geht's:** Oben auf der Startseite auf ✨ tippen und ein Modell laden (einmalig, am besten im WLAN):
+- **Gemma 4 E4B** – empfohlen, 3,7 GB
+- **Gemma 4 12B** – Experiment, am klügsten, 6,9 GB, braucht 16 GB Arbeitsspeicher
+- **Gemma 4 E2B** – klein und schnell, 2,6 GB
 
-Außerdem: Die README auf GitHub zeigt jetzt Mental Math Plus statt der Original-App.
+Hinweis: Die App fragt jetzt nach Internet – nur für diesen Download. Die KI braucht Android 12 oder neuer.
 
 **Installieren:** `MentalMathPlus.apk` unten antippen, herunterladen und öffnen. Die neue Version ersetzt die alte, dein Fortschritt bleibt erhalten.

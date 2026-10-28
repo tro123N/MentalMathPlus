@@ -104,6 +104,7 @@ fun ClimbHomeScreen(navController: NavController) {
     val context = LocalContext.current
     val owner = LocalActivity.current as ViewModelStoreOwner
     val climbViewModel: ClimbViewModel = hiltViewModel(owner)
+    val aiViewModel: com.helddertierwelt.mentalmath.presentation.climb.AiViewModel = hiltViewModel(owner)
     val progress by climbViewModel.progress.collectAsState()
     val worlds = climbViewModel.worlds
     val next = climbViewModel.nextSkill(progress)
@@ -131,6 +132,22 @@ fun ClimbHomeScreen(navController: NavController) {
                 title = "Kletterweg",
                 navigationIcon = null,
                 actions = {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        IconButton(
+                            onClick = {
+                                aiViewModel.setFocus(null)
+                                openRoute("ai")
+                            },
+                            modifier = Modifier.testTag("action_ai"),
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.auto_awesome_24dp),
+                                contentDescription = "KI-Coach",
+                                tint = com.helddertierwelt.mentalmath.presentation.theme.accent,
+                                modifier = Modifier.size(dimens.icons.topBarAction),
+                            )
+                        }
+                    }
                     IconButton(
                         onClick = { openRoute("stats") },
                         modifier = Modifier.testTag("action_stats"),

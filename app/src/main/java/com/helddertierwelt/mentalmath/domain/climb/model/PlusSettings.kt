@@ -52,6 +52,14 @@ data class PlusSettings(
     val trickTips: Boolean = true,
     /** Freies Training: Schwierigkeit passt sich automatisch an. */
     val adaptive: Boolean = false,
+    /** KI-Coach: gewähltes Modell (Kennung aus AiModel). */
+    val aiModel: String = "gemma4-e4b",
+    /** KI-Coach: vor der Antwort gründlich nachdenken (Denkmodus). */
+    val aiThinking: Boolean = true,
+    /** KI-Coach: schneller schreiben durch Vorausschätzen mehrerer Wörter (wenn das Modell es kann). */
+    val aiFast: Boolean = true,
+    /** KI-Coach: Modell nur über WLAN herunterladen. */
+    val aiWifiOnly: Boolean = true,
 ) {
     val paletteValue: Palette get() = Palette.of(palette)
 

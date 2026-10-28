@@ -106,6 +106,8 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            // Mental Math Plus: Regeln für die KI-Bibliothek (LiteRT-LM ruft Kotlin-Code aus nativem Code auf).
+            proguardFiles("proguard-rules.pro")
         }
     }
 
@@ -123,6 +125,9 @@ android {
         resources {
             excludes += "assets/dexopt/baseline.prof"
             excludes += "assets/dexopt/baseline.profm"
+        }
+        jniLibs {
+            pickFirsts += "**/liblitertlm_jni.so"
         }
     }
 
@@ -180,6 +185,8 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.compose.ui.unit)
+    // Mental Math Plus: KI direkt auf dem Handy (Google LiteRT-LM, Apache 2.0)
+    implementation(libs.litertlm.android)
     ksp(libs.hilt.compiler)
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)

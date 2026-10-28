@@ -22,6 +22,7 @@ protobufPlugin = "0.10.0"
 splashScreen = "1.2.0"
 kotlinxSerializationPlugin = "2.4.20"
 work-runtime-ktx = "2.12.0"
+litertlm = "0.18.0"
 uiUnit = "1.12.1"
 ui = "1.12.1"
 
@@ -56,6 +57,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
 androidx-compose-ui-unit = { group = "androidx.compose.ui", name = "ui-unit", version.ref = "uiUnit" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
+litertlm-android = { group = "com.google.ai.edge.litertlm", name = "litertlm-android", version.ref = "litertlm" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

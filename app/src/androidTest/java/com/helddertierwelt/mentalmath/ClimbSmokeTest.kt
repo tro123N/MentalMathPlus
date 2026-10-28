@@ -59,6 +59,16 @@ import com.helddertierwelt.mentalmath.domain.climb.model.Skill
 import com.helddertierwelt.mentalmath.domain.climb.model.SkillProgress
 import com.helddertierwelt.mentalmath.domain.climb.model.World
 import com.helddertierwelt.mentalmath.presentation.climb.ClimbViewModel
+import com.helddertierwelt.mentalmath.presentation.climb.AiViewModel
+import com.helddertierwelt.mentalmath.data.climb.ai.AiEngine
+import com.helddertierwelt.mentalmath.data.climb.ai.EngineStatus
+import com.helddertierwelt.mentalmath.data.climb.ai.ModelState
+import com.helddertierwelt.mentalmath.domain.climb.ai.AiModel
+import com.helddertierwelt.mentalmath.domain.climb.ai.AiQuiz
+import com.helddertierwelt.mentalmath.domain.climb.ai.AiStatus
+import com.helddertierwelt.mentalmath.domain.climb.ai.AiTaskContext
+import com.helddertierwelt.mentalmath.domain.climb.engine.ProblemResult
+import com.helddertierwelt.mentalmath.domain.climb.math.Fmt
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.BeforeClass
@@ -112,6 +122,11 @@ class ClimbSmokeTest {
     private val vm: ClimbViewModel by lazy {
         val activity = compose.activity
         compose.runOnUiThread { ViewModelProvider(activity)[ClimbViewModel::class.java] }
+    }
+
+    private val ai: AiViewModel by lazy {
+        val activity = compose.activity
+        compose.runOnUiThread { ViewModelProvider(activity)[AiViewModel::class.java] }
     }
 
     // --- Hilfen -------------------------------------------------------------------------------
@@ -981,6 +996,138 @@ class ClimbSmokeTest {
         }
         clickButton("Zum Kletterweg")
         waitForHome()
+    }
+
+    // --- KI-Coach -----------------------------------------------------------------------------
+
+    private fun aiLog(text: String) {
+        Log.i(TAG, text)
+        File(screenDir(), "ki_antworten.txt").appendText(text + "\n")
+    }
+
+    /** Die letzte Frage und Antwort für die Auswertung (liegt mit den Bildern auf ci-smoke). */
+    private fun logAi(title: String) {
+        val sb = StringBuilder("=== $title ===\n")
+        ai.chat.value.messages.takeLast(2).forEach { m ->
+            sb.append("[${m.role} ${m.status}] ${m.text}\n")
+            if (m.prompt != null) sb.append("  (an das Modell: ${m.prompt!!.take(600)})\n")
+            if (m.thought.isNotBlank()) sb.append("  (Gedanken: ${m.thought.take(1500)})\n")
+            m.tools.forEach { sb.append("  Werkzeug ${it.name}: ${it.label}\n") }
+            m.actions.forEach { sb.append("  Vorschlag: $it\n") }
+            m.error?.let { sb.append("  Fehler: $it\n") }
+        }
+        sb.append("Status: ${ai.engineStatus.value}\n")
+        aiLog(sb.toString())
+    }
+
+    /** Wartet, bis die KI fertig geantwortet hat; nach 25 s gibt es ein Zwischenbild. */
+    private fun waitForAiReply(name: String, timeoutMs: Long = 600_000) {
+        val started = System.currentTimeMillis()
+        compose.waitUntil(15_000) { ai.busy.value || ai.chat.value.messages.lastOrNull()?.status != AiStatus.STREAMING }
+        compose.waitUntil(timeoutMs) { !ai.busy.value || System.currentTimeMillis() - started > 25_000 }
+        if (ai.busy.value) shot("${name}_laeuft")
+        compose.waitUntil(timeoutMs) { !ai.busy.value }
+        aiLog("Dauer „$name“: ${(System.currentTimeMillis() - started) / 1000} s")
+        compose.waitForIdle()
+        shot(name)
+        logAi(name)
+    }
+
+    private fun askAi(text: String, name: String) {
+        compose.onNodeWithTag("aiInput").performTextInput(text)
+        compose.waitForIdle()
+        compose.onNodeWithTag("aiSend").performClick()
+        waitForAiReply(name)
+    }
+
+    @Test
+    fun l_kiCoach() {
+        waitForHome()
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S) return
+        // Im Emulator: nur Prozessor, kleineres Gedächtnis, immer gleiche Antworten.
+        AiEngine.deterministic = true
+        AiEngine.forceCpu = true
+        AiEngine.contextOverride = 8_192
+        compose.runOnUiThread {
+            ai.select(AiModel.GEMMA4_E2B)
+            ai.setThinking(false)
+        }
+        compose.onNodeWithTag("action_ai").performClick()
+        compose.waitForIdle()
+        // Das Modell spielt ci/smoke.sh auf; die App prüft es beim ersten Öffnen (Prüfsumme).
+        compose.waitUntil(300_000) {
+            ai.models.value[AiModel.GEMMA4_E2B].let { it is ModelState.Ready || it is ModelState.Missing || it is ModelState.Failed }
+        }
+        val state = ai.models.value[AiModel.GEMMA4_E2B]
+        aiLog("Modell im Emulator: $state, Arbeitsspeicher etwa ${ai.deviceRamGb()} GB")
+        if (state !is ModelState.Ready) {
+            waitForTag("aiSetup")
+            shootScrolling("aiSetup", "l_ki_einrichten", maxShots = 3)
+            back()
+            waitForHome()
+            return
+        }
+        waitForTag("aiList", 30_000)
+        compose.waitUntil(420_000) { ai.engineStatus.value.let { it is EngineStatus.Ready || it is EngineStatus.Failed } }
+        shot("l_ki_start")
+        val status = ai.engineStatus.value
+        aiLog("KI geladen: $status")
+        assertTrue("KI nicht geladen: $status", status is EngineStatus.Ready)
+
+        // 1. Rechnen mit dem Werkzeug
+        askAi("Wie viel ist 17 mal 23? Rechne mit dem Werkzeug nach.", "l_ki_rechnen")
+        val reply = ai.chat.value.messages.last()
+        assertEquals("Antwort: ${reply.error}", AiStatus.DONE, reply.status)
+        assertTrue("Leere Antwort", reply.text.isNotBlank())
+        aiLog(if (reply.text.contains("391")) "Rechnung richtig (391)." else "WARNUNG: 391 fehlt in der Antwort.")
+
+        // 2. Übung vorbereiten und per Knopf starten
+        askAi("Bereite mir eine Übung zu Prozenten vor.", "l_ki_vorschlag")
+        if (ai.chat.value.messages.last().actions.isNotEmpty()) {
+            compose.onAllNodesWithTag("aiActionRun").onFirst().performScrollTo().performClick()
+            waitForSession()
+            shot("l_ki_uebung_gestartet")
+            aiLog("Vorschlag gestartet: ${vm.session.value?.title}")
+            quitSession()
+            waitForTag("aiList")
+        } else {
+            aiLog("WARNUNG: kein Vorschlag erzeugt.")
+        }
+
+        // 3. Aufgabe im Chat stellen und beantworten
+        askAi("Stell mir eine leichte Aufgabe zum Dreisatz.", "l_ki_aufgabe")
+        ai.chat.value.quiz.lastOrNull()?.let { q ->
+            val p = AiQuiz.problem(q)!!
+            askAi("Mein Ergebnis: " + Fmt.spoken(p.expected, p.choices), "l_ki_aufgabe_antwort")
+        } ?: aiLog("WARNUNG: keine Aufgabe erzeugt.")
+
+        // 4. Frage zu einer Aufgabe aus der App, diesmal mit Denkmodus
+        val task = ApTasks.choice(ApTasks.taskOfType("PERCENT/base", kotlin.random.Random(4))!!, 5, kotlin.random.Random(4))
+        val mistake = task.mistakes.firstOrNull()
+        val wrongIndex = (mistake?.answer as? Expected.Choice)?.index ?: (((task.expected as Expected.Choice).index + 1) % task.choices.size)
+        val result = ProblemResult(task, task.choices[wrongIndex], false, 84_000, note = mistake?.why)
+        compose.runOnUiThread {
+            ai.newChat()
+            ai.setThinking(true)
+            ai.setFocus(AiTaskContext.of(result, "TMSnat-Simulation"))
+        }
+        waitForTag("aiFocus")
+        shot("l_ki_fokus")
+        compose.onNodeWithTag("aiSuggestion0").performScrollTo().performClick()
+        waitForAiReply("l_ki_fehler")
+        shootScrolling("aiList", "l_ki_fehler_ganz", maxShots = 4)
+
+        // 5. Einstellungen des KI-Coachs
+        compose.onNodeWithTag("aiSettingsButton").performClick()
+        waitForTag("aiSettings")
+        shootScrolling("aiSettings", "l_ki_einstellungen", maxShots = 4)
+        back()
+        waitForTag("aiList")
+        back()
+        waitForHome()
+        AiEngine.deterministic = false
+        AiEngine.forceCpu = false
+        AiEngine.contextOverride = null
     }
 
     companion object {

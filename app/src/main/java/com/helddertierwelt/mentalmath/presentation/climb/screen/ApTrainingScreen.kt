@@ -128,6 +128,7 @@ fun ApTrainingScreen(navController: NavController) {
     val dimens = MentalMathTheme.dimens
     val owner = LocalActivity.current as ViewModelStoreOwner
     val viewModel: ClimbViewModel = hiltViewModel(owner)
+    val aiViewModel: com.helddertierwelt.mentalmath.presentation.climb.AiViewModel = hiltViewModel(owner)
     val progress by viewModel.progress.collectAsState()
     val plus by viewModel.plusSettings.collectAsState()
     // Die Prognose rechnet im Hintergrund und wird nur neu berechnet, wenn sich die Ergebnisse ändern.
@@ -208,6 +209,22 @@ fun ApTrainingScreen(navController: NavController) {
 
             ForecastCard(outcome = forecast, onPractice = { openLevel(it) })
             CardGap()
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                ActionButton(
+                    text = "KI-Coach fragen",
+                    subtitle = "Erklärt Aufgaben und Fehler, plant dein Training und stellt dir Aufgaben – offline auf dem Handy",
+                    icon = R.drawable.auto_awesome_24dp,
+                    iconTint = accent,
+                    onClick = {
+                        viewModel.playTap()
+                        aiViewModel.setFocus(null)
+                        navController.navigate("ai")
+                    },
+                    modifier = Modifier.testTag("apAiButton"),
+                )
+                CardGap()
+            }
 
             ClimbCard(modifier = Modifier.testTag("apSimulation")) {
                 CardTitle("Testsimulation")

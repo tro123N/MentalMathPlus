@@ -258,6 +258,23 @@ class ClimbViewModel @Inject constructor(
         return true
     }
 
+    /**
+     * Mehrere Aufgaben eines Aufgabentyps (z. B. „PERCENT/base“) mit neuen Zahlen – vom KI-Coach
+     * vorgeschlagen, nach Fehlern mit Lösungsweg.
+     */
+    fun startApTypes(type: String, count: Int): Boolean {
+        val problems = List(count.coerceIn(1, 20)) {
+            com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks.taskOfType(type, random)
+                ?.let { com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks.choice(it, 5, random) }
+        }.filterNotNull()
+        if (problems.isEmpty()) return false
+        freeGenerator = null
+        lastFreeStart = { startApTypes(type, count) }
+        val title = com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks.typeName(type)
+        begin(SessionLogic.createFree(problems, FreeRules(FreeMode.ENDLOS, 0, 2, FreeRules.TRACK_AP), title, null))
+        return true
+    }
+
     /** Punkt-Prognose für den TMSnat (rechnet im Hintergrund 10.000 Tests durch). */
     suspend fun apForecast(p: ClimbProgress): ApForecast.Outcome = withContext(Dispatchers.Default) { ApForecast.forecast(p) }
 

@@ -98,6 +98,20 @@ fun Navigation(
             }
 
             composable(
+                route = "ai",
+                enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+            ) {
+                com.helddertierwelt.mentalmath.presentation.climb.screen.AiChatScreen(navController = navController)
+            }
+
+            composable(
+                route = "aisettings",
+                enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+            ) {
+                com.helddertierwelt.mentalmath.presentation.climb.screen.AiSettingsScreen(navController = navController)
+            }
+
+            composable(
                 route = "stats",
                 enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
             ) {

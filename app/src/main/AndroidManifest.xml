@@ -3,10 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Mental Math Plus: Internet nur für den einmaligen Download des KI-Modells (die KI läuft danach offline). -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" tools:node="remove"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" tools:node="remove" tools:ignore="ForegroundServicesPolicy" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Die KI-Bibliothek (LiteRT-LM) wird nur ab Android 12 benutzt; ältere Geräte installieren die App trotzdem. -->
+    <uses-sdk tools:overrideLibrary="com.google.ai.edge.litertlm" />
     <application
         android:name=".MentalMath"
         android:allowBackup="true"
@@ -39,6 +43,9 @@
                       android:pathPrefix="/app" />
             </intent-filter>
         </activity>
+        <!-- Grafikeinheit (GPU) für die KI auf dem Handy, falls vorhanden. -->
+        <uses-native-library android:name="libvndksupport.so" android:required="false" />
+        <uses-native-library android:name="libOpenCL.so" android:required="false" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

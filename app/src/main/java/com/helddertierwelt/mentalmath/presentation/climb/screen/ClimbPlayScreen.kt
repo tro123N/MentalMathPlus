@@ -115,6 +115,7 @@ fun ClimbPlayScreen(navController: NavController) {
     val dimens = MentalMathTheme.dimens
     val owner = LocalActivity.current as ViewModelStoreOwner
     val viewModel: ClimbViewModel = hiltViewModel(owner)
+    val aiViewModel: com.helddertierwelt.mentalmath.presentation.climb.AiViewModel = hiltViewModel(owner)
     val settingsViewModel: SettingsViewModel = hiltViewModel(owner)
     val settings by settingsViewModel.settingsState.collectAsState()
     val sessionOrNull by viewModel.session.collectAsState()
@@ -289,7 +290,21 @@ fun ClimbPlayScreen(navController: NavController) {
                         Spacer(Modifier.height(12.dp))
                         if (!session.isSimulation) FlashFeedback(session = session)
                         if (session.phase == Phase.REVEAL && !session.isGuided) {
-                            RevealCard(session)
+                            RevealCard(
+                                session = session,
+                                onAsk = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                                    {
+                                        viewModel.playTap()
+                                        session.results.lastOrNull()?.let { r ->
+                                            val source = if (session.free?.isAp == true) "TMSnat-Training · ${session.title}" else "${typeLabel(session.type)} · ${session.title}"
+                                            aiViewModel.setFocus(com.helddertierwelt.mentalmath.domain.climb.ai.AiTaskContext.of(r, source))
+                                            navController.navigate("ai")
+                                        }
+                                    }
+                                } else {
+                                    null
+                                },
+                            )
                         }
                         session.feedback?.note?.let { note ->
                             if (session.phase == Phase.ANSWERING && session.isGuided) {
@@ -342,7 +357,7 @@ private fun TrickCard(tip: com.helddertierwelt.mentalmath.domain.climb.engine.Tr
 }
 
 @Composable
-private fun RevealCard(session: Session) {
+private fun RevealCard(session: Session, onAsk: (() -> Unit)? = null) {
     val problem = session.problem ?: return
     val feedback = session.feedback
     ClimbCard {
@@ -359,6 +374,15 @@ private fun RevealCard(session: Session) {
         feedback?.note?.let { BodyText(it, color = yellow) }
         Spacer(Modifier.height(8.dp))
         SolutionSteps(problem = problem, showHints = true)
+        if (onAsk != null) {
+            Spacer(Modifier.height(10.dp))
+            PillButton(
+                text = "✨ KI-Coach fragen",
+                onClick = onAsk,
+                color = accent,
+                modifier = Modifier.testTag("askAi"),
+            )
+        }
     }
 }
 

@@ -86,6 +86,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.yellow
 fun ClimbResultScreen(navController: NavController) {
     val owner = LocalActivity.current as ViewModelStoreOwner
     val viewModel: ClimbViewModel = hiltViewModel(owner)
+    val aiViewModel: com.helddertierwelt.mentalmath.presentation.climb.AiViewModel = hiltViewModel(owner)
     val summaryOrNull by viewModel.summary.collectAsState()
     val progress by viewModel.progress.collectAsState()
 
@@ -133,7 +134,18 @@ fun ClimbResultScreen(navController: NavController) {
                     CardGap()
                 }
                 MessagesCard(summary = summary)
-                ProblemsCard(results = summary.results)
+                ProblemsCard(
+                    results = summary.results,
+                    onAsk = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        { r ->
+                            viewModel.playTap()
+                            aiViewModel.setFocus(com.helddertierwelt.mentalmath.domain.climb.ai.AiTaskContext.of(r, summary.title))
+                            navController.navigate("ai")
+                        }
+                    } else {
+                        null
+                    },
+                )
                 CardGap()
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     val skillId = summary.skillId
@@ -432,7 +444,7 @@ private fun MessagesCard(summary: Summary) {
 }
 
 @Composable
-private fun ProblemsCard(results: List<ProblemResult>) {
+private fun ProblemsCard(results: List<ProblemResult>, onAsk: ((ProblemResult) -> Unit)? = null) {
     val dimens = MentalMathTheme.dimens
     val open = remember { mutableStateMapOf<Int, Boolean>() }
     ClimbCard {
@@ -507,6 +519,17 @@ private fun ProblemsCard(results: List<ProblemResult>) {
                         BodyText(SessionLogic.MISTAKE_PREFIX + it, color = yellow, modifier = Modifier.padding(start = 8.dp, bottom = 6.dp))
                     }
                     SolutionSteps(problem = r.problem, showHints = true, modifier = Modifier.padding(start = 8.dp))
+                    if (onAsk != null) {
+                        Spacer(Modifier.height(8.dp))
+                        com.helddertierwelt.mentalmath.presentation.climb.component.PillButton(
+                            text = "✨ KI-Coach fragen",
+                            onClick = { onAsk(r) },
+                            color = accent,
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .testTag("askAi$i"),
+                        )
+                    }
                 }
             }
         }

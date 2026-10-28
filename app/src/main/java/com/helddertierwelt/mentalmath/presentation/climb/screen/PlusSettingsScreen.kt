@@ -421,6 +421,27 @@ fun PlusSettingsScreen(navController: NavController) {
             }
             CardGap()
 
+            // KI-Coach
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                ClimbCard(modifier = Modifier.testTag("settingsAi")) {
+                    CardTitle("KI-Coach")
+                    BodyText("Eine KI direkt auf dem Handy: erklärt Aufgaben und Fehler, kennt deinen Lernstand und bereitet Übungen vor – ohne Internet und kostenlos.")
+                    Spacer(Modifier.height(10.dp))
+                    ActionButton(
+                        text = "KI-Coach einstellen",
+                        subtitle = "Modell herunterladen, Denkmodus, Speicher",
+                        icon = R.drawable.auto_awesome_24dp,
+                        iconTint = accent,
+                        onClick = {
+                            viewModel.playTap()
+                            navController.navigate("aisettings")
+                        },
+                        modifier = Modifier.testTag("settingsAiButton"),
+                    )
+                }
+                CardGap()
+            }
+
             // Ton und Vibration
             ClimbCard {
                 CardTitle("Ton und Vibration")

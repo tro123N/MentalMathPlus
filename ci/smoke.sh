@@ -25,8 +25,18 @@ if [ -n "$APP" ] && [ -n "$TEST" ]; then
   adb shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS > /dev/null 2>&1 || true
   adb install -r -g "$APP" && adb install -r -g "$TEST" && {
     adb shell cmd locale set-app-locales "$PKG" --locales de-DE || true
+    # KI-Modell für den KI-Test in den App-Ordner legen (wie nach einem Download).
+    MODEL="smoke-model/gemma-4-E2B-it.litertlm"
+    if [ -f "$MODEL" ]; then
+      MDIR="/sdcard/Android/data/$PKG/files/models"
+      adb shell mkdir -p "$MDIR" || true
+      adb push "$MODEL" "$MDIR/" > /dev/null && echo "KI-Modell aufgespielt." || echo "KI-Modell konnte nicht aufgespielt werden."
+      adb shell ls -l "$MDIR" || true
+      adb shell df -h /data | tail -n 1 || true
+      rm -f "$MODEL"
+    fi
     adb logcat -c || true
-    timeout 2400 adb shell am instrument -w \
+    timeout 5400 adb shell am instrument -w \
       -e class com.helddertierwelt.mentalmath.ClimbSmokeTest \
       -e shots "$SHOTS" \
       "$RUNNER" 2>&1 | tee "$OUT/instrument.txt"
