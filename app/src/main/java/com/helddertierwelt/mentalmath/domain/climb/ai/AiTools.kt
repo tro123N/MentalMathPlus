@@ -532,8 +532,9 @@ object AiToolbox {
             put("antwortformat", answerFormat(problem))
             put(
                 "hinweis",
-                "Die App zeigt die Aufgabe als Karte unter deiner Antwort (mit allen Antwortmöglichkeiten). Schreib nur einen kurzen Satz dazu, " +
-                    "wiederhole die Aufgabe nicht und verrate weder Lösung noch Rechenweg. Antwortet die Person, prüfe mit check_answer; bittet sie um Hilfe, nutze get_hint.",
+                "Die App zeigt die Aufgabe als Karte unter deiner Antwort (mit allen Antwortmöglichkeiten). Schreib nur einen kurzen Satz wie " +
+                    "„Hier ist deine Aufgabe – schreib mir dein Ergebnis.“ Es gibt keinen Knopf zum Starten. Wiederhole die Aufgabe nicht und verrate " +
+                    "weder Lösung noch Rechenweg. Antwortet die Person, prüfe mit check_answer; bittet sie um Hilfe, nutze get_hint.",
             )
         }
         return ToolOutcome(CREATE_TASK, result, label = "Aufgabe $id: ${AiQuiz.title(source)}", quiz = (ctx.quiz + task).takeLast(AiQuiz.KEPT))
@@ -560,12 +561,7 @@ object AiToolbox {
         val result = buildJsonObject {
             put("aufgabe", task.id)
             put("richtig", verdict.correct)
-            put("antwort_der_person", raw)
-            put("richtige_antwort", problem.answerText())
-            verdict.note?.let { put("hinweis", it) }
-            why?.let { put("typischer_denkfehler", it) }
-            problem.method?.let { put("methode", it) }
-            putJsonArray("loesungsweg") { AiLookup.solutionLines(problem).forEach { add(it) } }
+            // Gleich am Anfang, damit auch kleine Modelle sie beachten.
             put(
                 "anleitung",
                 if (verdict.correct) {
@@ -575,6 +571,12 @@ object AiToolbox {
                         (if (why != null) " (typischer_denkfehler)." else ".")
                 },
             )
+            put("antwort_der_person", raw)
+            put("richtige_antwort", problem.answerText())
+            verdict.note?.let { put("hinweis", it) }
+            why?.let { put("typischer_denkfehler", it) }
+            problem.method?.let { put("methode", it) }
+            putJsonArray("loesungsweg") { AiLookup.solutionLines(problem).forEach { add(it) } }
         }
         return ToolOutcome(CHECK_ANSWER, result, label = "${task.id}: " + if (verdict.correct) "richtig" else "falsch", quiz = updated)
     }

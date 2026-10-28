@@ -4,7 +4,7 @@ Neu: ein **KI-Coach**, der direkt auf deinem Handy läuft – ohne Internet, kos
 
 - **Kennt deinen Lernstand** im Kletterweg und im TMSnat-Training und sagt dir, was sich gerade am meisten lohnt.
 - **Erklärt Aufgaben und Fehler** Schritt für Schritt – nach einem Fehler beim Üben oder in der Aufgabenliste jedes Ergebnisses mit „KI-Coach fragen“.
-- **Stellt dir Aufgaben im Chat**, prüft deine Antwort und gibt dir auf Wunsch einen Tipp.
+- **Stellt dir Aufgaben im Chat** (als Karte, bei A–E-Aufgaben mit Antwortknöpfen), prüft deine Antwort und gibt dir auf Wunsch einen Tipp.
 - **Bereitet Übungen vor:** gezielt üben, Simulation, Fehlertraining, ähnliche Aufgaben, Levels – und Einstellungen wie die tägliche Erinnerung. Du startest alles selbst mit einem Knopf.
 - **Rechnet nie im Kopf:** Jede Rechnung prüft die KI mit einem eingebauten, exakten Rechner.
 - **Gründlich oder schnell:** Im Denkmodus überlegt die KI vor der Antwort (klüger, etwas langsamer).
