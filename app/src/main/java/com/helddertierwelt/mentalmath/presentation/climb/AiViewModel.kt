@@ -56,6 +56,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -245,11 +246,17 @@ class AiViewModel @Inject constructor(
      */
     fun onVisible(preload: Boolean = true) {
         engine.cancelRelease()
-        viewModelScope.launch {
+        wantsPreload = preload
+        preloadJob?.cancel()
+        preloadJob = viewModelScope.launch {
             store.refresh()
             startPolling()
-            val model = activeModel()
-            if (preload && model != null && engine.status.value !is EngineStatus.Loading) {
+            if (!preload) return@launch
+            // Läuft gerade ein Download oder die Prüfung der Datei (z. B. gleich nach dem App-Start),
+            // erst danach laden – sonst bliebe die KI bis zur ersten Frage ungeladen.
+            store.states.first { states -> states.values.none { it is ModelState.Downloading || it is ModelState.Verifying } }
+            val model = activeModel() ?: return@launch
+            if (wantsPreload && engine.status.value !is EngineStatus.Loading) {
                 if (engine.load(model, settings.value.aiFast)) prepareSession(model)
             }
         }
@@ -257,8 +264,15 @@ class AiViewModel @Inject constructor(
 
     /** Der KI-Bildschirm ist verdeckt: das Modell nach einer Weile freigeben (es braucht viel Speicher). */
     fun onHidden(delayMs: Long = RELEASE_DELAY_MS) {
+        wantsPreload = false
+        preloadJob?.cancel()
         engine.scheduleRelease(delayMs)
     }
+
+    /** Soll das Modell vorab geladen werden (Gesprächsbildschirm sichtbar)? */
+    @Volatile
+    private var wantsPreload = false
+    private var preloadJob: Job? = null
 
     // --- Gespräch --------------------------------------------------------------------------------
 

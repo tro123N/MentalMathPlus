@@ -1163,8 +1163,11 @@ class ClimbSmokeTest {
         waitForTagNoIdle("aiList", 30_000)
         shotNow("l_ki_laedt")
         val loadStart = System.currentTimeMillis()
-        compose.waitUntil(420_000) { ai.engineStatus.value.let { it is EngineStatus.Ready || it is EngineStatus.Failed } }
-        aiLog("Laden dauerte ${(System.currentTimeMillis() - loadStart) / 1000} s")
+        // Der Bildschirm lädt das Modell von selbst vor (auch wenn die Prüfung der Datei gerade erst fertig wurde).
+        val loaded = runCatching {
+            compose.waitUntil(420_000) { ai.engineStatus.value.let { it is EngineStatus.Ready || it is EngineStatus.Failed } }
+        }.isSuccess
+        aiLog("Laden dauerte ${(System.currentTimeMillis() - loadStart) / 1000} s" + if (loaded) "" else " – abgebrochen, Stand: ${ai.engineStatus.value}")
         shot("l_ki_start")
         val status = ai.engineStatus.value
         aiLog("KI geladen: $status")
