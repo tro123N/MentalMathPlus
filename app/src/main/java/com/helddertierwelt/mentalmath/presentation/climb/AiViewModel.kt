@@ -38,6 +38,7 @@ import com.helddertierwelt.mentalmath.domain.climb.curriculum.Curriculum
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiMessage
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiModel
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiPrompt
+import com.helddertierwelt.mentalmath.domain.climb.ai.AiQuiz
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiRole
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiStatus
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiTaskContext
@@ -412,9 +413,20 @@ class AiViewModel @Inject constructor(
                     }
                 }
                 val final = AiText.clean(text.toString())
+                val quiz = _chat.value.quiz
                 updateMessage(replyId) { m ->
+                    val shown = final.ifBlank {
+                        when {
+                            m.quiz.isNotEmpty() -> "Hier ist deine Aufgabe:"
+                            m.actions.isNotEmpty() -> "Ich habe dir etwas vorbereitet:"
+                            else -> "Dazu fällt mir gerade nichts ein. Frag mich bitte noch einmal anders."
+                        }
+                    }
+                    // Fürs Gedächtnis des Modells (z. B. nach einem Neustart): welche Aufgaben als Karte dastanden.
+                    val notes = m.quiz.mapNotNull { id -> quiz.firstOrNull { it.id == id }?.let { AiQuiz.card(it) }?.let { AiQuiz.note(it) } }
                     m.copy(
-                        text = final.ifBlank { if (m.actions.isNotEmpty()) "Ich habe dir etwas vorbereitet:" else "Dazu fällt mir gerade nichts ein. Frag mich bitte noch einmal anders." },
+                        text = shown,
+                        prompt = if (notes.isEmpty()) m.prompt else shown + "\n\n" + notes.joinToString("\n"),
                         thought = AiText.clean(thought.toString()),
                         status = AiStatus.DONE,
                     )
@@ -459,10 +471,13 @@ class AiViewModel @Inject constructor(
                 is AgentEvent.ToolFinished -> {
                     val o = e.outcome
                     o.quiz?.let { q -> _chat.update { it.copy(quiz = q) } }
+                    // Neue Aufgabe: erscheint als Karte unter der Antwort (statt als kleiner Hinweis).
+                    val posed = if (o.name == AiToolbox.CREATE_TASK && o.ok) o.quiz?.lastOrNull()?.id else null
                     updateMessage(replyId) { m ->
                         m.copy(
-                            tools = if (o.label.isEmpty()) m.tools else m.tools + AiToolUse(o.name, o.label, o.ok),
+                            tools = if (o.label.isEmpty() || posed != null) m.tools else m.tools + AiToolUse(o.name, o.label, o.ok),
                             actions = o.action?.let { a -> if (a in m.actions) m.actions else m.actions + a } ?: m.actions,
+                            quiz = if (posed != null && posed !in m.quiz) m.quiz + posed else m.quiz,
                         )
                     }
                     // Nach dem Werkzeug geht es mit Denken oder Schreiben weiter.

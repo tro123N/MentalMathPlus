@@ -403,6 +403,48 @@ class AiTest {
     }
 
     @Test
+    fun posedTasksBecomeCardsWithEverythingTheyNeed() {
+        // TMSnat-Kategorie (eintippen), Level mit A–E-Antworten und ein Wochentag-Level.
+        val created = run(AiToolbox.CREATE_TASK, """{"topic": "Prozente"}""")
+        val task = created.quiz!!.last()
+        val card = AiQuiz.card(task)!!
+        val problem = AiQuiz.problem(task)!!
+        assertEquals(task.id, card.id)
+        assertEquals("Prozente in Textaufgaben", card.title)
+        assertEquals(created.result.str("aufgabe"), card.text)
+        assertEquals(problem.choices, card.choices)
+        assertFalse(card.answered)
+        assertTrue(created.result.str("hinweis").contains("Karte"))
+        // Die Notiz fürs Gedächtnis enthält die Aufgabe, aber nicht die Lösung.
+        val note = AiQuiz.note(card)
+        assertTrue(note.startsWith("(Aufgabe ${task.id}"))
+        assertTrue(note.contains(card.text.lines().last()))
+        assertFalse(note.contains("\n"))
+        val withChoices = Curriculum.worlds.flatMap { it.skills }.firstNotNullOfOrNull { s ->
+            (1L..5L).map { AiQuizTask("A3", "skill:${s.id}", 2, it) }.firstOrNull { AiQuiz.problem(it)?.choices?.isNotEmpty() == true }
+        }!!
+        val choiceCard = AiQuiz.card(withChoices)!!
+        assertTrue(choiceCard.choices.size >= 2)
+        assertTrue(AiQuiz.note(choiceCard).contains("Antwortmöglichkeiten: " + choiceCard.choices.first()))
+        // Nach der Antwort ist die Karte als beantwortet markiert.
+        val answer = chatAnswer(problem.expected, problem.choices)
+        val checked = run(AiToolbox.CHECK_ANSWER, """{"task_id": "${task.id}", "answer": "$answer"}""", ctx(quiz = created.quiz!!))
+        assertTrue(AiQuiz.card(checked.quiz!!.last())!!.answered)
+    }
+
+    @Test
+    fun checkAnswerTellsTheModelWhatToSay() {
+        val task = AiQuizTask("A1", "ap:PERCENT", 2, 11)
+        val problem = AiQuiz.problem(task)!!
+        val right = run(AiToolbox.CHECK_ANSWER, """{"task_id": "A1", "answer": "${chatAnswer(problem.expected, problem.choices)}"}""", ctx(quiz = listOf(task)))
+        assertTrue(right.result.str("anleitung").contains("erfinde keinen Fehler"))
+        val wrongValue = (problem.expected as Expected.Exact).value.add(java.math.BigDecimal.ONE)
+        val wrong = run(AiToolbox.CHECK_ANSWER, """{"task_id": "A1", "answer": "${Fmt.expected(Expected.Exact(wrongValue))}"}""", ctx(quiz = listOf(task)))
+        assertFalse(wrong.result["richtig"]!!.jsonPrimitive.boolean)
+        assertTrue(wrong.result.str("anleitung").startsWith("Die Antwort ist falsch"))
+    }
+
+    @Test
     fun proposalsBecomeActions() {
         val practice = run(AiToolbox.PREPARE_PRACTICE, """{"categories": ["Prozente", "Dreisatz"]}""")
         assertEquals(AiAction.ApPractice(listOf("PERCENT", "RATIO")), practice.action)

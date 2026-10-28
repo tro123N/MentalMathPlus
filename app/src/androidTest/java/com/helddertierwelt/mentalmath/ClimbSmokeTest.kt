@@ -1196,6 +1196,7 @@ class ClimbSmokeTest {
         // 3. Aufgabe im Chat stellen und beantworten
         askAi("Stell mir eine leichte Aufgabe zum Dreisatz.", "l_ki_aufgabe")
         ai.chat.value.quiz.lastOrNull()?.let { q ->
+            aiLog("Aufgabenkarten zu sehen: ${compose.onAllNodesWithTag("aiQuizCard").fetchSemanticsNodes().size}")
             val p = AiQuiz.problem(q)!!
             askAi("Mein Ergebnis: " + Fmt.spoken(p.expected, p.choices), "l_ki_aufgabe_antwort")
         } ?: aiLog("WARNUNG: keine Aufgabe erzeugt.")

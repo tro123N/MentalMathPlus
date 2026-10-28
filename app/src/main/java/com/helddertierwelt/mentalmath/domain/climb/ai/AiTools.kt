@@ -501,7 +501,7 @@ object AiToolbox {
         return "skill:${skill.id}"
     }
 
-    private fun answerFormat(p: Problem): String {
+    internal fun answerFormat(p: Problem): String {
         val unit = p.prompt.unit ?: p.prompt.text.trim().removePrefix("?").trim().takeIf { it.isNotEmpty() && p.prompt.text.trim().startsWith("?") }
         val kind = when (p.input) {
             InputKind.INTEGER -> "ganze Zahl"
@@ -530,14 +530,13 @@ object AiToolbox {
             put("aufgabe", AiLookup.taskText(problem))
             if (problem.choices.isNotEmpty()) putJsonArray("antwortmoeglichkeiten") { problem.choices.forEach { add(it) } }
             put("antwortformat", answerFormat(problem))
-            put("hinweis", "Stelle die Aufgabe genau so. Verrate weder Lösung noch Rechenweg. Wenn die Person antwortet, prüfe mit check_answer; bittet sie um Hilfe, nutze get_hint.")
+            put(
+                "hinweis",
+                "Die App zeigt die Aufgabe als Karte unter deiner Antwort (mit allen Antwortmöglichkeiten). Schreib nur einen kurzen Satz dazu, " +
+                    "wiederhole die Aufgabe nicht und verrate weder Lösung noch Rechenweg. Antwortet die Person, prüfe mit check_answer; bittet sie um Hilfe, nutze get_hint.",
+            )
         }
-        val title = when {
-            source.startsWith("ap:") -> AiLookup.category(source.removePrefix("ap:"))?.title
-            source.startsWith("type:") -> ApTasks.typeName(source.removePrefix("type:"))
-            else -> Curriculum.skill(source.removePrefix("skill:"))?.title
-        } ?: ""
-        return ToolOutcome(CREATE_TASK, result, label = "Aufgabe $id: $title", quiz = (ctx.quiz + task).takeLast(AiQuiz.KEPT))
+        return ToolOutcome(CREATE_TASK, result, label = "Aufgabe $id: ${AiQuiz.title(source)}", quiz = (ctx.quiz + task).takeLast(AiQuiz.KEPT))
     }
 
     private fun quizTask(args: JsonObject, ctx: AiContext): AiQuizTask? {
@@ -567,6 +566,15 @@ object AiToolbox {
             why?.let { put("typischer_denkfehler", it) }
             problem.method?.let { put("methode", it) }
             putJsonArray("loesungsweg") { AiLookup.solutionLines(problem).forEach { add(it) } }
+            put(
+                "anleitung",
+                if (verdict.correct) {
+                    "Die Antwort ist richtig. Lobe kurz und konkret, erfinde keinen Fehler und biete eine neue Aufgabe an."
+                } else {
+                    "Die Antwort ist falsch. Nenne die richtige Antwort und erkläre mit dem Lösungsweg, wo der Fehler liegt" +
+                        (if (why != null) " (typischer_denkfehler)." else ".")
+                },
+            )
         }
         return ToolOutcome(CHECK_ANSWER, result, label = "${task.id}: " + if (verdict.correct) "richtig" else "falsch", quiz = updated)
     }
@@ -759,6 +767,35 @@ object AiQuiz {
 
     /** So viele Aufgaben merkt sich ein Gespräch. */
     const val KEPT = 30
+
+    /** Eine im Chat gestellte Aufgabe, wie sie als Karte unter der Antwort erscheint. */
+    data class Card(
+        val id: String,
+        val title: String,
+        val text: String,
+        val choices: List<String>,
+        val format: String,
+        val answered: Boolean,
+    )
+
+    /** Kurzer Name der Aufgabenart, z. B. „Prozente in Textaufgaben“. */
+    fun title(source: String): String = when {
+        source.startsWith("ap:") -> AiLookup.category(source.removePrefix("ap:"))?.title
+        source.startsWith("type:") -> ApTasks.typeName(source.removePrefix("type:"))
+        else -> Curriculum.skill(source.removePrefix("skill:"))?.title
+    } ?: ""
+
+    fun card(task: AiQuizTask): Card? {
+        val p = problem(task) ?: return null
+        return Card(task.id, title(task.source), AiLookup.taskText(p), p.choices, AiToolbox.answerFormat(p), task.answered)
+    }
+
+    /** Für das Gedächtnis des Modells: Welche Aufgabe stand als Karte unter der Antwort? */
+    fun note(card: Card): String = buildString {
+        append("(Aufgabe ").append(card.id).append(", als Karte gezeigt: ").append(card.text.replace("\n", " "))
+        if (card.choices.isNotEmpty()) append(" Antwortmöglichkeiten: ").append(card.choices.joinToString("  "))
+        append(")")
+    }
 
     /** Die Aufgabe zu einem Eintrag – mit demselben Startwert immer dieselbe. */
     fun problem(task: AiQuizTask): Problem? {

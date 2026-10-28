@@ -93,6 +93,7 @@ import com.helddertierwelt.mentalmath.data.climb.ai.ModelState
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiAction
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiActions
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiModel
+import com.helddertierwelt.mentalmath.domain.climb.ai.AiQuiz
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiRole
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiStatus
 import com.helddertierwelt.mentalmath.domain.climb.engine.SessionType
@@ -373,6 +374,9 @@ fun AiChatScreen(navController: NavController) {
                             if (m.role == AiRole.USER) {
                                 AiUserBubble(m)
                             } else {
+                                val cards = remember(m.quiz, chat.quiz) {
+                                    m.quiz.mapNotNull { id -> chat.quiz.firstOrNull { it.id == id }?.let { AiQuiz.card(it) } }
+                                }
                                 AiAssistantBubble(
                                     m = m,
                                     activity = if (m === last) activity else null,
@@ -381,6 +385,8 @@ fun AiChatScreen(navController: NavController) {
                                     onAction = { i, a -> runAction(m.id, i, a) },
                                     onRetry = { ai.retry() },
                                     onCopy = { copy(it) },
+                                    quiz = cards,
+                                    onAnswer = { answer -> send(answer) },
                                 )
                             }
                         }

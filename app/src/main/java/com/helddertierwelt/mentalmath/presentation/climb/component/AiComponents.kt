@@ -78,6 +78,7 @@ import com.helddertierwelt.mentalmath.domain.climb.ai.AiActions
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiMarkdown
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiMessage
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiModel
+import com.helddertierwelt.mentalmath.domain.climb.ai.AiQuiz
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiStatus
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiText
 import com.helddertierwelt.mentalmath.domain.climb.ai.AiToolUse
@@ -372,14 +373,17 @@ fun AiThoughts(thought: String, thinkingNow: Boolean) {
             )
         }
         AnimatedVisibility(visible = open) {
-            Text(
-                AiText.clean(thought).let { if (it.length > 6_000) "… " + it.takeLast(6_000) else it },
-                fontSize = dimens.fonts.caption,
-                lineHeight = dimens.fonts.caption * 1.35f,
-                fontStyle = FontStyle.Italic,
-                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
-                modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 8.dp),
-            )
+            Column(Modifier.padding(start = 10.dp, end = 10.dp, bottom = 8.dp)) {
+                CaptionText("Die KI denkt meist auf Englisch nach – die Antwort kommt auf Deutsch.")
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    AiText.clean(thought).let { if (it.length > 6_000) "… " + it.takeLast(6_000) else it },
+                    fontSize = dimens.fonts.caption,
+                    lineHeight = dimens.fonts.caption * 1.35f,
+                    fontStyle = FontStyle.Italic,
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
+                )
+            }
         }
     }
 }
@@ -395,7 +399,62 @@ fun AiTyping(text: String) {
     }
 }
 
-/** Antwort der KI (links): Gedanken, Text, Werkzeuge, Vorschläge. */
+/** Eine Aufgabe, die die KI im Chat gestellt hat – mit Antwortknöpfen bei A–E-Aufgaben. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun AiQuizCard(card: AiQuiz.Card, enabled: Boolean, onAnswer: (String) -> Unit, modifier: Modifier = Modifier) {
+    val dimens = MentalMathTheme.dimens
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(14.dp))
+            .border(1.dp, accent.copy(alpha = 0.45f), RoundedCornerShape(14.dp))
+            .background(accent.copy(alpha = 0.07f))
+            .padding(horizontal = 12.dp, vertical = 10.dp)
+            .testTag("aiQuizCard"),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(painter = painterResource(R.drawable.question_mark_24dp), contentDescription = null, tint = accent, modifier = Modifier.size(16.dp))
+            Spacer(Modifier.width(6.dp))
+            Text(
+                "Aufgabe ${card.id}" + if (card.title.isNotEmpty()) " · ${card.title}" else "",
+                fontSize = dimens.fonts.caption,
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
+            )
+            if (card.answered) {
+                Icon(painter = painterResource(R.drawable.check_24dp), contentDescription = "beantwortet", tint = green, modifier = Modifier.size(16.dp))
+            }
+        }
+        Text(card.text, fontSize = dimens.fonts.sideSheetEntry, lineHeight = dimens.fonts.sideSheetEntry * 1.4f, color = MaterialTheme.colorScheme.onPrimary)
+        if (card.choices.isNotEmpty()) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                card.choices.forEachIndexed { i, choice ->
+                    val active = enabled && !card.answered
+                    Text(
+                        choice,
+                        fontSize = dimens.fonts.caption,
+                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = if (active) 1f else 0.55f),
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(16.dp))
+                            .border(1.dp, accent.copy(alpha = if (active) 0.6f else 0.25f), RoundedCornerShape(16.dp))
+                            .background(MaterialTheme.colorScheme.primary)
+                            .clickable(enabled = active) { onAnswer("Meine Antwort: $choice") }
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
+                            .testTag("aiQuizChoice$i"),
+                    )
+                }
+            }
+        } else if (!card.answered) {
+            CaptionText("Antwort: ${card.format} – schreib sie unten ins Feld.")
+        }
+    }
+}
+
+/** Antwort der KI (links): Gedanken, Text, gestellte Aufgaben, Werkzeuge, Vorschläge. */
 @Composable
 fun AiAssistantBubble(
     m: AiMessage,
@@ -406,6 +465,8 @@ fun AiAssistantBubble(
     onRetry: () -> Unit,
     onCopy: (String) -> Unit,
     modifier: Modifier = Modifier,
+    quiz: List<AiQuiz.Card> = emptyList(),
+    onAnswer: (String) -> Unit = {},
 ) {
     val dimens = MentalMathTheme.dimens
     val streaming = m.status == AiStatus.STREAMING
@@ -439,6 +500,7 @@ fun AiAssistantBubble(
         if (m.thought.isNotBlank()) AiThoughts(m.thought, thinkingNow = streaming && m.text.isEmpty())
         if (shown.isNotEmpty()) MarkdownText(shown, modifier = Modifier.testTag("aiReplyText"))
         if (streaming && (shown.isEmpty() || activity != null)) AiTyping(activity ?: "Schreibt …")
+        quiz.forEach { AiQuizCard(it, enabled = !busy, onAnswer = onAnswer) }
         AiToolChips(m.tools)
         m.actions.forEachIndexed { i, a ->
             AiActionCard(a, done = i in m.done, enabled = !busy || !streaming, onRun = { onAction(i, a) })

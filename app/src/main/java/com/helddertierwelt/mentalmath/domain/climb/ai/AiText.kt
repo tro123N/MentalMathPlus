@@ -238,7 +238,8 @@ object AiMarkdown {
                     flush()
                     blocks += MdBlock.Quote(inline(trimmed.removePrefix(">").trim()))
                 }
-                else -> paragraph += line.trimEnd()
+                // Eingerückte Zeilen (z. B. nach einer Formel in einer Liste) ohne Leerzeichen davor zeigen.
+                else -> paragraph += line.trim()
             }
             i++
         }

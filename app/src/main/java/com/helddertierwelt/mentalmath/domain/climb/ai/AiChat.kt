@@ -71,6 +71,8 @@ data class AiMessage(
     /** Schon ausgeführte bzw. übernommene Vorschläge (Index in [actions]). */
     val done: List<Int> = emptyList(),
     val tools: List<AiToolUse> = emptyList(),
+    /** Aufgaben, die die KI in dieser Antwort gestellt hat (IDs aus [AiConversation.quiz], als Karte gezeigt). */
+    val quiz: List<String> = emptyList(),
     val status: AiStatus = AiStatus.DONE,
     /** Fehlermeldung bei [AiStatus.ERROR]. */
     val error: String? = null,
