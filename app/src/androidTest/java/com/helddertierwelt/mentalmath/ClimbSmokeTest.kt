@@ -1126,9 +1126,22 @@ class ClimbSmokeTest {
     }
 
     private fun askAi(text: String, name: String) {
+        val before = ai.chat.value.messages.size
         compose.onNodeWithTag("aiInput").performTextInput(text)
+        // Die Tastatur fährt ein und schiebt das Eingabefeld nach oben – erst danach auf Senden tippen
+        // (sonst landet der Tipp dort, wo der Knopf eben noch war).
+        Thread.sleep(1_500)
         compose.waitForIdle()
+        if (before == 0) shot("${name}_tastatur")
         compose.onNodeWithTag("aiSend").performClick()
+        val sent = runCatching { compose.waitUntil(10_000) { ai.chat.value.messages.size > before } }.isSuccess
+        if (!sent) {
+            aiLog("Senden per Knopf hat nicht geklappt – zweiter Versuch.")
+            Thread.sleep(1_500)
+            compose.waitForIdle()
+            compose.onNodeWithTag("aiSend").performClick()
+            compose.waitUntil(10_000) { ai.chat.value.messages.size > before }
+        }
         waitForAiReply(name)
     }
 
