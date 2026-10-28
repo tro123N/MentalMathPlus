@@ -39,10 +39,13 @@ Die App hat drei getrennte Bereiche (Leiste unten):
 
 ### TMSnat-Training (im freien Training)
 - Vorbereitung auf den TMSnat-Untertest **„Arithmetisches Problemlösen“** (ab 2027; der Untertest stammt aus dem HAM-Nat): 16 Aufgaben in 25 Minuten, Antworten A–E, ohne Taschenrechner.
-- Unbegrenzt viele eigene Textaufgaben in 12 Kategorien (Dreisatz, Prozente, Beziehungsketten, Anteile, Einheiten und Dosierung, Tempo, gemeinsame Arbeit, Mischungen, Wachstum und Halbwertszeit, Gleichungen, Kombinatorik, Wahrscheinlichkeit) – mit Lösungswegen, typischen Fehlern als falschen Antworten und unwichtigen Zusatzangaben wie im Test.
-- **Testsimulation** wie im TMSnat (16 Aufgaben, 25 Minuten), dazu Kurztest und Tempo-Test (20 Minuten); mit Gesamtzeit, „Später bearbeiten“, Auswertung nach Kategorien und Verlauf der Ergebnisse.
+- Unbegrenzt viele eigene Textaufgaben in 12 Kategorien (Dreisatz, Prozente, Beziehungsketten, Anteile, Einheiten und Dosierung, Tempo, gemeinsame Arbeit, Mischungen, Wachstum und Halbwertszeit, Gleichungen, Kombinatorik, Wahrscheinlichkeit) – mit Lösungswegen und unwichtigen Zusatzangaben wie im Test.
+- **Typische Fehler erklärt:** Die falschen Antworten entstehen aus typischen Denkfehlern. Wer so eine Antwort wählt (oder eintippt), sieht, was schiefging – z. B. „Das ist die Tagesdosis – sie muss noch auf 3 Gaben verteilt werden.“ Die richtige Antwort steht gleich oft bei A, B, C, D und E.
+- **Testsimulation** wie im TMSnat (16 Aufgaben, 25 Minuten), dazu Kurztest und Tempo-Test (20 Minuten); mit Gesamtzeit, „Später bearbeiten“, Auswertung nach Kategorien und **Zeitanalyse** (Zeit pro Aufgabe gegen das Ziel von 94 Sekunden, Zeitfresser, Tipps).
+- **Punkt-Prognose:** Aus den eigenen Ergebnissen werden 10.000 Tests simuliert – mit erwarteter Punktzahl, Bereich, Tempo und der Kategorie, deren Üben am meisten bringt.
+- **Fehlertraining:** Falsch gelöste Aufgabentypen kommen mit neuen Zahlen wieder – sofort, dann nach 1, 3 und 7 Tagen.
 - **Gemischt üben** ohne Ende: nach einem Fehler erscheint sofort der Lösungsweg.
-- Jede Kategorie ist auch ein Level (Welt 13) mit Erklärung, geführtem Üben und Prüfung.
+- Countdown bis zum ersten TMSnat; jede Kategorie ist auch ein Level (Welt 13) mit Erklärung, geführtem Üben und Prüfung.
 
 ### 3. Klassischer Modus – die Original-App (fährt neben „Freies Training“ heraus)
 - Der unveränderte Spielmodus von „Mental Math“: Grundrechenarten mit eigenen Zahlenbereichen, Bestenliste, Verlauf und Spiele per Link.
