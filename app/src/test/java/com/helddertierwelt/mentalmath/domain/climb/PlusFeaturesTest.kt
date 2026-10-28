@@ -391,6 +391,22 @@ class PlusFeaturesTest {
     }
 
     @Test
+    fun apAnswerPositionsAreEven() {
+        // Die richtige Antwort steht etwa gleich oft bei A, B, C, D und E – kein Muster zum Raten.
+        val r = Random(3)
+        val counts = IntArray(5)
+        repeat(100) {
+            com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks.simulation(16, 5, r).forEach {
+                counts[(it.expected as com.helddertierwelt.mentalmath.domain.climb.model.Expected.Choice).index]++
+            }
+        }
+        val total = counts.sum()
+        counts.forEachIndexed { i, c ->
+            assertTrue("Antwort ${"ABCDE"[i]}: $c von $total", c * 100 >= total * 14 && c * 100 <= total * 26)
+        }
+    }
+
+    @Test
     fun independentWorldIsAlwaysOpen() {
         val w13 = worlds.indexOfFirst { it.independent }
         assertTrue(w13 >= 0)

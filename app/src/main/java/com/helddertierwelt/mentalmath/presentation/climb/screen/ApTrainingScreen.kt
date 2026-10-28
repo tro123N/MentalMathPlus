@@ -137,24 +137,24 @@ fun ApTrainingScreen(navController: NavController) {
                 Spacer(Modifier.height(8.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     ActionButton(
-                        text = "TMSnat-Simulation · 16 Aufgaben · 25 min",
-                        subtitle = "Genau wie im Test, Antworten A–E",
+                        text = "TMSnat-Simulation",
+                        subtitle = "16 Aufgaben · 25 min · Antworten A–E, genau wie im Test",
                         icon = R.drawable.trophy_24dp,
                         iconTint = yellow,
                         onClick = { play(viewModel.startApSimulation(ApTasks.TEST_SECONDS)) },
                         modifier = Modifier.testTag("simTms"),
                     )
                     ActionButton(
-                        text = "Kurztest · 8 Aufgaben · 12½ min",
-                        subtitle = "Halber Test für zwischendurch",
+                        text = "Kurztest",
+                        subtitle = "8 Aufgaben · 12½ min · der halbe Test für zwischendurch",
                         icon = R.drawable.timer_24dp,
                         iconTint = accent,
                         onClick = { play(viewModel.startApSimulation(ApTasks.TEST_SECONDS / 2, ApTasks.TEST_COUNT / 2)) },
                         modifier = Modifier.testTag("simShort"),
                     )
                     ActionButton(
-                        text = "Tempo-Test · 16 Aufgaben · 20 min",
-                        subtitle = "Weniger Zeit als im Test – für eine Zeitreserve am Testtag",
+                        text = "Tempo-Test",
+                        subtitle = "16 Aufgaben · 20 min · weniger Zeit als im Test, für eine Zeitreserve am Testtag",
                         icon = R.drawable.whatshot_24dp,
                         iconTint = red,
                         onClick = { play(viewModel.startApSimulation(1_200)) },

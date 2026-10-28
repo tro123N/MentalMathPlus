@@ -180,7 +180,7 @@ object ApTasks {
         else -> "${dec(value)} $unit"
     }
 
-    /** Aufgabe mit [options] Antwortmöglichkeiten (A–E oder A–D), aufsteigend sortiert wie im Test. */
+    /** Aufgabe mit [options] Antwortmöglichkeiten (im TMSnat A–E), nach Größe sortiert. */
     fun choice(t: ApTask, options: Int, r: Random): Problem {
         val labels = "ABCDE"
         val n = options.coerceIn(3, 5)
@@ -218,6 +218,11 @@ object ApTasks {
 
     private fun norm(x: BigDecimal): BigDecimal = x.stripTrailingZeros()
 
+    /**
+     * Antworten zu einer Zahl: zuerst typische Fehler, dann nahe Werte. Die richtige Antwort soll
+     * an jeder Stelle (A bis E) etwa gleich oft stehen – sonst lernt man beim Üben ein Muster,
+     * das es im Test nicht gibt. [below] falsche Antworten kommen deshalb unter die richtige.
+     */
     private fun numericOptions(answer: BigDecimal, wrong: List<BigDecimal>, count: Int, r: Random): List<BigDecimal> {
         val intAnswer = isInt(answer)
         val picked = mutableListOf<BigDecimal>()
@@ -228,25 +233,36 @@ object ApTasks {
             if (x.compareTo(answer) == 0) return false
             return picked.none { it.compareTo(x) == 0 }
         }
-        for (w in wrong.shuffled(r)) {
-            if (picked.size >= count - 1) break
-            val x = norm(w)
-            if (ok(x)) picked += x
+        val below = r.nextInt(count)
+        fun fill(candidates: List<BigDecimal>, under: Boolean, limit: Int) {
+            for (c in candidates) {
+                if (picked.count { (it < answer) == under } >= limit) return
+                if ((c < answer) == under && ok(c)) picked += c
+            }
         }
+        val typical = wrong.map { norm(it) }.shuffled(r)
         val step = niceStep(answer)
         val two = BigDecimal(2)
-        val candidates = mutableListOf(
-            answer + step, answer - step, answer + step * two, answer - step * two,
-            answer * two, answer.divide(two, MathContext.DECIMAL64), answer * BigDecimal("1.5"),
-            answer * BigDecimal("0.75"), answer + step * BigDecimal(3), answer * BigDecimal(3),
-        ).map { norm(it) }.shuffled(r)
-        for (c in candidates) {
+        fun steps(k: Int) = norm(answer + step * BigDecimal(k))
+        fun times(f: String) = norm(answer * BigDecimal(f))
+        val lower = listOf(steps(-1), steps(-2)).shuffled(r) +
+            listOf(times("0.75"), norm(answer.divide(two, MathContext.DECIMAL64))).shuffled(r) +
+            listOf(steps(-3), steps(-4))
+        val upper = listOf(steps(1), steps(2)).shuffled(r) +
+            listOf(times("1.5"), times("2")).shuffled(r) +
+            listOf(steps(3), steps(4))
+        fill(typical, true, below)
+        fill(typical, false, count - 1 - below)
+        fill(lower, true, below)
+        fill(upper, false, count - 1 - below)
+        // Reicht es auf einer Seite nicht (z. B. gibt es keine kleinere ganze Zahl), die andere Seite auffüllen.
+        for (c in typical + upper + lower) {
             if (picked.size >= count - 1) break
             if (ok(c)) picked += c
         }
-        var k = 4L
+        var k = 5
         while (picked.size < count - 1) {
-            val c = norm(answer + step * bd(k))
+            val c = steps(k)
             if (ok(c)) picked += c
             k++
         }
@@ -270,21 +286,32 @@ object ApTasks {
         }
     }
 
+    /** Antworten zu einem Bruch, nach demselben Muster wie bei Zahlen. */
     private fun fracOptions(answer: Pair<Long, Long>, wrong: List<Pair<Long, Long>>, count: Int, r: Random): List<Pair<Long, Long>> {
         val picked = mutableListOf<Pair<Long, Long>>()
         fun ok(f: Pair<Long, Long>): Boolean =
-            f.first > 0 && f.second > 0 && f.first <= f.second && f != answer && f !in picked
-        for (w in wrong.shuffled(r)) {
-            if (picked.size >= count - 1) break
-            val f = reduce(w.first, w.second)
-            if (ok(f)) picked += f
+            f.first > 0 && f.second > 0 && f.first <= f.second && f.first * answer.second != answer.first * f.second &&
+                picked.none { it.first * f.second == f.first * it.second }
+        fun value(f: Pair<Long, Long>): Double = f.first.toDouble() / f.second
+        val target = value(answer)
+        val below = r.nextInt(count)
+        fun fill(candidates: List<Pair<Long, Long>>, under: Boolean, limit: Int) {
+            for (c in candidates) {
+                if (picked.count { (value(it) < target) == under } >= limit) return
+                if ((value(c) < target) == under && ok(c)) picked += c
+            }
         }
+        fun fracs(vararg list: Pair<Long, Long>) =
+            list.filter { it.first > 0 && it.second > 0 }.map { reduce(it.first, it.second) }
+        val typical = wrong.map { reduce(it.first, it.second) }.shuffled(r)
         val (n, d) = answer
-        val candidates = listOf(
-            n + 1 to d, n - 1 to d, n to d + 1, n to d - 1, n * 2 to d, n to d * 2,
-            n + 1 to d + 1, d - n to d, n + 2 to d, n to d + 2, 1L to d, n + 3 to d,
-        ).filter { it.first > 0 && it.second > 0 }.map { reduce(it.first, it.second) }.shuffled(r)
-        for (c in candidates) {
+        val lower = fracs(n - 1 to d, n to d + 1).shuffled(r) + fracs(n to d + 2, n to d * 2, 1L to d).shuffled(r) + fracs(n to d * 3)
+        val upper = fracs(n + 1 to d, n to d - 1).shuffled(r) + fracs(n + 2 to d, n * 2 to d, n + 1 to d + 1).shuffled(r) + fracs(n + 3 to d)
+        fill(typical, true, below)
+        fill(typical, false, count - 1 - below)
+        fill(lower, true, below)
+        fill(upper, false, count - 1 - below)
+        for (c in typical + upper + lower) {
             if (picked.size >= count - 1) break
             if (ok(c)) picked += c
         }
@@ -294,7 +321,7 @@ object ApTasks {
             if (ok(c)) picked += c
             k++
         }
-        return (picked + answer).sortedBy { it.first.toDouble() / it.second }
+        return (picked + answer).sortedBy { value(it) }
     }
 
     // --- 1. Dreisatz --------------------------------------------------------------------------
