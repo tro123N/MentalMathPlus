@@ -40,7 +40,10 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -124,6 +127,7 @@ private fun statusText(status: EngineStatus, model: AiModel?): String = when (st
 }
 
 /** Der KI-Coach: Gespräch mit der KI auf dem Handy. */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AiChatScreen(navController: NavController) {
     val dimens = MentalMathTheme.dimens
@@ -331,6 +335,12 @@ fun AiChatScreen(navController: NavController) {
                     LaunchedEffect(focus, topic) {
                         val total = snapshotFlow { listState.layoutInfo.totalItemsCount }.first { it > 0 }
                         listState.scrollToItem(total - 1)
+                    }
+                    // Fährt die Tastatur aus, bleibt das Ende des Gesprächs sichtbar.
+                    val imeVisible = WindowInsets.isImeVisible
+                    LaunchedEffect(imeVisible) {
+                        val total = listState.layoutInfo.totalItemsCount
+                        if (imeVisible && total > 0) listState.animateScrollToItem(total - 1)
                     }
                     // Beim Schreiben unten bleiben (außer die Person hat nach oben gescrollt).
                     LaunchedEffect(messages.size, last?.text?.length, last?.thought?.length, last?.actions?.size, last?.status) {
