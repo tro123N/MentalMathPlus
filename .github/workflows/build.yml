@@ -15,9 +15,11 @@ on:
 permissions:
   contents: write
 
+# Auf "dev" zählt nur der neueste Stand: ein laufender Test wird dann abgebrochen.
+# Auf "plus" (Release) läuft jeder Build zu Ende.
 concurrency:
   group: apk-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.ref == 'refs/heads/dev' }}
 
 jobs:
   build:

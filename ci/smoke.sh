@@ -64,28 +64,32 @@ if [ -n "$APP" ] && [ -n "$TEST" ]; then
   if adb install -r -g "$APP" && adb install -r -g "$TEST"; then
     adb shell cmd locale set-app-locales "$PKG" --locales de-DE || true
     # KI-Modell für den KI-Test in den App-Ordner legen (wie nach einem Download).
+    # Das Aufspielen dauert je nach Rechner 2 bis 30 Minuten (2,6 GB): Es läuft im Hintergrund,
+    # während die übrigen Tests laufen – die brauchen das Modell nicht.
     MODEL="smoke-model/gemma-4-E2B-it.litertlm"
     PUSHLOG="$OUT/model-push.txt"
+    MDIR="/sdcard/Android/data/$PKG/files/models"
     have_model=0
+    push_pid=""
+    rm -f "$OUT/push.ok"
     if [ -f "$MODEL" ]; then
-      MDIR="/sdcard/Android/data/$PKG/files/models"
-      # Der Speicher des virtuellen Handys ist kurz nach dem Start manchmal noch nicht bereit:
-      # bis zu dreimal versuchen und alles protokollieren.
-      for attempt in 1 2 3; do
-        timeout 60 adb shell mkdir -p "$MDIR" >> "$PUSHLOG" 2>&1 || true
-        timeout 900 adb push "$MODEL" "$MDIR/" >> "$PUSHLOG" 2>&1
-        rc=$?
-        if [ "$rc" -eq 0 ]; then
-          echo "KI-Modell aufgespielt (Versuch $attempt)." | tee -a "$PUSHLOG"
-          have_model=1
-          break
-        fi
-        echo "KI-Modell aufspielen fehlgeschlagen (Versuch $attempt, Status $rc)." | tee -a "$PUSHLOG"
-        sleep 30
-      done
-      timeout 30 adb shell ls -l "$MDIR" >> "$PUSHLOG" 2>&1 || true
-      timeout 30 adb shell df -h /data >> "$PUSHLOG" 2>&1 || true
-      rm -f "$MODEL"
+      (
+        for attempt in 1 2 3; do
+          start=$(date +%s)
+          timeout 60 adb shell mkdir -p "$MDIR" >> "$PUSHLOG" 2>&1 || true
+          timeout 2400 adb push "$MODEL" "$MDIR/" >> "$PUSHLOG" 2>&1
+          rc=$?
+          echo "Aufspielen, Versuch $attempt: Status $rc nach $(( $(date +%s) - start )) s" >> "$PUSHLOG"
+          if [ "$rc" -eq 0 ]; then
+            echo ok > "$OUT/push.ok"
+            break
+          fi
+          # Zeit abgelaufen: kein weiterer Versuch (der KI-Test fällt dann aus).
+          [ "$rc" -eq 124 ] && break
+          sleep 30
+        done
+      ) &
+      push_pid=$!
     else
       echo "Keine Modelldatei $MODEL gefunden." | tee -a "$PUSHLOG"
       ls -la smoke-model >> "$PUSHLOG" 2>&1 || true
@@ -104,6 +108,14 @@ if [ -n "$APP" ] && [ -n "$TEST" ]; then
     publish_branch ci-smoke "$OUT" "Smoke-Test Lauf ${RUN_NUMBER:-?} (ohne KI)"
 
     # 2) KI-Test mit dem echten Modell (falls aufgespielt).
+    if [ -n "$push_pid" ]; then
+      wait "$push_pid"
+      [ -f "$OUT/push.ok" ] && have_model=1
+      echo "KI-Modell aufgespielt: $([ "$have_model" -eq 1 ] && echo ja || echo nein)" | tee -a "$PUSHLOG"
+      timeout 30 adb shell ls -l "$MDIR" >> "$PUSHLOG" 2>&1 || true
+      timeout 30 adb shell df -h /data >> "$PUSHLOG" 2>&1 || true
+      rm -f "$MODEL" "$OUT/push.ok"
+    fi
     if [ "$have_model" -eq 1 ]; then
       ai_state="läuft"
       timeout -k 30 2700 adb shell am instrument -w \

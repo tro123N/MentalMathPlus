@@ -1161,7 +1161,7 @@ class ClimbSmokeTest {
         }
         compose.onNodeWithTag("action_ai").performClick()
         // Das Modell spielt ci/smoke.sh auf; die App prüft es beim ersten Öffnen (Prüfsumme).
-        compose.waitUntil(300_000) {
+        compose.waitUntil(600_000) {
             ai.models.value[AiModel.GEMMA4_E2B].let { it is ModelState.Ready || it is ModelState.Missing || it is ModelState.Failed }
         }
         val state = ai.models.value[AiModel.GEMMA4_E2B]
