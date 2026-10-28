@@ -5,8 +5,18 @@ set -uo pipefail
 cd "$(dirname "$0")/.."
 
 RUN="${RUN_NUMBER:-0}"
-VERSION="1.0.${RUN}"
+# Versionsnummer aus ci/version.txt (z. B. "2.1"): erste Zahl = großer Umbau, zweite = neue Funktionen.
+# Gibt es diese Version schon als Release, zählt die dritte Zahl hoch (2.1 → 2.1.1 → 2.1.2): reine Korrekturen.
+BASE="$(tr -d ' \r\n\t' < ci/version.txt 2>/dev/null || true)"
+[ -n "$BASE" ] || BASE="2.0"
+VERSION="$BASE"
+if gh release view "v${VERSION}" >/dev/null 2>&1; then
+  n=1
+  while gh release view "v${BASE}.${n}" >/dev/null 2>&1; do n=$((n + 1)); done
+  VERSION="${BASE}.${n}"
+fi
 TAG="v${VERSION}"
+echo "Version: ${VERSION} (Build ${RUN})"
 APK_NAME="MentalMathPlus.apk"
 LOG="build.log"
 
@@ -90,5 +100,26 @@ gh release create "$TAG" "$APK_NAME" \
   --notes-file "$NOTES" \
   --target "${GITHUB_SHA:-plus}" \
   --latest || { echo "::error::Release konnte nicht erstellt werden."; exit 1; }
+
+# Die Startseite des Repositorys zeigt die README des Branches "main" (unveränderter Import des Originals).
+# Damit dort die README von Mental Math Plus steht, wird sie nach jedem Release nach "main" übernommen.
+sync_readme() {
+  [ -n "${GH_TOKEN:-}" ] && [ -n "${GITHUB_REPOSITORY:-}" ] || return 0
+  local tmp
+  tmp="$(mktemp -d)"
+  if git clone -q --depth 1 --branch main "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$tmp/main" 2>/dev/null; then
+    if ! cmp -s README.md "$tmp/main/README.md"; then
+      cp README.md "$tmp/main/README.md"
+      (
+        cd "$tmp/main" &&
+        git add README.md &&
+        git -c user.name="ci" -c user.email="ci@users.noreply.github.com" commit -q -m "README von Mental Math Plus (aus plus, ${TAG})" &&
+        git push -q origin main
+      ) || echo "README konnte nicht nach main übernommen werden."
+    fi
+  fi
+  rm -rf "$tmp"
+}
+sync_readme
 
 echo "Fertig: ${TAG}"

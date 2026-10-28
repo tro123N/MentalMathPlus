@@ -199,6 +199,93 @@ fun LineChart(
     }
 }
 
+/**
+ * Säulendiagramm mit eigener Farbe je Säule, z. B. Zeit pro Aufgabe (richtig grün, falsch rot).
+ * [guide] zeichnet eine gestrichelte Ziel-Linie mit Beschriftung rechts.
+ * [highlight]: Säulen in diesem Bereich (Index) voll, die anderen blasser.
+ */
+@Composable
+fun ColorBarChart(
+    values: List<Float>,
+    colors: List<Color>,
+    labels: List<String>,
+    modifier: Modifier = Modifier,
+    guide: ChartGuide? = null,
+    height: Dp = 140.dp,
+    highlight: IntRange? = null,
+) {
+    val measurer = rememberTextMeasurer()
+    val textColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
+    val gridColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.15f)
+    val labelStyle = TextStyle(fontSize = 10.sp, color = textColor)
+    Canvas(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(height),
+    ) {
+        if (values.isEmpty()) return@Canvas
+        val top = 8.dp.toPx()
+        val bottom = 16.dp.toPx()
+        val right = if (guide != null) 40.dp.toPx() else 0f
+        val chartHeight = size.height - top - bottom
+        val chartWidth = size.width - right
+        val maxValue = max(max(values.maxOrNull() ?: 0f, guide?.value ?: 0f) * 1.08f, 1f)
+        val slot = chartWidth / values.size
+        val barWidth = slot * 0.66f
+        drawLine(gridColor, Offset(0f, top + chartHeight), Offset(chartWidth, top + chartHeight), strokeWidth = 1.dp.toPx())
+        values.forEachIndexed { i, v ->
+            val x = slot * i + (slot - barWidth) / 2
+            val base = colors.getOrElse(i) { textColor }
+            val color = if (highlight == null || i in highlight) base else base.copy(alpha = 0.35f)
+            if (v > 0f) {
+                val h = (v / maxValue) * chartHeight
+                drawRoundRect(
+                    color = color,
+                    topLeft = Offset(x, top + chartHeight - h),
+                    size = Size(barWidth, h),
+                    cornerRadius = CornerRadius(3.dp.toPx(), 3.dp.toPx()),
+                )
+            } else {
+                drawLine(color, Offset(x, top + chartHeight - 1.dp.toPx()), Offset(x + barWidth, top + chartHeight - 1.dp.toPx()), strokeWidth = 2.dp.toPx())
+            }
+            val label = labels.getOrNull(i).orEmpty()
+            if (label.isNotEmpty()) {
+                val layout = measurer.measure(label, labelStyle)
+                val lx = (slot * i + slot / 2 - layout.size.width / 2f).coerceIn(0f, size.width - layout.size.width)
+                drawText(layout, topLeft = Offset(lx, size.height - layout.size.height))
+            }
+        }
+        guide?.let { g ->
+            val gy = top + chartHeight * (1f - g.value / maxValue)
+            drawLine(
+                g.color.copy(alpha = 0.85f),
+                Offset(0f, gy),
+                Offset(chartWidth, gy),
+                strokeWidth = 1.5.dp.toPx(),
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 8f)),
+            )
+            val layout = measurer.measure(g.label, labelStyle.copy(color = g.color))
+            drawText(layout, topLeft = Offset(chartWidth + 4.dp.toPx(), (gy - layout.size.height / 2f).coerceIn(0f, size.height - layout.size.height)))
+        }
+    }
+}
+
+/** Kleiner farbiger Punkt mit Beschriftung (Legende). */
+@Composable
+fun LegendItem(color: Color, text: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .width(10.dp)
+                .height(10.dp)
+                .clip(RoundedCornerShape(3.dp))
+                .background(color),
+        )
+        Spacer(Modifier.width(5.dp))
+        CaptionText(text)
+    }
+}
+
 /** Waagrechter Balken mit Anteil 0 bis 1. */
 @Composable
 fun ShareBar(fraction: Float, color: Color, modifier: Modifier = Modifier, height: Dp = 8.dp) {

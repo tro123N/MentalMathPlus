@@ -97,6 +97,19 @@ data class ApRun(
     val options: Int,
 )
 
+/** Ein Aufgabentyp im Fehlertraining (TMSnat-Training). */
+@Serializable
+data class ApMistakeEntry(
+    /** Aufgabentyp, z. B. „PERCENT/base“ (Kategorie und Art der Aufgabe). */
+    val type: String,
+    /** 0 = gerade falsch gelöst; jede richtige Wiederholung erhöht die Stufe. */
+    val stage: Int = 0,
+    /** Ab diesem Zeitpunkt (ms) ist der Typ wieder dran. */
+    val due: Long = 0,
+    /** So oft war dieser Typ insgesamt falsch. */
+    val misses: Int = 1,
+)
+
 /** Statistik einer Aufgabenart im freien Training. */
 @Serializable
 data class FreeStat(
@@ -126,6 +139,8 @@ data class ClimbProgress(
     val bestStreak: Int = 0,
     /** Testsimulationen „Arithmetisches Problemlösen“, die neuesten zuletzt. */
     val apRuns: List<ApRun> = emptyList(),
+    /** Fehlertraining: Aufgabentypen des TMSnat-Trainings, die zuletzt falsch gelöst wurden. */
+    val apMistakes: List<ApMistakeEntry> = emptyList(),
 ) {
     fun of(skillId: String): SkillProgress = skills[skillId] ?: SkillProgress()
 

@@ -31,7 +31,15 @@ import com.helddertierwelt.mentalmath.domain.climb.model.World
 import kotlin.random.Random
 
 /** Eine geplante Aufgabe in einer Einheit; [limitMs] überschreibt das Zeitlimit der Einheit. */
-data class Planned(val problem: Problem, val retry: Boolean = false, val limitMs: Long? = null)
+data class Planned(
+    val problem: Problem,
+    val retry: Boolean = false,
+    val limitMs: Long? = null,
+    /** Nummer in der ursprünglichen Reihenfolge (freies Training, Testsimulation), 0 = ohne. */
+    val number: Int = 0,
+    /** Testsimulation: Zeit aus früheren Versuchen, bevor die Aufgabe übersprungen wurde. */
+    val spentMs: Long = 0,
+)
 
 /** Modi des freien Trainings. [selectable]: im freien Training auswählbar. */
 enum class FreeMode(val title: String, val selectable: Boolean = true) {
@@ -174,6 +182,9 @@ object SessionLogic {
 
     const val MAX_INPUT = 12
 
+    /** Vor der Erklärung eines typischen Fehlers. */
+    const val MISTAKE_PREFIX = "Typischer Fehler: "
+
     /** Wiederholungen werden so viele Aufgaben später eingeplant. */
     const val RETRY_DISTANCE = 3
 
@@ -203,7 +214,7 @@ object SessionLogic {
             type = SessionType.FREE,
             skillId = null,
             title = title,
-            problems = problems.map { Planned(it) },
+            problems = problems.mapIndexed { i, p -> Planned(p, number = i + 1) },
             timeLimitMs = timeLimitMs,
             free = rules,
         )
@@ -233,13 +244,28 @@ object SessionLogic {
         }
     }
 
-    /** Einheit sofort beenden (Zeit um, Leben weg oder vom Nutzer beendet). */
-    fun finishNow(s: Session): Session {
+    /**
+     * Einheit sofort beenden (Zeit um, Leben weg oder vom Nutzer beendet).
+     * [elapsedMs]: Zeit, die schon für die aktuelle, nicht beantwortete Aufgabe vergangen ist.
+     */
+    fun finishNow(s: Session, elapsedMs: Long = 0): Session {
         if (s.isSimulation) {
             // Nicht bearbeitete Aufgaben zählen wie im Test als falsch.
-            val open = s.problems.drop(s.results.size).map { ProblemResult(it.problem, "", false, 0, timedOut = true) }
+            val currentIndex = s.results.size
+            val open = s.problems.drop(currentIndex).mapIndexed { i, planned ->
+                val extra = planned.spentMs + if (i == 0 && s.phase == Phase.ANSWERING) elapsedMs else 0L
+                ProblemResult(planned.problem, "", false, 0, timedOut = true, number = planned.number, extraMs = extra)
+            }
             val results = s.results + open
-            return s.copy(results = results, index = s.problems.size, phase = Phase.FINISHED, input = "", feedback = null)
+            val counted = if (s.phase == Phase.ANSWERING && open.isNotEmpty()) elapsedMs else 0L
+            return s.copy(
+                results = results,
+                index = s.problems.size,
+                phase = Phase.FINISHED,
+                input = "",
+                feedback = null,
+                skippedMs = s.skippedMs + counted,
+            )
         }
         val done = s.results.size
         return s.copy(problems = s.problems.take(done), index = done, phase = Phase.FINISHED, input = "", feedback = null)
@@ -252,7 +278,7 @@ object SessionLogic {
         if (s.index >= s.problems.lastIndex) return s
         val list = s.problems.toMutableList()
         list.removeAt(s.index)
-        list.add(current)
+        list.add(current.copy(spentMs = current.spentMs + elapsedMs))
         return s.copy(problems = list, input = "", showHint = false, skippedMs = s.skippedMs + elapsedMs, skips = s.skips + 1)
     }
 
@@ -295,13 +321,24 @@ object SessionLogic {
         val input = s.input
         val verdict = AnswerCheck.check(expected, input)
         val display = if (input.isEmpty()) "" else displayInput(input, s.inputKind, problem.choices)
+        // Passt eine falsche Antwort zu einem typischen Fehler, wird erklärt, was schiefging.
+        val mistake = if (verdict.correct) null else problem.mistakeFor(input)
         val feedback = Feedback(
             correct = verdict.correct,
             userAnswer = display,
             correctAnswer = Fmt.spoken(problem.expected, problem.choices),
-            note = verdict.note,
+            note = verdict.note ?: mistake?.let { "$MISTAKE_PREFIX$it" },
         )
-        val result = ProblemResult(problem, display, verdict.correct, elapsedMs, retry = planned.retry)
+        val result = ProblemResult(
+            problem,
+            display,
+            verdict.correct,
+            elapsedMs,
+            retry = planned.retry,
+            number = planned.number,
+            extraMs = planned.spentMs,
+            note = mistake,
+        )
         var next = s.copy(results = s.results + result, feedback = feedback)
 
         return if (s.isExam) {
@@ -452,6 +489,19 @@ data class Summary(
 object SessionFinisher {
 
     fun finish(
+        worlds: List<World>,
+        before: ClimbProgress,
+        session: Session,
+        now: Long,
+        today: Long,
+    ): Pair<ClimbProgress, Summary> {
+        val (p, summary) = finishSession(worlds, before, session, now, today)
+        // Fehlertraining: falsch gelöste Aufgabentypen des TMSnat-Trainings merken (nicht beim geführten Üben).
+        val reviewed = if (session.type == SessionType.GUIDED) p else ApReview.update(p, session.results, now)
+        return reviewed to summary
+    }
+
+    private fun finishSession(
         worlds: List<World>,
         before: ClimbProgress,
         session: Session,

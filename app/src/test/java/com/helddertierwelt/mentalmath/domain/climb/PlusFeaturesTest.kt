@@ -391,6 +391,152 @@ class PlusFeaturesTest {
     }
 
     @Test
+    fun typicalMistakesAreExplained() {
+        val ap = com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks
+        val r = Random(11)
+        // Eine Aufgabe suchen, bei der eine falsche Antwort einen erklärten typischen Fehler hat.
+        val problem = generateSequence { ap.mixed(5, 2, r) }.first { it.mistakes.isNotEmpty() }
+        val mistake = problem.mistakes.first()
+        val index = (mistake.answer as com.helddertierwelt.mentalmath.domain.climb.model.Expected.Choice).index
+        val rules = FreeRules(FreeMode.ENDLOS, 0, 2, FreeRules.TRACK_AP)
+        var s = SessionLogic.createFree(listOf(problem), rules, "Gemischt üben", null)
+        s = SessionLogic.choose(s, index, 30_000).first
+        assertEquals(Phase.REVEAL, s.phase)
+        assertEquals(SessionLogic.MISTAKE_PREFIX + mistake.why, s.feedback?.note)
+        assertEquals(mistake.why, s.results.single().note)
+        // Beim Eintippen (Level) wird derselbe Fehler erkannt.
+        val typed = generateSequence { ap.typed(ap.task(com.helddertierwelt.mentalmath.domain.climb.curriculum.ApCategory.UNITS, 2, r)) }
+            .first { p -> p.mistakes.any { it.answer is com.helddertierwelt.mentalmath.domain.climb.model.Expected.Exact } }
+        val m = typed.mistakes.first { it.answer is com.helddertierwelt.mentalmath.domain.climb.model.Expected.Exact }
+        val text = (m.answer as com.helddertierwelt.mentalmath.domain.climb.model.Expected.Exact).value.stripTrailingZeros().toPlainString().replace('.', ',')
+        assertEquals(m.why, typed.mistakeFor(text))
+        assertNull(typed.mistakeFor(""))
+    }
+
+    @Test
+    fun everyTaskTypeCanBeRegenerated() {
+        val ap = com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks
+        val r = Random(21)
+        // Jeder Generator liefert einen bekannten Typ …
+        com.helddertierwelt.mentalmath.domain.climb.curriculum.ApCategory.entries.forEach { c ->
+            for (d in 1..3) repeat(40) {
+                val type = ap.typeOf(ap.typed(ap.task(c, d, r)))!!
+                assertTrue("Unbekannter Aufgabentyp $type", type in ap.types)
+            }
+        }
+        // … und jeder Typ lässt sich mit neuen Zahlen wieder erzeugen.
+        ap.types.forEach { type ->
+            val t = ap.taskOfType(type, r)
+            assertNotNull("Typ $type nicht erzeugbar", t)
+            assertEquals(type, ap.typeOf(ap.typed(t!!)))
+        }
+        // Auch Aufgaben des gemischten Levels (Level-ID statt Kategorie) haben einen Typ.
+        val mixed = ap.mixed(5, 2, r).copy(skillId = "w13.mixed")
+        assertNotNull(ap.typeOf(mixed))
+    }
+
+    @Test
+    fun apReviewBringsMistakesBack() {
+        val ap = com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks
+        val review = com.helddertierwelt.mentalmath.domain.climb.engine.ApReview
+        val r = Random(4)
+        val problem = ap.choice(ap.task(com.helddertierwelt.mentalmath.domain.climb.curriculum.ApCategory.PERCENT, 2, r), 5, r)
+        val type = ap.typeOf(problem)!!
+        val day = Progression.DAY_MS
+        fun result(correct: Boolean) = ProblemResult(problem, if (correct) "A" else "B", correct, 40_000)
+        var p = review.update(ClimbProgress(), listOf(result(false)), now)
+        assertEquals(listOf(type), review.due(p, now).map { it.type })
+        assertEquals(0, p.apMistakes.single().stage)
+        // Nicht bearbeitet zählt nicht; andere Aufgaben auch nicht.
+        assertEquals(p, review.update(p, listOf(ProblemResult(problem, "", false, 0, timedOut = true)), now))
+        // Fehlertraining: eine neue Aufgabe desselben Typs.
+        val again = review.problems(p, now, r)
+        assertEquals(listOf(type), again.map { ap.typeOf(it) })
+        // Richtig → morgen wieder, dann nach 3 und 7 Tagen, danach gelernt.
+        p = review.update(p, listOf(result(true)), now)
+        assertTrue(review.due(p, now).isEmpty())
+        assertEquals(now + day, p.apMistakes.single().due)
+        p = review.update(p, listOf(result(true)), now + day)
+        assertEquals(now + 4 * day, p.apMistakes.single().due)
+        // Noch nicht fällig: eine richtige Antwort ändert nichts.
+        assertEquals(p, review.update(p, listOf(result(true)), now + 2 * day))
+        p = review.update(p, listOf(result(true)), now + 4 * day)
+        assertEquals(3, p.apMistakes.single().stage)
+        // Wieder falsch → zurück auf Anfang.
+        val back = review.update(p, listOf(result(false)), now + 5 * day)
+        assertEquals(0, back.apMistakes.single().stage)
+        assertEquals(2, back.apMistakes.single().misses)
+        p = review.update(p, listOf(result(true)), now + 11 * day)
+        assertTrue("Nach vier richtigen Wiederholungen gelernt", p.apMistakes.isEmpty())
+    }
+
+    @Test
+    fun apForecastFollowsTheResults() {
+        val forecast = com.helddertierwelt.mentalmath.domain.climb.engine.ApForecast
+        assertTrue(forecast.forecast(ClimbProgress()) is com.helddertierwelt.mentalmath.domain.climb.engine.ApForecast.Outcome.NeedMore)
+        fun progress(sample: (Int) -> Long): ClimbProgress =
+            com.helddertierwelt.mentalmath.domain.climb.curriculum.ApCategory.entries.fold(ClimbProgress()) { acc, c ->
+                acc.with(c.skillId) { it.copy(recent = List(10) { i -> sample(i) }) }
+            }
+        // Alles richtig und schnell: volle Punktzahl, die Zeit reicht immer.
+        val perfect = (forecast.forecast(progress { 40_000L }, runs = 2_000) as com.helddertierwelt.mentalmath.domain.climb.engine.ApForecast.Outcome.Ready).forecast
+        assertEquals(16, perfect.median)
+        assertEquals(0.0, perfect.timeShort, 1e-9)
+        assertNull(perfect.weakest)
+        // Alles richtig, aber 150 s pro Aufgabe: nur 10 Aufgaben in 25 Minuten, der Rest wird geraten.
+        val slow = (forecast.forecast(progress { 150_000L }, runs = 2_000) as com.helddertierwelt.mentalmath.domain.climb.engine.ApForecast.Outcome.Ready).forecast
+        assertTrue("Prognose ${slow.median}", slow.median in 10..13)
+        assertEquals(1.0, slow.timeShort, 1e-9)
+        // Jede zweite falsch: etwa die Hälfte.
+        val half = (forecast.forecast(progress { i -> if (i % 2 == 0) 60_000L else -60_000L }, runs = 2_000) as com.helddertierwelt.mentalmath.domain.climb.engine.ApForecast.Outcome.Ready).forecast
+        assertTrue("Prognose ${half.median}", half.median in 6..10)
+        assertTrue(half.low <= half.median && half.median <= half.high)
+        assertEquals(100.0, half.distribution.sum(), 1e-6)
+    }
+
+    @Test
+    fun apTimeAnalysisSplitsTheTime() {
+        val ap = com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks
+        val problems = ap.simulation(4, 5, Random(2))
+        val results = listOf(
+            ProblemResult(problems[0], "A", true, 60_000, number = 1),
+            ProblemResult(problems[2], "B", false, 100_000, number = 3, extraMs = 200_000),
+            ProblemResult(problems[1], "C", true, 80_000, number = 2),
+            ProblemResult(problems[3], "", false, 0, timedOut = true, number = 4, extraMs = 30_000),
+        )
+        val report = com.helddertierwelt.mentalmath.domain.climb.engine.ApTime.analyze(results, 400)
+        assertEquals(listOf(1, 2, 3, 4), report.tasks.map { it.number })
+        assertEquals(100_000L, report.targetMs)
+        assertEquals(140_000L, report.firstHalfMs)
+        assertEquals(330_000L, report.secondHalfMs)
+        assertEquals(listOf(3), report.slow.map { it.number })
+        assertEquals(300_000L, report.wrongMs)
+        assertEquals(1, report.wrongCount)
+        assertEquals(1, report.unanswered)
+        assertEquals(440_000L / 3, report.avgAnsweredMs)
+    }
+
+    @Test
+    fun skippedTimeStaysWithTheTask() {
+        val ap = com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks
+        val rules = FreeRules(FreeMode.SIMULATION, 1500, 5, FreeRules.TRACK_AP)
+        var s = SessionLogic.createFree(ap.simulation(3, 5, Random(9)), rules, "Kurztest", null)
+        assertEquals(listOf(1, 2, 3), s.problems.map { it.number })
+        s = SessionLogic.skip(s, 50_000)
+        assertEquals(listOf(2, 3, 1), s.problems.map { it.number })
+        assertEquals(50_000L, s.problems.last().spentMs)
+        val c = (s.expected as com.helddertierwelt.mentalmath.domain.climb.model.Expected.Choice).index
+        s = SessionLogic.advance(SessionLogic.choose(s, c, 20_000).first)
+        // Zeit läuft während Aufgabe 3 ab: Aufgabe 3 bekommt die laufende Zeit, Aufgabe 1 ihre frühere Zeit.
+        val done = SessionLogic.finishNow(s, 10_000)
+        val byNumber = done.results.associateBy { it.number }
+        assertEquals(20_000L, byNumber.getValue(2).totalMs)
+        assertEquals(10_000L, byNumber.getValue(3).totalMs)
+        assertEquals(50_000L, byNumber.getValue(1).totalMs)
+        assertEquals(80_000L, done.usedMs)
+    }
+
+    @Test
     fun apAnswerPositionsAreEven() {
         // Die richtige Antwort steht etwa gleich oft bei A, B, C, D und E – kein Muster zum Raten.
         val r = Random(3)

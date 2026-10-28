@@ -58,7 +58,19 @@ data class ProblemResult(
     val hintsUsed: Int = 0,
     /** Wiederholung einer zuvor falsch gelösten Aufgabe in derselben Einheit. */
     val retry: Boolean = false,
-)
+    /** Nummer der Aufgabe in der ursprünglichen Reihenfolge (Testsimulation), 0 = unbekannt. */
+    val number: Int = 0,
+    /** Zeit aus früheren, übersprungenen Versuchen dieser Aufgabe (Testsimulation). */
+    val extraMs: Long = 0,
+    /** Erklärung, wenn die falsche Antwort zu einem typischen Fehler passt. */
+    val note: String? = null,
+) {
+    /** Gesamte Zeit für diese Aufgabe, auch aus übersprungenen Versuchen. */
+    val totalMs: Long get() = timeMs + extraMs
+
+    /** In der Testsimulation nicht bearbeitet (Zeit um oder vorzeitig beendet). */
+    val unanswered: Boolean get() = timedOut && answer.isEmpty()
+}
 
 /** Auswertung einer Prüfung. */
 data class Outcome(

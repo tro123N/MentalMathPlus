@@ -1,5 +1,7 @@
 # Mental Math Plus
 
+[![Neueste Version](https://img.shields.io/github/v/release/tro123N/MentalMathPlus?label=Version&sort=semver)](https://github.com/tro123N/MentalMathPlus/releases/latest)
+
 > **Hinweis: Dieses Projekt wurde mit KI erstellt.** Alle Erweiterungen dieses Forks – Code, Erklärungstexte und Dokumentation – wurden von der KI **Claude (Anthropic)** geschrieben. Es ist ein **privates Hobbyprojekt** ohne kommerzielle Absicht, ohne Gewährleistung und ohne professionelle Prüfung. Fehler sind möglich.
 >
 > **Inhaber und Betreuer dieses Forks:** [tro123N](https://github.com/tro123N). Er hat die Idee, die Wünsche und die Entscheidungen beigesteuert, programmiert aber nicht selbst.
@@ -37,10 +39,13 @@ Die App hat drei getrennte Bereiche (Leiste unten):
 
 ### TMSnat-Training (im freien Training)
 - Vorbereitung auf den TMSnat-Untertest **„Arithmetisches Problemlösen“** (ab 2027; der Untertest stammt aus dem HAM-Nat): 16 Aufgaben in 25 Minuten, Antworten A–E, ohne Taschenrechner.
-- Unbegrenzt viele eigene Textaufgaben in 12 Kategorien (Dreisatz, Prozente, Beziehungsketten, Anteile, Einheiten und Dosierung, Tempo, gemeinsame Arbeit, Mischungen, Wachstum und Halbwertszeit, Gleichungen, Kombinatorik, Wahrscheinlichkeit) – mit Lösungswegen, typischen Fehlern als falschen Antworten und unwichtigen Zusatzangaben wie im Test.
-- **Testsimulation** wie im TMSnat (16 Aufgaben, 25 Minuten), dazu Kurztest und Tempo-Test (20 Minuten); mit Gesamtzeit, „Später bearbeiten“, Auswertung nach Kategorien und Verlauf der Ergebnisse.
+- Unbegrenzt viele eigene Textaufgaben in 12 Kategorien (Dreisatz, Prozente, Beziehungsketten, Anteile, Einheiten und Dosierung, Tempo, gemeinsame Arbeit, Mischungen, Wachstum und Halbwertszeit, Gleichungen, Kombinatorik, Wahrscheinlichkeit) – mit Lösungswegen und unwichtigen Zusatzangaben wie im Test.
+- **Typische Fehler erklärt:** Die falschen Antworten entstehen aus typischen Denkfehlern. Wer so eine Antwort wählt (oder eintippt), sieht, was schiefging – z. B. „Das ist die Tagesdosis – sie muss noch auf 3 Gaben verteilt werden.“ Die richtige Antwort steht gleich oft bei A, B, C, D und E.
+- **Testsimulation** wie im TMSnat (16 Aufgaben, 25 Minuten), dazu Kurztest und Tempo-Test (20 Minuten); mit Gesamtzeit, „Später bearbeiten“, Auswertung nach Kategorien und **Zeitanalyse** (Zeit pro Aufgabe gegen das Ziel von 94 Sekunden, Zeitfresser, Tipps).
+- **Punkt-Prognose:** Aus den eigenen Ergebnissen werden 10.000 Tests simuliert – mit erwarteter Punktzahl, Bereich, Tempo und der Kategorie, deren Üben am meisten bringt.
+- **Fehlertraining:** Falsch gelöste Aufgabentypen kommen mit neuen Zahlen wieder – sofort, dann nach 1, 3 und 7 Tagen.
 - **Gemischt üben** ohne Ende: nach einem Fehler erscheint sofort der Lösungsweg.
-- Jede Kategorie ist auch ein Level (Welt 13) mit Erklärung, geführtem Üben und Prüfung.
+- Countdown bis zum ersten TMSnat; jede Kategorie ist auch ein Level (Welt 13) mit Erklärung, geführtem Üben und Prüfung.
 
 ### 3. Klassischer Modus – die Original-App (fährt neben „Freies Training“ heraus)
 - Der unveränderte Spielmodus von „Mental Math“: Grundrechenarten mit eigenen Zahlenbereichen, Bestenliste, Verlauf und Spiele per Link.
@@ -48,6 +53,16 @@ Die App hat drei getrennte Bereiche (Leiste unten):
 ### Für alle Bereiche
 - **Einstellungen:** Farbthemen (hell/dunkel und fünf Farben), tägliche Erinnerung zur gewünschten Uhrzeit, Ton und Vibration.
 - **Fortschritt sichern:** als Datei speichern oder teilen und auf einem anderen Handy wieder laden.
+
+## Versionen
+
+Die Versionsnummer zeigt, wie groß eine Änderung ist:
+
+- **erste Zahl** (z. B. **2**.0): großer Umbau oder ein ganz neuer Bereich,
+- **zweite Zahl** (z. B. 2.**1**): neue Funktionen,
+- **dritte Zahl** (z. B. 2.1.**1**): nur Fehlerkorrekturen.
+
+Bis Version 1.0.24 war die letzte Zahl nur ein Zähler der automatischen Builds – deshalb die Sprünge (1.0.15 → 1.0.18 → 1.0.20 → 1.0.24). Ab Version 2.0 gilt die Zählung oben. Was sich in jeder Version geändert hat, steht unter [Releases](https://github.com/tro123N/MentalMathPlus/releases).
 
 ## Herkunft, Urheber und Lizenz
 
@@ -58,5 +73,7 @@ Die App hat drei getrennte Bereiche (Leiste unten):
 ## Entwicklung
 
 - Die Weiterentwicklung liegt auf dem Branch `plus`. Jeder Push dorthin baut über GitHub Actions eine signierte APK (`.github/workflows/build.yml`, Logik in `ci/build.sh`) und veröffentlicht sie unter *Releases*.
+- Die Versionsnummer steht in `ci/version.txt` (z. B. `2.1`). Gibt es diese Version schon, zählt der Build automatisch die dritte Zahl hoch (`2.1.1`, `2.1.2` …).
+- Der Branch `main` enthält den unveränderten Import der Original-App; nur diese README wird nach jedem Release dorthin übernommen, damit sie auf der Startseite des Repositorys erscheint.
 - Der Signaturschlüssel liegt nicht im Repository, sondern als Repository-Secret `SIGNING_KEY` (Format: `<Passwort>.<Keystore als Base64>`).
 - Lokal bauen: `./gradlew assembleFossRelease` (Android SDK und JDK 21 nötig).

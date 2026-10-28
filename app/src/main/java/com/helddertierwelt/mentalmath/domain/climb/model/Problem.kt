@@ -111,4 +111,13 @@ data class Problem(
     val notes: List<String> = emptyList(),
     /** Antwortmöglichkeiten bei [InputKind.CHOICE]. */
     val choices: List<String> = emptyList(),
-)
+    /** Typische Fehler: Antworten, die durch einen bestimmten Denkfehler entstehen, mit Erklärung. */
+    val mistakes: List<Mistake> = emptyList(),
+) {
+    /** Erklärung zu einer falschen Eingabe, wenn sie zu einem typischen Fehler passt. */
+    fun mistakeFor(input: String): String? =
+        if (input.isBlank()) null else mistakes.firstOrNull { com.helddertierwelt.mentalmath.domain.climb.math.AnswerCheck.check(it.answer, input).correct }?.why
+}
+
+/** Ein typischer Fehler: die Antwort, die dabei herauskommt, und was schiefgelaufen ist. */
+data class Mistake(val answer: Expected, val why: String)

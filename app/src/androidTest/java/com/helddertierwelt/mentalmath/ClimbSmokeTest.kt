@@ -41,9 +41,11 @@ import androidx.compose.ui.test.performTextInput
 import androidx.lifecycle.ViewModelProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.helddertierwelt.mentalmath.domain.climb.curriculum.ApCategory
 import com.helddertierwelt.mentalmath.domain.climb.curriculum.Curriculum
 import com.helddertierwelt.mentalmath.domain.climb.engine.Phase
 import com.helddertierwelt.mentalmath.domain.climb.engine.Progression
+import com.helddertierwelt.mentalmath.domain.climb.model.ApMistakeEntry
 import com.helddertierwelt.mentalmath.domain.climb.model.ClimbProgress
 import com.helddertierwelt.mentalmath.domain.climb.model.DayStat
 import com.helddertierwelt.mentalmath.domain.climb.model.TestLog
@@ -52,6 +54,7 @@ import com.helddertierwelt.mentalmath.domain.climb.model.Skill
 import com.helddertierwelt.mentalmath.domain.climb.model.SkillProgress
 import com.helddertierwelt.mentalmath.domain.climb.model.World
 import com.helddertierwelt.mentalmath.presentation.climb.ClimbViewModel
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.BeforeClass
 import org.junit.FixMethodOrder
@@ -208,6 +211,31 @@ class ClimbSmokeTest {
         }
         compose.waitUntil(5_000) { vm.session.value !== before }
         compose.waitForIdle()
+    }
+
+    /** Wählt eine falsche Antwort, zu der es eine Fehlererklärung gibt; false, wenn die Aufgabe keine hat. */
+    private fun answerTypicalMistake(): Boolean {
+        val s = vm.session.value ?: error("Keine Übung aktiv")
+        check(s.phase == Phase.ANSWERING) { "Falsche Phase ${s.phase}" }
+        val problem = s.problem ?: error("Keine Aufgabe")
+        val m = problem.mistakes.firstOrNull { it.answer is Expected.Choice } ?: return false
+        compose.onNodeWithText(problem.choices[(m.answer as Expected.Choice).index]).performClick()
+        compose.waitUntil(5_000) { vm.session.value !== s }
+        compose.waitForIdle()
+        return true
+    }
+
+    /** Löst die laufende Einheit bis zum Ende, alles richtig. */
+    private fun solveAll() {
+        repeat(200) {
+            val s = vm.session.value ?: return
+            when (s.phase) {
+                Phase.ANSWERING -> answer()
+                Phase.FLASH -> waitWhileFlash()
+                Phase.REVEAL -> pressWeiter()
+                Phase.FINISHED -> return
+            }
+        }
     }
 
     private fun waitWhileFlash() {
@@ -784,20 +812,54 @@ class ClimbSmokeTest {
         }
         waitForResult()
         assertTrue("Keine gespeicherte Simulation", vm.summary.value?.apRun != null)
-        shootScrolling("resultColumn", "i_ergebnis", maxShots = 5)
+        compose.onNodeWithTag("apTime").performScrollTo()
+        compose.waitForIdle()
+        shot("i_zeiteinteilung")
+        shootScrolling("resultColumn", "i_ergebnis", maxShots = 7)
         clickButton("Zum TMSnat-Training")
         waitForTag("apColumn")
         compose.onNodeWithTag("apHistory").performScrollTo()
         compose.waitForIdle()
         shot("i_verlauf")
 
+        // Fehlertraining: Die falsch gelösten Aufgabentypen der Simulation sind fällig.
+        assertTrue("Nichts im Fehlertraining", vm.apReviewDue(vm.progress.value).isNotEmpty())
+        compose.onNodeWithTag("apReviewButton").performScrollTo()
+        compose.waitForIdle()
+        shot("i_fehlertraining_knopf")
+        compose.onNodeWithTag("apReviewButton").performClick()
+        waitForSession()
+        assertEquals(ClimbViewModel.REVIEW_TITLE, vm.session.value?.title)
+        shot("i_fehlertraining")
+        solveAll()
+        waitForResult()
+        shot("i_fehlertraining_ergebnis")
+        assertTrue("Fehlertraining nicht weitergestuft", vm.apReviewDue(vm.progress.value).isEmpty())
+        clickButton("Zum TMSnat-Training")
+        waitForTag("apColumn")
+
         compose.onNodeWithTag("apPracticeButton").performScrollTo().performClick()
         waitForSession()
         compose.onNodeWithTag("trickButton").performClick()
         compose.waitForIdle()
         shot("i_ueben_trick")
-        answer(wrong = true)
+        // Bis eine Aufgabe mit erklärtem typischem Fehler kommt, richtig antworten; dann diesen Fehler wählen.
+        var typical = false
+        repeat(15) {
+            if (typical) return@repeat
+            val s = vm.session.value ?: return@repeat
+            when (s.phase) {
+                Phase.ANSWERING -> if (s.problem?.mistakes?.isNotEmpty() == true) typical = answerTypicalMistake() else answer()
+                Phase.FLASH -> waitWhileFlash()
+                Phase.REVEAL -> pressWeiter()
+                Phase.FINISHED -> Unit
+            }
+        }
+        if (!typical) answer(wrong = true)
         compose.waitForIdle()
+        if (typical) {
+            assertTrue("Keine Erklärung zum typischen Fehler", vm.session.value?.feedback?.note?.startsWith("Typischer Fehler") == true)
+        }
         // Nach einem Fehler kommt der Lösungsweg, weiter geht es erst mit „Weiter“.
         assertTrue("Kein Lösungsweg nach falscher Antwort", vm.session.value?.phase == Phase.REVEAL)
         shot("i_ueben_falsch")
@@ -810,6 +872,61 @@ class ClimbSmokeTest {
         compose.runOnUiThread { vm.endFree() }
         waitForResult()
         shot("i_ueben_ergebnis")
+        clickButton("Zum Kletterweg")
+        waitForHome()
+    }
+
+    /** Prognose mit vorhandenen Ergebnissen und Fehlertraining mit fälligen Aufgabentypen. */
+    @Test
+    fun j_prognose() {
+        waitForHome()
+        val random = java.util.Random(3)
+        val seeded = ApCategory.entries.fold(ClimbProgress()) { acc, c ->
+            acc.with(c.skillId) { sp ->
+                sp.copy(
+                    practiced = 12,
+                    practicedCorrect = 9,
+                    recent = List(12) { i ->
+                        val ms = 45_000L + random.nextInt(75_000)
+                        if (i % 4 == 3) -ms else ms
+                    },
+                )
+            }
+        }.copy(
+            apMistakes = listOf(
+                ApMistakeEntry("PERCENT/base", stage = 0, due = 0, misses = 2),
+                ApMistakeEntry("MIX/cross", stage = 0, due = 0, misses = 1),
+                ApMistakeEntry("PROB/two", stage = 1, due = Long.MAX_VALUE / 2, misses = 1),
+            ),
+        )
+        compose.runOnUiThread { vm.importProgress(seeded) }
+        compose.waitUntil(5_000) { vm.progress.value.apMistakes.size == 3 && vm.session.value == null }
+        compose.onNodeWithTag("tab_free").performClick()
+        waitForTag("freeColumn")
+        compose.onNodeWithTag("apEntry").performScrollTo().performClick()
+        waitForTag("apColumn")
+        waitForTag("forecastValue", 30_000)
+        compose.onNodeWithTag("apForecast").performScrollTo()
+        compose.waitForIdle()
+        shot("j_prognose")
+        compose.onNodeWithTag("apReviewButton").performScrollTo()
+        compose.waitForIdle()
+        shot("j_fehlertraining_knopf")
+        compose.onNodeWithTag("apReviewButton").performClick()
+        waitForSession()
+        assertEquals(2, vm.session.value?.problems?.size)
+        // Erste Aufgabe: typischer Fehler mit Erklärung und Lösungsweg.
+        if (answerTypicalMistake()) {
+            assertEquals(Phase.REVEAL, vm.session.value?.phase)
+            shot("j_fehlertraining_fehler")
+            pressWeiter()
+        } else {
+            answer()
+            waitWhileFlash()
+        }
+        solveAll()
+        waitForResult()
+        shootScrolling("resultColumn", "j_fehlertraining_ergebnis", maxShots = 3)
         clickButton("Zum Kletterweg")
         waitForHome()
     }

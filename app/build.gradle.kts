@@ -30,8 +30,11 @@ android {
         applicationId = "io.github.tro123n.mentalmathplus"
         minSdk = 24
         targetSdk = 36
+        // Versionsnummer: ci/build.sh setzt sie beim Release (aus ci/version.txt); sonst gilt die Datei direkt.
         versionCode = System.getenv("MMP_VERSION_CODE")?.toIntOrNull() ?: 1000
-        versionName = System.getenv("MMP_VERSION_NAME") ?: "1.0.0"
+        versionName = System.getenv("MMP_VERSION_NAME")
+            ?: rootProject.file("ci/version.txt").takeIf { it.exists() }?.readText()?.trim()?.ifEmpty { null }
+            ?: "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

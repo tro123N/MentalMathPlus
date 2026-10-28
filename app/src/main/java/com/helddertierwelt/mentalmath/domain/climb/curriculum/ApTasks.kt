@@ -23,11 +23,13 @@ import com.helddertierwelt.mentalmath.domain.climb.math.Fmt
 import com.helddertierwelt.mentalmath.domain.climb.math.Num
 import com.helddertierwelt.mentalmath.domain.climb.model.Expected
 import com.helddertierwelt.mentalmath.domain.climb.model.InputKind
+import com.helddertierwelt.mentalmath.domain.climb.model.Mistake
 import com.helddertierwelt.mentalmath.domain.climb.model.Problem
 import com.helddertierwelt.mentalmath.domain.climb.model.Prompt
 import com.helddertierwelt.mentalmath.domain.climb.model.Step
 import java.math.BigDecimal
 import java.math.MathContext
+import java.math.RoundingMode
 import kotlin.random.Random
 
 /**
@@ -51,8 +53,17 @@ enum class ApCategory(val skillId: String, val title: String, val method: String
 
     companion object {
         fun of(skillId: String): ApCategory? = entries.firstOrNull { it.skillId == skillId }
+
+        /** Kategorie einer Aufgabe – auch im gemischten Level, dessen Aufgaben die Level-ID tragen. */
+        fun of(problem: Problem): ApCategory? = of(problem.skillId) ?: entries.firstOrNull { it.method == problem.method }
     }
 }
+
+/** Ergebnis eines typischen Fehlers; [why] erklärt ihn (null: nur eine nahe, plausible Zahl). */
+data class Wrong(val value: BigDecimal, val why: String?)
+
+/** Wie [Wrong], für Brüche. */
+data class WrongFrac(val value: Pair<Long, Long>, val why: String?)
 
 /** Eine Textaufgabe mit Lösung, Lösungsweg und den Ergebnissen typischer Fehler. */
 data class ApTask(
@@ -67,8 +78,8 @@ data class ApTask(
     val frac: Pair<Long, Long>? = null,
     val steps: List<Step>,
     /** Ergebnisse, die bei typischen Fehlern herauskommen – die besten falschen Antworten. */
-    val wrong: List<BigDecimal> = emptyList(),
-    val wrongFrac: List<Pair<Long, Long>> = emptyList(),
+    val wrong: List<Wrong> = emptyList(),
+    val wrongFrac: List<WrongFrac> = emptyList(),
 )
 
 /** Erzeugt beliebig viele Aufgaben zum arithmetischen Problemlösen. */
@@ -97,6 +108,18 @@ object ApTasks {
         if (isInt(value)) step(label, value.toLong(), hint) else decStep(label, value, null, hint)
 
     private fun dec(x: BigDecimal): String = Fmt.dec(x)
+
+    /** Typischer Fehler mit Erklärung. */
+    private infix fun BigDecimal.because(why: String): Wrong = Wrong(this, why)
+
+    /** Nur eine nahe, plausible falsche Zahl ohne bestimmten Denkfehler. */
+    private fun near(x: BigDecimal): Wrong = Wrong(x, null)
+
+    private infix fun Pair<Long, Long>.because(why: String): WrongFrac = WrongFrac(this, why)
+
+    private fun nearFrac(x: Pair<Long, Long>): WrongFrac = WrongFrac(x, null)
+
+    private fun sameFrac(a: Pair<Long, Long>, b: Pair<Long, Long>): Boolean = a.first * b.second == b.first * a.second
 
     /** Unwichtige Angaben, die im Test gern eingestreut werden. Sie passen zu keiner Rechnung. */
     private val ballast: List<(Random) -> String> = listOf(
@@ -154,6 +177,12 @@ object ApTasks {
             value != null && isInt(value) -> Expected.Exact(value) to InputKind.INTEGER
             else -> Expected.Exact(value!!) to InputKind.DECIMAL
         }
+        // Typische Fehler auch beim Eintippen erkennen (Levels von Welt 13).
+        val mistakes = if (frac != null) {
+            t.wrongFrac.mapNotNull { w -> w.why?.takeIf { !sameFrac(w.value, frac) }?.let { Mistake(Expected.Frac(w.value.first, w.value.second), it) } }
+        } else {
+            t.wrong.mapNotNull { w -> w.why?.takeIf { w.value.compareTo(value!!) != 0 }?.let { Mistake(Expected.Exact(w.value), it) } }
+        }
         return Problem(
             skillId = t.category.skillId,
             key = t.key,
@@ -162,6 +191,7 @@ object ApTasks {
             input = input,
             steps = t.steps,
             method = t.category.method,
+            mistakes = mistakes,
         )
     }
 
@@ -186,16 +216,23 @@ object ApTasks {
         val n = options.coerceIn(3, 5)
         val texts: List<String>
         val correctIndex: Int
+        val mistakes: List<Mistake>
         val frac = t.frac
         if (frac != null) {
             val all = fracOptions(frac, t.wrongFrac, n, r)
-            correctIndex = all.indexOf(frac)
+            correctIndex = all.indexOfFirst { sameFrac(it, frac) }
             texts = all.map { optionText(null, it, null) }
+            mistakes = all.mapIndexedNotNull { i, f ->
+                if (i == correctIndex) null else t.wrongFrac.firstOrNull { w -> w.why != null && sameFrac(w.value, f) }?.why?.let { Mistake(Expected.Choice(i), it) }
+            }
         } else {
             val answer = t.value!!
             val all = numericOptions(answer, t.wrong, n, r)
             correctIndex = all.indexOfFirst { it.compareTo(answer) == 0 }
             texts = all.map { optionText(it, null, t.unit) }
+            mistakes = all.mapIndexedNotNull { i, v ->
+                if (i == correctIndex) null else t.wrong.firstOrNull { w -> w.why != null && w.value.compareTo(v) == 0 }?.why?.let { Mistake(Expected.Choice(i), it) }
+            }
         }
         val choices = texts.mapIndexed { i, s -> "(${labels[i]}) $s" }
         val answerStep = Step(
@@ -213,6 +250,7 @@ object ApTasks {
             steps = t.steps + answerStep,
             method = t.category.method,
             choices = choices,
+            mistakes = mistakes,
         )
     }
 
@@ -223,11 +261,13 @@ object ApTasks {
      * an jeder Stelle (A bis E) etwa gleich oft stehen – sonst lernt man beim Üben ein Muster,
      * das es im Test nicht gibt. [below] falsche Antworten kommen deshalb unter die richtige.
      */
-    private fun numericOptions(answer: BigDecimal, wrong: List<BigDecimal>, count: Int, r: Random): List<BigDecimal> {
+    private fun numericOptions(answer: BigDecimal, wrong: List<Wrong>, count: Int, r: Random): List<BigDecimal> {
         val intAnswer = isInt(answer)
         val picked = mutableListOf<BigDecimal>()
+        val typicalValues = wrong.map { norm(it.value) }
         fun ok(x: BigDecimal): Boolean {
-            if (x.signum() <= 0) return false
+            // Null nur, wenn sie ausdrücklich ein typischer Fehler ist (z. B. „0 %“).
+            if (x.signum() < 0 || (x.signum() == 0 && typicalValues.none { it.signum() == 0 })) return false
             if (intAnswer && !isInt(x)) return false
             if (!intAnswer && x.stripTrailingZeros().scale() > 2) return false
             if (x.compareTo(answer) == 0) return false
@@ -240,7 +280,7 @@ object ApTasks {
                 if ((c < answer) == under && ok(c)) picked += c
             }
         }
-        val typical = wrong.map { norm(it) }.shuffled(r)
+        val typical = typicalValues.shuffled(r)
         val step = niceStep(answer)
         val two = BigDecimal(2)
         fun steps(k: Int) = norm(answer + step * BigDecimal(k))
@@ -287,7 +327,7 @@ object ApTasks {
     }
 
     /** Antworten zu einem Bruch, nach demselben Muster wie bei Zahlen. */
-    private fun fracOptions(answer: Pair<Long, Long>, wrong: List<Pair<Long, Long>>, count: Int, r: Random): List<Pair<Long, Long>> {
+    private fun fracOptions(answer: Pair<Long, Long>, wrong: List<WrongFrac>, count: Int, r: Random): List<Pair<Long, Long>> {
         val picked = mutableListOf<Pair<Long, Long>>()
         fun ok(f: Pair<Long, Long>): Boolean =
             f.first > 0 && f.second > 0 && f.first <= f.second && f.first * answer.second != answer.first * f.second &&
@@ -303,7 +343,7 @@ object ApTasks {
         }
         fun fracs(vararg list: Pair<Long, Long>) =
             list.filter { it.first > 0 && it.second > 0 }.map { reduce(it.first, it.second) }
-        val typical = wrong.map { reduce(it.first, it.second) }.shuffled(r)
+        val typical = wrong.map { reduce(it.value.first, it.value.second) }.shuffled(r)
         val (n, d) = answer
         val lower = fracs(n - 1 to d, n to d + 1).shuffled(r) + fracs(n to d + 2, n to d * 2, 1L to d).shuffled(r) + fracs(n to d * 3)
         val upper = fracs(n + 1 to d, n to d - 1).shuffled(r) + fracs(n + 2 to d, n * 2 to d, n + 1 to d + 1).shuffled(r) + fracs(n + 3 to d)
@@ -359,8 +399,13 @@ object ApTasks {
         if (c == a) c += 1
         val b = a * k
         val answer = k * c
-        val wrong = mutableListOf(bd(b * c), bd(answer + k), bd(k * (c - 1)), bd(b + c))
-        if ((b * a) % c == 0L) wrong += bd(b * a / c)
+        val wrong = mutableListOf(
+            bd(b * c) because "${n(b)} $X ${n(c)} – die Angabe gilt für ${n(a)}, nicht für 1. Erst durch ${n(a)} teilen.",
+            near(bd(answer + k)),
+            near(bd(k * (c - 1))),
+            bd(b + c) because "${n(b)} + ${n(c)} – addiert statt mit dem Dreisatz gerechnet: erst auf 1, dann auf ${n(c)}.",
+        )
+        if ((b * a) % c == 0L) wrong += bd(b * a / c) because "${n(b)} $X ${n(a)} $DIV ${n(c)} – antiproportional gerechnet. Hier gilt aber „je mehr, desto mehr“."
         return ApTask(
             category = ApCategory.RATIO,
             key = "prop:$a,$b,$c",
@@ -385,9 +430,19 @@ object ApTasks {
             if (divisors.isEmpty()) return@repeat
             val c = r.pick(divisors)
             val answer = total / c
-            val wrong = mutableListOf(bd(total), bd(answer * 2), bd(answer + 1))
-            if ((t * c) % a == 0L) wrong += bd(t * c / a)
-            if (t + a > c) wrong += bd(t + a - c)
+            val wrong = mutableListOf(
+                bd(total) because "${n(a)} $X ${n(t)} ist der Gesamtaufwand – er muss noch auf ${n(c)} verteilt werden.",
+                near(bd(answer * 2)),
+                near(bd(answer + 1)),
+            )
+            if ((t * c) % a == 0L) wrong += bd(t * c / a) because "${n(t)} $X ${n(c)} $DIV ${n(a)} – proportional gerechnet. Hier gilt aber „je mehr, desto weniger“."
+            if (t + a > c) {
+                wrong += bd(t + a - c) because if (c > a) {
+                    "Den Unterschied ${n(c - a)} einfach abgezogen. Bei „je mehr, desto weniger“ wird der Gesamtaufwand geteilt."
+                } else {
+                    "Den Unterschied ${n(a - c)} einfach dazugezählt. Bei „je mehr, desto weniger“ wird der Gesamtaufwand geteilt."
+                }
+            }
             return ApTask(
                 category = ApCategory.RATIO,
                 key = "inv:$a,$t,$c",
@@ -430,9 +485,9 @@ object ApTasks {
                 r,
             )
         }
-        val wrong = mutableListOf(bd(answer + q), bd(answer - q))
-        if ((p * m2) % m == 0L) wrong += bd(p * m2 / m)
-        if ((p * h2) % h == 0L) wrong += bd(p * h2 / h)
+        val wrong = mutableListOf(near(bd(answer + q)), near(bd(answer - q)))
+        if ((p * m2) % m == 0L) wrong += bd(p * m2 / m) because "Nur die neue Anzahl eingerechnet (${n(p)} $X ${n(m2)} $DIV ${n(m)}) – die neue Stundenzahl fehlt."
+        if ((p * h2) % h == 0L) wrong += bd(p * h2 / h) because "Nur die neue Stundenzahl eingerechnet (${n(p)} $X ${n(h2)} $DIV ${n(h)}) – die neue Anzahl fehlt."
         return ApTask(
             category = ApCategory.RATIO,
             key = "two:$q,$m,$h,$m2,$h2,$ctx",
@@ -471,7 +526,11 @@ object ApTasks {
         val unit = baseUnit(p)
         val base = unit * r.betweenL(maxOf(1, 40 / unit), maxOf(2, 1_200 / unit))
         val answer = base * p / 100
-        val wrong = mutableListOf(bd(base - answer), bd(answer * 2), bd(base * p / 10).takeIf { (base * p) % 10 == 0L } ?: bd(answer + 1))
+        val wrong = mutableListOf(
+            bd(base - answer) because "Das sind die übrigen ${n(100 - p)} % – gefragt sind die ${n(p)} %.",
+            near(bd(answer * 2)),
+            if ((base * p) % 10 == 0L) bd(base * p / 10) because "Durch 10 statt durch 100 geteilt – das Komma ist um eine Stelle verrutscht." else near(bd(answer + 1)),
+        )
         return ApTask(
             category = ApCategory.PERCENT,
             key = "part:$base,$p",
@@ -497,7 +556,15 @@ object ApTasks {
         val answer = if (up) old + change else old - change
         if (answer <= 0) return percentPart(d, r)
         val factor = if (up) 100 + p else 100 - p
-        val wrong = mutableListOf(bd(change), bd(if (up) old - change else old + change), bd(if (up) old + p else maxOf(1, old - p)))
+        val wrong = mutableListOf(
+            bd(change) because "Das ist nur die Änderung (${n(p)} % von ${n(old)} €) – sie muss noch ${if (up) "zum alten Preis addiert" else "vom alten Preis abgezogen"} werden.",
+            bd(if (up) old - change else old + change) because "In die falsche Richtung gerechnet: ${if (up) "gesenkt statt erhöht" else "erhöht statt gesenkt"}.",
+            when {
+                up -> bd(old + p) because "${n(p)} € statt ${n(p)} % dazugezählt."
+                old - p >= 1 -> bd(old - p) because "${n(p)} € statt ${n(p)} % abgezogen."
+                else -> near(bd(answer + 1))
+            },
+        )
         return ApTask(
             category = ApCategory.PERCENT,
             key = "chg:$old,$p,$up",
@@ -525,9 +592,10 @@ object ApTasks {
         val old = unit * r.betweenL(maxOf(1, 20 / unit), maxOf(2, 800 / unit))
         val now = old * factor / 100
         val wrong = mutableListOf(
-            (bd(now) * BigDecimal(if (up) 100 - p else 100 + p)).divide(BigDecimal(100), MathContext.DECIMAL64),
-            bd(if (up) now - p else now + p),
-            bd(now),
+            (bd(now) * BigDecimal(if (up) 100 - p else 100 + p)).divide(BigDecimal(100), MathContext.DECIMAL64) because
+                "Vom neuen Preis aus ${n(p)} % ${if (up) "abgezogen" else "aufgeschlagen"}. Die ${n(p)} % beziehen sich aber auf den alten Preis.",
+            bd(if (up) now - p else now + p) because "${n(p)} € statt ${n(p)} % ${if (up) "abgezogen" else "dazugezählt"}.",
+            bd(now) because "Das ist der Preis nachher – gefragt ist der Preis vorher.",
         )
         return ApTask(
             category = ApCategory.PERCENT,
@@ -558,9 +626,16 @@ object ApTasks {
         val a = unit * r.betweenL(maxOf(1, 20 / unit), maxOf(2, 400 / unit))
         val diff = a * p / 100
         val b = if (down) a - diff else a + diff
-        val wrong = mutableListOf(bd(diff), bd(100 - p))
+        val wrong = mutableListOf(
+            bd(diff) because "Das ist der Unterschied in mg – gefragt ist der Unterschied in Prozent.",
+            if (down) {
+                bd(100 - p) because "Das ist der neue Wert in Prozent des alten (${n(b)} mg sind ${n(100 - p)} % von ${n(a)} mg) – gefragt ist, um wie viel gesenkt wurde."
+            } else {
+                bd(100 + p) because "Das ist der neue Wert in Prozent des alten (${n(b)} mg sind ${n(100 + p)} % von ${n(a)} mg) – gefragt ist nur die Erhöhung."
+            },
+        )
         val other = BigDecimal(diff * 100).divide(bd(b), MathContext.DECIMAL64)
-        if (other.stripTrailingZeros().scale() <= 1) wrong += other
+        if (other.stripTrailingZeros().scale() <= 1) wrong += other because "Auf den neuen Wert ${n(b)} mg bezogen statt auf den Ausgangswert ${n(a)} mg."
         return ApTask(
             category = ApCategory.PERCENT,
             key = "rate:$a,$p,$down",
@@ -596,7 +671,17 @@ object ApTasks {
             val aNow = m * pb
             if ((aNow * 100) % (100 - p) != 0L) return@repeat
             val aOld = aNow * 100 / (100 - p)
-            val wrong = mutableListOf(bd(aNow), (bd(aNow) * BigDecimal(100 + p)).divide(BigDecimal(100), MathContext.DECIMAL64), bd(aNow + p), bd(pb * 100 / (100 - p)).takeIf { (pb * 100) % (100 - p) == 0L } ?: bd(aOld + pb))
+            val wrong = mutableListOf(
+                bd(aNow) because "Das ist der Preis nach der Senkung – gefragt ist der Preis vorher.",
+                (bd(aNow) * BigDecimal(100 + p)).divide(BigDecimal(100), MathContext.DECIMAL64) because
+                    "${n(p)} % auf den heutigen Preis aufgeschlagen. Die ${n(p)} % beziehen sich aber auf den alten Preis.",
+                bd(aNow + p) because "${n(p)} € statt ${n(p)} % dazugezählt.",
+                if ((pb * 100) % (100 - p) == 0L) {
+                    bd(pb * 100 / (100 - p)) because "Nur mit dem Preis des Pflaster-Sets gerechnet – das Desinfektionsmittel kostet aber ${timesWord(m)} so viel."
+                } else {
+                    near(bd(aOld + pb))
+                },
+            )
             return ApTask(
                 category = ApCategory.PERCENT,
                 key = "rel:$p,$m,$pb",
@@ -646,7 +731,13 @@ object ApTasks {
                 step("Nach der zweiten: ${n(if (upFirst) 100 + p else 100 - p)} $X ${n(if (upFirst) 100 - p else 100 + p)} $DIV 100", after, "Die zweite Änderung bezieht sich auf den neuen Preis."),
                 step("Unter dem Ausgangspreis: 100 $MINUS ${n(after)}", loss, "Plus und minus gleich viel Prozent heben sich nicht auf."),
             ),
-            wrong = listOf(bd(p), bd(2 * p), bd(p / 2), bd(loss * 2)),
+            wrong = listOf(
+                BigDecimal.ZERO because "Plus und minus ${n(p)} % heben sich nicht auf: Die zweite Änderung bezieht sich auf den schon veränderten Preis.",
+                near(bd(p)),
+                near(bd(2 * p)),
+                near(bd(p / 2)),
+                near(bd(loss * 2)),
+            ),
         )
     }
 
@@ -752,12 +843,12 @@ object ApTasks {
                 steps += step("${names[i]}: ${rels[i]!!.label(values[i + 1])}", values[i], if (i == count - 2) "Bei der Größe anfangen, die als Zahl gegeben ist." else null)
             }
             val answer: Long
-            val wrong = mutableListOf<BigDecimal>()
+            val wrong = mutableListOf<Wrong>()
             if (askSum) {
                 answer = values.sum()
                 steps += step("Zusammen: " + values.joinToString(" + ") { n(it) }, answer)
-                wrong += bd(answer - values[count - 1])
-                wrong += bd(values[0] * count)
+                wrong += bd(answer - values[count - 1]) because "${names[count - 1]} beim Zusammenzählen vergessen."
+                wrong += bd(values[0] * count) because "Die Anzahl von ${names[0]} mal $count genommen – die anderen haben aber verschieden viele."
             } else {
                 answer = values[0]
             }
@@ -776,7 +867,10 @@ object ApTasks {
                     v = next
                     chain[i] = v
                 }
-                if (valid) wrong += bd(if (askSum) chain.sum() else chain[0])
+                if (valid) {
+                    val sentence = rels[flip]!!.text(names[flip], names[flip + 1], set.noun).removeSuffix(".")
+                    wrong += bd(if (askSum) chain.sum() else chain[0]) because "Die Beziehung „$sentence“ falsch herum gelesen."
+                }
             }
             val question = if (askSum) "Wie viele ${set.noun} haben alle zusammen?" else "Wie viele ${set.noun} hat ${names[0]}?"
             return ApTask(
@@ -839,7 +933,11 @@ object ApTasks {
                 step("Belegt: ${n(partUnit)} $X ${n(num)}", occupied),
                 step("Frei: ${n(total)} $MINUS ${n(occupied)}", free, "Gefragt sind die freien Betten – nicht die belegten."),
             ),
-            wrong = listOf(bd(occupied), bd(partUnit), bd(total - partUnit)),
+            wrong = listOf(
+                bd(occupied) because "Das sind die belegten Betten – gefragt sind die freien.",
+                bd(partUnit) because "Das ist erst ein Teil (${n(total)} $DIV ${n(den)}).",
+                bd(total - partUnit) because "Nur 1/${n(den)} abgezogen statt ${fracText(num, den)}.",
+            ),
         )
     }
 
@@ -861,9 +959,12 @@ object ApTasks {
             val factText = chosen.mapIndexed { i, f -> "${fracText(f.first, f.second)} ${groups[i]}" }
             val sentence = "Von allen Patienten einer Ambulanz sind " +
                 (if (parts == 2) "${factText[0]} und ${factText[1]}." else "${factText[0]}, ${factText[1]} und ${factText[2]}.")
-            val wrong = mutableListOf(bd(restCount * 2), bd(total + k), bd(restCount * parts))
+            val wrong = mutableListOf(near(bd(restCount * 2)), near(bd(total + k)), near(bd(restCount * parts)))
             val used = partCounts.sum()
-            if ((restCount * l) % used == 0L) wrong += bd(restCount * l / used)
+            if ((restCount * l) % used == 0L) {
+                wrong += bd(restCount * l / used) because
+                    "Die ${n(restCount)} Erwachsenen so gerechnet, als wären sie die genannten Anteile (${n(used)} von ${n(l)} Teilen). Sie sind aber der Rest: ${n(rest)} von ${n(l)} Teilen."
+            }
             return ApTask(
                 category = ApCategory.FRACTIONS,
                 key = "rest:" + chosen.joinToString(",") + ":$k",
@@ -889,9 +990,15 @@ object ApTasks {
         val start = a * b * k
         val afterFirst = start / a * (a - 1)
         val left = afterFirst / b * (b - 1)
-        val wrong = mutableListOf(bd(left * a * b), bd(start + k * (a - 1)), bd(afterFirst))
+        val wrong = mutableListOf(
+            bd(left * a * b) because "Einfach mit ${n(a)} und ${n(b)} malgenommen. Übrig bleiben aber ${n(a - 1)}/${n(a)} und dann ${n(b - 1)}/${n(b)} – nicht 1/${n(a)} und 1/${n(b)}.",
+            near(bd(start + k * (a - 1))),
+            bd(afterFirst) because "Das ist der Vorrat nach Montag – gefragt ist der Vorrat am Anfang.",
+        )
         val sameBase = a * b - b - a
-        if (sameBase > 0 && (left * a * b) % sameBase == 0L) wrong += bd(left * a * b / sameBase)
+        if (sameBase > 0 && (left * a * b) % sameBase == 0L) {
+            wrong += bd(left * a * b / sameBase) because "Beide Anteile vom ursprünglichen Vorrat abgezogen. Am Dienstag wurde aber ${fracText(1, b)} der übrigen Spritzen verbraucht."
+        }
         return ApTask(
             category = ApCategory.FRACTIONS,
             key = "ror:$a,$b,$k",
@@ -948,7 +1055,11 @@ object ApTasks {
                     step("Dosis in mg: ${dec(grams)} $X 1.000", mg, "1 g = 1.000 mg – erst die Einheiten angleichen."),
                     step("Tabletten: ${n(mg)} $DIV ${n(tab)}", count),
                 ),
-                wrong = listOf(bd(count * 10), bd(count + 1), bd(count * 2)),
+                wrong = listOf(
+                    bd(count * 10) because "Beim Umrechnen ist das Komma verrutscht: ${dec(grams)} g sind ${n(mg)} mg, nicht ${n(mg * 10)} mg.",
+                    near(bd(count + 1)),
+                    near(bd(count * 2)),
+                ),
             )
         }
         return infusionRate(r)
@@ -970,7 +1081,11 @@ object ApTasks {
             unit = "ml",
             value = bd(rate),
             steps = steps,
-            wrong = listOf(bd(rate * 10), bd(vol / 60).takeIf { vol % 60 == 0L } ?: bd(rate + 10), bd(rate * 2)),
+            wrong = listOf(
+                if (inLitres) bd(rate * 10) because "Beim Umrechnen ist das Komma verrutscht: $volText sind ${n(vol)} ml." else near(bd(rate * 10)),
+                if (vol % 60 == 0L) bd(vol / 60) because "Durch 60 geteilt statt durch die ${n(hours)} Stunden." else near(bd(rate + 10)),
+                near(bd(rate * 2)),
+            ),
         )
     }
 
@@ -997,7 +1112,12 @@ object ApTasks {
                     step("Tagesdosis: ${n(w)} $X ${n(dpk)}", tot, "mg pro kg mal Körpergewicht."),
                     step("Pro Gabe: ${n(tot)} $DIV ${n(g)}", ans, "Gefragt ist eine einzelne Gabe."),
                 ),
-                wrong = listOf(bd(tot), bd(tot * g), bd(dpk * g), bd(ans * 2)),
+                wrong = listOf(
+                    bd(tot) because "Das ist die Tagesdosis (${n(w)} $X ${n(dpk)}) – sie muss noch auf ${n(g)} Gaben verteilt werden.",
+                    bd(tot * g) because "Mit der Zahl der Gaben malgenommen statt geteilt (${n(tot)} $X ${n(g)}).",
+                    bd(dpk * g) because "Das Körpergewicht wurde nicht eingerechnet.",
+                    near(bd(ans * 2)),
+                ),
             )
         }
         return tablets(2, r)
@@ -1019,7 +1139,12 @@ object ApTasks {
             unit = "ml",
             value = bd(ml),
             steps = steps,
-            wrong = listOf(bd(ml * 10), bd(mg * c), bd(ml + c), BigDecimal.valueOf(ml, 1)),
+            wrong = listOf(
+                if (useGram) bd(ml * 10) because "Beim Umrechnen ist das Komma verrutscht: $doseText sind ${n(mg)} mg." else near(bd(ml * 10)),
+                bd(mg * c) because "Mit der Konzentration malgenommen statt geteilt (${n(mg)} $X ${n(c)}).",
+                near(bd(ml + c)),
+                if (useGram) BigDecimal.valueOf(ml, 1) because "Beim Umrechnen ist das Komma verrutscht: $doseText sind ${n(mg)} mg." else near(BigDecimal.valueOf(ml, 1)),
+            ),
         )
     }
 
@@ -1044,7 +1169,12 @@ object ApTasks {
                 step("Tropfen pro Stunde: ${n(rate)} $X 20", rate * 20),
                 step("Tropfen pro Minute: ${n(rate * 20)} $DIV 60", perMin, "Gefragt ist pro Minute – durch 60 teilen."),
             ),
-            wrong = listOf(bd(rate * 20), bd(rate), bd(rate / 3 * 2), bd(perMin * 60).takeIf { perMin < 50 } ?: bd(perMin + 10)),
+            wrong = listOf(
+                bd(rate * 20) because "Das sind die Tropfen pro Stunde – gefragt ist pro Minute: noch durch 60 teilen.",
+                bd(rate) because "Das sind ml pro Stunde – noch in Tropfen pro Minute umrechnen.",
+                near(bd(rate / 3 * 2)),
+                if (rate % 60 == 0L) bd(rate / 60) because "Das sind ml pro Minute – noch mal 20 nehmen (20 Tropfen pro ml)." else near(bd(perMin + 10)),
+            ),
         )
     }
 
@@ -1066,7 +1196,12 @@ object ApTasks {
                     step("µg insgesamt: ${n(u)} $X ${n(h * 60)}", total),
                     valueStep("In mg: ${n(total)} $DIV 1.000", mg, "1 mg = 1.000 µg."),
                 ),
-                wrong = listOf(bd(total), mg * BigDecimal.TEN, mg.divide(BigDecimal.TEN), mg.divide(BigDecimal(60), MathContext.DECIMAL64)),
+                wrong = listOf(
+                    bd(total) because "Das sind µg – noch durch 1.000 teilen (1 mg = 1.000 µg).",
+                    mg * BigDecimal.TEN because "Beim Umrechnen ist das Komma verrutscht: 1 mg = 1.000 µg.",
+                    mg.divide(BigDecimal.TEN) because "Beim Umrechnen ist das Komma verrutscht: 1 mg = 1.000 µg.",
+                    mg.divide(BigDecimal(60), MathContext.DECIMAL64) because "Mit ${n(h)} Stunden statt ${n(h * 60)} Minuten gerechnet – die Dosis gilt pro Minute.",
+                ),
             )
         }
         return drops(r)
@@ -1101,7 +1236,12 @@ object ApTasks {
                     step("Wie oft passen ${n(min)} Minuten in eine Stunde: 60 $DIV ${n(min)}", f),
                     step("km pro Stunde: ${n(km)} $X ${n(f)}", v),
                 ),
-                wrong = listOf(bd(km * 60), bd(km * min), bd(v / 2).takeIf { v % 2 == 0L } ?: bd(v + 5), bd(v + 10)),
+                wrong = listOf(
+                    bd(km * 60) because "Mit 60 malgenommen, aber nicht durch die ${n(min)} Minuten geteilt.",
+                    bd(km * min) because "Weg mal Minuten gerechnet. Richtig: Wie oft passen ${n(min)} Minuten in eine Stunde? So oft den Weg nehmen.",
+                    if (v % 2 == 0L) near(bd(v / 2)) else near(bd(v + 5)),
+                    near(bd(v + 10)),
+                ),
             )
         }
         error("unreachable")
@@ -1125,7 +1265,12 @@ object ApTasks {
                 valueStep("Meter pro Sekunde: ${n(sps)} $X ${dec(len)}", mps),
                 valueStep("Meter: ${dec(mps)} $X ${n(sec)}", dist),
             ),
-            wrong = listOf(mps * bd(mins), dist * BigDecimal(2), len * bd(sec), dist.divide(BigDecimal(2))),
+            wrong = listOf(
+                mps * bd(mins) because "Mit ${n(mins)} Minuten statt ${n(sec)} Sekunden gerechnet – das Tempo gilt pro Sekunde.",
+                near(dist * BigDecimal(2)),
+                len * bd(sec) because "Die ${n(sps)} Schritte pro Sekunde vergessen.",
+                near(dist.divide(BigDecimal(2))),
+            ),
         )
     }
 
@@ -1158,7 +1303,11 @@ object ApTasks {
                 step("Zeit gesamt: ${n(t1)} + ${n(t2)}", total),
                 step("Durchschnitt: ${n(2 * dist)} $DIV ${n(total)}", avg, "Gesamtstrecke durch Gesamtzeit – nicht den Mittelwert der Geschwindigkeiten nehmen!"),
             ),
-            wrong = listOf(bd((v1 + v2) / 2).takeIf { (v1 + v2) % 2 == 0L } ?: BigDecimal.valueOf(v1 + v2).divide(BigDecimal(2)), bd(v1 + v2), bd(dist / total).takeIf { dist % total == 0L } ?: bd(avg + 5)),
+            wrong = listOf(
+                BigDecimal.valueOf(v1 + v2).divide(BigDecimal(2)) because "Den Mittelwert der Geschwindigkeiten genommen. Die langsame Fahrt dauert aber länger und zählt deshalb stärker.",
+                bd(v1 + v2) because "Die Geschwindigkeiten addiert.",
+                if (dist % total == 0L) bd(dist / total) because "Nur eine Strecke durch die Gesamtzeit geteilt – hin und zurück sind ${n(2 * dist)} km." else near(bd(avg + 5)),
+            ),
         )
     }
 
@@ -1170,8 +1319,14 @@ object ApTasks {
             val minutes = r.pick(listOf(20L, 30L, 40L, 45L, 60L, 90L, 120L))
             if ((s * minutes) % 60 != 0L) return@repeat
             val dist = s * minutes / 60
-            val wrong = mutableListOf(bd(minutes * 2), bd(minutes / 2), bd(dist / s).takeIf { dist % s == 0L } ?: bd(minutes + 15))
-            if (v1 != v2 && (dist * 60) % kotlin.math.abs(v1 - v2) == 0L) wrong += bd(dist * 60 / kotlin.math.abs(v1 - v2))
+            val wrong = mutableListOf(
+                near(bd(minutes * 2)),
+                near(bd(minutes / 2)),
+                if (dist % s == 0L) bd(dist / s) because "Das Ergebnis in Stunden – gefragt sind Minuten." else near(bd(minutes + 15)),
+            )
+            if (v1 != v2 && (dist * 60) % kotlin.math.abs(v1 - v2) == 0L) {
+                wrong += bd(dist * 60 / kotlin.math.abs(v1 - v2)) because "Die Geschwindigkeiten abgezogen. Beim Aufeinanderzufahren addieren sie sich."
+            }
             return ApTask(
                 category = ApCategory.SPEED,
                 key = "meet:$v1,$v2,$minutes",
@@ -1223,7 +1378,15 @@ object ApTasks {
                     step("Aufholen pro Stunde: ${n(v2)} $MINUS ${n(v1)}", closing, "Beim Hinterherfahren zählt der Unterschied der Geschwindigkeiten."),
                     step("Minuten: ${n(head)} $X 60 $DIV ${n(closing)}", minutes),
                 ),
-                wrong = listOf(bd(minutes + late), bd(head * 60 / v2).takeIf { (head * 60) % v2 == 0L } ?: bd(minutes * 2), bd(late)),
+                wrong = listOf(
+                    bd(minutes + late) because "Die ${n(late)} Minuten Vorsprung mitgezählt – gefragt ist die Zeit ab dem Start des Rollers.",
+                    if ((head * 60) % v2 == 0L) {
+                        bd(head * 60 / v2) because "Den Vorsprung durch die Geschwindigkeit des Rollers geteilt. Aufgeholt wird aber nur mit dem Unterschied: ${n(v2)} $MINUS ${n(v1)} km/h."
+                    } else {
+                        near(bd(minutes * 2))
+                    },
+                    bd(late) because "${n(late)} Minuten ist der Vorsprung des Kuriers, nicht die Zeit bis zum Einholen.",
+                ),
             )
         }
         return meeting(r)
@@ -1242,7 +1405,12 @@ object ApTasks {
                 step("Meter pro Stunde: ${n(ms)} $X 3.600", ms * 3_600, "Eine Stunde hat 3.600 Sekunden."),
                 step("km pro Stunde: ${n(ms * 3_600)} $DIV 1.000", kmh, "Kurz: m/s mal 3,6 ergibt km/h."),
             ),
-            wrong = listOf(bd(ms * 60), bd(ms * 36), BigDecimal.valueOf(ms * 10).divide(BigDecimal(36), MathContext.DECIMAL64).setScale(1, java.math.RoundingMode.HALF_UP), bd(kmh + 10)),
+            wrong = listOf(
+                bd(ms * 60) because "Mit 60 statt mit 3,6 malgenommen (eine Stunde hat 3.600 Sekunden, ein km 1.000 m).",
+                bd(ms * 36) because "Mit 36 statt mit 3,6 malgenommen – das Komma vergessen.",
+                BigDecimal.valueOf(ms * 10).divide(BigDecimal(36), MathContext.DECIMAL64).setScale(1, RoundingMode.HALF_UP) because "Durch 3,6 geteilt statt malgenommen.",
+                near(bd(kmh + 10)),
+            ),
         )
     }
 
@@ -1287,9 +1455,14 @@ object ApTasks {
             )
             steps += if (hoursExact) step("Stunden: ${n(l)} $DIV ${n(sum)}", answer) else step("Minuten: ${n(l)} $X 60 $DIV ${n(sum)}", answer)
             val unitFactor = if (hoursExact) 1L else 60L
-            val wrong = mutableListOf(bd((a + b) * unitFactor), bd(kotlin.math.abs(a - b) * unitFactor))
-            if (((a + b) * unitFactor) % 2 == 0L) wrong += bd((a + b) * unitFactor / 2)
-            wrong += bd(minOf(a, b) * unitFactor)
+            val wrong = mutableListOf(
+                bd((a + b) * unitFactor) because "Die Zeiten addiert. Zusammen geht es aber schneller als allein.",
+                bd(kotlin.math.abs(a - b) * unitFactor) because "Die Zeiten voneinander abgezogen. Richtig: die Leistungen pro Stunde addieren.",
+            )
+            if (((a + b) * unitFactor) % 2 == 0L) {
+                wrong += bd((a + b) * unitFactor / 2) because "Den Mittelwert der Zeiten genommen. Zusammen geht es schneller als jeder allein."
+            }
+            wrong += bd(minOf(a, b) * unitFactor) because "Das ist die Zeit ${if (pumps) "der schnelleren Pumpe" else "der Schnelleren"} allein – zusammen geht es schneller."
             return ApTask(
                 category = ApCategory.WORK,
                 key = "tog:$a,$b,$pumps",
@@ -1312,9 +1485,12 @@ object ApTasks {
             if (net <= 0 || l % net != 0L) return@repeat
             val hours = l / net
             if (hours > 30) return@repeat
-            val wrong = mutableListOf(bd(b - a), bd(a + b))
+            val wrong = mutableListOf(
+                bd(b - a) because "Die Zeiten voneinander abgezogen. Richtig: die Leistungen pro Stunde abziehen.",
+                bd(a + b) because "Die Zeiten addiert.",
+            )
             val sum = l / a + l / b
-            if (l % sum == 0L) wrong += bd(l / sum)
+            if (l % sum == 0L) wrong += bd(l / sum) because "Zulauf und Abfluss addiert, als würden beide füllen. Der Abfluss arbeitet aber dagegen."
             return ApTask(
                 category = ApCategory.WORK,
                 key = "fd:$a,$b",
@@ -1383,7 +1559,16 @@ object ApTasks {
                     step("Restzeit: ${n(rest)} $DIV ${n(capacity)}", restTime),
                     step("Insgesamt: ${n(t1)} + ${n(restTime)}", sum, "Die ersten ${n(t1)} Stunden nicht vergessen."),
                 ),
-                wrong = listOf(bd(restTime), bd(t), bd(sum + 1), bd(total / capacity).takeIf { total % capacity == 0L } ?: bd(sum - 1)),
+                wrong = listOf(
+                    bd(restTime) because "Das ist nur die Restzeit – die ersten ${n(t1)} Stunden kommen noch dazu.",
+                    bd(t) because "Das ist die geplante Zeit ohne Verstärkung.",
+                    near(bd(sum + 1)),
+                    if (total % capacity == 0L) {
+                        bd(total / capacity) because "So gerechnet, als hätten alle von Anfang an mitgearbeitet. Die Verstärkung kam aber erst nach ${n(t1)} Stunden."
+                    } else {
+                        near(bd(sum - 1))
+                    },
+                ),
             )
         }
         return fillAndDrain(r)
@@ -1406,8 +1591,11 @@ object ApTasks {
             val total = v * f
             val active = BigDecimal.valueOf(v * c).divide(BigDecimal(100))
             val newC = c / f
-            val wrong = mutableListOf(bd(c - f), bd(c * f).takeIf { c * f < 100 } ?: bd(newC + 1))
-            if (f > 1 && c % (f - 1) == 0L) wrong += bd(c / (f - 1))
+            val wrong = mutableListOf(
+                bd(c - f) because "Den Faktor ${n(f)} abgezogen statt durch ${n(f)} geteilt – die Lösung ist auf das ${n(f)}-Fache verdünnt.",
+                if (c * f < 100) bd(c * f) because "Mit ${n(f)} malgenommen statt geteilt – beim Verdünnen sinkt die Konzentration." else near(bd(newC + 1)),
+            )
+            if (f > 1 && c % (f - 1) == 0L) wrong += bd(c / (f - 1)) because "Durch die Wassermenge geteilt statt durch die ganze neue Menge (${n(total)} ml)."
             return ApTask(
                 category = ApCategory.MIX,
                 key = "dil:$c,$f,$v",
@@ -1451,7 +1639,11 @@ object ApTasks {
                     step("Gesamtmenge danach: ${dec(active)} $X 100 $DIV ${n(c2)}", total, "Der Wirkstoff soll danach ${n(c2)} % der Lösung sein."),
                     step("Wasser: ${n(total)} $MINUS ${n(v)}", water, "Gefragt ist nur das zugegebene Wasser."),
                 ),
-                wrong = listOf(bd(total), bd(v * c2 / c).takeIf { (v * c2) % c == 0L } ?: bd(water + v / 2), bd(water * 2)),
+                wrong = listOf(
+                    bd(total) because "Das ist die ganze Menge danach – gefragt ist nur das Wasser: noch ${n(v)} ml abziehen.",
+                    if ((v * c2) % c == 0L) bd(v * c2 / c) because "Das Verhältnis falsch herum genommen (${n(v)} $X ${n(c2)} $DIV ${n(c)})." else near(bd(water + v / 2)),
+                    near(bd(water * 2)),
+                ),
             )
         }
         return dilute(r)
@@ -1470,8 +1662,11 @@ object ApTasks {
             val c = w / total
             val w1 = v1 * c1 / 100
             val w2 = v2 * c2 / 100
-            val wrong = mutableListOf(bd(c1 + c2), bd(c + 5))
-            if ((c1 + c2) % 2 == 0L) wrong += bd((c1 + c2) / 2)
+            val wrong = mutableListOf(
+                bd(c1 + c2) because "Die Prozente addiert. Die Konzentration der Mischung liegt zwischen den beiden.",
+                near(bd(c + 5)),
+            )
+            if ((c1 + c2) % 2 == 0L) wrong += bd((c1 + c2) / 2) because "Den Mittelwert der Prozente genommen – das stimmt nur bei gleichen Mengen."
             return ApTask(
                 category = ApCategory.MIX,
                 key = "comb:$v1,$c1,$v2,$c2",
@@ -1502,8 +1697,11 @@ object ApTasks {
             if ((vLow * a) % b != 0L) return@repeat
             val x = vLow * a / b
             if (x > 3_000) return@repeat
-            val wrong = mutableListOf(bd(vLow), bd(x * 2))
-            if ((vLow * b) % a == 0L) wrong += bd(vLow * b / a)
+            val wrong = mutableListOf(
+                bd(vLow) because "Gleich viel von beiden genommen – das ergibt genau die Mitte zwischen ${n(low)} % und ${n(high)} %.",
+                near(bd(x * 2)),
+            )
+            if ((vLow * b) % a == 0L) wrong += bd(vLow * b / a) because "Das Verhältnis nicht über Kreuz genommen (${n(vLow)} $X ${n(b)} $DIV ${n(a)})."
             return ApTask(
                 category = ApCategory.MIX,
                 key = "cross:$low,$high,$target,$vLow",
@@ -1564,7 +1762,12 @@ object ApTasks {
                 step("Faktor: ${powLabel(k)}", factor),
                 step("Bakterien: ${n(n0)} $X ${n(factor)}", answer),
             ),
-            wrong = listOf(bd(n0 * 2 * k), bd(n0 * factor / 2), bd(n0 * factor * 2), bd(n0 + n0 * k)),
+            wrong = listOf(
+                bd(n0 * 2 * k) because "Mit 2 $X ${n(k)} = ${n(2 * k)} statt mit ${powLabel(k)} = ${n(factor)} malgenommen.",
+                bd(n0 * factor / 2) because "Eine Verdopplung zu wenig gezählt.",
+                bd(n0 * factor * 2) because "Eine Verdopplung zu viel gezählt.",
+                bd(n0 + n0 * k) because "Pro Zeitabschnitt nur den Startwert dazugezählt – beim Verdoppeln wächst aber jedes Mal der neue Bestand.",
+            ),
         )
     }
 
@@ -1592,7 +1795,12 @@ object ApTasks {
                     step("Faktor: ${powLabel(k)}", factor, "${n(k)}-mal halbieren heißt durch ${n(factor)} teilen."),
                     step("Rest: ${n(m0)} $DIV ${n(factor)}", res),
                 ),
-                wrong = listOf(bd(m0 / (2 * k)).takeIf { m0 % (2 * k) == 0L } ?: bd(res + 5), bd(res * 2), bd(res / 2).takeIf { res % 2 == 0L } ?: bd(res + 10), bd(m0 - m0 / 2)),
+                wrong = listOf(
+                    if (m0 % (2 * k) == 0L) bd(m0 / (2 * k)) because "Durch 2 $X ${n(k)} = ${n(2 * k)} geteilt statt durch ${powLabel(k)} = ${n(factor)}." else near(bd(res + 5)),
+                    bd(res * 2) because "Einmal zu wenig halbiert – es sind ${n(k)} Halbwertszeiten.",
+                    if (res % 2 == 0L) bd(res / 2) because "Einmal zu viel halbiert – es sind ${n(k)} Halbwertszeiten." else near(bd(res + 10)),
+                    bd(m0 - m0 / 2) because "Nur einmal halbiert – in ${n(t)} Stunden sind es ${n(k)} Halbwertszeiten.",
+                ),
             )
         } else {
             ApTask(
@@ -1611,7 +1819,12 @@ object ApTasks {
                     step("Faktor: ${powLabel(k)}", factor),
                     step("Zu Beginn: ${n(res)} $X ${n(factor)}", m0, "Rückwärts: Jede Halbwertszeit verdoppelt den früheren Wert."),
                 ),
-                wrong = listOf(bd(res * 2 * k), bd(m0 / 2), bd(m0 * 2), bd(res * t)),
+                wrong = listOf(
+                    bd(res * 2 * k) because "Mit 2 $X ${n(k)} = ${n(2 * k)} statt mit ${powLabel(k)} = ${n(factor)} malgenommen.",
+                    bd(m0 / 2) because "Einmal zu wenig verdoppelt – es sind ${n(k)} Halbwertszeiten.",
+                    bd(m0 * 2) because "Einmal zu viel verdoppelt – es sind ${n(k)} Halbwertszeiten.",
+                    bd(res * t) because "Mit den ${n(t)} Stunden malgenommen, statt die Halbwertszeiten zu zählen.",
+                ),
             )
         }
     }
@@ -1638,7 +1851,12 @@ object ApTasks {
                 step("So oft halbieren, bis ${n(factor)} erreicht ist", k, "${powLabel(k)} = ${n(factor)}."),
                 step("Tage: ${n(k)} $X ${n(t12)}", k * t12),
             ),
-            wrong = listOf(bd(factor * t12 / 2), bd((k + 1) * t12), bd((k - 1) * t12), bd(factor * t12)),
+            wrong = listOf(
+                near(bd(factor * t12 / 2)),
+                bd((k + 1) * t12) because "Eine Halbierung zu viel gezählt: Von ${n(m0)} mg bis ${n(res)} mg wird ${n(k)}-mal halbiert.",
+                bd((k - 1) * t12) because "Eine Halbierung zu wenig gezählt: Von ${n(m0)} mg bis ${n(res)} mg wird ${n(k)}-mal halbiert.",
+                bd(factor * t12) because "Mit dem Verhältnis ${n(factor)} malgenommen statt die Halbierungen zu zählen (${powLabel(k)} = ${n(factor)}, also ${n(k)} Halbierungen).",
+            ),
         )
     }
 
@@ -1666,7 +1884,16 @@ object ApTasks {
                 step("Station B: ${n(2 * b)} $DIV 2", b),
                 step("Station A: ${n(b)} + ${n(diff)}", a),
             ),
-            wrong = listOf(bd(b), bd(sum / 2).takeIf { sum % 2 == 0L } ?: bd(a + 1), bd(sum / 2 + diff).takeIf { sum % 2 == 0L } ?: bd(a + diff), bd(sum - diff)),
+            wrong = listOf(
+                bd(b) because "Das ist Station B – gefragt ist Station A.",
+                if (sum % 2 == 0L) bd(sum / 2) because "Einfach halbiert – den Unterschied von ${n(diff)} Betten nicht berücksichtigt." else near(bd(a + 1)),
+                if (sum % 2 == 0L) {
+                    bd(sum / 2 + diff) because "Erst halbiert und dann den ganzen Unterschied dazugezählt. Richtig: erst den Unterschied abziehen, dann halbieren."
+                } else {
+                    near(bd(a + diff))
+                },
+                bd(sum - diff) because "Den Unterschied abgezogen, aber nicht halbiert – das sind beide Stationen zusammen ohne die ${n(diff)} Extra-Betten.",
+            ),
         )
     }
 
@@ -1693,7 +1920,15 @@ object ApTasks {
                 step("Fehlende Menge: ${n(volume)} $MINUS ${n(base)}", excess),
                 step("Jede große bringt ${n(large - small)} ml mehr: ${n(excess)} $DIV ${n(large - small)}", x),
             ),
-            wrong = listOf(bd(total - x), bd(volume / large).takeIf { volume % large == 0L } ?: bd(x + 2), bd(excess / large).takeIf { excess % large == 0L && excess / large > 0 } ?: bd(x + 1)),
+            wrong = listOf(
+                bd(total - x) because "Das sind die ${n(small)}-ml-Ampullen – gefragt sind die ${n(large)}-ml-Ampullen.",
+                if (volume % large == 0L) bd(volume / large) because "So gerechnet, als wären alle Ampullen ${n(large)}-ml-Ampullen." else near(bd(x + 2)),
+                if (excess % large == 0L && excess / large > 0) {
+                    bd(excess / large) because "Die fehlende Menge durch ${n(large)} geteilt statt durch den Unterschied ${n(large - small)} ml."
+                } else {
+                    near(bd(x + 1))
+                },
+            ),
         )
     }
 
@@ -1725,7 +1960,12 @@ object ApTasks {
                     step("Faktor vor x: ${n(a)} $MINUS ${n(b)}", a - b),
                     step("Sohn: ${n(num)} $DIV ${n(a - b)}", x),
                 ),
-                wrong = listOf(bd(a * x), bd(x + k), bd(num), bd(b * x)),
+                wrong = listOf(
+                    bd(a * x) because "Das ist das Alter der Ärztin – gefragt ist der Sohn.",
+                    bd(x + k) because "Das ist das Alter des Sohnes in ${n(k)} Jahren.",
+                    bd(num) because "Das ist erst die Zahl ohne x – noch durch ${n(a - b)} teilen.",
+                    near(bd(b * x)),
+                ),
             )
         }
         return twoPrices(r)
@@ -1759,7 +1999,16 @@ object ApTasks {
                 step("Kaffee-Unterschied: ${n(a1)} $MINUS ${n(a2)}", a1 - a2),
                 step("Ein Kaffee: ${n(diff)} $DIV ${n(a1 - a2)}", coffee),
             ),
-            wrong = listOf(bd(bun), bd(diff), bd(coffee + 1), bd(p2 / a2).takeIf { p2 % a2 == 0L && p2 / a2 != coffee } ?: bd(coffee + 2)),
+            wrong = listOf(
+                bd(bun) because "Das ist der Preis eines Brötchens.",
+                bd(diff) because "Das ist der Preis für ${n(a1 - a2)} Kaffee – noch durch ${n(a1 - a2)} teilen.",
+                near(bd(coffee + 1)),
+                if (p2 % a2 == 0L && p2 / a2 != coffee) {
+                    bd(p2 / a2) because "Die Brötchen in der zweiten Bestellung übersehen (${n(p2)} $DIV ${n(a2)})."
+                } else {
+                    near(bd(coffee + 2))
+                },
+            ),
         )
     }
 
@@ -1783,7 +2032,12 @@ object ApTasks {
             unit = null,
             value = bd(result),
             steps = listOf(step("Für den ersten Besuch ${n(n)} Möglichkeiten, dann eine weniger: " + (n downTo 1).joinToString(" $X ") { n(it) }, result)),
-            wrong = listOf(bd(n * n), bd(n * (n - 1)), bd(factorial(n - 1)), bd(2 * n)),
+            wrong = listOf(
+                bd(n * n) because "${n(n)} $X ${n(n)} – nach jedem Besuch bleibt aber eine Möglichkeit weniger.",
+                bd(n * (n - 1)) because "Nur die ersten beiden Besuche gezählt – es geht weiter bis 1: ${(n downTo 1).joinToString(" $X ") { n(it) }}.",
+                bd(factorial(n - 1)) because "Einen Faktor vergessen: Für den ersten Besuch gibt es ${n(n)} Möglichkeiten.",
+                near(bd(2 * n)),
+            ),
         )
     }
 
@@ -1804,7 +2058,12 @@ object ApTasks {
             unit = "Menüs",
             value = bd(result),
             steps = listOf(step("Jede Wahl mit jeder kombinieren: ${n(a)} $X ${n(b)} $X ${n(c)}", result, "Bei „und“ werden die Möglichkeiten multipliziert.")),
-            wrong = listOf(bd(a + b + c), bd(a * b), bd(result * 2), bd(a * b + c)),
+            wrong = listOf(
+                bd(a + b + c) because "Addiert statt malgenommen – bei „und“ werden die Möglichkeiten multipliziert.",
+                bd(a * b) because "Den Nachtisch vergessen.",
+                near(bd(result * 2)),
+                bd(a * b + c) because "Den Nachtisch addiert statt malgenommen.",
+            ),
         )
     }
 
@@ -1823,7 +2082,12 @@ object ApTasks {
             unit = null,
             value = bd(result),
             steps = listOf(step("Ämter nacheinander besetzen: ${n(n)} $X ${n(n - 1)} $X ${n(n - 2)}", result, "Die Ämter sind verschieden – die Reihenfolge zählt.")),
-            wrong = listOf(bd(result / 6), bd(n * n * n), bd(n * 3), bd(n * (n - 1))),
+            wrong = listOf(
+                bd(result / 6) because "Durch 6 geteilt, als wären die Ämter gleich. Die Ämter sind aber verschieden – die Reihenfolge zählt.",
+                bd(n * n * n) because "${n(n)} $X ${n(n)} $X ${n(n)} – aber niemand darf zwei Ämter haben.",
+                bd(n * 3) because "Mit der Zahl der Ämter malgenommen. Richtig: die Ämter nacheinander besetzen.",
+                bd(n * (n - 1)) because "Nur zwei Ämter besetzt – es sind drei.",
+            ),
         )
     }
 
@@ -1849,7 +2113,16 @@ object ApTasks {
             unit = null,
             value = bd(result),
             steps = steps,
-            wrong = listOf(bd(people * (people - 1)), bd((people - 2) * (people - 3) / 2), bd(people * people / 2).takeIf { people % 2 == 0L } ?: bd(result + people), bd((people - 1) * (people - 1))),
+            wrong = listOf(
+                bd(people * (people - 1)) because "${if (couples) "Jedes Anstoßen" else "Jeder Handschlag"} doppelt gezählt – noch durch 2 teilen.",
+                if (couples) bd((people - 2) * (people - 3) / 2) because "Das Gastgeberpaar vergessen." else near(bd((people - 2) * (people - 3) / 2)),
+                if (people % 2 == 0L) {
+                    bd(people * people / 2) because "${n(people)} $X ${n(people)} statt ${n(people)} $X ${n(people - 1)} – mit sich selbst zählt nicht."
+                } else {
+                    near(bd(result + people))
+                },
+                near(bd((people - 1) * (people - 1))),
+            ),
         )
     }
 
@@ -1867,7 +2140,12 @@ object ApTasks {
                 step("Mit Reihenfolge: ${n(n)} $X ${n(n - 1)} $X ${n(n - 2)}", ordered),
                 step("Reihenfolge egal (3 $X 2 $X 1 = 6): ${n(ordered)} $DIV 6", result, "Jedes Team wurde sechsmal gezählt – einmal in jeder Reihenfolge."),
             ),
-            wrong = listOf(bd(ordered), bd(n * (n - 1) / 2), bd(n * 3), bd(ordered / 3)),
+            wrong = listOf(
+                bd(ordered) because "Mit Reihenfolge gezählt. Alle haben die gleiche Aufgabe – jedes Team kommt so sechsmal vor: noch durch 6 teilen.",
+                bd(n * (n - 1) / 2) because "Nur Zweierteams gezählt – gesucht sind Dreierteams.",
+                bd(n * 3) because "Mit der Teamgröße malgenommen. Richtig: ${n(n)} $X ${n(n - 1)} $X ${n(n - 2)}, dann durch 6.",
+                bd(ordered / 3) because "Durch 3 statt durch 6 geteilt – drei Personen lassen sich auf 3 $X 2 $X 1 = 6 Arten anordnen.",
+            ),
         )
     }
 
@@ -1900,7 +2178,11 @@ object ApTasks {
                 step("Mögliche Fälle: ${n(pos)} + ${n(neg)}", total),
                 fracStep("Wahrscheinlichkeit ${n(pos)}/${n(total)}, gekürzt", pos, total, "Günstige durch mögliche Fälle – und kürzen."),
             ),
-            wrongFrac = listOf(reduce(pos, neg).takeIf { pos < neg } ?: (1L to total), reduce(neg, total), 1L to pos),
+            wrongFrac = listOf(
+                if (pos < neg) reduce(pos, neg) because "Positive durch negative Proben geteilt – richtig ist: durch alle ${n(total)} Proben." else nearFrac(1L to total),
+                reduce(neg, total) because "Das ist die Wahrscheinlichkeit für eine negative Probe.",
+                nearFrac(1L to pos),
+            ),
         )
     }
 
@@ -1927,7 +2209,11 @@ object ApTasks {
                 step("Möglich: ${n(total)} $X ${n(total - 1)}", all),
                 fracStep("Wahrscheinlichkeit ${n(fav)}/${n(all)}, gekürzt", fav, all),
             ),
-            wrongFrac = listOf(reduce(bad * bad, total * total), reduce(bad, total), reduce(2 * bad, total).takeIf { 2 * bad < total } ?: (1L to total)),
+            wrongFrac = listOf(
+                reduce(bad * bad, total * total) because "Mit Zurücklegen gerechnet. Beim zweiten Ziehen ist aber eine Probe weniger da.",
+                reduce(bad, total) because "Nur das erste Ziehen gezählt.",
+                if (2 * bad < total) reduce(2 * bad, total) because "Die Wahrscheinlichkeiten addiert statt malgenommen – bei „und“ wird multipliziert." else nearFrac(1L to total),
+            ),
         )
     }
 
@@ -1946,7 +2232,12 @@ object ApTasks {
             unit = "%",
             value = bd(both),
             steps = listOf(step("Beide: ${n(p)} $X ${n(p)} $DIV 100", both, "Bei „und“ mit unabhängigen Ereignissen werden die Wahrscheinlichkeiten multipliziert.")),
-            wrong = listOf(bd(p), bd(2 * p - 100), bd(100 - (100 - p) * (100 - p) / 100), bd(p / 2)),
+            wrong = listOf(
+                bd(p) because "Nur ein Test gezählt – beide müssen anschlagen.",
+                near(bd(2 * p - 100)),
+                bd(100 - (100 - p) * (100 - p) / 100) because "Das ist „mindestens ein Test“ – gefragt ist: beide Tests.",
+                near(bd(p / 2)),
+            ),
         )
     }
 
@@ -1966,7 +2257,11 @@ object ApTasks {
                 step("Paare mit Summe ${n(s)} abzählen", count, "Zum Beispiel ${(maxOf(1, s - 6)..minOf(6, s - 1)).joinToString(", ") { "$it+${s - it}" }}."),
                 fracStep("Wahrscheinlichkeit ${n(count)}/36, gekürzt", count, 36),
             ),
-            wrongFrac = listOf(1L to 11L, reduce(count, 12), reduce(1, s)),
+            wrongFrac = listOf(
+                (1L to 11L) because "Die 11 möglichen Summen (2 bis 12) sind nicht gleich wahrscheinlich – gezählt werden die 36 Paare.",
+                reduce(count, 12) because "Mit 6 + 6 = 12 statt 6 $X 6 = 36 möglichen Paaren gerechnet.",
+                nearFrac(reduce(1, s)),
+            ),
         )
     }
 
@@ -2000,7 +2295,11 @@ object ApTasks {
                 step("Mindestens einmal (Zähler): ${n(all)} $MINUS ${n(none)}", fav),
                 fracStep("Wahrscheinlichkeit ${n(fav)}/${n(all)}, gekürzt", fav, all),
             ),
-            wrongFrac = listOf(reduce(2, q), reduce(1, all), reduce(none, all)),
+            wrongFrac = listOf(
+                reduce(2, q) because "Die Wahrscheinlichkeiten addiert (1/${n(q)} + 1/${n(q)}) – so wird „beide Male“ doppelt gezählt.",
+                reduce(1, all) because "Das ist „beide Male“ – gefragt ist „mindestens einmal“.",
+                reduce(none, all) because "Das ist „keinmal“ – noch von 1 abziehen.",
+            ),
         )
     }
 
@@ -2016,6 +2315,51 @@ object ApTasks {
         seconds < TEST_SECONDS -> "Tempo-Test"
         seconds > TEST_SECONDS -> "Simulation mit mehr Zeit"
         else -> "TMSnat-Simulation"
+    }
+
+    // --- Aufgabentypen (Fehlertraining) -------------------------------------------------------
+
+    /** Lesbare Namen der Aufgabentypen: Kategorie/Art → Name. */
+    private val typeNames = mapOf(
+        "RATIO/prop" to "Dreisatz", "RATIO/inv" to "Antiproportional", "RATIO/two" to "Dreisatz mit zwei Größen",
+        "PERCENT/part" to "Prozentwert", "PERCENT/chg" to "Preis nach Änderung", "PERCENT/base" to "Preis vorher (Grundwert)",
+        "PERCENT/rate" to "Prozentsatz der Änderung", "PERCENT/rel" to "Prozente mit Beziehung", "PERCENT/twice" to "Zwei Änderungen nacheinander",
+        "RELATIONS/rel" to "Beziehungskette",
+        "FRACTIONS/tot" to "Anteil vom Ganzen", "FRACTIONS/rest" to "Rest in Teilen", "FRACTIONS/ror" to "Anteil vom Rest",
+        "UNITS/tab" to "Tabletten pro Tag", "UNITS/rate" to "Infusion pro Stunde", "UNITS/kg" to "Dosis pro kg",
+        "UNITS/inj" to "Injektion in ml", "UNITS/drop" to "Tropfen pro Minute", "UNITS/ug" to "µg und mg",
+        "SPEED/kmh" to "km/h aus Minuten", "SPEED/steps" to "Schritte und Meter", "SPEED/avg" to "Durchschnittstempo",
+        "SPEED/meet" to "Begegnung", "SPEED/catch" to "Einholen", "SPEED/ms" to "m/s in km/h",
+        "WORK/tog" to "Gemeinsam arbeiten", "WORK/fd" to "Zulauf und Abfluss", "WORK/join" to "Verstärkung kommt dazu",
+        "MIX/dil" to "Verdünnen", "MIX/wat" to "Wasser zugeben", "MIX/comb" to "Zwei Lösungen mischen", "MIX/cross" to "Mischungskreuz",
+        "GROWTH/dbl" to "Verdopplung", "GROWTH/hl" to "Halbwertszeit", "GROWTH/hlb" to "Halbwertszeit rückwärts", "GROWTH/hlt" to "Zeit aus Halbwertszeit",
+        "EQUATIONS/sd" to "Summe und Unterschied", "EQUATIONS/amp" to "Zwei Sorten", "EQUATIONS/age" to "Altersaufgabe", "EQUATIONS/pr" to "Zwei Bestellungen",
+        "COMBI/perm" to "Reihenfolgen", "COMBI/prod" to "Kombinieren", "COMBI/ord" to "Ämter besetzen", "COMBI/hs" to "Jeder mit jedem", "COMBI/team" to "Teams auswählen",
+        "PROB/lap" to "Einfache Wahrscheinlichkeit", "PROB/two" to "Zweimal ziehen", "PROB/both" to "Beide Ereignisse", "PROB/dice" to "Zwei Würfel", "PROB/one" to "Mindestens einmal",
+    )
+
+    /** Alle bekannten Aufgabentypen. */
+    val types: Set<String> get() = typeNames.keys
+
+    /** Aufgabentyp einer Aufgabe, z. B. „PERCENT/base“; null bei Aufgaben außerhalb des TMSnat-Trainings. */
+    fun typeOf(problem: Problem): String? {
+        val category = ApCategory.of(problem) ?: return null
+        return "${category.name}/${problem.key.substringBefore(':')}"
+    }
+
+    /** Lesbarer Name eines Aufgabentyps, z. B. „Preis vorher (Grundwert)“. */
+    fun typeName(type: String): String =
+        typeNames[type] ?: ApCategory.entries.firstOrNull { it.name == type.substringBefore('/') }?.title ?: type
+
+    /** Eine neue Aufgabe desselben Typs (andere Zahlen); null, wenn der Typ unbekannt ist. */
+    fun taskOfType(type: String, r: Random): ApTask? {
+        val category = ApCategory.entries.firstOrNull { it.name == type.substringBefore('/') } ?: return null
+        val kind = type.substringAfter('/')
+        repeat(600) { i ->
+            val t = task(category, listOf(2, 3, 1)[i % 3], r)
+            if (t.key.substringBefore(':') == kind) return t
+        }
+        return null
     }
 
     /**

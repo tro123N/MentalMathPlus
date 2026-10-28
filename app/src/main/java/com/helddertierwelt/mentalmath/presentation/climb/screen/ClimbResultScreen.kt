@@ -54,8 +54,11 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
+import com.helddertierwelt.mentalmath.domain.climb.engine.ApTime
 import com.helddertierwelt.mentalmath.domain.climb.engine.Evaluation
+import com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode
 import com.helddertierwelt.mentalmath.domain.climb.engine.ProblemResult
+import com.helddertierwelt.mentalmath.domain.climb.engine.SessionLogic
 import com.helddertierwelt.mentalmath.domain.climb.engine.SessionType
 import com.helddertierwelt.mentalmath.domain.climb.engine.Summary
 import com.helddertierwelt.mentalmath.domain.climb.math.Fmt
@@ -65,7 +68,10 @@ import com.helddertierwelt.mentalmath.presentation.climb.component.BodyText
 import com.helddertierwelt.mentalmath.presentation.climb.component.CaptionText
 import com.helddertierwelt.mentalmath.presentation.climb.component.CardGap
 import com.helddertierwelt.mentalmath.presentation.climb.component.CardTitle
+import com.helddertierwelt.mentalmath.presentation.climb.component.ChartGuide
 import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbCard
+import com.helddertierwelt.mentalmath.presentation.climb.component.ColorBarChart
+import com.helddertierwelt.mentalmath.presentation.climb.component.LegendItem
 import com.helddertierwelt.mentalmath.presentation.climb.component.ClimbTopBar
 import com.helddertierwelt.mentalmath.presentation.climb.component.SolutionSteps
 import com.helddertierwelt.mentalmath.presentation.climb.component.StarRow
@@ -111,6 +117,10 @@ fun ClimbResultScreen(navController: NavController) {
             } else {
                 SummaryCard(summary = summary, viewModel = viewModel)
                 CardGap()
+                if (summary.free?.mode == FreeMode.SIMULATION) {
+                    ApTimeCard(summary = summary)
+                    CardGap()
+                }
                 if (summary.free?.isAp == true) {
                     ApCategoryCard(summary = summary, onPractice = { skillId ->
                         viewModel.playTap()
@@ -144,9 +154,11 @@ fun ClimbResultScreen(navController: NavController) {
                             },
                         )
                     }
-                    ActionButton(
+                    // Fehlertraining: „Nochmal“ nur, wenn noch Aufgabentypen fällig sind.
+                    val reviewDone = summary.title == ClimbViewModel.REVIEW_TITLE && viewModel.apReviewDue(progress).isEmpty()
+                    if (!reviewDone) ActionButton(
                         text = "Nochmal",
-                        subtitle = "Gleiche Übung mit neuen Aufgaben",
+                        subtitle = if (summary.title == ClimbViewModel.REVIEW_TITLE) "Die noch fälligen Aufgabentypen" else "Gleiche Übung mit neuen Aufgaben",
                         icon = R.drawable.refresh_24dp,
                         iconTint = accent,
                         onClick = {
@@ -337,9 +349,6 @@ private fun SummaryCard(summary: Summary, viewModel: ClimbViewModel) {
             if (summary.free?.mode != com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode.SIMULATION) {
                 BodyText("Richtig: $correct von $total")
                 BodyText("Ø Zeit pro Aufgabe: ${secondsText(avgMs / 1000.0)}")
-            } else {
-                val answered = results.filter { !(it.timedOut && it.answer.isEmpty()) }
-                if (answered.isNotEmpty()) BodyText("Ø Zeit pro bearbeiteter Aufgabe: ${secondsText(answered.sumOf { it.timeMs } / answered.size / 1000.0)}")
             }
             val hints = results.sumOf { it.hintsUsed }
             if (summary.type == SessionType.GUIDED) {
@@ -458,7 +467,7 @@ private fun ProblemsCard(results: List<ProblemResult>) {
                         Row {
                             if (!r.correct) {
                                 Text(
-                                    text = if (r.timedOut) "Zeit abgelaufen" else r.answer.ifEmpty { "–" },
+                                    text = if (r.unanswered && r.number > 0) "nicht bearbeitet" else if (r.timedOut) "Zeit abgelaufen" else r.answer.ifEmpty { "–" },
                                     fontSize = dimens.fonts.caption,
                                     color = red,
                                     textDecoration = if (r.timedOut) null else TextDecoration.LineThrough,
@@ -471,7 +480,14 @@ private fun ProblemsCard(results: List<ProblemResult>) {
                                 color = if (r.correct) green else MaterialTheme.colorScheme.onPrimary,
                             )
                             Spacer(Modifier.width(8.dp))
-                            CaptionText(secondsText(r.timeMs / 1000.0))
+                            CaptionText(secondsText(r.totalMs / 1000.0))
+                        }
+                        if (r.note != null && !expanded) {
+                            Text(
+                                text = "Typischer Fehler – antippen für die Erklärung",
+                                fontSize = dimens.fonts.caption,
+                                color = yellow,
+                            )
                         }
                     }
                     Icon(
@@ -483,10 +499,75 @@ private fun ProblemsCard(results: List<ProblemResult>) {
                 }
                 if (expanded) {
                     Spacer(Modifier.height(6.dp))
+                    r.note?.let {
+                        BodyText(SessionLogic.MISTAKE_PREFIX + it, color = yellow, modifier = Modifier.padding(start = 8.dp, bottom = 6.dp))
+                    }
                     SolutionSteps(problem = r.problem, showHints = true, modifier = Modifier.padding(start = 8.dp))
                 }
             }
         }
+    }
+}
+
+/** Minuten und Sekunden, z. B. „1:34“. */
+private fun mmss(ms: Long): String {
+    val s = (ms + 500) / 1000
+    return "${s / 60}:${(s % 60).toString().padStart(2, '0')}"
+}
+
+/** Zeitanalyse einer Testsimulation: Zeit je Aufgabe, Zeitfresser, Hälften und Tipps. */
+@Composable
+private fun ApTimeCard(summary: Summary) {
+    val rules = summary.free ?: return
+    val report = ApTime.analyze(summary.results, rules.param)
+    if (report.tasks.isEmpty()) return
+    val gray = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.35f)
+    ClimbCard(modifier = Modifier.testTag("apTime")) {
+        CardTitle("Zeiteinteilung")
+        CaptionText("Zeit pro Aufgabe in der Reihenfolge des Tests, auch aus übersprungenen Versuchen. Die gestrichelte Linie ist das Ziel.")
+        Spacer(Modifier.height(8.dp))
+        ColorBarChart(
+            values = report.tasks.map { it.ms / 1000f },
+            colors = report.tasks.map { if (!it.answered) gray else if (it.correct) green else red },
+            labels = report.tasks.map { t -> if (report.tasks.size <= 10 || t.number % 2 == 1) "${t.number}" else "" },
+            guide = ChartGuide(report.targetMs / 1000f, mmss(report.targetMs), yellow),
+            height = 150.dp,
+        )
+        Spacer(Modifier.height(6.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+            LegendItem(green, "richtig")
+            LegendItem(red, "falsch")
+            if (report.unanswered > 0) LegendItem(gray, "nicht bearbeitet")
+        }
+        Spacer(Modifier.height(8.dp))
+        BodyText("Ø pro bearbeiteter Aufgabe: ${mmss(report.avgAnsweredMs)} (Ziel: ${mmss(report.targetMs)})")
+        val half = (report.tasks.size + 1) / 2
+        BodyText("Aufgaben 1–$half: ${mmss(report.firstHalfMs)} · Aufgaben ${half + 1}–${report.tasks.size}: ${mmss(report.secondHalfMs)}")
+        if (report.slow.isNotEmpty()) {
+            BodyText(
+                "Zeitfresser: " + report.slow.take(3).joinToString(", ") { t ->
+                    "Nr. ${t.number} (${mmss(t.ms)}, ${if (!t.answered) "offen" else if (t.correct) "richtig" else "falsch"})"
+                },
+                color = yellow,
+            )
+        }
+        if (report.wrongCount > 0) {
+            CaptionText("Auf die ${if (report.wrongCount == 1) "falsche Aufgabe" else "${report.wrongCount} falschen Aufgaben"} entfielen ${mmss(report.wrongMs)}.")
+        }
+        Spacer(Modifier.height(6.dp))
+        val tips = buildList {
+            if (report.slow.any { !it.correct }) {
+                add("Hängst du an einer Aufgabe fest, tippe nach etwa zwei Minuten „Später bearbeiten“. Im Test genauso: markieren, weiter, am Ende zurückkommen.")
+            }
+            if (report.unanswered > 0) {
+                add("Im echten Test bei offenen Aufgaben trotzdem ankreuzen: Raten bringt im Schnitt einen Punkt pro fünf Aufgaben, und es gibt keinen Abzug.")
+            }
+            if (report.firstHalfMs > rules.param * 1000L / 2 && report.tasks.size >= 8) {
+                add("Die erste Hälfte hat mehr als die Hälfte der Zeit gekostet. In der Simulation werden die Aufgaben nach hinten schwerer – plane dort mehr Zeit ein.")
+            }
+            if (isEmpty() && report.unanswered == 0) add("Gute Zeiteinteilung – du bist mit der Zeit ausgekommen.")
+        }
+        tips.forEach { CaptionText("• $it", modifier = Modifier.padding(bottom = 3.dp)) }
     }
 }
 

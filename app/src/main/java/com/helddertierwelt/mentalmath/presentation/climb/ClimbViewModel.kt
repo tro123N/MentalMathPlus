@@ -28,6 +28,8 @@ import com.helddertierwelt.mentalmath.data.climb.ClimbRepository
 import com.helddertierwelt.mentalmath.data.climb.PlusSettingsRepository
 import com.helddertierwelt.mentalmath.domain.climb.curriculum.Curriculum
 import com.helddertierwelt.mentalmath.domain.climb.engine.AdaptiveState
+import com.helddertierwelt.mentalmath.domain.climb.engine.ApForecast
+import com.helddertierwelt.mentalmath.domain.climb.engine.ApReview
 import com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode
 import com.helddertierwelt.mentalmath.domain.climb.engine.TrickAdvisor
 import com.helddertierwelt.mentalmath.domain.climb.engine.TrickTip
@@ -44,6 +46,7 @@ import com.helddertierwelt.mentalmath.domain.climb.engine.SessionType
 import com.helddertierwelt.mentalmath.domain.climb.engine.Summary
 import com.helddertierwelt.mentalmath.domain.climb.free.FreeTopic
 import com.helddertierwelt.mentalmath.domain.climb.free.FreeTopics
+import com.helddertierwelt.mentalmath.domain.climb.model.ApMistakeEntry
 import com.helddertierwelt.mentalmath.domain.climb.model.Backup
 import com.helddertierwelt.mentalmath.domain.climb.model.BackupCodec
 import com.helddertierwelt.mentalmath.domain.climb.model.ClimbProgress
@@ -54,6 +57,7 @@ import com.helddertierwelt.mentalmath.domain.climb.model.World
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackController
 import com.helddertierwelt.mentalmath.domain.feedback.FeedbackType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,6 +65,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.TimeZone
 import javax.inject.Inject
 import kotlin.random.Random
@@ -237,6 +242,25 @@ class ClimbViewModel @Inject constructor(
         return true
     }
 
+    /** Fällige Aufgabentypen im Fehlertraining. */
+    fun apReviewDue(p: ClimbProgress): List<ApMistakeEntry> = ApReview.due(p, now())
+
+    /** Wann der nächste Aufgabentyp im Fehlertraining fällig wird (null: keiner mehr in der Wiederholung). */
+    fun apReviewNext(p: ClimbProgress): Long? = ApReview.nextDue(p, now())
+
+    /** Fehlertraining: zu jedem fälligen Aufgabentyp eine neue Aufgabe, nach Fehlern mit Lösungsweg. */
+    fun startApReview(): Boolean {
+        val problems = ApReview.problems(progress.value, now(), random)
+        if (problems.isEmpty()) return false
+        freeGenerator = null
+        lastFreeStart = { startApReview() }
+        begin(SessionLogic.createFree(problems, FreeRules(FreeMode.ENDLOS, 0, 2, FreeRules.TRACK_AP), REVIEW_TITLE, null))
+        return true
+    }
+
+    /** Punkt-Prognose für den TMSnat (rechnet im Hintergrund 10.000 Tests durch). */
+    suspend fun apForecast(p: ClimbProgress): ApForecast.Outcome = withContext(Dispatchers.Default) { ApForecast.forecast(p) }
+
     /** „Nochmal“ nach dem freien Training oder dem TMSnat-Training. */
     fun restartFree(): Boolean = lastFreeStart?.invoke() ?: startFree()
 
@@ -270,7 +294,7 @@ class ClimbViewModel @Inject constructor(
             return
         }
         advanceJob?.cancel()
-        val done = SessionLogic.finishNow(s)
+        val done = SessionLogic.finishNow(s, if (s.phase == Phase.ANSWERING) currentElapsed() else 0L)
         _session.value = done
         restartProblemClock()
         finish(done)
@@ -521,7 +545,7 @@ class ClimbViewModel @Inject constructor(
                 _elapsedMs.value = elapsed
                 val limit = s.currentLimitMs
                 if (s.free != null && SessionLogic.freeOver(s, elapsed)) {
-                    val done = SessionLogic.finishNow(s)
+                    val done = SessionLogic.finishNow(s, elapsed)
                     _session.value = done
                     finish(done)
                     break
@@ -543,5 +567,10 @@ class ClimbViewModel @Inject constructor(
         val p = pausedAt ?: return
         problemStart += SystemClock.elapsedRealtime() - p
         pausedAt = null
+    }
+
+    companion object {
+        /** Titel der Einheit Fehlertraining. */
+        const val REVIEW_TITLE = "Fehlertraining"
     }
 }

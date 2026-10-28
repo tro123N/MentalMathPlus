@@ -320,6 +320,8 @@ class CurriculumTest {
     fun apTasksAreCorrectInEveryDifficulty() {
         val cats = com.helddertierwelt.mentalmath.domain.climb.curriculum.ApCategory.entries
         val ap = com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks
+        var choiceProblems = 0
+        var withMistake = 0
         for (c in cats) {
             for (d in 1..3) {
                 val random = Random(c.ordinal * 100L + d)
@@ -332,7 +334,17 @@ class CurriculumTest {
                         assertTrue("$context: Ergebnis zu groß für Kopfrechnen", v < BigDecimal(2_000_000))
                         assertTrue("$context: zu viele Nachkommastellen", v.stripTrailingZeros().scale() <= 2)
                     }
-                    checkProblem(ap.typed(t), "$context getippt")
+                    val typed = ap.typed(t)
+                    checkProblem(typed, "$context getippt")
+                    // Typische Fehler beim Eintippen dürfen nie zur richtigen Antwort passen.
+                    typed.mistakes.forEach { m ->
+                        assertTrue("$context: leere Fehlererklärung", m.why.length > 10)
+                        when (val e = m.answer) {
+                            is Expected.Exact -> assertTrue("$context: Fehler = Lösung (${m.why})", e.value.compareTo(t.value) != 0)
+                            is Expected.Frac -> assertTrue("$context: Fehler = Lösung (${m.why})", e.numerator * t.frac!!.second != t.frac!!.first * e.denominator)
+                            else -> fail("$context: unerwartete Fehlerart $e")
+                        }
+                    }
                     for (options in listOf(4, 5)) {
                         val p = ap.choice(t, options, random)
                         checkProblem(p, "$context Auswahl $options")
@@ -341,10 +353,22 @@ class CurriculumTest {
                         val correct = (p.expected as Expected.Choice).index
                         val expectedText = ap.optionText(t.value, t.frac, t.unit)
                         assertEquals("$context: richtige Antwort steht nicht zur Wahl", expectedText, p.choices[correct].substringAfter(") "))
+                        // Erklärungen gehören zu falschen Antworten, und jede passt zu genau ihrer Antwort.
+                        p.mistakes.forEach { m ->
+                            val idx = (m.answer as Expected.Choice).index
+                            assertTrue("$context: Erklärung zur richtigen Antwort (${m.why})", idx != correct)
+                            assertTrue("$context: Erklärung ohne Antwort", idx in p.choices.indices)
+                            assertTrue("$context: leere Fehlererklärung", m.why.length > 10)
+                        }
+                        assertEquals("$context: zwei Erklärungen für eine Antwort", p.mistakes.size, p.mistakes.map { it.answer }.toSet().size)
+                        choiceProblems++
+                        if (p.mistakes.isNotEmpty()) withMistake++
                     }
                 }
             }
         }
+        // Die meisten Aufgaben haben mindestens eine falsche Antwort mit Erklärung.
+        assertTrue("Zu wenige Fehlererklärungen: $withMistake von $choiceProblems", withMistake * 100 >= choiceProblems * 70)
         // Simulation: 16 Aufgaben, alle Kategorien, nach hinten schwerer.
         val sim = ap.simulation(16, 5, Random(5))
         assertEquals(16, sim.size)
