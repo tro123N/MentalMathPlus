@@ -48,6 +48,11 @@ enum class AiModel(
     val thinkingBudget: Int,
     /** Noch nicht auf Handys erprobt: Die App fällt bei Problemen auf ein kleineres Modell zurück. */
     val experimental: Boolean = false,
+    /**
+     * Läuft auf Handys. Modelle mit false werden nicht mehr angeboten; eine schon geladene Datei
+     * lässt sich nur noch löschen.
+     */
+    val phone: Boolean = true,
 ) {
     GEMMA4_E4B(
         id = "gemma4-e4b",
@@ -66,8 +71,8 @@ enum class AiModel(
     GEMMA4_12B(
         id = "gemma4-12b",
         title = "Gemma 4 12B",
-        badge = "Experiment · am klügsten",
-        summary = "Das größte Gemma-4-Modell, das auf ein Handy passt: deutlich klüger, aber langsamer und sehr speicherhungrig. Braucht ein Handy mit 16 GB Arbeitsspeicher.",
+        badge = "Nur für Computer",
+        summary = "Für Computer gedacht: Auf Handys reicht der Speicher der Grafikeinheit nicht – die App wird sehr langsam oder beendet. Lösche die Datei, um 6,9 GB frei zu machen.",
         repo = "litert-community/gemma-4-12B-it-litert-lm",
         revision = "7a0b1ce0ea821bcd01c5f72af84155e02191152f",
         file = "gemma-4-12B-it.litertlm",
@@ -77,6 +82,7 @@ enum class AiModel(
         contextTokens = 8_192,
         thinkingBudget = 1_024,
         experimental = true,
+        phone = false,
     ),
     GEMMA4_E2B(
         id = "gemma4-e2b",
@@ -108,8 +114,11 @@ enum class AiModel(
 
         fun of(id: String?): AiModel? = entries.firstOrNull { it.id == id }
 
+        /** Das gewählte Modell – ein nicht mehr angebotenes zählt als das Standardmodell. */
+        fun chosen(id: String?): AiModel = of(id)?.takeIf { it.phone } ?: DEFAULT
+
         /** Reihenfolge, in der bei Problemen auf ein anderes, schon geladenes Modell ausgewichen wird. */
-        val fallbackOrder: List<AiModel> = listOf(GEMMA4_E4B, GEMMA4_E2B, GEMMA4_12B)
+        val fallbackOrder: List<AiModel> = listOf(GEMMA4_E4B, GEMMA4_E2B)
 
         /** Bytes als Gigabyte mit einer Nachkommastelle, z. B. „6,9 GB“ (wie das Handy Speicher anzeigt). */
         fun gigabytes(bytes: Long): String = String.format(Locale.GERMANY, "%.1f GB", bytes / 1e9)

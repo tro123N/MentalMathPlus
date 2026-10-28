@@ -588,8 +588,8 @@ fun AiModelCard(
             )
         }
         BodyText(model.summary)
-        CaptionText("Download ${model.sizeLabel} · empfohlen ab ${model.minRamGb} GB Arbeitsspeicher")
-        if (tooSmall) Text("Dein Handy hat etwa $deviceRamGb GB Arbeitsspeicher – das kann knapp werden.", fontSize = dimens.fonts.caption, color = yellow)
+        if (model.phone) CaptionText("Download ${model.sizeLabel} · empfohlen ab ${model.minRamGb} GB Arbeitsspeicher")
+        if (tooSmall && model.phone) Text("Dein Handy hat etwa $deviceRamGb GB Arbeitsspeicher – das kann knapp werden.", fontSize = dimens.fonts.caption, color = yellow)
         if (crashed) Text("Beim Laden wurde die App auf diesem Handy beendet. Nimm lieber ein kleineres Modell.", fontSize = dimens.fonts.caption, color = red)
         when (state) {
             ModelState.Missing -> Button(
@@ -621,7 +621,7 @@ fun AiModelCard(
                 Spacer(Modifier.width(6.dp))
                 CaptionText("Auf dem Handy (${AiModel.gigabytes(state.bytes)})", modifier = Modifier.weight(1f))
                 if (onDelete != null) TextButton(onClick = onDelete, modifier = Modifier.testTag("aiDelete_${model.id}")) { Text("Löschen", color = red, fontSize = dimens.fonts.caption) }
-                if (!selected) {
+                if (!selected && model.phone) {
                     Button(
                         onClick = onSelect,
                         shape = RoundedCornerShape(20.dp),
@@ -632,7 +632,7 @@ fun AiModelCard(
             }
             is ModelState.Failed -> Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(state.message, fontSize = dimens.fonts.caption, color = red)
-                Button(
+                if (model.phone) Button(
                     onClick = onDownload,
                     shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = accent, contentColor = Color.White),

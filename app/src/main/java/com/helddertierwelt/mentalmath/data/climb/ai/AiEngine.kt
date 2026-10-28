@@ -149,7 +149,7 @@ class AiEngine @Inject constructor(
                 runCatching { badFile.appendText(combo + "\n") }
                 val model = AiModel.of(combo.substringBefore('|'))
                 _crashNote.value = "Beim letzten Laden von ${model?.title ?: "der KI"} wurde die App beendet – vermutlich reichte der Arbeitsspeicher nicht. " +
-                    "Die App versucht es jetzt sparsamer."
+                    if (model != null && !model.phone) "Dieses Modell ist für Computer gedacht und wird nicht mehr angeboten – nimm Gemma 4 E4B." else "Die App versucht es jetzt sparsamer."
             }
         }
     }
@@ -184,6 +184,10 @@ class AiEngine @Inject constructor(
     @OptIn(ExperimentalApi::class)
     private fun loadLocked(model: AiModel, fast: Boolean): Boolean {
         closeLocked()
+        if (!model.phone) {
+            _status.value = EngineStatus.Failed(model, "${model.title} läuft auf Handys nicht zuverlässig. Nimm Gemma 4 E4B.")
+            return false
+        }
         val file = store.file(model)
         if (file == null || !store.isReady(model)) {
             _status.value = EngineStatus.Failed(model, "Das Modell ist noch nicht geladen.")
@@ -327,8 +331,8 @@ class AiEngine @Inject constructor(
         releaseJob?.cancel()
         releaseJob = scope.launch {
             delay(delayMs)
-            // Läuft noch eine Antwort, kurz warten – aber nicht ewig (falls eine Antwort hängt).
-            withTimeoutOrNull(120_000) { while (busy.get() > 0) delay(1_000) }
+            // Läuft noch eine Antwort, sie zu Ende schreiben lassen – aber nicht ewig (falls sie hängt).
+            withTimeoutOrNull(600_000) { while (busy.get() > 0) delay(1_000) }
             release()
         }
     }

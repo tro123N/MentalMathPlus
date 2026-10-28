@@ -138,7 +138,7 @@ class AiViewModel @Inject constructor(
     fun crashedEverywhere(model: AiModel): Boolean = engine.crashedEverywhere(model)
 
     /** Gewähltes Modell aus den Einstellungen. */
-    val selectedModel: AiModel get() = AiModel.of(settings.value.aiModel) ?: AiModel.DEFAULT
+    val selectedModel: AiModel get() = AiModel.chosen(settings.value.aiModel)
 
     /**
      * Das Modell, mit dem gesprochen wird: das gewählte, wenn es geladen ist und auf dem Handy
@@ -146,7 +146,7 @@ class AiViewModel @Inject constructor(
      */
     fun activeModel(): AiModel? {
         val selected = selectedModel
-        fun usable(m: AiModel) = store.isReady(m) && !engine.crashedEverywhere(m) && m !in failedThisRun
+        fun usable(m: AiModel) = m.phone && store.isReady(m) && !engine.crashedEverywhere(m) && m !in failedThisRun
         if (usable(selected)) return selected
         return AiModel.fallbackOrder.firstOrNull { usable(it) }
     }
@@ -155,12 +155,14 @@ class AiViewModel @Inject constructor(
     private val failedThisRun = mutableSetOf<AiModel>()
 
     fun select(model: AiModel) {
+        if (!model.phone) return
         failedThisRun -= model
         feedbackController.play(FeedbackType.TAP)
         viewModelScope.launch { settingsRepository.update { it.copy(aiModel = model.id) } }
     }
 
     fun download(model: AiModel) {
+        if (!model.phone) return
         feedbackController.play(FeedbackType.TAP)
         viewModelScope.launch {
             settingsRepository.update { it.copy(aiModel = model.id) }
@@ -370,6 +372,8 @@ class AiViewModel @Inject constructor(
         val user = AiMessage(userId, AiRole.USER, text, prompt = question.takeIf { it != text }, task = card)
         val reply = AiMessage(replyId, AiRole.ASSISTANT, "", status = AiStatus.STREAMING)
         _chat.value = before.copy(messages = before.messages + user + reply, nextId = before.nextId + 2)
+        // Gleich speichern: Wird die App im Hintergrund beendet, bleibt die Frage erhalten.
+        save()
         run(user, replyId)
     }
 
@@ -456,7 +460,14 @@ class AiViewModel @Inject constructor(
 
     /** Eine Antwort des Modells (mit Werkzeugen) abholen und laufend in die Nachricht [replyId] schreiben. */
     private suspend fun collectAnswer(s: LlmSession, prompt: String, thinking: Boolean, replyId: Long, text: StringBuilder, thought: StringBuilder) {
+        var lastSave = System.currentTimeMillis()
         AiAgent.answer(s, prompt, thinking) { context() }.collect { e ->
+            // Alle paar Sekunden speichern, damit eine halbe Antwort nicht verloren geht.
+            val now = System.currentTimeMillis()
+            if (now - lastSave > 3_000) {
+                lastSave = now
+                save()
+            }
             when (e) {
                 is AgentEvent.Text -> {
                     text.append(e.text)
@@ -527,6 +538,7 @@ class AiViewModel @Inject constructor(
         _chat.update { c -> c.copy(messages = c.messages.filter { m -> after.none { it.id == m.id } } + reply, nextId = c.nextId + 1) }
         // Abgebrochene Antworten stecken noch im Gedächtnis des Modells: frisch anfangen.
         session = null
+        save()
         run(lastUser, replyId)
     }
 

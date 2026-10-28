@@ -99,7 +99,7 @@ fun AiSettingsScreen(navController: NavController) {
     }
     BackHandler { back() }
 
-    val selected = AiModel.of(settings.aiModel) ?: AiModel.DEFAULT
+    val selected = AiModel.chosen(settings.aiModel)
     val crashed = remember(models, status) { AiModel.entries.filter { ai.crashedEverywhere(it) }.toSet() }
 
     Scaffold(topBar = { ClimbTopBar(title = "KI-Einstellungen", onNavigation = { back() }) }) { padding ->
@@ -128,10 +128,10 @@ fun AiSettingsScreen(navController: NavController) {
 
             ClimbCard(modifier = Modifier.testTag("aiModels")) {
                 CardTitle("Modell")
-                BodyText("Gemma 4 E4B ist die beste Wahl für die meisten Handys. Gemma 4 12B ist noch klüger, aber ein Experiment: Es braucht sehr viel Arbeitsspeicher und antwortet langsamer.")
+                BodyText("Gemma 4 E4B ist das klügste Modell, das zuverlässig auf Handys läuft. Gemma 4 E2B ist kleiner und schneller.")
                 Spacer(Modifier.height(10.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    AiModel.entries.forEach { m ->
+                    AiModel.entries.filter { it.phone || models[it] !is ModelState.Missing }.forEach { m ->
                         AiModelCard(
                             model = m,
                             state = models[m] ?: ModelState.Missing,

@@ -182,7 +182,7 @@ fun AiChatScreen(navController: NavController) {
     // Welches Modell spricht? Das gewählte, sonst ein anderes geladenes.
     val ready = models.filterValues { it is ModelState.Ready }.keys
     val crashed = remember(ready, status) { AiModel.entries.filter { ai.crashedEverywhere(it) }.toSet() }
-    val selected = AiModel.of(settings.aiModel) ?: AiModel.DEFAULT
+    val selected = AiModel.chosen(settings.aiModel)
     val active = if (selected in ready && selected !in crashed) selected else AiModel.fallbackOrder.firstOrNull { it in ready && it !in crashed }
 
     var pendingReminder by remember { mutableStateOf<Pair<Int, Int>?>(null) }
@@ -581,7 +581,7 @@ private fun AiSetup(ai: AiViewModel, models: Map<AiModel, ModelState>, selected:
             Spacer(Modifier.height(6.dp))
             CaptionText("Dein Handy: etwa $ram GB Arbeitsspeicher, ${AiModel.gigabytes(ai.freeBytes())} frei.")
         }
-        AiModel.entries.forEach { m ->
+        AiModel.entries.filter { it.phone || models[it] !is ModelState.Missing }.forEach { m ->
             AiModelCard(
                 model = m,
                 state = models[m] ?: ModelState.Missing,
@@ -591,7 +591,7 @@ private fun AiSetup(ai: AiViewModel, models: Map<AiModel, ModelState>, selected:
                 onDownload = { ai.download(m) },
                 onCancel = { ai.cancelDownload(m) },
                 onSelect = { ai.select(m) },
-                onDelete = null,
+                onDelete = if (m.phone) null else ({ ai.delete(m) }),
             )
         }
         ClimbCard {
