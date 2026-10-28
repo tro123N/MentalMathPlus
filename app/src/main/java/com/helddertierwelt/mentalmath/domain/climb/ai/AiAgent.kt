@@ -82,11 +82,19 @@ object AiAgent {
         var input: LlmInput = LlmInput.User(prompt)
         var round = 0
         val seen = mutableMapOf<String, Int>()
+        // Steht schon Text da (z. B. „Ich rechne nach.“ vor einem Werkzeug), beginnt die Fortsetzung in einem neuen Absatz.
+        var wroteText = false
         while (true) {
             val calls = mutableListOf<LlmToolCall>()
+            var firstInRound = true
             session.send(input, thinking).collect { chunk ->
                 when (chunk) {
-                    is LlmChunk.Text -> if (chunk.text.isNotEmpty()) emit(AgentEvent.Text(chunk.text))
+                    is LlmChunk.Text -> if (chunk.text.isNotEmpty()) {
+                        if (firstInRound && wroteText) emit(AgentEvent.Text("\n\n"))
+                        firstInRound = false
+                        wroteText = true
+                        emit(AgentEvent.Text(chunk.text))
+                    }
                     is LlmChunk.Thought -> if (chunk.text.isNotEmpty()) emit(AgentEvent.Thought(chunk.text))
                     is LlmChunk.ToolCalls -> calls += chunk.calls
                 }

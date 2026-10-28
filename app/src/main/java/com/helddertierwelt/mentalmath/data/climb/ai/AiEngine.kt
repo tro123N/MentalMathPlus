@@ -281,13 +281,15 @@ class AiEngine @Inject constructor(
                     systemInstruction = Contents.of(system),
                     initialMessages = history.map { m -> if (m.role == AiRole.USER) Message.user(m.modelText) else Message.model(m.modelText) },
                     tools = tools,
-                    samplerConfig = if (deterministic) SamplerConfig(topK = 1, topP = 1.0, temperature = 1.0, seed = 1) else SamplerConfig(topK = 40, topP = 0.95, temperature = 0.7),
+                    // Für Tests ein fester Startwert: gleiche Frage → gleiche Antwort, ohne die Endlosschleifen,
+                    // in die kleine Modelle beim reinen „immer das wahrscheinlichste Wort“ geraten.
+                    samplerConfig = SamplerConfig(topK = 40, topP = 0.95, temperature = 0.7, seed = if (deterministic) 42 else 0),
                     automaticToolCalling = false,
-                    maxOutputToken = model.thinkingBudget + ANSWER_TOKENS,
+                    maxOutputToken = maxOutput(model),
                 ),
             )
             conversation = c
-            LiteRtSession(c, model.thinkingBudget + ANSWER_TOKENS, model.thinkingBudget, supportsThinking, busy).also { session = it }
+            LiteRtSession(c, maxOutput(model), thinkingBudget(model), supportsThinking, busy).also { session = it }
         }
     }
 
@@ -295,7 +297,12 @@ class AiEngine @Inject constructor(
     fun isCurrent(s: LlmSession?): Boolean = s != null && s === session && conversation?.isAlive == true
 
     /** Platz, der für eine Antwort (mit Denken und Werkzeugen) frei bleiben muss, in Tokens. */
-    fun reserveTokens(model: AiModel): Int = model.thinkingBudget + ANSWER_TOKENS + 600
+    fun reserveTokens(model: AiModel): Int = maxOutput(model) + 600
+
+    private fun thinkingBudget(model: AiModel): Int = thinkingOverride ?: model.thinkingBudget
+
+    /** Höchstlänge einer Antwort (Denken und Text) in Tokens. */
+    private fun maxOutput(model: AiModel): Int = thinkingBudget(model) + (answerOverride ?: ANSWER_TOKENS)
 
     /** Größe des Gesprächsgedächtnisses des geladenen Modells. */
     fun contextTokens(model: AiModel): Int = contextOverride ?: model.contextTokens
@@ -355,6 +362,13 @@ class AiEngine @Inject constructor(
         /** Für Tests: kleineres Gesprächsgedächtnis (spart Arbeitsspeicher im Emulator). */
         @Volatile
         var contextOverride: Int? = null
+
+        /** Für Tests: kürzeres Nachdenken und kürzere Antworten (der Emulator rechnet langsam). */
+        @Volatile
+        var thinkingOverride: Int? = null
+
+        @Volatile
+        var answerOverride: Int? = null
     }
 }
 

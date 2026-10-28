@@ -28,11 +28,12 @@ fi
 rm -f "$OUT/build.log"
 
 # Release-Build (wie für das Release, nur ohne Signatur): prüft R8 vorab und zeigt Größe und ABIs.
-./gradlew --no-daemon --stacktrace :app:assembleFossRelease 2>&1 | tee "$OUT/release.log"
+./gradlew --no-daemon --stacktrace :app:testFossDebugUnitTest :app:assembleFossRelease 2>&1 | tee "$OUT/release.log"
 rstatus=${PIPESTATUS[0]}
 REL="$(ls app/build/outputs/apk/foss/release/*.apk 2>/dev/null | head -n 1)"
 {
-  echo "Release-Build: $([ "$rstatus" -eq 0 ] && echo OK || echo FEHLGESCHLAGEN)"
+  echo "Unit-Tests und Release-Build: $([ "$rstatus" -eq 0 ] && echo OK || echo FEHLGESCHLAGEN)"
+  grep -E "tests completed|FAILED$|Test.*FAILED" "$OUT/release.log" | head -n 20
   if [ -n "$REL" ]; then
     echo "APK: $(basename "$REL") $(du -h "$REL" | cut -f1)"
     unzip -l "$REL" | grep -E "\.so$" | awk '{printf "%8.1f MB  %s\n", $1/1048576, $4}'

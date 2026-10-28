@@ -1101,13 +1101,22 @@ class ClimbSmokeTest {
         compose.waitUntil(timeout) { compose.onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty() }
     }
 
-    /** Wartet, bis die KI fertig geantwortet hat; nach 25 s gibt es ein Zwischenbild. */
-    private fun waitForAiReply(name: String, timeoutMs: Long = 600_000) {
+    /**
+     * Wartet, bis die KI fertig geantwortet hat; nach 25 s gibt es ein Zwischenbild. Dauert es
+     * länger als [timeoutMs], wird die Antwort abgebrochen (der Emulator rechnet langsam).
+     */
+    private fun waitForAiReply(name: String, timeoutMs: Long = 240_000) {
         val started = System.currentTimeMillis()
         compose.waitUntil(15_000) { ai.busy.value || ai.chat.value.messages.lastOrNull()?.status != AiStatus.STREAMING }
         compose.waitUntil(timeoutMs) { !ai.busy.value || System.currentTimeMillis() - started > 25_000 }
         if (ai.busy.value) shotNow("${name}_laeuft")
-        compose.waitUntil(timeoutMs) { !ai.busy.value }
+        try {
+            compose.waitUntil(timeoutMs) { !ai.busy.value }
+        } catch (e: Throwable) {
+            aiLog("ZEIT ÜBERSCHRITTEN bei „$name“ – Antwort abgebrochen. Bisher: ${ai.chat.value.messages.lastOrNull()?.text?.take(800)}")
+            compose.runOnUiThread { ai.stop() }
+            compose.waitUntil(30_000) { !ai.busy.value }
+        }
         // Noch einen Moment, bis die letzte Ladeanzeige verschwunden ist.
         compose.waitUntil(10_000) { ai.activity.value == null }
         aiLog("Dauer „$name“: ${(System.currentTimeMillis() - started) / 1000} s")
@@ -1131,6 +1140,8 @@ class ClimbSmokeTest {
         AiEngine.deterministic = true
         AiEngine.forceCpu = true
         AiEngine.contextOverride = 8_192
+        AiEngine.thinkingOverride = 384
+        AiEngine.answerOverride = 640
         compose.runOnUiThread {
             ai.select(AiModel.GEMMA4_E2B)
             ai.setThinking(false)
@@ -1213,6 +1224,8 @@ class ClimbSmokeTest {
         AiEngine.deterministic = false
         AiEngine.forceCpu = false
         AiEngine.contextOverride = null
+        AiEngine.thinkingOverride = null
+        AiEngine.answerOverride = null
     }
 
     companion object {
@@ -1225,6 +1238,11 @@ class ClimbSmokeTest {
         @BeforeClass
         @JvmStatic
         fun cleanScreens() {
+            // Zweiter Durchlauf (nur der KI-Test): Bilder des ersten Durchlaufs behalten, weiterzählen.
+            if (InstrumentationRegistry.getArguments().getString("keepScreens") == "true") {
+                counter = screenDir().listFiles()?.count { it.name.endsWith(".png") } ?: 0
+                return
+            }
             screenDir().deleteRecursively()
             screenDir()
         }

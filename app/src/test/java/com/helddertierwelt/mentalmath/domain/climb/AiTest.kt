@@ -651,6 +651,19 @@ class AiTest {
     }
 
     @Test
+    fun textAroundToolCallsGetsItsOwnParagraph() = runBlocking {
+        val session = ScriptedSession(
+            listOf(
+                listOf(LlmChunk.Text("Ich rechne nach."), LlmChunk.ToolCalls(listOf(LlmToolCall("calculate", """{"expression": "17 * 23"}""")))),
+                listOf(LlmChunk.Text("Das sind "), LlmChunk.Text("391.")),
+            ),
+        )
+        val text = AiAgent.answer(session, "17 mal 23?", thinking = false) { ctx() }.toList()
+            .filterIsInstance<AgentEvent.Text>().joinToString("") { it.text }
+        assertEquals("Ich rechne nach.\n\nDas sind 391.", text)
+    }
+
+    @Test
     fun agentStopsEndlessToolLoops() = runBlocking {
         val loop = List(10) { listOf<LlmChunk>(LlmChunk.ToolCalls(listOf(LlmToolCall("get_tmsnat_status", "{}")))) }
         val session = ScriptedSession(loop)

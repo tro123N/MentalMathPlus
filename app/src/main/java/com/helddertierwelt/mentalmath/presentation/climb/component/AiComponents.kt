@@ -359,7 +359,7 @@ fun AiThoughts(thought: String, thinkingNow: Boolean) {
             Icon(painter = painterResource(R.drawable.lightbulb_24dp), contentDescription = null, tint = yellow, modifier = Modifier.size(16.dp))
             Spacer(Modifier.width(6.dp))
             Text(
-                if (thinkingNow) "Denkt nach …" else "Gedanken",
+                if (thinkingNow) "Gedanken mitlesen" else "Gedanken",
                 fontSize = dimens.fonts.caption,
                 color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f),
                 modifier = Modifier.weight(1f),
