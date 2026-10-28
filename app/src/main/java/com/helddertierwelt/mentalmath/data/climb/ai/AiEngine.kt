@@ -65,6 +65,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -319,7 +320,8 @@ class AiEngine @Inject constructor(
         releaseJob?.cancel()
         releaseJob = scope.launch {
             delay(delayMs)
-            while (busy.get() > 0) delay(1_000)
+            // Läuft noch eine Antwort, kurz warten – aber nicht ewig (falls eine Antwort hängt).
+            withTimeoutOrNull(120_000) { while (busy.get() > 0) delay(1_000) }
             release()
         }
     }

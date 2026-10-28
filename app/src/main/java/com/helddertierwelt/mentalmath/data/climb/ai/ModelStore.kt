@@ -107,10 +107,10 @@ class ModelStore @Inject constructor(
         return info.totalMem
     }
 
-    /** Arbeitsspeicher in GB, wie ihn der Hersteller angibt (z. B. 15,2 → 16). */
+    /** Arbeitsspeicher in GB, wie ihn der Hersteller angibt (z. B. 15,2 GiB nutzbar → 16). */
     fun deviceRamGb(): Int {
-        val gb = deviceRamBytes() / 1e9
-        return listOf(2, 3, 4, 6, 8, 12, 16, 18, 24, 32).firstOrNull { gb <= it * 1.02 } ?: gb.toInt()
+        val gib = deviceRamBytes() / (1024.0 * 1024.0 * 1024.0)
+        return listOf(2, 3, 4, 6, 8, 12, 16, 18, 24, 32).firstOrNull { gib <= it * 1.02 } ?: gib.toInt()
     }
 
     /** Die KI braucht Android 12 oder neuer (ältere Geräte haben ohnehin zu wenig Speicher). */

@@ -42,6 +42,7 @@ write_summary() {
     echo "KI-Test: $ai_state"
     echo "Bilder: $(ls "$OUT/screens" | wc -l)"
     [ -f "$OUT/apk-info.txt" ] && cat "$OUT/apk-info.txt"
+    [ -f "$OUT/model-info.txt" ] && cat "$OUT/model-info.txt"
     echo
     echo "----- Tests ohne KI -----"
     tail -n 60 "$OUT/instrument.txt" 2>/dev/null

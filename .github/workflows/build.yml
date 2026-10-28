@@ -45,6 +45,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 130
     steps:
+      # Platz für Build, virtuelles Handy und KI-Modell (2,6 GB): vorinstallierte, hier
+      # nicht gebrauchte Werkzeuge entfernen (Android-SDK und Java bleiben).
+      - name: Speicher freimachen
+        run: |
+          df -h /
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/local/share/boost \
+            /usr/share/swift /usr/local/share/powershell /opt/hostedtoolcache/CodeQL \
+            /opt/hostedtoolcache/go /opt/hostedtoolcache/PyPy /opt/hostedtoolcache/Ruby || true
+          df -h /
+
       - uses: actions/checkout@v6
 
       - uses: actions/setup-java@v5

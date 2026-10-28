@@ -15,3 +15,7 @@
 # Gson wird von LiteRT-LM für JSON genutzt.
 -keep class com.google.gson.** { *; }
 -dontwarn com.google.gson.**
+
+# Jetpack WindowManager (kommt über Bibliotheken mit): optionale Geräte-Erweiterungen fehlen absichtlich.
+-dontwarn androidx.window.extensions.**
+-dontwarn androidx.window.sidecar.**

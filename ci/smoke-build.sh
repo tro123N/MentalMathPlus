@@ -44,6 +44,9 @@ REL="$(ls app/build/outputs/apk/foss/release/*.apk 2>/dev/null | head -n 1)"
 cat "$OUT/apk-info.txt"
 rm -f "$OUT/release.log"
 
+# Platz schaffen: Für den Test werden nur die fertigen APKs gebraucht.
+rm -rf app/build/intermediates app/build/tmp app/build/kotlin app/build/generated build/ 2>/dev/null || true
+
 # KI-Test: das kleine Gemma-4-Modell (E2B, 2,6 GB) für das virtuelle Handy laden und prüfen.
 # Klappt der Download nicht, läuft der Test ohne KI-Gespräch weiter.
 MODEL_DIR=smoke-model
@@ -52,16 +55,18 @@ MODEL_URL="https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/reso
 MODEL_SHA=181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c
 rm -rf "$MODEL_DIR"
 mkdir -p "$MODEL_DIR"
-df -h . | tail -n 1
-if curl -L --fail --retry 3 --retry-delay 10 -sS -o "$MODEL_DIR/$MODEL_FILE" "$MODEL_URL"; then
-  if echo "$MODEL_SHA  $MODEL_DIR/$MODEL_FILE" | sha256sum -c --status; then
-    echo "KI-Modell geladen: $(du -h "$MODEL_DIR/$MODEL_FILE" | cut -f1)"
+{
+  echo "Speicher vorher: $(df -h . | tail -n 1)"
+  if curl -L --fail --retry 3 --retry-delay 10 -sS -o "$MODEL_DIR/$MODEL_FILE" "$MODEL_URL" 2>&1; then
+    if echo "$MODEL_SHA  $MODEL_DIR/$MODEL_FILE" | sha256sum -c --status; then
+      echo "KI-Modell geladen: $(du -h "$MODEL_DIR/$MODEL_FILE" | cut -f1)"
+    else
+      echo "KI-Modell: Prüfsumme falsch ($(du -h "$MODEL_DIR/$MODEL_FILE" | cut -f1)) – ohne Modell weiter."
+      rm -f "$MODEL_DIR/$MODEL_FILE"
+    fi
   else
-    echo "KI-Modell: Prüfsumme falsch – ohne Modell weiter."
+    echo "KI-Modell konnte nicht geladen werden (curl $?) – ohne Modell weiter."
     rm -f "$MODEL_DIR/$MODEL_FILE"
   fi
-else
-  echo "KI-Modell konnte nicht geladen werden – ohne Modell weiter."
-  rm -f "$MODEL_DIR/$MODEL_FILE"
-fi
-df -h . | tail -n 1
+  echo "Speicher nachher: $(df -h . | tail -n 1)"
+} 2>&1 | tee "$OUT/model-info.txt"
