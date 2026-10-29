@@ -1,0 +1,6 @@
+Aufspielen, Versuch 1: Status 124 nach 2400 s
+KI-Modell aufgespielt: nein
+total 1224712
+-rw-r--r-- 1 shell ext_data_rw 1254096896 2026-10-29 00:12 gemma-4-E2B-it.litertlm
+Filesystem       Size Used Avail Use% Mounted on
+/dev/block/dm-40 7.7G 2.1G  5.4G  29% /data/user/0

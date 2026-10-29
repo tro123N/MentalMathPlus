@@ -1,0 +1,35 @@
+commit: 9b732d0ea94e0cc5a197721cfba2465707ea5197
+run: 45
+shots: w8.shopping,w13.mix,w13.prob,w13.mixed
+Ergebnis: OK
+KI-Test: übersprungen (kein Modell)
+Bilder: 148
+Unit-Tests und Release-Build: OK
+APK: app-foss-release-unsigned.apk 28M
+     0.0 MB  lib/arm64-v8a/libandroidx.graphics.path.so
+     0.0 MB  lib/arm64-v8a/libdatastore_shared_counter.so
+    21.1 MB  lib/arm64-v8a/liblitertlm_jni.so
+     0.0 MB  lib/armeabi-v7a/libandroidx.graphics.path.so
+     0.0 MB  lib/armeabi-v7a/libdatastore_shared_counter.so
+Speicher vorher: /dev/root       145G   43G  103G  30% /
+KI-Modell geladen: 2.5G
+Speicher nachher: /dev/root       145G   45G  100G  31% /
+Aufspielen, Versuch 1: Status 124 nach 2400 s
+KI-Modell aufgespielt: nein
+total 1224712
+-rw-r--r-- 1 shell ext_data_rw 1254096896 2026-10-29 00:12 gemma-4-E2B-it.litertlm
+Filesystem       Size Used Avail Use% Mounted on
+/dev/block/dm-40 7.7G 2.1G  5.4G  29% /data/user/0
+
+----- Tests ohne KI -----
+
+com.helddertierwelt.mentalmath.ClimbSmokeTest:.s_glBindAttribLocation: bind attrib 0 name position
+s_glBindAttribLocation: bind attrib 1 name color
+s_glBindAttribLocation: bind attrib 2 name localCoord
+...........
+
+Time: 620.11
+
+OK (12 tests)
+
+

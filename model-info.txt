@@ -1,0 +1,3 @@
+Speicher vorher: /dev/root       145G   43G  103G  30% /
+KI-Modell geladen: 2.5G
+Speicher nachher: /dev/root       145G   45G  100G  31% /
