@@ -53,7 +53,7 @@ Die App hat drei getrennte Bereiche (Leiste unten):
 - Er **greift in die App ein**, aber nur auf Knopfdruck: Er bereitet Übungen, Testsimulationen, das Fehlertraining, ähnliche Aufgaben, Levels und Einstellungen (z. B. die tägliche Erinnerung) vor; die Person startet sie selbst.
 - Jede Rechnung prüft die KI mit einem eingebauten **exakten Rechner** (Bruchrechnung statt Rundungsfehler).
 - **Denkmodus** („Gründlich“) für schwierige Fragen, umschaltbar auf „Schnell“.
-- Modelle: **Gemma 4 E4B** (empfohlen, 3,7 GB), **Gemma 4 12B** (Experiment, am klügsten, 6,9 GB, für Handys mit 16 GB Arbeitsspeicher) und **Gemma 4 E2B** (klein und schnell, 2,6 GB). Lizenz der Modelle: Apache 2.0. Braucht Android 12 oder neuer.
+- Modelle: **Gemma 4 E4B** (empfohlen, 3,7 GB), **Gemma 4 12B** (Experiment, am klügsten, 6,9 GB, eigentlich für Computer – stürzt es auf der Grafikeinheit ab, nimmt die App danach den Prozessor) und **Gemma 4 E2B** (klein und schnell, 2,6 GB). Lizenz der Modelle: Apache 2.0. Braucht Android 12 oder neuer.
 - Einstieg: ✨ oben auf der Startseite, im TMSnat-Training, nach einem Fehler beim Üben („KI-Coach fragen“) und in der Aufgabenliste jedes Ergebnisses.
 
 ### 3. Klassischer Modus – die Original-App (fährt neben „Freies Training“ heraus)
