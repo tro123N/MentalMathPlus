@@ -46,6 +46,7 @@ Die App hat drei getrennte Bereiche (Leiste unten):
 - **Fehlertraining:** Falsch gelöste Aufgabentypen kommen mit neuen Zahlen wieder – sofort, dann nach 1, 3 und 7 Tagen.
 - **Gemischt üben** ohne Ende: nach einem Fehler erscheint sofort der Lösungsweg.
 - Countdown bis zum ersten TMSnat; jede Kategorie ist auch ein Level (Welt 13) mit Erklärung, geführtem Üben und Prüfung.
+- **Einheiten umrechnen** (ab Version 2.2, auch als Aufgabenart im freien Training und als Welt 14): Vorsilben und Zehnerpotenzen (Tera bis Piko), Länge, Masse, Volumen und Liter, Fläche, Zeit und Uhrzeit, Geschwindigkeit (km/h ↔ m/s), Konzentration (mg/ml, g/l, mmol/l, Prozentlösungen, Tropfen, Dichte), Physik (Druck, Energie, Leistung, Strom, Spannung, Frequenz, Stoffmenge, Temperatur) und wissenschaftliche Schreibweise – unbegrenzt viele Aufgaben, jeder Bereich mit Erklärung und Lösungsweg, nach Fehlern mit Hinweis auf den typischen Fehler.
 
 ### KI-Coach – eine KI direkt auf dem Handy (ab Version 2.1)
 - Ein Sprachmodell von Google (**Gemma 4**) läuft komplett auf dem Handy, über [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM): **ohne Internet, kostenlos, Gespräche und Lernstand bleiben auf dem Gerät.** Das Modell wird einmal heruntergeladen.
