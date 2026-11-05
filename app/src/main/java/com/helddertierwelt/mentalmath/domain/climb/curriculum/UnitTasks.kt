@@ -289,7 +289,7 @@ object UnitTasks {
             return decimalProblem(
                 skillId,
                 "${dim.id}:${plain(v)}${from.symbol}>${to.symbol}",
-                Prompt("${d(v)} ${from.symbol} = ? ${to.symbol}", caption = dim.caption, unit = to.symbol),
+                Prompt("${d(v)} ${from.symbol} = ? ${to.symbol}", caption = dim.caption),
                 res,
                 steps,
                 if (dim.power > 1) "Längenfaktor hoch ${dim.power}" else "Faktor zwischen den Einheiten",
@@ -316,7 +316,7 @@ object UnitTasks {
             return decimalProblem(
                 skillId,
                 "${dim.id}:sum:${plain(a)}${big.symbol}+${plain(b)}${small.symbol}",
-                Prompt("${d(a)} ${big.symbol} + ${d(b)} ${small.symbol} = ? ${small.symbol}", caption = dim.caption, unit = small.symbol),
+                Prompt("${d(a)} ${big.symbol} + ${d(b)} ${small.symbol} = ? ${small.symbol}", caption = dim.caption),
                 res,
                 listOf(
                     factorStep(a, ratio, big.symbol, small.symbol),
@@ -404,7 +404,7 @@ object UnitTasks {
             return decimalProblem(
                 skillId,
                 "prefix:${plain(v)}$from>$to",
-                Prompt("${d(v)} $from = ? $to", caption = "Vorsilben umrechnen", unit = to),
+                Prompt("${d(v)} $from = ? $to", caption = "Vorsilben umrechnen"),
                 res,
                 listOf(
                     s(distLabel, bd(dist.toLong()), "${name(a)}, ${name(b)}: Die Exponenten liegen $dist auseinander."),
@@ -429,7 +429,7 @@ object UnitTasks {
                 val hours = bd(r.betweenL(den + 1, den * 8)).divide(bd(den)).stripTrailingZeros()
                 val min = hours.multiply(bd(60)).stripTrailingZeros()
                 decimalProblem(
-                    skillId, "time:${plain(hours)}h>min", Prompt("${d(hours)} h = ? min", caption = caption, unit = "min"), min,
+                    skillId, "time:${plain(hours)}h>min", Prompt("${d(hours)} h = ? min", caption = caption), min,
                     listOf(s("${d(hours)} $X 60", min, "1 h = 60 min – die Nachkommastellen sind Teile einer Stunde, keine Minuten.")),
                     "Stunden mal 60",
                     listOf(mistake(hours.multiply(bd(100)), "Mit 100 statt 60 gerechnet: ${d(hours)} h sind nicht ${d(hours.multiply(bd(100)))} min.")),
@@ -441,7 +441,7 @@ object UnitTasks {
                 val min = hours.multiply(bd(60)).stripTrailingZeros()
                 val wrong = min.divide(bd(100))
                 decimalProblem(
-                    skillId, "time:${plain(min)}min>h", Prompt("${d(min)} min = ? h", caption = caption, unit = "h"), hours,
+                    skillId, "time:${plain(min)}min>h", Prompt("${d(min)} min = ? h", caption = caption), hours,
                     listOf(s("${d(min)} $DIV 60", hours, "60 min = 1 h, also durch 60 teilen.")),
                     "Minuten durch 60",
                     listOf(mistake(wrong, "Durch 100 statt durch 60 geteilt – eine Stunde hat 60 Minuten.")),
@@ -452,7 +452,7 @@ object UnitTasks {
                 val h = r.between(1, 9).toLong()
                 val m = r.between(1, 59).toLong()
                 decimalProblem(
-                    skillId, "time:${h}h${m}min", Prompt("$h h $m min = ? min", caption = caption, unit = "min"), bd(h * 60 + m),
+                    skillId, "time:${h}h${m}min", Prompt("$h h $m min = ? min", caption = caption), bd(h * 60 + m),
                     listOf(s("$h $X 60", bd(h * 60), "Die Stunden in Minuten umrechnen."), s("${n(h * 60)} + $m", bd(h * 60 + m), "Die Minuten dazuzählen.")),
                     "Stunden mal 60, Minuten dazu",
                     listOf(mistake(bd(h * 100 + m), "Mit 100 Minuten pro Stunde gerechnet.")),
@@ -465,14 +465,14 @@ object UnitTasks {
                 val sec = min.multiply(bd(60)).stripTrailingZeros()
                 if (r.nextBoolean()) {
                     decimalProblem(
-                        skillId, "time:${plain(hours)}h>s", Prompt("${d(hours)} h = ? s", caption = caption, unit = "s"), sec,
+                        skillId, "time:${plain(hours)}h>s", Prompt("${d(hours)} h = ? s", caption = caption), sec,
                         listOf(s("${d(hours)} $X 60", min, "Erst in Minuten …"), s("${d(min)} $X 60", sec, "… dann in Sekunden: 1 h = 3.600 s.")),
                         "Zweimal mal 60",
                         listOf(mistake(min, "Nur einmal mit 60 malgenommen – das sind erst die Minuten.")),
                     )
                 } else {
                     decimalProblem(
-                        skillId, "time:${plain(sec)}s>h", Prompt("${d(sec)} s = ? h", caption = caption, unit = "h"), hours,
+                        skillId, "time:${plain(sec)}s>h", Prompt("${d(sec)} s = ? h", caption = caption), hours,
                         listOf(s("${d(sec)} $DIV 60", min, "Erst in Minuten …"), s("${d(min)} $DIV 60", hours, "… dann in Stunden: 3.600 s = 1 h.")),
                         "Zweimal durch 60",
                         listOf(mistake(min, "Nur einmal durch 60 geteilt – das sind erst die Minuten.")),
@@ -486,12 +486,12 @@ object UnitTasks {
                 if (hours.scale() > 0 || r.nextBoolean()) {
                     val d0 = bd(r.between(1, 14).toLong())
                     decimalProblem(
-                        skillId, "time:${plain(d0)}d>h", Prompt("${d(d0)} d = ? h", caption = caption, unit = "h"), d0.multiply(bd(24)),
+                        skillId, "time:${plain(d0)}d>h", Prompt("${d(d0)} d = ? h", caption = caption), d0.multiply(bd(24)),
                         listOf(s("${d(d0)} $X 24", d0.multiply(bd(24)), "1 Tag (d) = 24 h.")), "Tage mal 24",
                     )
                 } else {
                     decimalProblem(
-                        skillId, "time:${plain(hours)}h>d", Prompt("${d(hours)} h = ? d", caption = caption, unit = "d"), days,
+                        skillId, "time:${plain(hours)}h>d", Prompt("${d(hours)} h = ? d", caption = caption), days,
                         listOf(s("${d(hours)} $DIV 24", days, "24 h = 1 Tag (d).")), "Stunden durch 24",
                     )
                 }
@@ -509,7 +509,7 @@ object UnitTasks {
                 if (full > 0) steps += s("$full $X 60", bd(full * 60L), "Volle Stunden von ${h1 + 1}:00 bis $h2:00.")
                 steps += s(listOfNotNull("$toFull", if (full > 0) n(full * 60L) else null, "$m2").joinToString(" + "), bd(total.toLong()), "Alles zusammenzählen.")
                 decimalProblem(
-                    skillId, "time:span:$h1:$m1-$h2:$m2", Prompt("$h1:${"%02d".format(m1)} bis $h2:${"%02d".format(m2)} = ? min", caption = "Zeitspanne in Minuten", unit = "min"),
+                    skillId, "time:span:$h1:$m1-$h2:$m2", Prompt("$h1:${"%02d".format(m1)} bis $h2:${"%02d".format(m2)} = ? min", caption = "Zeitspanne in Minuten"),
                     bd(total.toLong()), steps, "Bis zur vollen Stunde, dann weiter",
                     listOf(mistake(bd(((h2 * 100 + m2) - (h1 * 100 + m1)).toLong()), "Uhrzeiten wie Dezimalzahlen abgezogen – eine Stunde hat aber nur 60 Minuten.")),
                 )
@@ -528,7 +528,7 @@ object UnitTasks {
                 val ms = dec(r.between(2, 120).toLong() * 5, 1).stripTrailingZeros()
                 val kmh = ms.multiply(BigDecimal("3.6")).stripTrailingZeros()
                 decimalProblem(
-                    skillId, "speed:${plain(kmh)}kmh>ms", Prompt("${d(kmh)} km/h = ? m/s", caption = caption, unit = "m/s"), ms,
+                    skillId, "speed:${plain(kmh)}kmh>ms", Prompt("${d(kmh)} km/h = ? m/s", caption = caption), ms,
                     listOf(s("${d(kmh)} $DIV 3,6", ms, "1 m/s = 3,6 km/h (3.600 s pro Stunde, 1.000 m pro km). Also durch 3,6.")),
                     "Durch 3,6",
                     listOf(mistake(kmh.multiply(BigDecimal("3.6")), "Falsche Richtung: m/s sind die größere Einheit, die Zahl muss kleiner werden.")),
@@ -538,7 +538,7 @@ object UnitTasks {
                 val ms = dec(r.between(2, 160).toLong() * 5, 1).stripTrailingZeros()
                 val kmh = ms.multiply(BigDecimal("3.6")).stripTrailingZeros()
                 decimalProblem(
-                    skillId, "speed:${plain(ms)}ms>kmh", Prompt("${d(ms)} m/s = ? km/h", caption = caption, unit = "km/h"), kmh,
+                    skillId, "speed:${plain(ms)}ms>kmh", Prompt("${d(ms)} m/s = ? km/h", caption = caption), kmh,
                     listOf(s("${d(ms)} $X 3,6", kmh, "1 m/s = 3,6 km/h – also mal 3,6.")),
                     "Mal 3,6",
                     listOf(mistake(ms.divide(BigDecimal("3.6"), MathContext.DECIMAL128), "Falsche Richtung: In km/h wird die Zahl größer.")),
@@ -550,7 +550,7 @@ object UnitTasks {
                 val mmin = kmh.multiply(bd(1000)).divide(bd(60)).stripTrailingZeros()
                 val perHour = mmin.multiply(bd(60))
                 decimalProblem(
-                    skillId, "speed:${plain(mmin)}mmin>kmh", Prompt("${d(mmin)} m/min = ? km/h", caption = caption, unit = "km/h"), kmh,
+                    skillId, "speed:${plain(mmin)}mmin>kmh", Prompt("${d(mmin)} m/min = ? km/h", caption = caption), kmh,
                     listOf(s("${d(mmin)} $X 60", perHour, "Meter pro Stunde: mal 60."), s("${d(perHour)} $DIV 1.000", kmh, "In Kilometer: durch 1.000.")),
                     "Mal 60, durch 1.000",
                 )
@@ -564,7 +564,7 @@ object UnitTasks {
                 if (km.scale() > 2 || perMin.scale() > 3) return convert(skillId, LENGTH, r)
                 decimalProblem(
                     skillId, "speed:${plain(kmh)}kmh*${min}min",
-                    Prompt("${d(kmh)} km/h für $min min = ? km", caption = "Weg aus Tempo und Minuten", unit = "km"), km,
+                    Prompt("${d(kmh)} km/h für $min min = ? km", caption = "Weg aus Tempo und Minuten"), km,
                     listOf(s("${d(kmh)} $DIV 60", perMin, "Kilometer pro Minute."), s("${d(perMin)} $X $min", km, "Mal die Minuten.")),
                     "Tempo pro Minute",
                     listOf(mistake(kmh.multiply(bd(min)), "Minuten nicht in Stunden umgerechnet: ${d(kmh)} km/h × $min wäre $min Stunden lang.")),
@@ -584,14 +584,14 @@ object UnitTasks {
             val mgml = pct.multiply(bd(10)).stripTrailingZeros()
             if (r.nextBoolean()) {
                 decimalProblem(
-                    skillId, "conc:${plain(pct)}%>mgml", Prompt("${d(pct)} % = ? mg/ml", caption = "Prozent: Gramm pro 100 ml", unit = "mg/ml"), mgml,
+                    skillId, "conc:${plain(pct)}%>mgml", Prompt("${d(pct)} % = ? mg/ml", caption = "Prozent: Gramm pro 100 ml"), mgml,
                     listOf(s("${d(pct)} $X 10", mgml, "1 % = 1 g in 100 ml = 1.000 mg in 100 ml = 10 mg/ml.")),
                     "1 % = 10 mg/ml",
                     listOf(mistake(pct.multiply(bd(1000)), "1 % heißt 1 g pro 100 ml – nicht pro ml.")),
                 )
             } else {
                 decimalProblem(
-                    skillId, "conc:${plain(mgml)}gl>%", Prompt("${d(mgml)} g/l = ? %", caption = "Prozent: Gramm pro 100 ml", unit = "%"), pct,
+                    skillId, "conc:${plain(mgml)}gl>%", Prompt("${d(mgml)} g/l = ? %", caption = "Prozent: Gramm pro 100 ml"), pct,
                     listOf(s("${d(mgml)} $DIV 10", pct, "1 % = 1 g pro 100 ml = 10 g pro Liter.")),
                     "10 g/l = 1 %",
                 )
@@ -604,7 +604,7 @@ object UnitTasks {
             val parts = bd(ml).divide(bd(100)).stripTrailingZeros()
             val g = pct.multiply(parts).stripTrailingZeros()
             decimalProblem(
-                skillId, "conc:${ml}ml*${plain(pct)}%", Prompt("${n(ml)} ml einer ${d(pct)}-%-Lösung: ? g Wirkstoff", caption = "Wirkstoff in Gramm", unit = "g"), g,
+                skillId, "conc:${ml}ml*${plain(pct)}%", Prompt("${n(ml)} ml einer ${d(pct)}-%-Lösung: ? g Wirkstoff", caption = "Wirkstoff in Gramm"), g,
                 listOf(s("${n(ml)} $DIV 100", parts, "So oft passen 100 ml hinein."), s("${d(pct)} $X ${d(parts)}", g, "In je 100 ml sind ${d(pct)} g.")),
                 "Prozent = Gramm pro 100 ml",
                 listOf(mistake(pct.multiply(bd(ml)), "Prozent als Gramm pro ml gerechnet – gemeint ist Gramm pro 100 ml.")),
@@ -616,12 +616,12 @@ object UnitTasks {
             val drops = ml.multiply(bd(20)).stripTrailingZeros()
             if (r.nextBoolean()) {
                 decimalProblem(
-                    skillId, "drops:${plain(drops)}>ml", Prompt("${d(drops)} Tropfen = ? ml", caption = "20 Tropfen = 1 ml", unit = "ml"), ml,
+                    skillId, "drops:${plain(drops)}>ml", Prompt("${d(drops)} Tropfen = ? ml", caption = "20 Tropfen = 1 ml"), ml,
                     listOf(s("${d(drops)} $DIV 20", ml, "20 Tropfen ergeben 1 ml.")), "Durch 20",
                 )
             } else {
                 decimalProblem(
-                    skillId, "drops:${plain(ml)}ml>drops", Prompt("${d(ml)} ml = ? Tropfen", caption = "20 Tropfen = 1 ml", unit = "Tropfen"), drops,
+                    skillId, "drops:${plain(ml)}ml>drops", Prompt("${d(ml)} ml = ? Tropfen", caption = "20 Tropfen = 1 ml"), drops,
                     listOf(s("${d(ml)} $X 20", drops, "Jeder Milliliter sind 20 Tropfen.")), "Mal 20",
                 )
             }
@@ -633,12 +633,12 @@ object UnitTasks {
             val g = rho.multiply(ml).stripTrailingZeros()
             if (r.nextBoolean()) {
                 decimalProblem(
-                    skillId, "density:${plain(rho)}*${plain(ml)}", Prompt("${d(ml)} ml bei ${d(rho)} g/ml = ? g", caption = "Dichte: Masse = Dichte × Volumen", unit = "g"), g,
+                    skillId, "density:${plain(rho)}*${plain(ml)}", Prompt("${d(ml)} ml bei ${d(rho)} g/ml = ? g", caption = "Dichte: Masse = Dichte × Volumen"), g,
                     listOf(s("${d(ml)} $X ${d(rho)}", g, "Jeder Milliliter wiegt ${d(rho)} g.")), "Masse = Dichte × Volumen",
                 )
             } else {
                 decimalProblem(
-                    skillId, "density:${plain(g)}/${plain(rho)}", Prompt("${d(g)} g bei ${d(rho)} g/ml = ? ml", caption = "Dichte: Volumen = Masse ÷ Dichte", unit = "ml"), ml,
+                    skillId, "density:${plain(g)}/${plain(rho)}", Prompt("${d(g)} g bei ${d(rho)} g/ml = ? ml", caption = "Dichte: Volumen = Masse ÷ Dichte"), ml,
                     listOf(s("${d(g)} $DIV ${d(rho)}", ml, "So viele Milliliter braucht es für ${d(g)} g.")), "Volumen = Masse ÷ Dichte",
                     listOf(mistake(g.multiply(rho), "Mit der Dichte malgenommen statt geteilt.")),
                 )
@@ -651,7 +651,7 @@ object UnitTasks {
             val g = pct.multiply(bd(ml)).divide(bd(100)).stripTrailingZeros()
             val per = g.divide(bd(ml), MathContext.DECIMAL128).stripTrailingZeros()
             decimalProblem(
-                skillId, "conc:${plain(g)}g/${ml}ml", Prompt("${d(g)} g in ${n(ml)} ml = ? %", caption = "Konzentration in Prozent", unit = "%"), pct,
+                skillId, "conc:${plain(g)}g/${ml}ml", Prompt("${d(g)} g in ${n(ml)} ml = ? %", caption = "Konzentration in Prozent"), pct,
                 listOf(s("${d(g)} $DIV ${n(ml)}", per, "Gramm pro Milliliter."), s("${d(per)} $X 100", pct, "Prozent = Gramm pro 100 ml.")),
                 "Gramm pro 100 ml",
             )
@@ -672,7 +672,7 @@ object UnitTasks {
                 val c = bd(r.between(0, 120).toLong())
                 val k = c + BigDecimal("273.15")
                 decimalProblem(
-                    skillId, "temp:${plain(c)}C>K", Prompt("${d(c)} °C = ? K", caption = "Temperatur umrechnen", unit = "K"), k,
+                    skillId, "temp:${plain(c)}C>K", Prompt("${d(c)} °C = ? K", caption = "Temperatur umrechnen"), k,
                     listOf(s("${d(c)} + 273,15", k, "Kelvin = Grad Celsius + 273,15.")), "Plus 273,15",
                     listOf(mistake(c + bd(273), "Mit 273 statt 273,15 gerechnet.")),
                 )
@@ -680,7 +680,7 @@ object UnitTasks {
                 val k = bd(r.between(274, 400).toLong())
                 val c = k - BigDecimal("273.15")
                 decimalProblem(
-                    skillId, "temp:${plain(k)}K>C", Prompt("${d(k)} K = ? °C", caption = "Temperatur umrechnen", unit = "°C"), c,
+                    skillId, "temp:${plain(k)}K>C", Prompt("${d(k)} K = ? °C", caption = "Temperatur umrechnen"), c,
                     listOf(s("${d(k)} $MINUS 273,15", c, "Grad Celsius = Kelvin − 273,15.")), "Minus 273,15",
                 )
             }
@@ -690,7 +690,7 @@ object UnitTasks {
             val kwh = dec(r.between(1, 40).toLong() * 5, 1).stripTrailingZeros()
             val mj = kwh.multiply(BigDecimal("3.6")).stripTrailingZeros()
             decimalProblem(
-                skillId, "energy:${plain(kwh)}kWh>MJ", Prompt("${d(kwh)} kWh = ? MJ", caption = "Energie umrechnen", unit = "MJ"), mj,
+                skillId, "energy:${plain(kwh)}kWh>MJ", Prompt("${d(kwh)} kWh = ? MJ", caption = "Energie umrechnen"), mj,
                 listOf(s("${d(kwh)} $X 3,6", mj, "1 kWh = 1.000 W × 3.600 s = 3.600.000 J = 3,6 MJ.")), "1 kWh = 3,6 MJ",
             )
         }
@@ -702,7 +702,7 @@ object UnitTasks {
             val h = bd(min).divide(bd(60)).stripTrailingZeros()
             val kwh = kw.multiply(h).stripTrailingZeros()
             decimalProblem(
-                skillId, "energy:${w}W*${min}min", Prompt("${n(w)} W für $min min = ? kWh", caption = "Energie = Leistung × Zeit", unit = "kWh"), kwh,
+                skillId, "energy:${w}W*${min}min", Prompt("${n(w)} W für $min min = ? kWh", caption = "Energie = Leistung × Zeit"), kwh,
                 listOf(
                     s("${n(w)} $DIV 1.000", kw, "Watt in Kilowatt."),
                     s("$min $DIV 60", h, "Minuten in Stunden."),
@@ -717,7 +717,7 @@ object UnitTasks {
             val kcal = bd(r.pick(listOf(10L, 20L, 50L, 100L, 150L, 200L, 250L, 500L)))
             val kj = kcal.multiply(BigDecimal("4.184")).stripTrailingZeros()
             decimalProblem(
-                skillId, "energy:${plain(kcal)}kcal>kJ", Prompt("${d(kcal)} kcal = ? kJ", caption = "1 kcal = 4,184 kJ", unit = "kJ"), kj,
+                skillId, "energy:${plain(kcal)}kcal>kJ", Prompt("${d(kcal)} kcal = ? kJ", caption = "1 kcal = 4,184 kJ"), kj,
                 listOf(s("${d(kcal)} $X 4,184", kj, "Eine Kilokalorie sind 4,184 Kilojoule.")), "Mal 4,184",
             )
         }

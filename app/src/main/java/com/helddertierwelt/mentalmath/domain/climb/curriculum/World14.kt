@@ -210,7 +210,7 @@ object World14 {
                 "Malnehmen: Zahlen malnehmen, Exponenten addieren. Teilen: Zahlen teilen, Exponenten abziehen.",
                 "Ist die Zahl danach 10 oder größer: eine Stelle in den Exponenten schieben (20 · 10⁸ = 2 · 10⁹).",
             ),
-            listOf("10³ · 10⁻⁵ = 10⁻² · 10⁶ ÷ 10² = 10⁴ · (3 · 10⁴) · (2 · 10⁻⁶) = 6 · 10⁻²"),
+            listOf("10³ · 10⁻⁵ = 10⁻²", "10⁶ ÷ 10² = 10⁴", "(3 · 10⁴) · (2 · 10⁻⁶) = 6 · 10⁻²"),
             "Vorsicht mit Minuszeichen: 10⁶ ÷ 10⁻² = 10⁸, denn 6 − (−2) = 8.",
             medium, 1410,
         ) { id, r -> UnitTasks.scientific(id, r) },
