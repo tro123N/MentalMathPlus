@@ -59,6 +59,7 @@ import androidx.navigation.NavController
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.climb.curriculum.ApCategory
 import com.helddertierwelt.mentalmath.domain.climb.curriculum.ApTasks
+import com.helddertierwelt.mentalmath.domain.climb.curriculum.World14
 import com.helddertierwelt.mentalmath.domain.climb.engine.ApForecast
 import com.helddertierwelt.mentalmath.domain.climb.engine.Progression
 import com.helddertierwelt.mentalmath.domain.climb.engine.Stats
@@ -305,6 +306,65 @@ fun ApTrainingScreen(navController: NavController) {
                     checked = plus.adaptive,
                     onCheckedChange = { viewModel.setAdaptive(it) },
                 )
+            }
+            CardGap()
+
+            ClimbCard(modifier = Modifier.testTag("apUnits")) {
+                CardTitle("Einheiten umrechnen")
+                CaptionText("Vorsilben und Zehnerpotenzen, Länge, Masse, Volumen, Fläche, Zeit, Tempo, Konzentration, Physik – unbegrenzt viele Aufgaben, nach Fehlern mit Lösungsweg.")
+                Spacer(Modifier.height(8.dp))
+                ActionButton(
+                    text = "Alle Einheiten üben",
+                    subtitle = "Ohne Ende und gemischt – die Schwierigkeit passt sich an, wenn eingeschaltet",
+                    icon = R.drawable.play_arrow_24dp,
+                    iconTint = green,
+                    onClick = { play(viewModel.startUnitsPractice()) },
+                    modifier = Modifier.testTag("apUnitsButton"),
+                )
+                Spacer(Modifier.height(6.dp))
+                CaptionText("Oder ein Bereich: Antippen öffnet das Level mit Erklärung, ▶ übt ihn ohne Ende.")
+                World14.skillIds.forEach { id ->
+                    val skill = viewModel.skill(id) ?: return@forEach
+                    val sp = progress.of(id)
+                    val form = Stats.form(skill, sp)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(dimens.components.cornerRadius))
+                            .clickable { openLevel(id) }
+                            .testTag("apUnit_$id")
+                            .padding(vertical = 5.dp),
+                    ) {
+                        Column(Modifier.weight(1f)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(skill.title, fontSize = dimens.fonts.sideSheetEntry, color = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.weight(1f))
+                                StarRow(stars = sp.stars, size = dimens.icons.problemStatus * 0.6f)
+                            }
+                            if (form != null) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    ShareBar(form.score / 100f, formColor(form.score), modifier = Modifier.weight(1f))
+                                    Spacer(Modifier.width(10.dp))
+                                    CaptionText("Sicherheit ${form.score}")
+                                }
+                            } else {
+                                CaptionText(if (sp.practiced > 0) "Noch zu wenig Ergebnisse" else skill.summary)
+                            }
+                        }
+                        Spacer(Modifier.width(6.dp))
+                        Icon(
+                            painter = painterResource(R.drawable.play_arrow_24dp),
+                            contentDescription = "${skill.title} ohne Ende üben",
+                            tint = green,
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(RoundedCornerShape(20.dp))
+                                .clickable { play(viewModel.startUnitsPractice(id)) }
+                                .padding(8.dp)
+                                .testTag("apUnitPlay_$id"),
+                        )
+                    }
+                }
             }
             CardGap()
 

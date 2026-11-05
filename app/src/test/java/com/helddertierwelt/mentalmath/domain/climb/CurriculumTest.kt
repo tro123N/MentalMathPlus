@@ -123,10 +123,99 @@ class CurriculumTest {
         return evaluateExpression(label)
     }
 
+    // --- Einheiten (Welt 14): eigene, unabhängige Tabelle zum Nachrechnen -----------------------
+
+    /** Ein Faktor als Bruch, damit z. B. km/h → m/s exakt bleibt. */
+    private data class Factor(val dim: String, val num: BigDecimal, val den: BigDecimal = BigDecimal.ONE)
+
+    private val plainUnits: Map<String, Factor> = buildMap {
+        fun put(dim: String, vararg pairs: Pair<String, String>) = pairs.forEach { (k, v) -> put(k, Factor(dim, BigDecimal(v))) }
+        put("L", "km" to "1000", "m" to "1", "dm" to "0.1", "cm" to "0.01", "mm" to "0.001", "µm" to "1e-6", "nm" to "1e-9")
+        put("M", "t" to "1e6", "kg" to "1000", "g" to "1", "mg" to "0.001", "µg" to "1e-6", "ng" to "1e-9")
+        put("V", "m³" to "1000", "hl" to "100", "l" to "1", "dm³" to "1", "dl" to "0.1", "cl" to "0.01", "ml" to "0.001", "cm³" to "0.001", "mm³" to "1e-6", "µl" to "1e-6", "Tropfen" to "0.00005")
+        put("A", "km²" to "1e6", "ha" to "1e4", "a" to "100", "m²" to "1", "dm²" to "0.01", "cm²" to "1e-4", "mm²" to "1e-6")
+        put("T", "d" to "86400", "h" to "3600", "min" to "60", "s" to "1", "ms" to "0.001", "µs" to "1e-6")
+        put("E", "kcal" to "4184")
+        put("C", "%" to "10")
+    }
+    private val prefixExp = mapOf("T" to 12, "G" to 9, "M" to 6, "k" to 3, "h" to 2, "" to 0, "d" to -1, "c" to -2, "m" to -3, "µ" to -6, "n" to -9, "p" to -12)
+    private val baseUnits = listOf("mol" to ("N" to "1"), "bar" to ("P" to "100000"), "Wh" to ("E" to "3600"), "Hz" to ("F" to "1"), "Pa" to ("P" to "1"), "W" to ("W" to "1"), "J" to ("E" to "1"), "A" to ("I" to "1"), "V" to ("U" to "1"))
+
+    private fun factor(symbol: String): Factor? {
+        if (symbol.contains('/')) {
+            val (a, b) = symbol.split('/', limit = 2)
+            val fa = factor(a) ?: return null
+            val fb = factor(b) ?: return null
+            return Factor("${fa.dim}/${fb.dim}", fa.num * fb.den, fa.den * fb.num)
+        }
+        plainUnits[symbol]?.let { return if (it.dim == "C") Factor("M/V", it.num) else it }
+        for ((base, info) in baseUnits) {
+            if (!symbol.endsWith(base)) continue
+            val e = prefixExp[symbol.removeSuffix(base)] ?: continue
+            return Factor(info.first, BigDecimal(info.second).scaleByPowerOfTen(e))
+        }
+        return null
+    }
+
+    /** Wert von [v] in [from], ausgedrückt in [to]; null, wenn die Einheiten nicht zusammenpassen. */
+    private fun convertUnits(v: BigDecimal, from: String, to: String): BigDecimal? {
+        val f = factor(from) ?: return null
+        val t = factor(to) ?: return null
+        if (f.dim != t.dim) return null
+        return (v * f.num * t.den).divide(f.den * t.num, MathContext.DECIMAL128).stripTrailingZeros()
+    }
+
+    private val superDigits = "⁰¹²³⁴⁵⁶⁷⁸⁹"
+
+    private fun unitPrompt(text: String): BigDecimal? {
+        val u = "([^ ]+|Tropfen)"
+        Regex("^($numberPattern) $u = \\? $u$").matchEntire(text)?.let { m ->
+            val v = num(m.groupValues[1]) ?: return null
+            if (m.groupValues[2] == "°C" && m.groupValues[3] == "K") return v + BigDecimal("273.15")
+            if (m.groupValues[2] == "K" && m.groupValues[3] == "°C") return v - BigDecimal("273.15")
+            return convertUnits(v, m.groupValues[2], m.groupValues[3])
+        }
+        Regex("^($numberPattern) $u \\+ ($numberPattern) $u = \\? $u$").matchEntire(text)?.let { m ->
+            val a = convertUnits(num(m.groupValues[1])!!, m.groupValues[2], m.groupValues[5]) ?: return null
+            val b = convertUnits(num(m.groupValues[3])!!, m.groupValues[4], m.groupValues[5]) ?: return null
+            return a + b
+        }
+        Regex("^([0-9]+) h ([0-9]+) min = \\? min$").matchEntire(text)?.let { m ->
+            return BigDecimal(m.groupValues[1].toLong() * 60 + m.groupValues[2].toLong())
+        }
+        Regex("^([0-9]+):([0-9]{2}) bis ([0-9]+):([0-9]{2}) = \\? min$").matchEntire(text)?.let { m ->
+            val (h1, m1, h2, m2) = m.groupValues.drop(1).map { it.toLong() }
+            return BigDecimal((h2 * 60 + m2) - (h1 * 60 + m1))
+        }
+        Regex("^($numberPattern) · 10(⁻?[⁰¹²³⁴⁵⁶⁷⁸⁹]+)$").matchEntire(text)?.let { m ->
+            val sup = m.groupValues[2]
+            val e = sup.filter { it != '⁻' }.map { superDigits.indexOf(it) }.joinToString("").toInt() * (if (sup.startsWith('⁻')) -1 else 1)
+            return num(m.groupValues[1])!!.scaleByPowerOfTen(e).stripTrailingZeros()
+        }
+        Regex("^($numberPattern) ml einer ($numberPattern)-%-Lösung: \\? g Wirkstoff$").matchEntire(text)?.let { m ->
+            return (num(m.groupValues[2])!! * num(m.groupValues[1])!!).divide(BigDecimal(100))
+        }
+        Regex("^($numberPattern) ml bei ($numberPattern) g/ml = \\? g$").matchEntire(text)?.let { m -> return num(m.groupValues[1])!! * num(m.groupValues[2])!! }
+        Regex("^($numberPattern) g bei ($numberPattern) g/ml = \\? ml$").matchEntire(text)?.let { m ->
+            return num(m.groupValues[1])!!.divide(num(m.groupValues[2])!!, MathContext.DECIMAL128)
+        }
+        Regex("^($numberPattern) g in ($numberPattern) ml = \\? %$").matchEntire(text)?.let { m ->
+            return (num(m.groupValues[1])!! * BigDecimal(100)).divide(num(m.groupValues[2])!!, MathContext.DECIMAL128)
+        }
+        Regex("^($numberPattern) km/h für ($numberPattern) min = \\? km$").matchEntire(text)?.let { m ->
+            return (num(m.groupValues[1])!! * num(m.groupValues[2])!!).divide(BigDecimal(60), MathContext.DECIMAL128)
+        }
+        Regex("^($numberPattern) W für ($numberPattern) min = \\? kWh$").matchEntire(text)?.let { m ->
+            return (num(m.groupValues[1])!! * num(m.groupValues[2])!!).divide(BigDecimal(60_000), MathContext.DECIMAL128)
+        }
+        return null
+    }
+
     /** Wert, den die Aufgabenstellung selbst ergibt (für bekannte Formen). */
     private fun evaluatePrompt(p: Problem): BigDecimal? {
         val text = p.prompt.text
         evaluate(text)?.let { return it }
+        unitPrompt(text)?.let { return it }
         Regex("^Das Doppelte von ($numberPattern)$").matchEntire(text)?.let { return num(it.groupValues[1])!! * BigDecimal(2) }
         Regex("^Die Hälfte von ($numberPattern)$").matchEntire(text)?.let { return num(it.groupValues[1])!!.divide(BigDecimal(2)) }
         Regex("^([0-9]+) % von ($numberPattern)$").matchEntire(text)?.let {

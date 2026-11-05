@@ -242,6 +242,33 @@ class ClimbViewModel @Inject constructor(
         return true
     }
 
+    /**
+     * Einheiten umrechnen ohne Ende (Welt 14): ein Level ([skillId]) oder alles gemischt, nach Fehlern
+     * mit Lösungsweg. Die Antworten zählen für die Levels von Welt 14.
+     */
+    fun startUnitsPractice(skillId: String? = null): Boolean {
+        val skill = skillId?.let { Curriculum.skill(it) }
+        val generator = { level: Int, count: Int ->
+            List(count) {
+                skill?.generate(random)
+                    ?: com.helddertierwelt.mentalmath.domain.climb.curriculum.UnitTasks.free("w14.mixed", level, random)
+            }
+        }
+        freeGenerator = generator
+        lastFreeStart = { startUnitsPractice(skillId) }
+        val adaptive = plusSettings.value.adaptive && skill == null
+        val start = 2
+        val title = skill?.title ?: "Einheiten umrechnen"
+        val session = SessionLogic.createFree(
+            generator(start, 400),
+            FreeRules(FreeMode.ENDLOS, 0, if (adaptive) 0 else start, FreeRules.TRACK_UNITS),
+            title,
+            null,
+        )
+        begin(if (adaptive) session.copy(adaptive = AdaptiveState(start)) else session)
+        return true
+    }
+
     /** Fällige Aufgabentypen im Fehlertraining. */
     fun apReviewDue(p: ClimbProgress): List<ApMistakeEntry> = ApReview.due(p, now())
 

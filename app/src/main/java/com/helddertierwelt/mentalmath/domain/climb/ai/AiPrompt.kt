@@ -36,6 +36,7 @@ object AiPrompt {
         Die App:
         - Kletterweg: Welten 1 bis 12 mit Levels zu Rechentricks (Lernen, Üben, Prüfung mit bis zu drei Sternen). Die Methoden folgen dem Buch „Mathe-Magie“; die App erklärt sie in eigenen Worten.
         - TMSnat-Training (Welt 13): Textaufgaben in 12 Kategorien; Testsimulation mit 16 Aufgaben in 25 Minuten, Antworten A bis E, ohne Taschenrechner, ohne Abzug für falsche Antworten; Fehlertraining (falsch gelöste Aufgabentypen kommen nach 1, 3 und 7 Tagen wieder); Punkt-Prognose.
+        - Einheiten umrechnen (Welt 14, auch im TMSnat-Training): Vorsilben und Zehnerpotenzen, Länge, Masse, Volumen, Fläche, Zeit, Geschwindigkeit, Konzentration, Physik, wissenschaftliche Schreibweise – unbegrenzt viele Aufgaben.
         - Freies Training und der klassische Modus.
 
         Deine Regeln:

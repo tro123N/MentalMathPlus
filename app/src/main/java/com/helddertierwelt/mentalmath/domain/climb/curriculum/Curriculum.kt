@@ -40,6 +40,7 @@ object Curriculum {
             World11.world,
             World12.world,
             World13.world,
+            World14.world,
         )
     }
 

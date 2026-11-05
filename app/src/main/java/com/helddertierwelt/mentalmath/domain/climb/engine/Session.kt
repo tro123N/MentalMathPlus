@@ -74,8 +74,12 @@ data class FreeRules(
 
     val isAp: Boolean get() = track == TRACK_AP
 
+    /** Einheiten-Training (Welt 14): Antworten zählen für die Levels, nach Fehlern kommt der Lösungsweg. */
+    val isUnits: Boolean get() = track == TRACK_UNITS
+
     companion object {
         const val TRACK_AP = "ap"
+        const val TRACK_UNITS = "units"
     }
 }
 
@@ -150,7 +154,7 @@ data class Session(
             !showsSolution
 
     /** Gemischtes Üben im TMSnat-Training: nach einem Fehler den Lösungsweg zeigen, weiter mit „Weiter“. */
-    val showsSolution: Boolean get() = free?.isAp == true && free.mode == FreeMode.ENDLOS
+    val showsSolution: Boolean get() = (free?.isAp == true || free?.isUnits == true) && free.mode == FreeMode.ENDLOS
 
     /** Zeitlimit der aktuellen Aufgabe. */
     val currentLimitMs: Long? get() = current?.limitMs ?: timeLimitMs
@@ -585,7 +589,7 @@ object SessionFinisher {
         }
         val score = freeScore(session)
         val bestBefore = before.freeBest[rules.bestKey] ?: 0
-        var p = if (rules.isAp) {
+        var p = if (rules.isAp || rules.isUnits) {
             // TMSnat-Training: Ergebnisse zählen auch für die Sicherheit der Kategorien (Levels von Welt 13).
             Progression.record(before, answered, now, today)
         } else {

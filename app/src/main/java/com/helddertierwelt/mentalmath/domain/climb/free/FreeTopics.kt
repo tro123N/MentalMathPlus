@@ -47,6 +47,7 @@ enum class FreeTopic(val title: String, val subtitle: String) {
     POWERS("Potenzen und Wurzeln", "Quadrate, Kuben, Zweierpotenzen"),
     GEOMETRY("Geometrie", "Flächen, Umfänge, Winkel, Volumen"),
     NUMBER_THEORY("Zahlentheorie", "ggT, kgV, Primzahlen, Reste"),
+    UNITS("Einheiten umrechnen", "Vorsilben, Zeit, Volumen, Konzentration, Zehnerpotenzen"),
 }
 
 /** Erzeugt Aufgaben für das freie Training; Schwierigkeit 1 (leicht) bis 3 (schwer). */
@@ -71,6 +72,7 @@ object FreeTopics {
         FreeTopic.POWERS -> powers(level, r)
         FreeTopic.GEOMETRY -> geometry(level, r)
         FreeTopic.NUMBER_THEORY -> numberTheory(level, r)
+        FreeTopic.UNITS -> com.helddertierwelt.mentalmath.domain.climb.curriculum.UnitTasks.free(id(topic), level, r)
     }
 
     private fun intProblem(topic: FreeTopic, key: String, prompt: Prompt, value: Long, steps: List<Step>, method: String? = null) =

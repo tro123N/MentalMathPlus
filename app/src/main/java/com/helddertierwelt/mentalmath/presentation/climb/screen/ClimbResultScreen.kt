@@ -205,10 +205,14 @@ fun ClimbResultScreen(navController: NavController) {
                         )
                     }
                     if (summary.type == SessionType.FREE) {
-                        val ap = summary.free?.isAp == true
+                        val ap = summary.free?.isAp == true || summary.free?.isUnits == true
                         ActionButton(
                             text = if (ap) "Zum TMSnat-Training" else "Einstellungen",
-                            subtitle = if (ap) "Simulationen, Kategorien und Verlauf" else "Aufgabenarten und Modus ändern",
+                            subtitle = when {
+                                summary.free?.isUnits == true -> "Einheiten, Simulationen und Kategorien"
+                                ap -> "Simulationen, Kategorien und Verlauf"
+                                else -> "Aufgabenarten und Modus ändern"
+                            },
                             icon = R.drawable.tune_24dp,
                             iconTint = MaterialTheme.colorScheme.onPrimary,
                             onClick = {

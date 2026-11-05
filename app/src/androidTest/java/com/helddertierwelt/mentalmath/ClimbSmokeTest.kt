@@ -959,6 +959,50 @@ class ClimbSmokeTest {
         waitForHome()
     }
 
+    /** Einheiten umrechnen: Bereich im TMSnat-Training, Üben ohne Ende mit Lösungsweg, Aufgabenart im freien Training. */
+    @Test
+    fun j0_einheiten() {
+        waitForHome()
+        compose.onNodeWithTag("tab_free").performClick()
+        waitForTag("freeColumn")
+        compose.onNodeWithTag("topic_UNITS").performScrollTo()
+        compose.waitForIdle()
+        shot("j0_freies_training_einheiten")
+        compose.onNodeWithTag("apEntry").performScrollTo().performClick()
+        waitForTag("apColumn")
+        compose.onNodeWithTag("apUnits").performScrollTo()
+        compose.waitForIdle()
+        shootScrolling("apColumn", "j0_einheiten_karte", maxShots = 3)
+        compose.onNodeWithTag("apUnitsButton").performScrollTo().performClick()
+        waitForSession()
+        assertEquals("Einheiten umrechnen", vm.session.value?.title)
+        var shots = 0
+        var wrong = false
+        repeat(12) {
+            val s = vm.session.value ?: return@repeat
+            when (s.phase) {
+                Phase.ANSWERING -> {
+                    if (shots < 4) shot("j0_aufgabe_${shots++}")
+                    val makeWrong = !wrong && it >= 4
+                    answer(wrong = makeWrong)
+                    if (makeWrong) wrong = true
+                }
+                Phase.FLASH -> waitWhileFlash()
+                Phase.REVEAL -> {
+                    shot("j0_loesungsweg")
+                    pressWeiter()
+                }
+                Phase.FINISHED -> Unit
+            }
+        }
+        compose.runOnUiThread { vm.endFree() }
+        waitForResult()
+        shot("j0_ergebnis")
+        assertTrue("Einheiten zählen nicht für Welt 14", vm.progress.value.skills.keys.any { it.startsWith("w14.") })
+        clickButton("Zum Kletterweg")
+        waitForHome()
+    }
+
     /** Prognose mit vorhandenen Ergebnissen und Fehlertraining mit fälligen Aufgabentypen. */
     @Test
     fun j_prognose() {

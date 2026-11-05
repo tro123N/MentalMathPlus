@@ -1,26 +1,15 @@
-**Mental Math Plus 2.1.1 – Korrekturen am KI-Coach**
+**Mental Math Plus 2.2 – Einheiten umrechnen**
 
-- **Gemma 4 12B stürzt nicht mehr immer wieder ab:** Wurde die App beim Laden auf der Grafikeinheit beendet, lädt sie das Modell beim nächsten Mal auf den Prozessor (langsamer, braucht weniger Speicher). Außerdem nutzt 12B jetzt ein kleineres Gesprächsgedächtnis, das spart Speicher.
-- **Der Chat geht nicht mehr verloren**, wenn du die App während einer Antwort verlässt: Frage und Antwort werden laufend gespeichert, und die KI schreibt im Hintergrund zu Ende.
+Neu im **TMSnat-Training**: ein eigener Bereich **„Einheiten umrechnen“** mit unbegrenzt vielen Aufgaben.
 
----
+- **Vorsilben und Zehnerpotenzen:** Tera, Giga, Mega, Kilo … Milli, Mikro, Nano, Piko – auch als Auswahl („Mikro = 10⁻⁶“).
+- **Länge, Masse, Volumen und Liter, Fläche** – auch gemischt, z. B. „1,2 km + 350 m“, und mit m³, cm³, ha und a.
+- **Zeit und Uhrzeit:** Dezimalstunden (2,25 h = 135 min), Sekunden, Tage und Zeitspannen („8:45 bis 11:20“).
+- **Geschwindigkeit:** km/h ↔ m/s, m/min, Weg in wenigen Minuten.
+- **Konzentration und Dichte:** mg/ml, g/l, g/dl, mmol/l, Prozentlösungen, Tropfen.
+- **Druck, Energie und Strom:** bar, hPa, kWh, MJ, kcal, Watt, Ampere, Volt, Hertz, Mol, Kelvin.
+- **Wissenschaftliche Schreibweise:** 0,00042 = 4,2 · 10⁻⁴ und Rechnen mit Zehnerpotenzen.
 
-**Mental Math Plus 2.1 – der KI-Coach**
-
-Neu: ein **KI-Coach**, der direkt auf deinem Handy läuft – ohne Internet, kostenlos, und nichts verlässt dein Handy. Dahinter steckt Gemma 4 von Google.
-
-- **Kennt deinen Lernstand** im Kletterweg und im TMSnat-Training und sagt dir, was sich gerade am meisten lohnt.
-- **Erklärt Aufgaben und Fehler** Schritt für Schritt – nach einem Fehler beim Üben oder in der Aufgabenliste jedes Ergebnisses mit „KI-Coach fragen“.
-- **Stellt dir Aufgaben im Chat** (als Karte, bei A–E-Aufgaben mit Antwortknöpfen), prüft deine Antwort und gibt dir auf Wunsch einen Tipp.
-- **Bereitet Übungen vor:** gezielt üben, Simulation, Fehlertraining, ähnliche Aufgaben, Levels – und Einstellungen wie die tägliche Erinnerung. Du startest alles selbst mit einem Knopf.
-- **Rechnet nie im Kopf:** Jede Rechnung prüft die KI mit einem eingebauten, exakten Rechner.
-- **Gründlich oder schnell:** Im Denkmodus überlegt die KI vor der Antwort (klüger, etwas langsamer).
-
-**So geht's:** Oben auf der Startseite auf ✨ tippen und ein Modell laden (einmalig, am besten im WLAN):
-- **Gemma 4 E4B** – empfohlen, 3,7 GB
-- **Gemma 4 12B** – Experiment, am klügsten, 6,9 GB, braucht sehr viel Arbeitsspeicher
-- **Gemma 4 E2B** – klein und schnell, 2,6 GB
-
-Hinweis: Die App fragt jetzt nach Internet – nur für diesen Download. Die KI braucht Android 12 oder neuer.
+Jeder Bereich hat eine Erklärung, geführtes Üben und eine Prüfung (Welt 14). Mit **▶** übst du einen Bereich ohne Ende, mit **„Alle Einheiten üben“** alles gemischt. Nach einem Fehler siehst du den Lösungsweg und den typischen Fehler (z. B. „mit 100 statt 60 gerechnet“). Im **freien Training** gibt es die neue Aufgabenart **„Einheiten umrechnen“** in drei Stufen.
 
 **Installieren:** `MentalMathPlus.apk` unten antippen, herunterladen und öffnen. Die neue Version ersetzt die alte, dein Fortschritt bleibt erhalten.

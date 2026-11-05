@@ -857,6 +857,9 @@ object AiQuiz {
      * den Buchstaben („B“), zuletzt über die Nummer („die zweite“ = 2).
      */
     private fun choiceIndex(text: String, choices: List<String>): Int? {
+        // Wörtlich enthalten (z. B. „10⁻⁹“ oder „1,6 · 10⁸“, die beim Vereinfachen gleich aussähen).
+        choices.mapIndexedNotNull { i, c -> choiceBody(c).takeIf { it.isNotEmpty() && text.contains(it) }?.let { i to it.length } }
+            .maxByOrNull { it.second }?.let { return it.first }
         val simple = " " + AiLookup.simplify(text) + " "
         val byText = choices.mapIndexedNotNull { i, c ->
             val body = AiLookup.simplify(choiceBody(c))
