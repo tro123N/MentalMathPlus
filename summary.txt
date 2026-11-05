@@ -1,0 +1,49 @@
+commit: 41c482ccd67c48a6073ae4e3c13c465d8ca82950
+run: 49
+shots: w8.shopping,w13.mix,w13.prob,w13.mixed,w14.time,w14.sci
+Ergebnis: OK
+KI-Test: OK
+Bilder: 192
+Unit-Tests und Release-Build: OK
+APK: app-foss-release-unsigned.apk 28M
+     0.0 MB  lib/arm64-v8a/libandroidx.graphics.path.so
+     0.0 MB  lib/arm64-v8a/libdatastore_shared_counter.so
+    21.1 MB  lib/arm64-v8a/liblitertlm_jni.so
+     0.0 MB  lib/armeabi-v7a/libandroidx.graphics.path.so
+     0.0 MB  lib/armeabi-v7a/libdatastore_shared_counter.so
+Speicher vorher: /dev/root       145G   43G  103G  30% /
+KI-Modell geladen: 2.5G
+Speicher nachher: /dev/root       145G   45G  100G  31% /
+smoke-model/gemma-4-E2B-it.litertlm: 1 file pushed, 0 skipped. 174.2 MB/s (2588147712 bytes in 14.165s)
+Aufspielen, Versuch 1: Status 0 nach 23 s
+KI-Modell aufgespielt: ja
+total 2527496
+-rw-r--r-- 1 shell ext_data_rw 2588147712 2026-11-05 08:50 gemma-4-E2B-it.litertlm
+Filesystem       Size Used Avail Use% Mounted on
+/dev/block/dm-40 7.7G 3.3G  4.2G  45% /data/user/0
+
+----- Tests ohne KI -----
+
+com.helddertierwelt.mentalmath.ClimbSmokeTest:.s_glBindAttribLocation: bind attrib 0 name position
+s_glBindAttribLocation: bind attrib 1 name color
+s_glBindAttribLocation: bind attrib 2 name localCoord
+............
+
+Time: 637.65
+
+OK (13 tests)
+
+
+
+----- KI-Test -----
+
+com.helddertierwelt.mentalmath.ClimbSmokeTest:s_glBindAttribLocation: bind attrib 0 name position
+s_glBindAttribLocation: bind attrib 1 name color
+s_glBindAttribLocation: bind attrib 2 name localCoord
+.
+
+Time: 280.469
+
+OK (1 test)
+
+

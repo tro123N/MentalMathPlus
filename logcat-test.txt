@@ -1,0 +1,475 @@
+--------- beginning of main
+11-05 08:51:50.970 D/AndroidRuntime( 4025): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-05 08:51:50.980 I/AndroidRuntime( 4025): Using default boot image
+11-05 08:51:50.980 I/AndroidRuntime( 4025): Leaving lock profiling enabled
+11-05 08:51:51.621 D/AndroidRuntime( 4025): Calling main entry com.android.commands.am.Am
+11-05 08:52:16.305 I/TestRunner( 4061): run started: 13 tests
+11-05 08:52:16.323 I/TestRunner( 4061): started: a0_kiTexteAufDemGeraet(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 08:52:31.868 I/TestRunner( 4061): finished: a0_kiTexteAufDemGeraet(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 08:52:31.874 I/TestRunner( 4061): started: a_ersterAufstieg(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 08:52:34.653 I/ClimbSmokeTest( 4061): Bildschirmfoto 001_a_start.png
+11-05 08:52:36.258 I/ClimbSmokeTest( 4061): Bildschirmfoto 002_a_level.png
+11-05 08:52:37.372 I/ClimbSmokeTest( 4061): Bildschirmfoto 003_a_lernen_1.png
+11-05 08:52:37.931 I/ClimbSmokeTest( 4061): Bildschirmfoto 004_a_lernen_2.png
+11-05 08:52:39.433 I/ClimbSmokeTest( 4061): Bildschirmfoto 005_a_gefuehrt_0.png
+11-05 08:52:40.924 I/ClimbSmokeTest( 4061): Bildschirmfoto 006_a_gefuehrt_1.png
+11-05 08:52:43.038 I/ClimbSmokeTest( 4061): Bildschirmfoto 007_a_gefuehrt_tipp.png
+11-05 08:52:45.192 I/ClimbSmokeTest( 4061): Bildschirmfoto 008_a_ergebnis_gefuehrt_1.png
+11-05 08:52:47.069 I/ClimbSmokeTest( 4061): Bildschirmfoto 009_a_ueben_0.png
+11-05 08:52:49.422 I/ClimbSmokeTest( 4061): Bildschirmfoto 010_a_ueben_aufgedeckt.png
+11-05 08:52:58.295 I/ClimbSmokeTest( 4061): Bildschirmfoto 011_a_ergebnis_ueben_1.png
+11-05 08:52:58.788 I/ClimbSmokeTest( 4061): Bildschirmfoto 012_a_ergebnis_ueben_2.png
+11-05 08:53:01.051 I/ClimbSmokeTest( 4061): Bildschirmfoto 013_a_pruefung_0.png
+11-05 08:53:05.966 I/ClimbSmokeTest( 4061): Bildschirmfoto 014_a_pruefung_5.png
+11-05 08:53:15.237 I/ClimbSmokeTest( 4061): Bildschirmfoto 015_a_ergebnis_pruefung_1.png
+11-05 08:53:15.994 I/ClimbSmokeTest( 4061): Bildschirmfoto 016_a_ergebnis_pruefung_2.png
+11-05 08:53:16.705 I/ClimbSmokeTest( 4061): Bildschirmfoto 017_a_ergebnis_pruefung_3.png
+11-05 08:53:18.671 I/ClimbSmokeTest( 4061): Bildschirmfoto 018_a_nach_pruefung.png
+11-05 08:53:21.552 I/ClimbSmokeTest( 4061): Bildschirmfoto 019_a_klassisch_menue.png
+11-05 08:53:23.338 I/TestRunner( 4061): finished: a_ersterAufstieg(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 08:53:23.340 I/TestRunner( 4061): started: b_alleWelten(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 08:53:25.731 I/ClimbSmokeTest( 4061): Bildschirmfoto 020_b_start.png
+11-05 08:53:26.689 I/ClimbSmokeTest( 4061): Bildschirmfoto 021_b_welt_1.png
+11-05 08:53:27.646 I/ClimbSmokeTest( 4061): Bildschirmfoto 022_b_welt_2.png
+11-05 08:53:28.996 I/ClimbSmokeTest( 4061): Bildschirmfoto 023_b_welt_3.png
+11-05 08:53:29.853 I/ClimbSmokeTest( 4061): Bildschirmfoto 024_b_welt_4.png
+11-05 08:53:30.708 I/ClimbSmokeTest( 4061): Bildschirmfoto 025_b_welt_5.png
+11-05 08:53:31.564 I/ClimbSmokeTest( 4061): Bildschirmfoto 026_b_welt_6.png
+11-05 08:53:32.437 I/ClimbSmokeTest( 4061): Bildschirmfoto 027_b_welt_7.png
+11-05 08:53:33.338 I/ClimbSmokeTest( 4061): Bildschirmfoto 028_b_welt_8.png
+11-05 08:53:34.313 I/ClimbSmokeTest( 4061): Bildschirmfoto 029_b_welt_9.png
+11-05 08:53:35.332 I/ClimbSmokeTest( 4061): Bildschirmfoto 030_b_welt_10.png
+11-05 08:53:36.281 I/ClimbSmokeTest( 4061): Bildschirmfoto 031_b_welt_11.png
+11-05 08:53:37.190 I/ClimbSmokeTest( 4061): Bildschirmfoto 032_b_welt_12.png
+11-05 08:53:38.260 I/ClimbSmokeTest( 4061): Bildschirmfoto 033_b_welt_13.png
+11-05 08:53:38.871 I/ClimbSmokeTest( 4061): Bildschirmfoto 034_b_welt_14.png
+11-05 08:53:38.871 I/ClimbSmokeTest( 4061): Level w1.complement
+11-05 08:53:42.308 I/ClimbSmokeTest( 4061): Level w1.addsub20
+11-05 08:53:45.342 I/ClimbSmokeTest( 4061): Level w1.times
+11-05 08:53:49.475 I/ClimbSmokeTest( 4061): Level w1.divfacts
+11-05 08:53:52.008 I/ClimbSmokeTest( 4061): Level w1.doublehalf
+11-05 08:53:56.075 I/ClimbSmokeTest( 4061): Level w1.zeros
+11-05 08:53:59.558 I/ClimbSmokeTest( 4061): Level w2.times11a
+11-05 08:54:03.092 I/ClimbSmokeTest( 4061): Level w2.times11b
+11-05 08:54:06.627 I/ClimbSmokeTest( 4061): Level w2.square5
+11-05 08:54:10.143 I/ClimbSmokeTest( 4061): Level w2.sametens
+11-05 08:54:15.393 I/ClimbSmokeTest( 4061): Level w3.add2
+11-05 08:54:19.541 I/ClimbSmokeTest( 4061): Level w3.add3
+11-05 08:54:22.808 I/ClimbSmokeTest( 4061): Level w3.addzeros
+11-05 08:54:26.775 I/ClimbSmokeTest( 4061): Level w3.sub2
+11-05 08:54:29.592 I/ClimbSmokeTest( 4061): Level w3.complement
+11-05 08:54:32.725 I/ClimbSmokeTest( 4061): Level w3.sub3
+11-05 08:54:36.358 I/ClimbSmokeTest( 4061): Level w3.sub4
+11-05 08:54:39.675 I/ClimbSmokeTest( 4061): Level w3.moneyadd
+11-05 08:54:43.009 I/ClimbSmokeTest( 4061): Level w3.change
+11-05 08:54:46.458 I/ClimbSmokeTest( 4061): Level w4.mul21
+11-05 08:54:50.591 I/ClimbSmokeTest( 4061): Level w4.roundup
+11-05 08:54:53.758 I/ClimbSmokeTest( 4061): Level w4.mul31
+11-05 08:54:58.325 I/ClimbSmokeTest( 4061): Level w4.square2
+11-05 08:55:02.891 I/ClimbSmokeTest( 4061): Level w5.shift
+11-05 08:55:05.325 I/ClimbSmokeTest( 4061): Level w5.dec21
+11-05 08:55:09.158 I/ClimbSmokeTest( 4061): Level w5.dec31
+11-05 08:55:14.842 I/ClimbSmokeTest( 4061): Level w5.decmix
+11-05 08:55:18.908 I/ClimbSmokeTest( 4061): Level w5.percent
+11-05 08:55:22.958 I/ClimbSmokeTest( 4061): Level w6.addmethod
+11-05 08:55:27.091 I/ClimbSmokeTest( 4061): Level w6.submethod
+11-05 08:55:30.558 I/ClimbSmokeTest( 4061): Level w6.factor
+11-05 08:55:33.408 I/ClimbSmokeTest( 4061): Level w6.close
+11-05 08:55:37.125 I/ClimbSmokeTest( 4061): Level w6.free
+11-05 08:55:39.991 I/ClimbSmokeTest( 4061): Level w6.square3
+11-05 08:55:45.041 I/ClimbSmokeTest( 4061): Level w6.decdec
+11-05 08:55:49.041 I/ClimbSmokeTest( 4061): Level w6.cube
+11-05 08:55:53.641 I/ClimbSmokeTest( 4061): Level w7.div1
+11-05 08:55:58.641 I/ClimbSmokeTest( 4061): Level w7.div5
+11-05 08:56:01.858 I/ClimbSmokeTest( 4061): Level w7.div2
+11-05 08:56:06.408 I/ClimbSmokeTest( 4061): Level w7.simplify
+11-05 08:56:09.442 I/ClimbSmokeTest( 4061): Level w7.fracdec
+11-05 08:56:11.958 I/ClimbSmokeTest( 4061): Level w7.fractricks
+11-05 08:56:15.325 I/ClimbSmokeTest( 4061): Level w7.divisible
+11-05 08:56:17.475 I/ClimbSmokeTest( 4061): Level w7.fracmul
+11-05 08:56:21.541 I/ClimbSmokeTest( 4061): Level w7.fracreduce
+11-05 08:56:23.808 I/ClimbSmokeTest( 4061): Level w7.fracadd
+11-05 08:56:26.375 I/ClimbSmokeTest( 4061): Level w8.estsum
+11-05 08:56:33.208 I/ClimbSmokeTest( 4061): Level w8.shopping
+11-05 08:56:33.819 I/ClimbSmokeTest( 4061): Bildschirmfoto 035_b_w8_shopping_level.png
+11-05 08:56:34.400 I/ClimbSmokeTest( 4061): Bildschirmfoto 036_b_w8_shopping_lernen_1.png
+11-05 08:56:34.864 I/ClimbSmokeTest( 4061): Bildschirmfoto 037_b_w8_shopping_lernen_2.png
+11-05 08:56:35.667 I/ClimbSmokeTest( 4061): Bildschirmfoto 038_b_w8_shopping_gefuehrt.png
+11-05 08:56:40.366 I/ClimbSmokeTest( 4061): Bildschirmfoto 039_b_w8_shopping_gefuehrt_2.png
+11-05 08:56:41.148 I/ClimbSmokeTest( 4061): Bildschirmfoto 040_b_w8_shopping_ueben.png
+11-05 08:56:41.916 I/ClimbSmokeTest( 4061): Bildschirmfoto 041_b_w8_shopping_ueben_falsch.png
+11-05 08:56:42.258 I/ClimbSmokeTest( 4061): Level w8.estdiff
+11-05 08:56:46.691 I/ClimbSmokeTest( 4061): Level w8.estquot
+11-05 08:56:50.058 I/ClimbSmokeTest( 4061): Level w8.estprod
+11-05 08:56:53.808 I/ClimbSmokeTest( 4061): Level w8.sqrt
+11-05 08:56:57.208 I/ClimbSmokeTest( 4061): Level w8.tip
+11-05 08:57:00.075 I/ClimbSmokeTest( 4061): Level w8.oddpercent
+11-05 08:57:03.675 I/ClimbSmokeTest( 4061): Level w8.rule70
+11-05 08:57:05.525 I/ClimbSmokeTest( 4061): Level w8.loan
+11-05 08:57:09.875 I/ClimbSmokeTest( 4061): Level w9.columns
+11-05 08:57:15.225 I/ClimbSmokeTest( 4061): Level w9.modsum
+11-05 08:57:17.891 I/ClimbSmokeTest( 4061): Level w9.check9
+11-05 08:57:21.275 I/ClimbSmokeTest( 4061): Level w9.rest11
+11-05 08:57:24.258 I/ClimbSmokeTest( 4061): Level w9.check11
+11-05 08:57:27.108 I/ClimbSmokeTest( 4061): Level w9.cross2
+11-05 08:57:30.608 I/ClimbSmokeTest( 4061): Level w9.cross3
+11-05 08:57:35.275 I/ClimbSmokeTest( 4061): Level w9.sqrtpaper
+11-05 08:57:41.041 I/ClimbSmokeTest( 4061): Level w10.code
+11-05 08:57:43.991 I/ClimbSmokeTest( 4061): Level w10.decode
+11-05 08:57:46.991 I/ClimbSmokeTest( 4061): Level w10.encode
+11-05 08:57:48.725 I/ClimbSmokeTest( 4061): Level w10.pegs
+11-05 08:57:50.675 I/ClimbSmokeTest( 4061): Level w10.memory
+11-05 08:57:55.225 I/ClimbSmokeTest( 4061): Level w11.mul41
+11-05 08:57:58.941 I/ClimbSmokeTest( 4061): Level w11.square4
+11-05 08:58:05.575 I/ClimbSmokeTest( 4061): Level w11.mul32
+11-05 08:58:09.225 I/ClimbSmokeTest( 4061): Level w11.close3
+11-05 08:58:14.608 I/ClimbSmokeTest( 4061): Level w11.mul33
+11-05 08:58:20.825 I/ClimbSmokeTest( 4061): Level w11.square5
+11-05 08:58:28.525 I/ClimbSmokeTest( 4061): Level w11.mul55
+11-05 08:58:38.458 I/ClimbSmokeTest( 4061): Level w12.magic1089
+11-05 08:58:44.491 I/ClimbSmokeTest( 4061): Level w12.missing
+11-05 08:58:47.225 I/ClimbSmokeTest( 4061): Level w12.jumps
+11-05 08:58:49.841 I/ClimbSmokeTest( 4061): Level w12.magic
+11-05 08:58:52.625 I/ClimbSmokeTest( 4061): Level w12.cuberoot
+11-05 08:58:55.191 I/ClimbSmokeTest( 4061): Level w12.sqrtexact
+11-05 08:58:58.258 I/ClimbSmokeTest( 4061): Level w12.newyear
+11-05 08:59:01.158 I/ClimbSmokeTest( 4061): Level w12.weekday
+11-05 08:59:04.491 I/ClimbSmokeTest( 4061): Level w13.ratio
+11-05 08:59:08.408 I/ClimbSmokeTest( 4061): Level w13.percent
+11-05 08:59:11.091 I/ClimbSmokeTest( 4061): Level w13.relations
+11-05 08:59:13.491 I/ClimbSmokeTest( 4061): Level w13.fractions
+11-05 08:59:16.058 I/ClimbSmokeTest( 4061): Level w13.units
+11-05 08:59:18.791 I/ClimbSmokeTest( 4061): Level w13.speed
+11-05 08:59:21.358 I/ClimbSmokeTest( 4061): Level w13.work
+11-05 08:59:24.925 I/ClimbSmokeTest( 4061): Level w13.mix
+11-05 08:59:25.633 I/ClimbSmokeTest( 4061): Bildschirmfoto 042_b_w13_mix_level.png
+11-05 08:59:26.221 I/ClimbSmokeTest( 4061): Bildschirmfoto 043_b_w13_mix_lernen_1.png
+11-05 08:59:26.676 I/ClimbSmokeTest( 4061): Bildschirmfoto 044_b_w13_mix_lernen_2.png
+11-05 08:59:27.152 I/ClimbSmokeTest( 4061): Bildschirmfoto 045_b_w13_mix_lernen_3.png
+11-05 08:59:27.850 I/ClimbSmokeTest( 4061): Bildschirmfoto 046_b_w13_mix_gefuehrt.png
+11-05 08:59:30.116 I/ClimbSmokeTest( 4061): Bildschirmfoto 047_b_w13_mix_gefuehrt_2.png
+11-05 08:59:30.881 I/ClimbSmokeTest( 4061): Bildschirmfoto 048_b_w13_mix_ueben.png
+11-05 08:59:31.675 I/ClimbSmokeTest( 4061): Bildschirmfoto 049_b_w13_mix_ueben_falsch.png
+11-05 08:59:32.025 I/ClimbSmokeTest( 4061): Level w13.growth
+11-05 08:59:35.158 I/ClimbSmokeTest( 4061): Level w13.equations
+11-05 08:59:37.941 I/ClimbSmokeTest( 4061): Level w13.combi
+11-05 08:59:40.058 I/ClimbSmokeTest( 4061): Level w13.prob
+11-05 08:59:40.750 I/ClimbSmokeTest( 4061): Bildschirmfoto 050_b_w13_prob_level.png
+11-05 08:59:41.324 I/ClimbSmokeTest( 4061): Bildschirmfoto 051_b_w13_prob_lernen_1.png
+11-05 08:59:41.797 I/ClimbSmokeTest( 4061): Bildschirmfoto 052_b_w13_prob_lernen_2.png
+11-05 08:59:42.519 I/ClimbSmokeTest( 4061): Bildschirmfoto 053_b_w13_prob_gefuehrt.png
+11-05 08:59:44.684 I/ClimbSmokeTest( 4061): Bildschirmfoto 054_b_w13_prob_gefuehrt_2.png
+11-05 08:59:45.430 I/ClimbSmokeTest( 4061): Bildschirmfoto 055_b_w13_prob_ueben.png
+11-05 08:59:46.317 I/ClimbSmokeTest( 4061): Bildschirmfoto 056_b_w13_prob_ueben_falsch.png
+11-05 08:59:46.641 I/ClimbSmokeTest( 4061): Level w13.mixed
+11-05 08:59:47.318 I/ClimbSmokeTest( 4061): Bildschirmfoto 057_b_w13_mixed_level.png
+11-05 08:59:47.885 I/ClimbSmokeTest( 4061): Bildschirmfoto 058_b_w13_mixed_lernen_1.png
+11-05 08:59:48.362 I/ClimbSmokeTest( 4061): Bildschirmfoto 059_b_w13_mixed_lernen_2.png
+11-05 08:59:49.082 I/ClimbSmokeTest( 4061): Bildschirmfoto 060_b_w13_mixed_gefuehrt.png
+11-05 08:59:50.653 I/ClimbSmokeTest( 4061): Bildschirmfoto 061_b_w13_mixed_gefuehrt_2.png
+11-05 08:59:51.468 I/ClimbSmokeTest( 4061): Bildschirmfoto 062_b_w13_mixed_ueben.png
+11-05 08:59:51.983 I/ClimbSmokeTest( 4061): Bildschirmfoto 063_b_w13_mixed_ueben_falsch.png
+11-05 08:59:52.325 I/ClimbSmokeTest( 4061): Level w14.prefix
+11-05 08:59:56.975 I/ClimbSmokeTest( 4061): Level w14.length
+11-05 08:59:59.508 I/ClimbSmokeTest( 4061): Level w14.mass
+11-05 09:00:02.675 I/ClimbSmokeTest( 4061): Level w14.volume
+11-05 09:00:04.891 I/ClimbSmokeTest( 4061): Level w14.area
+11-05 09:00:08.225 I/ClimbSmokeTest( 4061): Level w14.time
+11-05 09:00:08.836 I/ClimbSmokeTest( 4061): Bildschirmfoto 064_b_w14_time_level.png
+11-05 09:00:09.419 I/ClimbSmokeTest( 4061): Bildschirmfoto 065_b_w14_time_lernen_1.png
+11-05 09:00:09.886 I/ClimbSmokeTest( 4061): Bildschirmfoto 066_b_w14_time_lernen_2.png
+11-05 09:00:10.596 I/ClimbSmokeTest( 4061): Bildschirmfoto 067_b_w14_time_gefuehrt.png
+11-05 09:00:12.000 I/ClimbSmokeTest( 4061): Bildschirmfoto 068_b_w14_time_gefuehrt_2.png
+11-05 09:00:12.766 I/ClimbSmokeTest( 4061): Bildschirmfoto 069_b_w14_time_ueben.png
+11-05 09:00:14.233 I/ClimbSmokeTest( 4061): Bildschirmfoto 070_b_w14_time_ueben_falsch.png
+11-05 09:00:14.575 I/ClimbSmokeTest( 4061): Level w14.speed
+11-05 09:00:16.641 I/ClimbSmokeTest( 4061): Level w14.conc
+11-05 09:00:18.358 I/ClimbSmokeTest( 4061): Level w14.physics
+11-05 09:00:21.491 I/ClimbSmokeTest( 4061): Level w14.sci
+11-05 09:00:22.152 I/ClimbSmokeTest( 4061): Bildschirmfoto 071_b_w14_sci_level.png
+11-05 09:00:22.717 I/ClimbSmokeTest( 4061): Bildschirmfoto 072_b_w14_sci_lernen_1.png
+11-05 09:00:23.165 I/ClimbSmokeTest( 4061): Bildschirmfoto 073_b_w14_sci_lernen_2.png
+11-05 09:00:23.899 I/ClimbSmokeTest( 4061): Bildschirmfoto 074_b_w14_sci_gefuehrt.png
+11-05 09:00:25.963 I/ClimbSmokeTest( 4061): Bildschirmfoto 075_b_w14_sci_gefuehrt_2.png
+11-05 09:00:26.715 I/ClimbSmokeTest( 4061): Bildschirmfoto 076_b_w14_sci_ueben.png
+11-05 09:00:27.194 I/ClimbSmokeTest( 4061): Bildschirmfoto 077_b_w14_sci_ueben_falsch.png
+11-05 09:00:27.541 I/ClimbSmokeTest( 4061): Level w14.mixed
+11-05 09:00:29.834 I/ClimbSmokeTest( 4061): Bildschirmfoto 078_b_auffrischen_level.png
+11-05 09:00:30.412 I/ClimbSmokeTest( 4061): Bildschirmfoto 079_b_auffrischen_0.png
+11-05 09:00:36.687 I/ClimbSmokeTest( 4061): Bildschirmfoto 080_b_auffrischen_ergebnis_1.png
+11-05 09:00:37.134 I/ClimbSmokeTest( 4061): Bildschirmfoto 081_b_auffrischen_ergebnis_2.png
+11-05 09:00:37.937 I/ClimbSmokeTest( 4061): Bildschirmfoto 082_b_wiederholung_0.png
+11-05 09:00:54.414 I/ClimbSmokeTest( 4061): Bildschirmfoto 083_b_wiederholung_ergebnis_1.png
+11-05 09:00:54.896 I/ClimbSmokeTest( 4061): Bildschirmfoto 084_b_wiederholung_ergebnis_2.png
+11-05 09:00:55.531 I/ClimbSmokeTest( 4061): Bildschirmfoto 085_b_ende.png
+11-05 09:00:56.088 I/TestRunner( 4061): finished: b_alleWelten(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:00:56.097 I/TestRunner( 4061): started: c_freiesTraining(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:00:59.851 I/ClimbSmokeTest( 4061): Bildschirmfoto 086_c_einstellungen_1.png
+11-05 09:01:00.306 I/ClimbSmokeTest( 4061): Bildschirmfoto 087_c_einstellungen_2.png
+11-05 09:01:00.916 I/ClimbSmokeTest( 4061): Bildschirmfoto 088_c_aufgabe_0.png
+11-05 09:01:02.493 I/ClimbSmokeTest( 4061): Bildschirmfoto 089_c_trick_tipp.png
+11-05 09:01:02.916 I/ClimbSmokeTest( 4061): Bildschirmfoto 090_c_aufgabe_1.png
+11-05 09:01:04.265 I/ClimbSmokeTest( 4061): Bildschirmfoto 091_c_aufgabe_2.png
+11-05 09:01:05.360 I/ClimbSmokeTest( 4061): Bildschirmfoto 092_c_aufgabe_3.png
+11-05 09:01:06.701 I/ClimbSmokeTest( 4061): Bildschirmfoto 093_c_aufgabe_4.png
+11-05 09:01:07.948 I/ClimbSmokeTest( 4061): Bildschirmfoto 094_c_aufgabe_5.png
+11-05 09:01:09.199 I/ClimbSmokeTest( 4061): Bildschirmfoto 095_c_aufgabe_6.png
+11-05 09:01:10.735 I/ClimbSmokeTest( 4061): Bildschirmfoto 096_c_aufgabe_7.png
+11-05 09:01:17.232 I/ClimbSmokeTest( 4061): Bildschirmfoto 097_c_ergebnis_1.png
+11-05 09:01:17.683 I/ClimbSmokeTest( 4061): Bildschirmfoto 098_c_ergebnis_2.png
+11-05 09:01:18.170 I/ClimbSmokeTest( 4061): Bildschirmfoto 099_c_ergebnis_3.png
+11-05 09:01:18.886 I/ClimbSmokeTest( 4061): Bildschirmfoto 100_c_statistik.png
+11-05 09:01:19.936 I/TestRunner( 4061): finished: c_freiesTraining(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:01:19.949 I/TestRunner( 4061): started: d_handbuch(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:01:21.899 I/ClimbSmokeTest( 4061): Bildschirmfoto 101_d_handbuch.png
+11-05 09:01:29.119 I/ClimbSmokeTest( 4061): Bildschirmfoto 102_d_eintrag_1.png
+11-05 09:01:29.584 I/ClimbSmokeTest( 4061): Bildschirmfoto 103_d_eintrag_2.png
+11-05 09:01:30.086 I/ClimbSmokeTest( 4061): Bildschirmfoto 104_d_eintrag_3.png
+11-05 09:01:31.266 I/ClimbSmokeTest( 4061): Bildschirmfoto 105_d_suche.png
+11-05 09:01:33.527 I/TestRunner( 4061): finished: d_handbuch(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:01:33.572 I/TestRunner( 4061): started: e_bereiche(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:01:35.313 I/ClimbSmokeTest( 4061): Bildschirmfoto 106_e_kletterweg.png
+11-05 09:01:36.193 I/ClimbSmokeTest( 4061): Bildschirmfoto 107_e_freies_training.png
+11-05 09:01:36.797 I/ClimbSmokeTest( 4061): Bildschirmfoto 108_e_klassisch.png
+11-05 09:01:38.009 I/TestRunner( 4061): finished: e_bereiche(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:01:38.072 I/TestRunner( 4061): started: f_statistik(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:01:39.645 I/ClimbSmokeTest( 4061): Bildschirmfoto 109_f_statistik_1.png
+11-05 09:01:40.101 I/ClimbSmokeTest( 4061): Bildschirmfoto 110_f_statistik_2.png
+11-05 09:01:40.565 I/ClimbSmokeTest( 4061): Bildschirmfoto 111_f_statistik_3.png
+11-05 09:01:41.013 I/ClimbSmokeTest( 4061): Bildschirmfoto 112_f_statistik_4.png
+11-05 09:01:42.149 I/ClimbSmokeTest( 4061): Bildschirmfoto 113_f_level_verlauf.png
+11-05 09:01:43.350 I/TestRunner( 4061): finished: f_statistik(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:01:43.359 I/TestRunner( 4061): started: g_einstufung(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:01:44.954 I/ClimbSmokeTest( 4061): Bildschirmfoto 114_g_einstufung_1.png
+11-05 09:01:45.403 I/ClimbSmokeTest( 4061): Bildschirmfoto 115_g_einstufung_2.png
+11-05 09:01:46.035 I/ClimbSmokeTest( 4061): Bildschirmfoto 116_g_test_0.png
+11-05 09:01:52.065 I/ClimbSmokeTest( 4061): Bildschirmfoto 117_g_test_7.png
+11-05 09:01:56.925 I/ClimbSmokeTest( 4061): Einstufung: PlacementOutcome(worldId=w1, total=12, correct=12, allowedMistakes=1, pace=0.13970396825396827, passed=true, newlyMastered=6)
+11-05 09:01:57.324 I/ClimbSmokeTest( 4061): Bildschirmfoto 118_g_ergebnis_1.png
+11-05 09:01:57.782 I/ClimbSmokeTest( 4061): Bildschirmfoto 119_g_ergebnis_2.png
+11-05 09:01:58.452 I/ClimbSmokeTest( 4061): Bildschirmfoto 120_g_nach_einstufung.png
+11-05 09:01:59.116 I/TestRunner( 4061): finished: g_einstufung(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:01:59.118 I/TestRunner( 4061): started: h_einstellungen(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:02:01.130 I/ClimbSmokeTest( 4061): Bildschirmfoto 121_h_einstellungen.png
+11-05 09:02:02.517 I/ClimbSmokeTest( 4061): Bildschirmfoto 122_h_dunkel_wald.png
+11-05 09:02:03.490 I/ClimbSmokeTest( 4061): Bildschirmfoto 123_h_erinnerung.png
+11-05 09:02:04.243 I/ClimbSmokeTest( 4061): Bildschirmfoto 124_h_alles_1.png
+11-05 09:02:04.717 I/ClimbSmokeTest( 4061): Bildschirmfoto 125_h_alles_2.png
+11-05 09:02:05.172 I/ClimbSmokeTest( 4061): Bildschirmfoto 126_h_alles_3.png
+11-05 09:02:05.631 I/ClimbSmokeTest( 4061): Bildschirmfoto 127_h_alles_4.png
+11-05 09:02:06.099 I/ClimbSmokeTest( 4061): Bildschirmfoto 128_h_alles_5.png
+11-05 09:02:06.668 I/ClimbSmokeTest( 4061): Bildschirmfoto 129_h_start_dunkel.png
+11-05 09:02:07.238 I/ClimbSmokeTest( 4061): Bildschirmfoto 130_h_statistik_dunkel.png
+11-05 09:02:08.250 I/ClimbSmokeTest( 4061): Bildschirmfoto 131_h_klassisch_dunkel.png
+11-05 09:02:10.121 I/ClimbSmokeTest( 4061): Bildschirmfoto 132_h_start_hell_abendrot.png
+11-05 09:02:11.909 I/TestRunner( 4061): finished: h_einstellungen(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:02:11.972 I/TestRunner( 4061): started: i_medizinertest(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:02:14.103 I/ClimbSmokeTest( 4061): Bildschirmfoto 133_i_freies_training.png
+11-05 09:02:14.802 I/ClimbSmokeTest( 4061): Bildschirmfoto 134_i_training_1.png
+11-05 09:02:15.269 I/ClimbSmokeTest( 4061): Bildschirmfoto 135_i_training_2.png
+11-05 09:02:15.723 I/ClimbSmokeTest( 4061): Bildschirmfoto 136_i_training_3.png
+11-05 09:02:16.170 I/ClimbSmokeTest( 4061): Bildschirmfoto 137_i_training_4.png
+11-05 09:02:16.631 I/ClimbSmokeTest( 4061): Bildschirmfoto 138_i_training_5.png
+11-05 09:02:17.104 I/ClimbSmokeTest( 4061): Bildschirmfoto 139_i_training_6.png
+11-05 09:02:17.713 I/ClimbSmokeTest( 4061): Bildschirmfoto 140_i_sim_0.png
+11-05 09:02:18.304 I/ClimbSmokeTest( 4061): Bildschirmfoto 141_i_sim_spaeter.png
+11-05 09:02:19.308 I/ClimbSmokeTest( 4061): Bildschirmfoto 142_i_sim_3.png
+11-05 09:02:20.949 I/ClimbSmokeTest( 4061): Bildschirmfoto 143_i_zeiteinteilung.png
+11-05 09:02:21.336 I/ClimbSmokeTest( 4061): Bildschirmfoto 144_i_ergebnis_1.png
+11-05 09:02:21.781 I/ClimbSmokeTest( 4061): Bildschirmfoto 145_i_ergebnis_2.png
+11-05 09:02:22.245 I/ClimbSmokeTest( 4061): Bildschirmfoto 146_i_ergebnis_3.png
+11-05 09:02:22.703 I/ClimbSmokeTest( 4061): Bildschirmfoto 147_i_ergebnis_4.png
+11-05 09:02:23.152 I/ClimbSmokeTest( 4061): Bildschirmfoto 148_i_ergebnis_5.png
+11-05 09:02:23.888 I/ClimbSmokeTest( 4061): Bildschirmfoto 149_i_verlauf.png
+11-05 09:02:24.358 I/ClimbSmokeTest( 4061): Bildschirmfoto 150_i_fehlertraining_knopf.png
+11-05 09:02:24.912 I/ClimbSmokeTest( 4061): Bildschirmfoto 151_i_fehlertraining.png
+11-05 09:02:26.448 I/ClimbSmokeTest( 4061): Bildschirmfoto 152_i_fehlertraining_ergebnis.png
+11-05 09:02:27.747 I/ClimbSmokeTest( 4061): Bildschirmfoto 153_i_ueben_trick.png
+11-05 09:02:28.269 I/ClimbSmokeTest( 4061): Bildschirmfoto 154_i_ueben_falsch.png
+11-05 09:02:29.288 I/ClimbSmokeTest( 4061): Bildschirmfoto 155_i_ueben_weiter.png
+11-05 09:02:29.784 I/ClimbSmokeTest( 4061): Bildschirmfoto 156_i_ueben_ergebnis.png
+11-05 09:02:30.502 I/TestRunner( 4061): finished: i_medizinertest(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:02:30.508 I/TestRunner( 4061): started: j0_einheiten(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:02:32.001 I/ClimbSmokeTest( 4061): Bildschirmfoto 157_j0_freies_training_einheiten.png
+11-05 09:02:32.818 I/ClimbSmokeTest( 4061): Bildschirmfoto 158_j0_einheiten_karte_1.png
+11-05 09:02:33.285 I/ClimbSmokeTest( 4061): Bildschirmfoto 159_j0_einheiten_karte_2.png
+11-05 09:02:33.767 I/ClimbSmokeTest( 4061): Bildschirmfoto 160_j0_einheiten_karte_3.png
+11-05 09:02:34.513 I/ClimbSmokeTest( 4061): Bildschirmfoto 161_j0_aufgabe_0.png
+11-05 09:02:35.564 I/ClimbSmokeTest( 4061): Bildschirmfoto 162_j0_aufgabe_1.png
+11-05 09:02:36.921 I/ClimbSmokeTest( 4061): Bildschirmfoto 163_j0_aufgabe_2.png
+11-05 09:02:37.924 I/ClimbSmokeTest( 4061): Bildschirmfoto 164_j0_loesungsweg.png
+11-05 09:02:38.430 I/ClimbSmokeTest( 4061): Bildschirmfoto 165_j0_aufgabe_3.png
+11-05 09:02:42.452 I/ClimbSmokeTest( 4061): Bildschirmfoto 166_j0_ergebnis.png
+11-05 09:02:43.300 I/TestRunner( 4061): finished: j0_einheiten(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:02:43.307 I/TestRunner( 4061): started: j_prognose(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:02:46.000 I/ClimbSmokeTest( 4061): Bildschirmfoto 167_j_prognose.png
+11-05 09:02:46.467 I/ClimbSmokeTest( 4061): Bildschirmfoto 168_j_fehlertraining_knopf.png
+11-05 09:02:47.115 I/ClimbSmokeTest( 4061): Bildschirmfoto 169_j_fehlertraining_fehler.png
+11-05 09:02:48.250 I/ClimbSmokeTest( 4061): Bildschirmfoto 170_j_fehlertraining_ergebnis_1.png
+11-05 09:02:48.701 I/ClimbSmokeTest( 4061): Bildschirmfoto 171_j_fehlertraining_ergebnis_2.png
+11-05 09:02:49.619 I/TestRunner( 4061): finished: j_prognose(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:02:49.623 I/TestRunner( 4061): started: k_zeitanalyse(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:02:52.234 I/ClimbSmokeTest( 4061): Bildschirmfoto 172_k_zeiteinteilung.png
+11-05 09:02:53.001 I/ClimbSmokeTest( 4061): Bildschirmfoto 173_k_fehler_aufgeklappt.png
+11-05 09:02:53.954 I/TestRunner( 4061): finished: k_zeitanalyse(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:02:53.956 I/TestRunner( 4061): run finished: 13 tests, 0 failed, 0 ignored
+11-05 09:02:54.181 I/AndroidRuntime( 4025): VM exiting with result code 0.
+11-05 09:03:02.519 D/AndroidRuntime( 8055): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-05 09:03:02.523 I/AndroidRuntime( 8055): Using default boot image
+11-05 09:03:02.523 I/AndroidRuntime( 8055): Leaving lock profiling enabled
+11-05 09:03:02.660 D/AndroidRuntime( 8055): Calling main entry com.android.commands.am.Am
+11-05 09:03:03.485 I/TestRunner( 8067): run started: 1 tests
+11-05 09:03:03.494 I/TestRunner( 8067): started: l_kiCoach(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:03:16.330 I/ClimbSmokeTest( 8067): Modell im Emulator: Ready(bytes=2588147776), Arbeitsspeicher etwa 8 GB
+11-05 09:03:18.164 I/AiEngine( 8067): Modellinfo: MTP=true, Denken=false, Werkzeuge=false
+11-05 09:03:18.170 I/litert  ( 8067): [environment.cc:36] Creating LiteRT environment with options
+11-05 09:03:18.170 W/litert  ( 8067): [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.
+11-05 09:03:18.170 I/litert  ( 8067): [accelerator_registry.cc:54] RegisterAccelerator: ptr=0x73c1fdb7dde0, name=LiteRT GPU
+11-05 09:03:18.170 I/litert  ( 8067): [gpu_registry.cc:113] Statically linked GPU accelerator registered.
+11-05 09:03:18.170 I/litert  ( 8067): [accelerator_registry.cc:54] RegisterAccelerator: ptr=0x73c1fdb78a50, name=CpuAccelerator
+11-05 09:03:18.170 I/litert  ( 8067): [cpu_registry.cc:75] XNNPACK CPU accelerator registered.
+11-05 09:03:18.307 I/litert  ( 8067): [environment.cc:36] Creating LiteRT environment with options
+11-05 09:03:18.307 W/litert  ( 8067): [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.
+11-05 09:03:18.307 I/litert  ( 8067): [accelerator_registry.cc:54] RegisterAccelerator: ptr=0x73c1fdb7d600, name=LiteRT GPU
+11-05 09:03:18.307 I/litert  ( 8067): [gpu_registry.cc:113] Statically linked GPU accelerator registered.
+11-05 09:03:18.307 I/litert  ( 8067): [accelerator_registry.cc:54] RegisterAccelerator: ptr=0x73c1fdb768a0, name=CpuAccelerator
+11-05 09:03:18.307 I/litert  ( 8067): [cpu_registry.cc:75] XNNPACK CPU accelerator registered.
+11-05 09:03:18.308 I/litert  ( 8067): [magic_number_utils.cc:101] Loaded: num_subgraphs=976, num_signatures=4
+11-05 09:03:18.308 I/litert  ( 8067): [magic_number_utils.cc:109]   signature=decode, subgraph_index=0, num_tensors=2703, num_inputs=35, num_outputs=32, num_ops=2068
+11-05 09:03:18.308 I/litert  ( 8067): [magic_number_utils.cc:109]   signature=prefill_1024, subgraph_index=1, num_tensors=1454, num_inputs=35, num_outputs=30, num_ops=1107
+11-05 09:03:18.308 I/litert  ( 8067): [magic_number_utils.cc:109]   signature=prefill_128, subgraph_index=2, num_tensors=1454, num_inputs=35, num_outputs=30, num_ops=1107
+11-05 09:03:18.308 I/litert  ( 8067): [magic_number_utils.cc:109]   signature=verify, subgraph_index=3, num_tensors=2887, num_inputs=35, num_outputs=32, num_ops=2243
+11-05 09:03:18.308 I/litert  ( 8067): [magic_number_utils.cc:113] Magic number configs: num_configs=1
+11-05 09:03:18.308 I/litert  ( 8067): [magic_number_utils.cc:120]   config[0]: magic_number=32003, target_number=8192, signature_prefix=null
+11-05 09:03:18.310 I/litert  ( 8067): [magic_number_utils.cc:536] 439 tensors of signature decode have been updated for magic number  32003 to target number 8192
+11-05 09:03:18.312 I/litert  ( 8067): [magic_number_utils.cc:536] 271 tensors of signature prefill_1024 have been updated for magic number  32003 to target number 8192
+11-05 09:03:18.313 I/litert  ( 8067): [magic_number_utils.cc:536] 270 tensors of signature prefill_128 have been updated for magic number  32003 to target number 8192
+11-05 09:03:18.316 I/litert  ( 8067): [magic_number_utils.cc:536] 444 tensors of signature verify have been updated for magic number  32003 to target number 8192
+11-05 09:03:18.316 I/litert  ( 8067): [compiled_model.cc:829] Flatbuffer model initialized directly from incoming litert model.
+11-05 09:03:22.078 I/litert  ( 8067): [environment.cc:36] Creating LiteRT environment with options
+11-05 09:03:22.078 W/litert  ( 8067): [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.
+11-05 09:03:22.078 I/litert  ( 8067): [accelerator_registry.cc:54] RegisterAccelerator: ptr=0x73c1fdc7bb30, name=LiteRT GPU
+11-05 09:03:22.078 I/litert  ( 8067): [gpu_registry.cc:113] Statically linked GPU accelerator registered.
+11-05 09:03:22.078 I/litert  ( 8067): [accelerator_registry.cc:54] RegisterAccelerator: ptr=0x73c1fdc7e1b0, name=CpuAccelerator
+11-05 09:03:22.078 I/litert  ( 8067): [cpu_registry.cc:75] XNNPACK CPU accelerator registered.
+11-05 09:03:22.133 I/litert  ( 8067): [magic_number_utils.cc:101] Loaded: num_subgraphs=1, num_signatures=1
+11-05 09:03:22.133 I/litert  ( 8067): [magic_number_utils.cc:109]   signature=embedder, subgraph_index=0, num_tensors=16, num_inputs=1, num_outputs=1, num_ops=8
+11-05 09:03:22.133 I/litert  ( 8067): [magic_number_utils.cc:113] Magic number configs: num_configs=1
+11-05 09:03:22.133 I/litert  ( 8067): [magic_number_utils.cc:120]   config[0]: magic_number=32003, target_number=8192, signature_prefix=null
+11-05 09:03:22.133 I/litert  ( 8067): [compiled_model.cc:829] Flatbuffer model initialized directly from incoming litert model.
+11-05 09:03:22.138 I/litert  ( 8067): [magic_number_utils.cc:101] Loaded: num_subgraphs=1, num_signatures=1
+11-05 09:03:22.138 I/litert  ( 8067): [magic_number_utils.cc:109]   signature=eoa, subgraph_index=0, num_tensors=1, num_inputs=0, num_outputs=1, num_ops=0
+11-05 09:03:22.138 I/litert  ( 8067): [magic_number_utils.cc:113] Magic number configs: num_configs=1
+11-05 09:03:22.138 I/litert  ( 8067): [magic_number_utils.cc:120]   config[0]: magic_number=32003, target_number=8192, signature_prefix=null
+11-05 09:03:22.138 I/litert  ( 8067): [compiled_model.cc:829] Flatbuffer model initialized directly from incoming litert model.
+11-05 09:03:22.139 I/litert  ( 8067): [compiled_model.cc:1856] Tracked constant output tensor eoa_embedding with locked address
+11-05 09:03:22.139 I/litert  ( 8067): [magic_number_utils.cc:101] Loaded: num_subgraphs=1, num_signatures=1
+11-05 09:03:22.139 I/litert  ( 8067): [magic_number_utils.cc:109]   signature=eoi, subgraph_index=0, num_tensors=1, num_inputs=0, num_outputs=1, num_ops=0
+11-05 09:03:22.139 I/litert  ( 8067): [magic_number_utils.cc:113] Magic number configs: num_configs=1
+11-05 09:03:22.139 I/litert  ( 8067): [magic_number_utils.cc:120]   config[0]: magic_number=32003, target_number=8192, signature_prefix=null
+11-05 09:03:22.139 I/litert  ( 8067): [compiled_model.cc:829] Flatbuffer model initialized directly from incoming litert model.
+11-05 09:03:22.139 I/litert  ( 8067): [compiled_model.cc:1856] Tracked constant output tensor eoi_embedding with locked address
+11-05 09:03:22.140 I/litert  ( 8067): [magic_number_utils.cc:101] Loaded: num_subgraphs=1, num_signatures=1
+11-05 09:03:22.140 I/litert  ( 8067): [magic_number_utils.cc:109]   signature=per_layer_embedder, subgraph_index=0, num_tensors=83, num_inputs=1, num_outputs=1, num_ops=42
+11-05 09:03:22.140 I/litert  ( 8067): [magic_number_utils.cc:113] Magic number configs: num_configs=1
+11-05 09:03:22.140 I/litert  ( 8067): [magic_number_utils.cc:120]   config[0]: magic_number=32003, target_number=8192, signature_prefix=null
+11-05 09:03:22.140 I/litert  ( 8067): [compiled_model.cc:829] Flatbuffer model initialized directly from incoming litert model.
+11-05 09:03:22.296 I/litert  ( 8067): [magic_number_utils.cc:101] Loaded: num_subgraphs=30, num_signatures=1
+11-05 09:03:22.296 I/litert  ( 8067): [magic_number_utils.cc:109]   signature=mtp_drafter, subgraph_index=0, num_tensors=275, num_inputs=8, num_outputs=2, num_ops=198
+11-05 09:03:22.296 I/litert  ( 8067): [magic_number_utils.cc:113] Magic number configs: num_configs=1
+11-05 09:03:22.296 I/litert  ( 8067): [magic_number_utils.cc:120]   config[0]: magic_number=32003, target_number=8192, signature_prefix=null
+11-05 09:03:22.296 I/litert  ( 8067): [magic_number_utils.cc:536] 57 tensors of signature mtp_drafter have been updated for magic number  32003 to target number 8192
+11-05 09:03:22.296 I/litert  ( 8067): [compiled_model.cc:829] Flatbuffer model initialized directly from incoming litert model.
+11-05 09:03:22.424 I/AiEngine( 8067): gemma4-e2b geladen: CPU, MTP=true, 4258 ms
+11-05 09:03:22.430 I/ClimbSmokeTest( 8067): Laden dauerte 4 s
+11-05 09:03:22.904 I/ClimbSmokeTest( 8067): Bildschirmfoto 175_l_ki_start.png
+11-05 09:03:22.904 I/ClimbSmokeTest( 8067): KI geladen: Ready(model=GEMMA4_E2B, backend=CPU, fast=true, thinking=true, tools=true, loadMs=4256)
+11-05 09:03:25.195 I/ClimbSmokeTest( 8067): Bildschirmfoto 176_l_ki_rechnen_tastatur.png
+11-05 09:04:14.089 I/ClimbSmokeTest( 8067): Dauer „l_ki_rechnen“: 48 s
+11-05 09:04:14.545 I/ClimbSmokeTest( 8067): Bildschirmfoto 178_l_ki_rechnen.png
+11-05 09:04:14.545 I/ClimbSmokeTest( 8067): === l_ki_rechnen ===
+11-05 09:04:14.545 I/ClimbSmokeTest( 8067): [USER DONE] Wie viel ist 17 mal 23? Rechne mit dem Werkzeug nach.
+11-05 09:04:14.545 I/ClimbSmokeTest( 8067): [ASSISTANT DONE] Das Ergebnis von 17 mal 23 ist 391.
+11-05 09:04:14.545 I/ClimbSmokeTest( 8067):   Werkzeug calculate: 17 * 23 = 391
+11-05 09:04:14.545 I/ClimbSmokeTest( 8067): Status: Ready(model=GEMMA4_E2B, backend=CPU, fast=true, thinking=true, tools=true, loadMs=4256)
+11-05 09:04:14.546 I/ClimbSmokeTest( 8067): Rechnung richtig (391).
+11-05 09:04:28.352 I/ClimbSmokeTest( 8067): Dauer „l_ki_vorschlag“: 11 s
+11-05 09:04:28.817 I/ClimbSmokeTest( 8067): Bildschirmfoto 179_l_ki_vorschlag.png
+11-05 09:04:28.818 I/ClimbSmokeTest( 8067): === l_ki_vorschlag ===
+11-05 09:04:28.818 I/ClimbSmokeTest( 8067): [USER DONE] Bereite mir eine Übung zu Prozenten vor.
+11-05 09:04:28.818 I/ClimbSmokeTest( 8067): [ASSISTANT DONE] Ich habe eine Übung zu Prozenten vorbereitet. Du kannst sie starten, wenn du bereit bist.
+11-05 09:04:28.818 I/ClimbSmokeTest( 8067):   Werkzeug prepare_practice: Gezielt üben
+11-05 09:04:28.818 I/ClimbSmokeTest( 8067):   Vorschlag: ApPractice(categories=[PERCENT])
+11-05 09:04:28.818 I/ClimbSmokeTest( 8067): Status: Ready(model=GEMMA4_E2B, backend=CPU, fast=true, thinking=true, tools=true, loadMs=4256)
+11-05 09:04:29.931 I/ClimbSmokeTest( 8067): Bildschirmfoto 180_l_ki_uebung_gestartet.png
+11-05 09:04:29.931 I/ClimbSmokeTest( 8067): Vorschlag gestartet: Prozente in Textaufgaben
+11-05 09:04:47.572 I/ClimbSmokeTest( 8067): Dauer „l_ki_aufgabe“: 15 s
+11-05 09:04:48.033 I/ClimbSmokeTest( 8067): Bildschirmfoto 181_l_ki_aufgabe.png
+11-05 09:04:48.033 I/ClimbSmokeTest( 8067): === l_ki_aufgabe ===
+11-05 09:04:48.033 I/ClimbSmokeTest( 8067): [USER DONE] Stell mir eine leichte Aufgabe zum Dreisatz.
+11-05 09:04:48.033 I/ClimbSmokeTest( 8067): [ASSISTANT DONE] Hier ist deine Aufgabe: 5 Packungen Verbandsmaterial kosten 55 €. Wie viel kosten 6 Packungen? Gesucht in €
+11-05 09:04:48.033 I/ClimbSmokeTest( 8067):   (an das Modell: Hier ist deine Aufgabe: 5 Packungen Verbandsmaterial kosten 55 €. Wie viel kosten 6 Packungen? Gesucht in €
+11-05 09:04:48.033 I/ClimbSmokeTest( 8067): 
+11-05 09:04:48.033 I/ClimbSmokeTest( 8067): (Aufgabe A1, als Karte gezeigt: 5 Packungen Verbandsmaterial kosten 55 €. Wie viel kosten 6 Packungen? Gesucht in €))
+11-05 09:04:48.033 I/ClimbSmokeTest( 8067): Status: Ready(model=GEMMA4_E2B, backend=CPU, fast=true, thinking=true, tools=true, loadMs=4256)
+11-05 09:04:48.043 I/ClimbSmokeTest( 8067): Aufgabenkarten zu sehen: 1
+11-05 09:05:11.606 I/ClimbSmokeTest( 8067): Dauer „l_ki_aufgabe_antwort“: 21 s
+11-05 09:05:12.068 I/ClimbSmokeTest( 8067): Bildschirmfoto 182_l_ki_aufgabe_antwort.png
+11-05 09:05:12.068 I/ClimbSmokeTest( 8067): === l_ki_aufgabe_antwort ===
+11-05 09:05:12.068 I/ClimbSmokeTest( 8067): [USER DONE] Mein Ergebnis: 66
+11-05 09:05:12.068 I/ClimbSmokeTest( 8067): [ASSISTANT DONE] Richtig! Das ist die richtige Antwort. Du hast den Dreisatz sehr gut gelöst.
+11-05 09:05:12.068 I/ClimbSmokeTest( 8067): 
+11-05 09:05:12.068 I/ClimbSmokeTest( 8067): Möchtest du eine weitere Aufgabe zu diesem Thema machen, oder möchtest du etwas anderes üben?
+11-05 09:05:12.068 I/ClimbSmokeTest( 8067):   Werkzeug check_answer: A1: richtig
+11-05 09:05:12.068 I/ClimbSmokeTest( 8067): Status: Ready(model=GEMMA4_E2B, backend=CPU, fast=true, thinking=true, tools=true, loadMs=4256)
+11-05 09:05:12.606 I/ClimbSmokeTest( 8067): Bildschirmfoto 183_l_ki_fokus.png
+11-05 09:07:38.756 I/ClimbSmokeTest( 8067): Dauer „l_ki_fehler“: 146 s
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): Bildschirmfoto 185_l_ki_fehler.png
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): === l_ki_fehler ===
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): [USER DONE] Wo lag mein Fehler?
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067):   (an das Modell: Es geht um diese Aufgabe aus der App (TMSnat-Simulation):
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): Nach 40 % Rabatt kostet eine Packung Teststreifen 300 €. Im Wartezimmer stehen 11 Stühle. Wie viel hat sie vorher gekostet?
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): Gesucht in €
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): Antwortmöglichkeiten: (A) 300 €  (B) 500 €  (C) 550 €  (D) 600 €  (E) 1.000 €
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): Aufgabentyp: Preis vorher (Grundwert) (Prozente in Textaufgaben)
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): Meine Antwort: (A) 300 € – falsch.
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): Richtig ist: (B) 500 €
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): Von der App erkannter Denkfehler: Das ist der Preis nachher – gefragt ist der Preis vorher.
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): Meine Zeit: 84 Sekunden
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): Methode: Grundwert, Prozentwert, Prozentsatz
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): Lösungsweg der App:
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): 1. Neuer Preis in Proze)
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): [ASSISTANT DONE] Du hast den Denkfehler gemacht, weil du den Preis nach dem Rabatt genommen hast.
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): 
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): Die Aufgabe fragt, wie viel die Packung **vor** dem Rabatt gekostet hat (den Grundwert).
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): 
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): * **300 €** ist der Preis *nach* dem 40 % Rabatt.
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): * Du musst herausfinden, was 300 € darstellen, wenn 40 % davon abgezogen wurden.
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): 
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): Die App hat dir den richtigen Weg gezeigt: Du musst den Prozentsatz des *neuen* Preises (60 %) herausfinden und diesen Prozentsatz auf den ursprünglichen Preis anwenden.
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): 
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): Zusammengefasst: **Wenn du den Preis nach dem Rabatt hast, musst du ihn durch den verbleibenden Prozentsatz teilen, um den ursprünglichen Preis zu finden.**
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067):   (Gedanken: Thinking Process:
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): 
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): 1. **Analyze the Request:** The user is asking for an explanation of their mistake on a specific TMSnat simulation task.
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067):     * **Task:** "Nach 40 % Rabatt kostet eine Packung Teststreifen 300 €. Im Wartezimmer stehen 11 Stühle. Wie viel hat sie vorher gekostet?" (After a 40% discount, a pack of test strips costs €300. There are 11 chairs in the waiting room. How much did it cost before?)
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067):     * **User's Answer:** (A) 300 € (Incorrect).
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067):     * **Correct Answer:** (B) 500 €.
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067):     * **App's Error Diagnosis:** "Das ist der Preis nachher – gefragt ist der Preis vorher." (This is the price after, the price before is asked.)
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067):     * **User's Method:** Grundwert, Prozentwert, Prozentsatz.
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067):     * **App's Solution Path:**
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067):         1. New price in percent: 100 - 40 = 60 (Warning: The new price is not 100%, but 60%.)
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067):         2. 300 × 100 : 60 = 500 (300 € are 60% – so multiply by 100 and divide by 60.)
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067):         3. Answer: (B) 500 €.
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): 
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): 2. **Determine the Goal:** I need to explain *why* the user chose 300 € (the discounted price) instead of 500 € (the original price), focusing on the core concept of the problem (finding the original value when a percentage *)
+11-05 09:07:39.203 I/ClimbSmokeTest( 8067): Status: Ready(model=GEMMA4_E2B, backend=CPU, fast=true, thinking=true, tools=true, loadMs=4256)
+11-05 09:07:39.584 I/ClimbSmokeTest( 8067): Bildschirmfoto 186_l_ki_fehler_ganz_1.png
+11-05 09:07:40.060 I/ClimbSmokeTest( 8067): Bildschirmfoto 187_l_ki_fehler_ganz_2.png
+11-05 09:07:40.833 I/ClimbSmokeTest( 8067): Bildschirmfoto 188_l_ki_einstellungen_1.png
+11-05 09:07:41.319 I/ClimbSmokeTest( 8067): Bildschirmfoto 189_l_ki_einstellungen_2.png
+11-05 09:07:41.800 I/ClimbSmokeTest( 8067): Bildschirmfoto 190_l_ki_einstellungen_3.png
+11-05 09:07:42.267 I/ClimbSmokeTest( 8067): Bildschirmfoto 191_l_ki_einstellungen_4.png
+11-05 09:07:43.951 I/TestRunner( 8067): finished: l_kiCoach(com.helddertierwelt.mentalmath.ClimbSmokeTest)
+11-05 09:07:43.954 I/TestRunner( 8067): run finished: 1 tests, 0 failed, 0 ignored
+11-05 09:07:44.112 I/AndroidRuntime( 8055): VM exiting with result code 0.

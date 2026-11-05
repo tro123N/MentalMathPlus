@@ -1,0 +1,7 @@
+smoke-model/gemma-4-E2B-it.litertlm: 1 file pushed, 0 skipped. 174.2 MB/s (2588147712 bytes in 14.165s)
+Aufspielen, Versuch 1: Status 0 nach 23 s
+KI-Modell aufgespielt: ja
+total 2527496
+-rw-r--r-- 1 shell ext_data_rw 2588147712 2026-11-05 08:50 gemma-4-E2B-it.litertlm
+Filesystem       Size Used Avail Use% Mounted on
+/dev/block/dm-40 7.7G 3.3G  4.2G  45% /data/user/0

@@ -1,0 +1,7 @@
+Unit-Tests und Release-Build: OK
+APK: app-foss-release-unsigned.apk 28M
+     0.0 MB  lib/arm64-v8a/libandroidx.graphics.path.so
+     0.0 MB  lib/arm64-v8a/libdatastore_shared_counter.so
+    21.1 MB  lib/arm64-v8a/liblitertlm_jni.so
+     0.0 MB  lib/armeabi-v7a/libandroidx.graphics.path.so
+     0.0 MB  lib/armeabi-v7a/libdatastore_shared_counter.so
