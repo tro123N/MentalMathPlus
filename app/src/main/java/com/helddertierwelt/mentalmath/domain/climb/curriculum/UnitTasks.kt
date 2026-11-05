@@ -305,7 +305,9 @@ object UnitTasks {
         repeat(60) {
             val i = r.nextInt(dim.units.size - 1)
             val big = dim.units[i]
-            val small = dim.units[i + 1 + r.nextInt(minOf(2, dim.units.size - i - 1))]
+            // Bei der Zeit nur benachbarte Einheiten (h + min, min + s) – „h + s“ kommt im Alltag kaum vor.
+            val skip = if (dim === TIME) 0 else r.nextInt(minOf(2, dim.units.size - i - 1))
+            val small = dim.units[i + 1 + skip]
             val ratio = ratio(big, small) ?: return@repeat
             if (ratio <= BigDecimal.ONE || ratio > BigDecimal(10000)) return@repeat
             val a = dec(r.between(11, 99).toLong(), 1).stripTrailingZeros()
