@@ -333,6 +333,14 @@ class ClimbSmokeTest {
         waitForTag("resultColumn")
     }
 
+    /** Auf der Startseite zu einem Element scrollen und es antippen. */
+    private fun home(tag: String) {
+        compose.onNodeWithTag("climbList").performScrollToNode(hasTestTag(tag))
+        compose.waitForIdle()
+        compose.onNodeWithTag(tag).performClick()
+        compose.waitForIdle()
+    }
+
     private fun clickButton(text: String) {
         compose.onNodeWithText(text).performScrollTo().performClick()
         compose.waitForIdle()
@@ -434,7 +442,7 @@ class ClimbSmokeTest {
         shot("a_start")
         val first = Curriculum.worlds.first().skills.first()
 
-        compose.onNodeWithText("Weiterklettern").performClick()
+        home("overviewContinue")
         waitForTag("levelColumn")
         shot("a_level")
 
@@ -511,13 +519,13 @@ class ClimbSmokeTest {
         // Jede Welt aufgeklappt fotografieren (Liste: Übersicht, dann eine Karte pro Welt).
         Curriculum.worlds.forEachIndexed { index, world ->
             val list = compose.onNodeWithTag("climbList")
-            list.performScrollToIndex(index + 2)
+            list.performScrollToIndex(index + 3)
             compose.waitForIdle()
             if (compose.onAllNodesWithTag("skill_${world.skills.first().id}").fetchSemanticsNodes().isEmpty()) {
                 compose.onNodeWithTag("worldHeader_${world.id}").performClick()
                 compose.waitForIdle()
             }
-            list.performScrollToIndex(index + 2)
+            list.performScrollToIndex(index + 3)
             shot("b_welt_${world.number}")
         }
 
@@ -562,9 +570,10 @@ class ClimbSmokeTest {
         // Eingerostetes Level auffrischen.
         compose.onNodeWithTag("climbList").performScrollToIndex(0)
         compose.waitForIdle()
-        compose.onAllNodesWithText("Auffrischen:", substring = true).fetchSemanticsNodes().let { nodes ->
+        runCatching { compose.onNodeWithTag("climbList").performScrollToNode(hasTestTag("overviewRefresh")) }
+        compose.onAllNodesWithTag("overviewRefresh").fetchSemanticsNodes().let { nodes ->
             if (nodes.isNotEmpty()) {
-                compose.onNodeWithText("Auffrischen:", substring = true).performClick()
+                compose.onNodeWithTag("overviewRefresh").performClick()
                 waitForTag("levelColumn")
                 shot("b_auffrischen_level")
                 clickButton("Auffrischen")
@@ -580,7 +589,7 @@ class ClimbSmokeTest {
         // Fällige Wiederholung.
         compose.onNodeWithTag("climbList").performScrollToIndex(0)
         compose.waitForIdle()
-        compose.onNodeWithText("Wiederholen", substring = true).performClick()
+        home("overviewReview")
         waitForSession()
         solveSession(name = "b_wiederholung", shotAt = setOf(0))
         waitForResult()
@@ -643,7 +652,7 @@ class ClimbSmokeTest {
     @Test
     fun d_handbuch() {
         waitForHome()
-        compose.onNodeWithTag("mini_handbook").performScrollTo().performClick()
+        home("mini_handbook")
         waitForTag("handbookList")
         shot("d_handbuch")
         val list = compose.onNodeWithTag("handbookList")
@@ -763,7 +772,7 @@ class ClimbSmokeTest {
         compose.runOnUiThread { vm.importProgress(ClimbProgress()) }
         compose.waitUntil(5_000) { vm.progress.value.skills.isEmpty() && vm.session.value == null }
         compose.waitForIdle()
-        compose.onNodeWithTag("mini_placement").performScrollTo().performClick()
+        home("mini_placement")
         waitForTag("placementColumn")
         shootScrolling("placementColumn", "g_einstufung", maxShots = 3)
         compose.onNodeWithTag("place_w1").performScrollTo().performClick()
@@ -1102,6 +1111,83 @@ class ClimbSmokeTest {
             shot("k_fehler_aufgeklappt")
         }
         clickButton("Zum Kletterweg")
+        waitForHome()
+    }
+
+    /** Trainingsplan „Heute“: Ziel wählen, Plan erstellen, Bausteine nacheinander abarbeiten. */
+    @Test
+    fun m_trainingsplan() {
+        waitForHome()
+        compose.runOnUiThread {
+            vm.resetPlusSettings()
+            vm.importProgress(ClimbProgress())
+        }
+        compose.waitUntil(5_000) { vm.progress.value.skills.isEmpty() && !vm.plusSettings.value.planSetUp }
+        compose.onNodeWithTag("climbList").performScrollToIndex(0)
+        compose.waitForIdle()
+        shot("m_plan_einrichten")
+        compose.onNodeWithTag("planGoal_tmsnat").performClick()
+        compose.onNodeWithTag("planMinutes_30").performClick()
+        compose.waitForIdle()
+        shot("m_plan_auswahl")
+        home("planCreate")
+        compose.waitUntil(5_000) { vm.plusSettings.value.planSetUp }
+        compose.waitUntil(5_000) { vm.progress.value.plan != null }
+        compose.onNodeWithTag("climbList").performScrollToIndex(0)
+        compose.waitForIdle()
+        shot("m_plan_neu")
+        assertTrue(vm.progress.value.plan!!.blocks.isNotEmpty())
+
+        // Fortgeschrittener Stand: Welt 1 und 2 geschafft, länger nicht geübt, ein Level mit Fehlermuster.
+        val now = vm.now()
+        val day = Progression.DAY_MS
+        val skills = Curriculum.worlds.take(2).flatMap { it.skills }
+        var seeded = ClimbProgress(skills = skills.associate { sk ->
+            sk.id to com.helddertierwelt.mentalmath.domain.climb.model.SkillProgress(
+                stars = 2, testsTaken = 1, testsPassed = 1, practiced = 20, practicedCorrect = 18, lastPracticedAt = now - 12 * day,
+                stability = 4.0, memoryAt = now - 12 * day, intervalDays = 6, nextReviewAt = now - 6 * day,
+                recent = List(10) { i -> if (i % 4 == 0) -6000L else (sk.goals.star1 * 1300).toLong() },
+            )
+        })
+        val weak = skills[3]
+        val errors = List(4) { com.helddertierwelt.mentalmath.domain.climb.model.ErrorEntry(weak.id, now - day, "Übertrag vergessen") }
+        seeded = seeded.copy(errors = errors)
+        compose.runOnUiThread { vm.importProgress(seeded) }
+        compose.waitUntil(5_000) { vm.progress.value.skills.size == skills.size }
+        compose.waitUntil(5_000) { vm.progress.value.plan?.blocks?.any { it.kind == "WARMUP" } == true }
+        compose.onNodeWithTag("climbList").performScrollToIndex(0)
+        compose.waitForIdle()
+        shot("m_plan_fortgeschritten")
+        Log.i(TAG, "Plan: " + vm.progress.value.plan!!.blocks.joinToString { "${it.kind}:${it.title} (${it.reason})" })
+
+        home("planStart")
+        waitForSession()
+        solveSession(name = "m_aufwaermen", shotAt = setOf(0))
+        waitForResult()
+        assertTrue("Aufwärmen nicht abgehakt", vm.progress.value.plan!!.done.isNotEmpty())
+        compose.onNodeWithTag("resultPlanNext").performScrollTo()
+        compose.waitForIdle()
+        shot("m_ergebnis_weiter_im_plan")
+        compose.onNodeWithTag("resultPlanNext").performClick()
+        compose.waitForIdle()
+        if (vm.session.value != null) {
+            solveSession(name = "m_zweiter_schritt", shotAt = setOf(0))
+            waitForResult()
+            clickButton("Zum Kletterweg")
+        } else {
+            waitForTag("levelColumn")
+            shot("m_neues_level")
+            back()
+        }
+        waitForHome()
+        compose.onNodeWithTag("climbList").performScrollToIndex(0)
+        compose.waitForIdle()
+        shot("m_plan_fortschritt")
+        compose.onNodeWithTag("planSettings").performClick()
+        compose.onNodeWithTag("settingsPlan").performScrollTo()
+        compose.waitForIdle()
+        shot("m_einstellungen_plan")
+        back()
         waitForHome()
     }
 

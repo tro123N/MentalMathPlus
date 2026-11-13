@@ -28,6 +28,9 @@ import com.helddertierwelt.mentalmath.data.climb.ClimbRepository
 import com.helddertierwelt.mentalmath.data.climb.PlusSettingsRepository
 import com.helddertierwelt.mentalmath.domain.climb.curriculum.Curriculum
 import com.helddertierwelt.mentalmath.domain.climb.engine.AdaptiveState
+import com.helddertierwelt.mentalmath.domain.climb.engine.DailyPlan
+import com.helddertierwelt.mentalmath.domain.climb.model.DayPlan
+import com.helddertierwelt.mentalmath.domain.climb.model.PlanBlock
 import com.helddertierwelt.mentalmath.domain.climb.engine.ApForecast
 import com.helddertierwelt.mentalmath.domain.climb.engine.ApReview
 import com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode
@@ -90,6 +93,17 @@ data class FreeConfig(
     }
 }
 
+/** Was nach dem Antippen eines Plan-Bausteins passiert. */
+sealed interface PlanStart {
+    /** Eine Einheit wurde gestartet: zum Spielen wechseln. */
+    data object Play : PlanStart
+
+    /** Das Level öffnen (neues Level: erst verstehen, dann üben). */
+    data class Level(val skillId: String) : PlanStart
+
+    data object Failed : PlanStart
+}
+
 @HiltViewModel
 class ClimbViewModel @Inject constructor(
     private val repository: ClimbRepository,
@@ -127,6 +141,14 @@ class ClimbViewModel @Inject constructor(
     /** Startet die zuletzt gestartete Einheit des freien Trainings bzw. des TMSnat-Trainings neu. */
     private var lastFreeStart: (() -> Boolean)? = null
     private var tickJob: Job? = null
+
+    /** Plan-Baustein, der mit der nächsten Einheit beginnt bzw. gerade läuft. */
+    private var pendingPlanBlock: String? = null
+    private var activePlanBlock: String? = null
+
+    /** Die zuletzt beendete Einheit kam aus dem Tagesplan. */
+    private val _fromPlan = MutableStateFlow(false)
+    val fromPlan: StateFlow<Boolean> = _fromPlan.asStateFlow()
     private var advanceJob: Job? = null
     private var problemStart = 0L
     private var pausedAt: Long? = null
@@ -155,6 +177,63 @@ class ClimbViewModel @Inject constructor(
     fun nextSkill(p: ClimbProgress): Skill? = Progression.nextSkill(worlds, p)
 
     fun streak(p: ClimbProgress): Int = Progression.visibleStreak(p, today())
+
+    // --- Trainingsplan -------------------------------------------------------------------------
+
+    /** Der Plan für heute (gespeichert oder neu berechnet). */
+    fun todayPlan(p: ClimbProgress, s: PlusSettings): DayPlan =
+        DailyPlan.current(worlds, p, s.planGoals, s.planMinutes, s.planFollowPath, now(), today())
+
+    /** Den heutigen Plan speichern, damit er über den Tag gleich bleibt. */
+    fun keepPlan(plan: DayPlan) {
+        if (progress.value.plan == plan) return
+        viewModelScope.launch {
+            repository.update { p -> if (p.plan?.let { it.day == plan.day && it.settingsKey == plan.settingsKey } == true) p else p.copy(plan = plan) }
+        }
+    }
+
+    /** Einen Baustein des Plans starten. */
+    fun startPlanBlock(block: PlanBlock): PlanStart {
+        val first = block.skillIds.firstOrNull()
+        if (block.kind == DailyPlan.NEW && first != null) {
+            playTap()
+            return PlanStart.Level(first)
+        }
+        pendingPlanBlock = block.id
+        val p = progress.value
+        val started = when {
+            block.kind == DailyPlan.WARMUP -> {
+                val skills = block.skillIds.mapNotNull { Curriculum.skill(it) }
+                if (skills.isEmpty()) false else {
+                    begin(SessionLogic.createReview(skills, random, block.title))
+                    true
+                }
+            }
+            block.target == DailyPlan.TARGET_AP -> startApPractice()
+            block.target == DailyPlan.TARGET_UNITS -> startUnitsPractice()
+            first != null -> {
+                val skill = Curriculum.skill(first)
+                if (skill == null) false else {
+                    val sp = p.of(first)
+                    val type = if (block.kind == DailyPlan.WEAK && sp.mastered && sp.needsAttention) SessionType.REFRESH else SessionType.PRACTICE
+                    begin(SessionLogic.create(type, skill, random))
+                    true
+                }
+            }
+            else -> false
+        }
+        pendingPlanBlock = null
+        return if (started) PlanStart.Play else PlanStart.Failed
+    }
+
+    /** Ziele, Minuten und Reihenfolge des Plans festlegen. */
+    fun setPlan(goals: List<String>, minutes: Int, followPath: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.update {
+                it.copy(planGoals = goals.ifEmpty { listOf(DailyPlan.GOAL_PROFI) }, planMinutes = minutes, planFollowPath = followPath, planSetUp = true)
+            }
+        }
+    }
 
     // --- Einheiten starten --------------------------------------------------------------------
 
@@ -351,6 +430,7 @@ class ClimbViewModel @Inject constructor(
     }
 
     private fun begin(s: Session) {
+        activePlanBlock = pendingPlanBlock
         advanceJob?.cancel()
         _summary.value = null
         _session.value = s
@@ -559,13 +639,23 @@ class ClimbViewModel @Inject constructor(
 
     private fun finish(s: Session) {
         tickJob?.cancel()
+        val planBlock = activePlanBlock
+        activePlanBlock = null
         viewModelScope.launch {
             var summary: Summary? = null
+            var inPlan = planBlock != null
             repository.update { p ->
                 val (updated, sum) = SessionFinisher.finish(worlds, p, s, now(), today())
                 summary = sum
-                updated
+                if (s.results.isEmpty()) {
+                    updated
+                } else {
+                    val plan = DailyPlan.afterSession(updated.plan, today(), planBlock, s.skillId)
+                    if (plan != updated.plan) inPlan = true
+                    updated.copy(plan = plan)
+                }
             }
+            _fromPlan.value = inPlan
             _summary.value = summary
             val results = s.results
             val accuracy = if (results.isEmpty()) 0.0 else results.count { it.correct }.toDouble() / results.size

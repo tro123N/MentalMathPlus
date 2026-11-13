@@ -60,6 +60,12 @@ data class PlusSettings(
     val aiFast: Boolean = true,
     /** KI-Coach: Modell nur über WLAN herunterladen. */
     val aiWifiOnly: Boolean = true,
+    /** Trainingsplan: Ziele („profi“, „tmsnat“, „abi“), Minuten pro Tag, Kletterweg der Reihe nach. */
+    val planGoals: List<String> = listOf("profi"),
+    val planMinutes: Int = 20,
+    val planFollowPath: Boolean = true,
+    /** Der Trainingsplan wurde eingerichtet (sonst zeigt die Startseite die Einrichtung). */
+    val planSetUp: Boolean = false,
 ) {
     val paletteValue: Palette get() = Palette.of(palette)
 

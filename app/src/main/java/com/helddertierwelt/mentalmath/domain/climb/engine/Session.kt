@@ -502,7 +502,10 @@ object SessionFinisher {
         val (p, summary) = finishSession(worlds, before, session, now, today)
         // Fehlertraining: falsch gelöste Aufgabentypen des TMSnat-Trainings merken (nicht beim geführten Üben).
         val reviewed = if (session.type == SessionType.GUIDED) p else ApReview.update(p, session.results, now)
-        return reviewed to summary
+        // Gedächtnismodell und Fehlerprotokoll (Trainingsplan).
+        val memory = session.type != SessionType.GUIDED && session.type != SessionType.PLACEMENT
+        val remembered = if (session.type == SessionType.GUIDED) reviewed else Memory.update(worlds, reviewed, session.results, now, memory)
+        return remembered to summary
     }
 
     private fun finishSession(

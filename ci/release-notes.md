@@ -1,11 +1,17 @@
-**Mental Math Plus 2.4 – drei neue Welten**
+**Mental Math Plus 2.5 – dein Trainingsplan „Heute“**
 
-**Welt 15 · Mehr Rechentricks:** mal 25 und 125, durch 25 und 125, mal 9/99/999, mal 5/50/500, mal 15, Quadrate um 50 und um 100, Differenz von Quadraten (47 × 53), nahe an 100 malnehmen, Prozent tauschen (8 % von 25 = 25 % von 8).
+Die App plant jetzt jeden Tag eine kurze Einheit für dich – nicht nur Level für Level klettern, sondern auch gezielt wiederholen, wo es hakt.
 
-**Welt 16 · Mathe im Alltag:** negative Zahlen, Mehrwertsteuer (netto ↔ brutto), Rabatt und Rabatt auf Rabatt, Zinsen und Zinseszins, Spritverbrauch und Tanken, Rezepte umrechnen, Uhrzeiten (auch über Mitternacht), Rechnung mit Trinkgeld teilen, Grundpreis pro kg.
+**So funktioniert es:** Oben auf der Startseite wählst du einmal dein Ziel (Kopfrechenprofi, TMSnat, Abitur/LK – auch mehrere), wie viel Zeit du pro Tag hast (10, 20 oder 30 Minuten) und ob neue Levels **der Reihe nach** kommen oder der Plan sie **frei aus deinen Zielwelten** wählt. Danach siehst du jeden Tag „Heute“:
 
-**Welt 17 · Oberstufe und Mathe-LK (hilfsmittelfrei):** Logarithmen, Potenzen und Wachstum (Verdopplung, Halbwertszeit), Ableitungen, Scheitelpunkt, quadratische Gleichungen (p-q-Formel, Vieta), binomische Formeln, Trigonometrie (Werte und Bogenmaß), Pythagoras, Mittelwert/Median/Erwartungswert, Wahrscheinlichkeit (n über k, Pfadregel, bedingt, Würfel), Vektoren (Skalarprodukt, Betrag, senkrecht), Integrale.
+- **Aufwärmen:** Levels, die du bald vergessen würdest. Die App schätzt für jedes Level, wie lange es im Gedächtnis bleibt – je öfter und sicherer du es nach einer Pause löst, desto länger.
+- **Neu:** das nächste Level.
+- **Schwachstelle:** wo zuletzt viele Fehler waren – auch erkannte Denkfehler, die sich wiederholen („Fehlermuster“).
+- **Tempo:** sicher, aber noch langsam – mit Zielzeit.
+- **Anwenden:** gemischte Aufgaben passend zu deinem Ziel.
 
-Alle drei Welten sind immer offen, jedes Level mit Erklärung, Lösungsweg, typischen Fehlern und Prüfung – und unbegrenzt vielen Aufgaben. Im **freien Training** gibt es dazu die neuen Aufgabenarten „Rechentricks“, „Mathe im Alltag“ und „Oberstufe“.
+Jeder Schritt sagt, **warum** er drin ist. Nach jeder Übung bringt dich „Weiter im Plan“ direkt zum nächsten Schritt. Ziel und Zeit kannst du jederzeit über das Regler-Symbol oder in den Einstellungen unter „Trainingsplan“ ändern.
+
+Dein bisheriger Fortschritt und alle Sterne bleiben erhalten.
 
 **Installieren:** `MentalMathPlus.apk` unten antippen, herunterladen und öffnen. Die neue Version ersetzt die alte, dein Fortschritt bleibt erhalten.

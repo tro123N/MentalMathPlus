@@ -89,6 +89,8 @@ fun ClimbResultScreen(navController: NavController) {
     val aiViewModel: com.helddertierwelt.mentalmath.presentation.climb.AiViewModel = hiltViewModel(owner)
     val summaryOrNull by viewModel.summary.collectAsState()
     val progress by viewModel.progress.collectAsState()
+    val fromPlan by viewModel.fromPlan.collectAsState()
+    val plus by viewModel.plusSettings.collectAsState()
 
     fun toHome() {
         viewModel.playTap()
@@ -149,6 +151,36 @@ fun ClimbResultScreen(navController: NavController) {
                 CardGap()
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     val skillId = summary.skillId
+                    // Trainingsplan: direkt zum nächsten Baustein.
+                    val plan = progress.plan?.takeIf { fromPlan && plus.planSetUp && it.day == viewModel.today() }
+                    val planNext = plan?.next
+                    if (planNext != null) {
+                        ActionButton(
+                            text = "Weiter im Plan",
+                            subtitle = planNext.title,
+                            icon = R.drawable.play_arrow_24dp,
+                            iconTint = green,
+                            onClick = {
+                                when (val start = viewModel.startPlanBlock(planNext)) {
+                                    com.helddertierwelt.mentalmath.presentation.climb.PlanStart.Play -> navController.navigate("climbplay") {
+                                        popUpTo("climbresult") { inclusive = true }
+                                        launchSingleTop = true
+                                    }
+                                    is com.helddertierwelt.mentalmath.presentation.climb.PlanStart.Level -> {
+                                        viewModel.clearSummary()
+                                        navController.navigate("level/${start.skillId}") {
+                                            popUpTo("climb") { inclusive = false }
+                                            launchSingleTop = true
+                                        }
+                                    }
+                                    com.helddertierwelt.mentalmath.presentation.climb.PlanStart.Failed -> Unit
+                                }
+                            },
+                            modifier = Modifier.testTag("resultPlanNext"),
+                        )
+                    } else if (plan?.finished == true) {
+                        BodyText("Plan für heute geschafft – stark!")
+                    }
                     val next = summary.unlocked ?: viewModel.nextSkill(progress)?.takeIf { it.id != skillId && viewModel.isUnlocked(progress, it.id) && summary.outcome?.passed == true }
                     if (next != null) {
                         ActionButton(

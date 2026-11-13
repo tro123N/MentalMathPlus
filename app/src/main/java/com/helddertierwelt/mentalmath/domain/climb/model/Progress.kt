@@ -52,6 +52,10 @@ data class SkillProgress(
     val tests: List<TestLog> = emptyList(),
     /** Das Level wurde über einen Einstufungstest übersprungen. */
     val placed: Boolean = false,
+    /** Gedächtnismodell: nach so vielen Tagen ist die Sicherheit auf 90 % gesunken (0 = noch unbekannt). */
+    val stability: Double = 0.0,
+    /** Zeitpunkt (ms), auf den sich [stability] bezieht – zuletzt geübt. */
+    val memoryAt: Long = 0,
 ) {
     val mastered: Boolean get() = stars >= 1
     val needsAttention: Boolean get() = rusty || refreshPending
@@ -143,6 +147,10 @@ data class ClimbProgress(
     val apMistakes: List<ApMistakeEntry> = emptyList(),
     /** Alle Levels sind offen (Schalter in den Einstellungen) – Sterne gibt es weiter nur durch Prüfungen. */
     val unlockAll: Boolean = false,
+    /** Fehlerprotokoll: die letzten falsch gelösten Aufgaben mit erkanntem Denkfehler. */
+    val errors: List<ErrorEntry> = emptyList(),
+    /** Trainingsplan des Tages (wird einmal pro Tag erstellt). */
+    val plan: DayPlan? = null,
 ) {
     fun of(skillId: String): SkillProgress = skills[skillId] ?: SkillProgress()
 
@@ -177,4 +185,44 @@ fun List<DayStat>.addDay(entry: DayStat, keep: Int): List<DayStat> {
         }
     }
     return if (merged.size > keep) merged.takeLast(keep) else merged
+}
+
+/** Eine falsch gelöste Aufgabe im Fehlerprotokoll. */
+@Serializable
+data class ErrorEntry(
+    val skillId: String,
+    val at: Long,
+    /** Erkannter typischer Denkfehler (falls die Antwort zu einem bekannten Fehler passt). */
+    val note: String? = null,
+)
+
+/** Ein Abschnitt des Tagesplans. */
+@Serializable
+data class PlanBlock(
+    val id: String,
+    /** WARMUP, NEW, WEAK, SPEED oder APPLY. */
+    val kind: String,
+    val title: String,
+    /** Warum dieser Abschnitt heute dran ist (für die Person). */
+    val reason: String,
+    val skillIds: List<String> = emptyList(),
+    /** Anzahl Aufgaben. */
+    val count: Int = 0,
+    /** Bei APPLY: welche Anwendung (ap, units, w15.mixed …). */
+    val target: String? = null,
+)
+
+/** Der Trainingsplan eines Tages. */
+@Serializable
+data class DayPlan(
+    val day: Long,
+    val minutes: Int,
+    val blocks: List<PlanBlock>,
+    /** IDs der erledigten Abschnitte. */
+    val done: List<String> = emptyList(),
+    /** Einstellungen, mit denen der Plan erstellt wurde (ändern sie sich, wird neu geplant). */
+    val settingsKey: String = "",
+) {
+    val next: PlanBlock? get() = blocks.firstOrNull { it.id !in done }
+    val finished: Boolean get() = blocks.isNotEmpty() && blocks.all { it.id in done }
 }

@@ -44,7 +44,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -66,6 +68,8 @@ import com.helddertierwelt.mentalmath.domain.climb.model.ClimbProgress
 import com.helddertierwelt.mentalmath.domain.climb.model.Skill
 import com.helddertierwelt.mentalmath.domain.climb.model.World
 import com.helddertierwelt.mentalmath.presentation.climb.ClimbViewModel
+import com.helddertierwelt.mentalmath.presentation.climb.PlanStart
+import com.helddertierwelt.mentalmath.presentation.climb.component.PlanCard
 import com.helddertierwelt.mentalmath.domain.climb.engine.Placement
 import com.helddertierwelt.mentalmath.presentation.climb.component.ActionButton
 import com.helddertierwelt.mentalmath.presentation.climb.component.AreaIntro
@@ -106,7 +110,11 @@ fun ClimbHomeScreen(navController: NavController) {
     val climbViewModel: ClimbViewModel = hiltViewModel(owner)
     val aiViewModel: com.helddertierwelt.mentalmath.presentation.climb.AiViewModel = hiltViewModel(owner)
     val progress by climbViewModel.progress.collectAsState()
+    val plus by climbViewModel.plusSettings.collectAsState()
+    val plusLoaded by climbViewModel.plusSettingsLoaded.collectAsState()
     val worlds = climbViewModel.worlds
+    val plan = remember(progress, plus) { climbViewModel.todayPlan(progress, plus) }
+    LaunchedEffect(plan, plus.planSetUp) { if (plus.planSetUp) climbViewModel.keepPlan(plan) }
     val next = climbViewModel.nextSkill(progress)
     val currentWorldId = next?.let { n -> worlds.firstOrNull { w -> w.skills.any { it.id == n.id } }?.id }
     // Aufgeklappte Welten bleiben erhalten, wenn man von einem Level zurückkommt.
@@ -195,6 +203,29 @@ fun ClimbHomeScreen(navController: NavController) {
                         title = "Lernen nach Plan",
                         text = "Die Methoden aus „Mathe-Magie“ Schritt für Schritt: jedes Level verstehen, üben und die Prüfung bestehen.",
                     )
+                }
+                if (plusLoaded) {
+                    item(key = "plan") {
+                        PlanCard(
+                            plan = plan,
+                            setUp = plus.planSetUp,
+                            goals = plus.planGoals,
+                            minutes = plus.planMinutes,
+                            followPath = plus.planFollowPath,
+                            onSetUp = { g, m, f ->
+                                climbViewModel.playTap()
+                                climbViewModel.setPlan(g, m, f)
+                            },
+                            onStart = { block ->
+                                when (val start = climbViewModel.startPlanBlock(block)) {
+                                    PlanStart.Play -> navController.navigate("climbplay")
+                                    is PlanStart.Level -> navController.navigate("level/${start.skillId}")
+                                    PlanStart.Failed -> Toast.makeText(context, "Dieser Schritt lässt sich gerade nicht starten.", Toast.LENGTH_SHORT).show()
+                                }
+                            },
+                            onSettings = { openRoute("plussettings") },
+                        )
+                    }
                 }
                 item {
                     OverviewCard(
@@ -299,6 +330,7 @@ private fun OverviewCard(
                 icon = R.drawable.refresh_24dp,
                 iconTint = yellow,
                 onClick = { onRefresh(first) },
+                modifier = Modifier.testTag("overviewRefresh"),
             )
             Spacer(Modifier.height(8.dp))
         }
@@ -309,6 +341,7 @@ private fun OverviewCard(
                 icon = R.drawable.terrain_24dp,
                 iconTint = green,
                 onClick = { onContinue(next) },
+                modifier = Modifier.testTag("overviewContinue"),
             )
         } else {
             BodyText("Du hast alle Levels geschafft. Wiederhole regelmäßig, damit nichts einrostet.")
@@ -321,6 +354,7 @@ private fun OverviewCard(
             iconTint = accent,
             enabled = mastered > 0,
             onClick = onReview,
+            modifier = Modifier.testTag("overviewReview"),
         )
         Spacer(Modifier.height(12.dp))
         val canPlace = Placement.candidates(viewModel.worlds, progress).isNotEmpty()
