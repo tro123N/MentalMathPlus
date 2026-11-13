@@ -20,6 +20,8 @@ package com.helddertierwelt.mentalmath.domain.climb
 
 import com.helddertierwelt.mentalmath.domain.climb.curriculum.Curriculum
 import com.helddertierwelt.mentalmath.domain.climb.engine.DailyPlan
+import com.helddertierwelt.mentalmath.domain.climb.engine.Drills
+import com.helddertierwelt.mentalmath.domain.climb.engine.SessionLogic
 import com.helddertierwelt.mentalmath.domain.climb.engine.Memory
 import com.helddertierwelt.mentalmath.domain.climb.engine.ProblemResult
 import com.helddertierwelt.mentalmath.domain.climb.engine.Progression
@@ -148,5 +150,87 @@ class PlanTest {
         assertEquals(2, both.blocks.count { it.kind == DailyPlan.APPLY })
         val abi = DailyPlan.build(worlds, ClimbProgress(), listOf("abi"), 30, false, now, today)
         assertTrue(abi.blocks.first { it.kind == DailyPlan.NEW }.skillIds.single().let { it.startsWith("w17.") || it.startsWith("w16.") })
+    }
+
+    private fun masteredPath(n: Int): ClimbProgress {
+        val skills = worlds.first().skills.take(n)
+        return skills.fold(ClimbProgress()) { acc, sk ->
+            acc.with(sk.id) { it.copy(stars = 1, practiced = 10, stability = 30.0, memoryAt = now, recent = List(10) { 2000L }) }
+        }
+    }
+
+    @Test
+    fun checkTestsThePrerequisitesAndMarksWeakOnes() {
+        val skills = worlds.first().skills
+        val target = skills[3]
+        var p = masteredPath(3).with(target.id) { it.copy(failStreak = 1, testsTaken = 1) }
+        assertTrue(Drills.checkUseful(worlds, p, target.id))
+        val session = Drills.check(worlds, p, target.id, Random(3))!!
+        assertEquals(Drills.CHECK_SIZE, session.problems.size)
+        val ids = session.problems.map { it.problem.skillId }.toSet()
+        assertEquals(setOf(skills[2].id, skills[1].id), ids)
+        // Alle Aufgaben der direkten Grundlage falsch.
+        val results = session.problems.map { ProblemResult(it.problem, "1", correct = it.problem.skillId != skills[2].id, timeMs = 2000) }
+        val (after, outcome) = Drills.afterCheck(worlds, p, session.copy(results = results))
+        assertEquals(listOf(skills[2].id), outcome!!.weak.map { it.id })
+        assertTrue(after.of(skills[2].id).refreshPending)
+        assertTrue(!after.of(skills[1].id).refreshPending)
+        // Der Plan bekommt einen Grundlagen-Check und danach das Auffrischen.
+        val plan = DailyPlan.build(worlds, p, listOf("profi"), 20, true, now, today)
+        val check = plan.blocks.first { it.kind == DailyPlan.CHECK }
+        assertEquals(target.id, check.skillIds.single())
+        val withFollowUp = DailyPlan.afterCheck(plan, today, outcome)!!
+        val idx = withFollowUp.blocks.indexOfFirst { it.kind == DailyPlan.CHECK }
+        assertEquals(skills[2].id, withFollowUp.blocks[idx + 1].skillIds.single())
+        p = after
+        assertTrue(Progression.blockers(worlds, p, target.id).isNotEmpty())
+    }
+
+    @Test
+    fun patternDrillFindsMatchingProblems() {
+        val random = Random(11)
+        val (skill, mistake) = worlds.flatMap { it.skills }.firstNotNullOf { sk ->
+            sk.generate(random).mistakes.firstOrNull()?.let { sk to it }
+        }
+        val note = SessionLogic.MISTAKE_PREFIX + mistake.why
+        val problems = Drills.patternProblems(skill, note, Random(5))
+        assertNotNull("${skill.id}: keine Aufgaben zum Fehlermuster", problems)
+        assertTrue(problems!!.all { Drills.matches(it, note) })
+        // Im Plan: Schwachstelle mit Fehlermuster wird zum Fehlermuster-Training.
+        var p = ClimbProgress().with(skill.id) { it.copy(practiced = 10, recent = List(10) { 3000L }) }
+        repeat(3) { p = Memory.update(worlds, p, listOf(ProblemResult(skill.generate(random), "1", false, 3000, note = note)), now - day) }
+        val plan = DailyPlan.build(worlds, p, listOf("profi", "tmsnat", "abi"), 30, true, now, today)
+        val block = plan.blocks.first { it.kind == DailyPlan.WEAK }
+        assertEquals(DailyPlan.TARGET_PATTERN, block.target)
+        assertEquals(note, block.note)
+        assertTrue(block.reason, !block.reason.contains(SessionLogic.MISTAKE_PREFIX))
+    }
+
+    @Test
+    fun speedTrainingUsesATightTimeLimit() {
+        val skill = worlds.first().skills.first()
+        val slow = (skill.goals.star2 * 1500).toLong()
+        val p = ClimbProgress().with(skill.id) { it.copy(stars = 1, recent = List(10) { slow }) }
+        assertTrue(Drills.speedUseful(skill, p))
+        assertTrue(!Drills.speedUseful(skill, ClimbProgress().with(skill.id) { it.copy(stars = 1, recent = List(10) { 500L }) }))
+        val s = Drills.speedSession(skill, Random(1))
+        assertEquals((skill.goals.star2 * Drills.SPEED_FACTOR * 1000).toLong(), s.timeLimitMs)
+        val mix = Drills.recentlyLearned(worlds, masteredPath(4))
+        assertEquals(4, mix.size)
+    }
+
+    @Test
+    fun patternDrillWorksForMostLevelsWithTypicalMistakes() {
+        var with = 0
+        var ok = 0
+        val missing = mutableListOf<String>()
+        for (sk in worlds.flatMap { it.skills }) {
+            val r = Random(sk.id.hashCode())
+            val m = (0 until 20).firstNotNullOfOrNull { sk.generate(r).mistakes.firstOrNull() } ?: continue
+            with++
+            if (Drills.patternProblems(sk, SessionLogic.MISTAKE_PREFIX + m.why, Random(1)) != null) ok++ else missing += sk.id
+        }
+        println("Fehlermuster-Training: $ok von $with Levels mit typischen Fehlern; ohne: ${missing.take(15)}")
+        assertTrue(ok >= with * 0.8)
     }
 }

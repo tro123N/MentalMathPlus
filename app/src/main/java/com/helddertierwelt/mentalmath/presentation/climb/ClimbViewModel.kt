@@ -29,6 +29,7 @@ import com.helddertierwelt.mentalmath.data.climb.PlusSettingsRepository
 import com.helddertierwelt.mentalmath.domain.climb.curriculum.Curriculum
 import com.helddertierwelt.mentalmath.domain.climb.engine.AdaptiveState
 import com.helddertierwelt.mentalmath.domain.climb.engine.DailyPlan
+import com.helddertierwelt.mentalmath.domain.climb.engine.Drills
 import com.helddertierwelt.mentalmath.domain.climb.model.DayPlan
 import com.helddertierwelt.mentalmath.domain.climb.model.PlanBlock
 import com.helddertierwelt.mentalmath.domain.climb.engine.ApForecast
@@ -144,6 +145,9 @@ class ClimbViewModel @Inject constructor(
 
     /** Plan-Baustein, der mit der nächsten Einheit beginnt bzw. gerade läuft. */
     private var pendingPlanBlock: String? = null
+
+    /** Zuletzt gestartete gezielte Übung (Check, Fehlermuster, Tempo, Mischen) für „Nochmal“. */
+    private var lastDrill: (() -> Boolean)? = null
     private var activePlanBlock: String? = null
 
     /** Die zuletzt beendete Einheit kam aus dem Tagesplan. */
@@ -209,6 +213,17 @@ class ClimbViewModel @Inject constructor(
                     true
                 }
             }
+            block.kind == DailyPlan.CHECK && first != null -> startCheck(first)
+            block.target == DailyPlan.TARGET_MIX -> {
+                val skills = block.skillIds.mapNotNull { Curriculum.skill(it) }
+                if (skills.size < 2) false else {
+                    begin(Drills.mixSession(skills, random, "Gemischt: zuletzt gelernt"))
+                    lastDrill = { begin(Drills.mixSession(skills, random, "Gemischt: zuletzt gelernt")); true }
+                    true
+                }
+            }
+            block.target == DailyPlan.TARGET_PATTERN && first != null && block.note != null -> startPatternDrill(first, block.note)
+            block.target == DailyPlan.TARGET_SPEED && first != null -> startSpeed(first)
             block.target == DailyPlan.TARGET_AP -> startApPractice()
             block.target == DailyPlan.TARGET_UNITS -> startUnitsPractice()
             first != null -> {
@@ -225,6 +240,38 @@ class ClimbViewModel @Inject constructor(
         pendingPlanBlock = null
         return if (started) PlanStart.Play else PlanStart.Failed
     }
+
+    /** Grundlagen-Check (5 Aufgaben) für ein Level, das gerade hakt. */
+    fun startCheck(skillId: String): Boolean {
+        val session = Drills.check(worlds, progress.value, skillId, random) ?: return false
+        begin(session)
+        lastDrill = { startCheck(skillId) }
+        return true
+    }
+
+    fun checkUseful(p: ClimbProgress, skillId: String): Boolean = Drills.checkUseful(worlds, p, skillId)
+
+    /** Fehlermuster-Training: Aufgaben, bei denen der Denkfehler [note] passieren kann. */
+    fun startPatternDrill(skillId: String, note: String): Boolean {
+        val skill = Curriculum.skill(skillId) ?: return false
+        begin(Drills.patternSession(skill, note, random))
+        lastDrill = { startPatternDrill(skillId, note) }
+        return true
+    }
+
+    /** Häufigster Denkfehler eines Levels in den letzten 30 Tagen (mindestens zweimal), sonst null. */
+    fun patternOf(p: ClimbProgress, skillId: String): com.helddertierwelt.mentalmath.domain.climb.engine.Memory.Pattern? =
+        com.helddertierwelt.mentalmath.domain.climb.engine.Memory.patterns(p, now()).firstOrNull { it.skillId == skillId }
+
+    /** Tempotraining: Zeitlimit knapp über dem Ziel für 2 Sterne. */
+    fun startSpeed(skillId: String): Boolean {
+        val skill = Curriculum.skill(skillId) ?: return false
+        begin(Drills.speedSession(skill, random))
+        lastDrill = { startSpeed(skillId) }
+        return true
+    }
+
+    fun speedUseful(p: ClimbProgress, skill: Skill): Boolean = Drills.speedUseful(skill, p)
 
     /** Ziele, Minuten und Reihenfolge des Plans festlegen. */
     fun setPlan(goals: List<String>, minutes: Int, followPath: Boolean) {
@@ -429,7 +476,11 @@ class ClimbViewModel @Inject constructor(
         finish(done)
     }
 
+    /** „Nochmal“ nach einer gezielten Übung; null, wenn die letzte Einheit keine war. */
+    fun restartDrill(): Boolean? = lastDrill?.let { restart -> restart() }
+
     private fun begin(s: Session) {
+        lastDrill = null
         activePlanBlock = pendingPlanBlock
         advanceJob?.cancel()
         _summary.value = null
@@ -650,7 +701,7 @@ class ClimbViewModel @Inject constructor(
                 if (s.results.isEmpty()) {
                     updated
                 } else {
-                    val plan = DailyPlan.afterSession(updated.plan, today(), planBlock, s.skillId)
+                    val plan = DailyPlan.afterCheck(DailyPlan.afterSession(updated.plan, today(), planBlock, s.skillId), today(), sum.check)
                     if (plan != updated.plan) inPlan = true
                     updated.copy(plan = plan)
                 }

@@ -181,6 +181,23 @@ fun ClimbResultScreen(navController: NavController) {
                     } else if (plan?.finished == true) {
                         BodyText("Plan für heute geschafft – stark!")
                     }
+                    // Grundlagen-Check: direkt zur unsicheren Grundlage.
+                    summary.check?.weak?.firstOrNull()?.let { base ->
+                        if (planNext == null || base.id !in planNext.skillIds) ActionButton(
+                            text = "Zur Grundlage: ${base.title}",
+                            subtitle = "Dort auffrischen, dann zurückkommen",
+                            icon = R.drawable.refresh_24dp,
+                            iconTint = com.helddertierwelt.mentalmath.presentation.theme.yellow,
+                            onClick = {
+                                viewModel.playTap()
+                                viewModel.clearSummary()
+                                navController.navigate("level/${base.id}") {
+                                    popUpTo("climb") { inclusive = false }
+                                    launchSingleTop = true
+                                }
+                            },
+                        )
+                    }
                     val next = summary.unlocked ?: viewModel.nextSkill(progress)?.takeIf { it.id != skillId && viewModel.isUnlocked(progress, it.id) && summary.outcome?.passed == true }
                     if (next != null) {
                         ActionButton(
@@ -206,7 +223,7 @@ fun ClimbResultScreen(navController: NavController) {
                         icon = R.drawable.refresh_24dp,
                         iconTint = accent,
                         onClick = {
-                            val started = when {
+                            val started = viewModel.restartDrill() ?: when {
                                 summary.type == SessionType.FREE -> viewModel.restartFree()
                                 summary.type == SessionType.PLACEMENT -> summary.placement?.let { viewModel.startPlacement(it.worldId) } ?: false
                                 skillId != null -> viewModel.startSession(summary.type, skillId)
@@ -454,6 +471,13 @@ private fun MessagesCard(summary: Summary) {
                     "Den Test kannst du jederzeit wiederholen.",
                 yellow,
             )
+        }
+    }
+    summary.check?.let { check ->
+        messages += if (check.weak.isEmpty()) {
+            Pair("Die Grundlagen sitzen (${check.checked.joinToString { it.title }}). Es liegt also an der neuen Methode selbst – übe sie noch einmal in Ruhe, dann klappt die Prüfung.", green)
+        } else {
+            Pair("Hier hakt es: ${check.weak.joinToString { "„${it.title}“" }}. Frische das zuerst auf – dann fällt das neue Level leichter.", yellow)
         }
     }
     summary.unlocked?.let { messages += "Neu freigeschaltet: ${it.title}" to green }

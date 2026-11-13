@@ -1191,6 +1191,69 @@ class ClimbSmokeTest {
         waitForHome()
     }
 
+    /** Gezielt üben: Grundlagen-Check, Fehlermuster-Training und Tempotraining im Level. */
+    @Test
+    fun n_gezieltUeben() {
+        waitForHome()
+        val now = vm.now()
+        val day = Progression.DAY_MS
+        val w1 = Curriculum.worlds[0]
+        val w2 = Curriculum.worlds[1]
+        val w16 = Curriculum.worlds.first { it.id == "w16" }
+        val vat = w16.skills.first { it.id == "w16.vat" }
+        val stuck = w2.skills.first()
+        val skills = w1.skills.associate { sk ->
+            sk.id to com.helddertierwelt.mentalmath.domain.climb.model.SkillProgress(
+                stars = 1, testsTaken = 1, testsPassed = 1, practiced = 20, practicedCorrect = 20,
+                stability = 10.0, memoryAt = now - day, intervalDays = 15, nextReviewAt = now + 14 * day,
+                recent = List(10) { (sk.goals.star2 * 1600).toLong() },
+            )
+        } + (stuck.id to com.helddertierwelt.mentalmath.domain.climb.model.SkillProgress(testsTaken = 1, failStreak = 1, practiced = 10, practicedCorrect = 7))
+        val mistake = (0 until 50).firstNotNullOf { vat.generate(kotlin.random.Random(it)).mistakes.firstOrNull() }
+        val errors = List(3) { com.helddertierwelt.mentalmath.domain.climb.model.ErrorEntry(vat.id, now - day, SessionLogic.MISTAKE_PREFIX + mistake.why) }
+        compose.runOnUiThread { vm.importProgress(ClimbProgress(skills = skills, errors = errors)) }
+        compose.waitUntil(5_000) { vm.progress.value.skills.size == skills.size }
+        compose.waitForIdle()
+
+        // Grundlagen-Check: alle Aufgaben falsch → Grundlage auffrischen.
+        openSkill(w2, stuck)
+        compose.onNodeWithTag("levelDrills").performScrollTo()
+        compose.waitForIdle()
+        shot("n_level_gezielt")
+        compose.onNodeWithTag("levelCheck").performScrollTo().performClick()
+        waitForSession()
+        assertEquals(5, vm.session.value!!.problems.size)
+        solveSession(name = "n_check", wrongAt = setOf(0, 1, 2, 3, 4), shotAt = setOf(0))
+        waitForResult()
+        assertTrue("Keine Auswertung des Checks", vm.summary.value?.check != null)
+        shootScrolling("resultColumn", "n_check_ergebnis", maxShots = 4)
+        clickButton("Zum Kletterweg")
+        waitForHome()
+
+        // Fehlermuster-Training.
+        openSkill(w16, vat)
+        compose.onNodeWithTag("levelPattern").performScrollTo()
+        compose.waitForIdle()
+        shot("n_level_fehlermuster")
+        compose.onNodeWithTag("levelPattern").performClick()
+        waitForSession()
+        solveSession(name = "n_fehlermuster", wrongAt = setOf(1), shotAt = setOf(0))
+        waitForResult()
+        clickButton("Zum Kletterweg")
+        waitForHome()
+
+        // Tempotraining: Zeitlimit sichtbar.
+        openSkill(w1, w1.skills.first())
+        compose.onNodeWithTag("levelSpeed").performScrollTo().performClick()
+        waitForSession()
+        assertTrue(vm.session.value!!.timeLimitMs != null)
+        shot("n_tempo")
+        solveSession()
+        waitForResult()
+        clickButton("Zum Kletterweg")
+        waitForHome()
+    }
+
     // --- KI-Coach -----------------------------------------------------------------------------
 
     private fun aiLog(text: String) {

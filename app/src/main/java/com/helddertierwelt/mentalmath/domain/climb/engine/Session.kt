@@ -145,6 +145,8 @@ data class Session(
     val skippedMs: Long = 0,
     /** Testsimulation: so oft wurde „Später“ gedrückt. */
     val skips: Int = 0,
+    /** Grundlagen-Check: das Level, dessen Grundlagen geprüft werden. */
+    val check: String? = null,
 ) {
     val current: Planned? get() = problems.getOrNull(index)
     val problem: Problem? get() = current?.problem
@@ -488,6 +490,8 @@ data class Summary(
     val freeEndLevel: Int? = null,
     /** Testsimulation: das gespeicherte Ergebnis. */
     val apRun: com.helddertierwelt.mentalmath.domain.climb.model.ApRun? = null,
+    /** Grundlagen-Check: Auswertung. */
+    val check: CheckOutcome? = null,
 )
 
 object SessionFinisher {
@@ -505,7 +509,9 @@ object SessionFinisher {
         // Gedächtnismodell und Fehlerprotokoll (Trainingsplan).
         val memory = session.type != SessionType.GUIDED && session.type != SessionType.PLACEMENT
         val remembered = if (session.type == SessionType.GUIDED) reviewed else Memory.update(worlds, reviewed, session.results, now, memory)
-        return remembered to summary
+        // Grundlagen-Check: unsichere Grundlagen zum Auffrischen markieren.
+        val (checked, check) = Drills.afterCheck(worlds, remembered, session)
+        return checked to (if (check != null) summary.copy(check = check) else summary)
     }
 
     private fun finishSession(

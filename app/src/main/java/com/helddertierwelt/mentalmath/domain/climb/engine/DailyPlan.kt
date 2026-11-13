@@ -35,6 +35,7 @@ import kotlin.math.roundToInt
 object DailyPlan {
 
     const val WARMUP = "WARMUP"
+    const val CHECK = "CHECK"
     const val NEW = "NEW"
     const val WEAK = "WEAK"
     const val SPEED = "SPEED"
@@ -55,6 +56,9 @@ object DailyPlan {
     /** Aktionsschlüssel in [PlanBlock.target]: TMSnat-Übung, Einheiten. */
     const val TARGET_AP = "ap"
     const val TARGET_UNITS = "units"
+    const val TARGET_PATTERN = "pattern"
+    const val TARGET_SPEED = "speed"
+    const val TARGET_MIX = "mix"
 
     /** Geschätzte Sekunden pro Aufgabe (mit Lesen und Rückmeldung). */
     const val SECONDS_PER_TASK = 18
@@ -112,12 +116,26 @@ object DailyPlan {
         return p
     }
 
+    /**
+     * Nach einem Grundlagen-Check: für jede unsichere Grundlage einen Abschnitt „Auffrischen“ direkt
+     * hinter dem Check einfügen.
+     */
+    fun afterCheck(plan: DayPlan?, today: Long, outcome: CheckOutcome?): DayPlan? {
+        if (plan == null || plan.day != today || outcome == null || outcome.weak.isEmpty()) return plan
+        val extra = outcome.weak.filter { s -> plan.blocks.none { it.id == "$today-$WEAK-${s.id}" } }.map { s ->
+            PlanBlock("$today-$WEAK-${s.id}", WEAK, "Grundlage auffrischen: ${s.title}", "im Grundlagen-Check nicht sicher", listOf(s.id), Progression.REFRESH_SIZE)
+        }
+        if (extra.isEmpty()) return plan
+        val at = plan.blocks.indexOfFirst { it.kind == CHECK }.let { if (it < 0) 0 else it + 1 }
+        return plan.copy(blocks = plan.blocks.take(at) + extra + plan.blocks.drop(at))
+    }
+
     /** Geschätzte Minuten eines Plans. */
     fun minutesOf(blocks: List<PlanBlock>): Int =
         (blocks.sumOf { it.count } * SECONDS_PER_TASK / 60.0).roundToInt().coerceAtLeast(1)
 
     /** Punktwert „braucht Übung“ eines Levels, dazu der wichtigste Grund. */
-    data class Weakness(val skill: Skill, val score: Double, val reason: String)
+    data class Weakness(val skill: Skill, val score: Double, val reason: String, val pattern: String? = null)
 
     fun weaknesses(worlds: List<World>, progress: ClimbProgress, now: Long, among: List<World> = worlds): List<Weakness> {
         val errors = Memory.recentErrors(progress, now)
@@ -136,13 +154,13 @@ object DailyPlan {
             val reason = when {
                 sp.rusty -> "eingerostet – kurz auffrischen"
                 sp.refreshPending -> "Grundlage für ein Level, das noch hakt"
-                pattern != null -> "Fehlermuster (${pattern.count}×): ${pattern.note}"
+                pattern != null -> "Fehlermuster (${pattern.count}×): ${pattern.note.removePrefix(SessionLogic.MISTAKE_PREFIX)}"
                 sp.failStreak > 0 -> "Prüfung zuletzt nicht bestanden"
                 err > 0 -> "$err Fehler in den letzten 14 Tagen"
                 form != null -> "Sicherheit erst ${form.score} %"
                 else -> "braucht Übung"
             }
-            Weakness(skill, score, reason)
+            Weakness(skill, score, reason, pattern?.note?.takeIf { !sp.needsAttention })
         }.filter { it.score >= WEAK_THRESHOLD }.sortedByDescending { it.score }
     }
 
@@ -193,6 +211,12 @@ object DailyPlan {
             add(PlanBlock("$today-$WARMUP", WARMUP, "Aufwärmen", reason, warm.map { it.first.id }, warm.size * Progression.REVIEW_PER_SKILL))
         }
 
+        // Grundlagen-Check vor einem Level, dessen Prüfung zuletzt nicht geklappt hat.
+        val checkFor = listOfNotNull(fresh, weak?.skill).firstOrNull { Drills.checkUseful(worlds, progress, it.id) }
+        if (checkFor != null) {
+            add(PlanBlock("$today-$CHECK", CHECK, "Grundlagen-Check", "Prüfung „${checkFor.title}“ zuletzt nicht bestanden – sitzen die Grundlagen?", listOf(checkFor.id), Drills.CHECK_SIZE, target = CHECK))
+        }
+
         // 2. Neues Level.
         if (fresh != null && fits(fresh.practiceCount)) {
             val reason = if (followPath) "nächstes Level auf dem Kletterweg" else "nächster Schritt für dein Ziel"
@@ -202,20 +226,23 @@ object DailyPlan {
         // 3. Schwachstelle (eingerostete Levels zuerst).
         if (weak != null && fits(weak.skill.practiceCount)) {
             val count = if (progress.of(weak.skill.id).let { it.mastered && it.needsAttention }) Progression.REFRESH_SIZE else weak.skill.practiceCount
-            add(PlanBlock("$today-$WEAK", WEAK, "Schwachstelle: ${weak.skill.title}", weak.reason, listOf(weak.skill.id), count))
+            if (weak.pattern != null) {
+                add(PlanBlock("$today-$WEAK", WEAK, "Fehlermuster: ${weak.skill.title}", weak.reason, listOf(weak.skill.id), Drills.PATTERN_SIZE, TARGET_PATTERN, weak.pattern))
+            } else {
+                add(PlanBlock("$today-$WEAK", WEAK, "Schwachstelle: ${weak.skill.title}", weak.reason, listOf(weak.skill.id), count))
+            }
         }
 
         // 4. Tempo: sicher, aber noch langsam.
         val usedIds = blocks.flatMap { it.skillIds }.toSet()
         val speed = goalWorlds(worlds, goals).flatMap { it.skills }
-            .filter { it.id !in usedIds && progress.of(it.id).let { sp -> sp.mastered && !sp.needsAttention } }
+            .filter { it.id !in usedIds && !progress.of(it.id).needsAttention && Drills.speedUseful(it, progress) }
             .mapNotNull { s -> Stats.form(s, progress.of(s.id))?.let { s to it } }
-            .filter { (s, f) -> f.accuracy >= 0.9 && f.medianSec != null && f.medianSec > s.goals.star2 }
             .maxByOrNull { (s, f) -> f.medianSec!! / s.goals.star2 }
         if (speed != null && fits(speed.first.practiceCount)) {
             val (s, f) = speed
-            val reason = "sicher, aber ${fmt(f.medianSec!!)} s pro Aufgabe – Ziel unter ${fmt(s.goals.star2)} s"
-            add(PlanBlock("$today-$SPEED", SPEED, "Tempo: ${s.title}", reason, listOf(s.id), s.practiceCount))
+            val reason = "sicher, aber ${fmt(f.medianSec!!)} s pro Aufgabe – Ziel unter ${fmt(s.goals.star2)} s, Zeitlimit ${fmt(s.goals.star2 * Drills.SPEED_FACTOR)} s"
+            add(PlanBlock("$today-$SPEED", SPEED, "Tempo: ${s.title}", reason, listOf(s.id), s.practiceCount, TARGET_SPEED))
         }
 
         // 5. Anwenden: gemischte Aufgaben passend zum Ziel – bei mehreren Zielen täglich ein anderes
@@ -247,7 +274,15 @@ object DailyPlan {
             }
 
             GOAL_ABI -> mixedBlock(worlds, progress, id, "w17.mixed", "Anwenden: Oberstufe gemischt", "Aufgaben aus allen LK-Themen")
-            else -> mixedBlock(worlds, progress, id, "w15.mixed", "Anwenden: Rechentricks gemischt", "Tricks erkennen, wenn sie nicht angesagt sind")
+            else -> {
+                // Abwechselnd: zuletzt gelernte Levels gemischt (Methode selbst erkennen) und Rechentricks gemischt.
+                val recent = Drills.recentlyLearned(worlds, progress)
+                if (today % 2 == 1L && recent.size >= 2) {
+                    PlanBlock(id, APPLY, "Anwenden: zuletzt Gelerntes gemischt", "die passende Methode selbst erkennen, ohne dass sie angesagt ist", recent.map { it.id }, recent.size * Progression.REVIEW_PER_SKILL, TARGET_MIX)
+                } else {
+                    mixedBlock(worlds, progress, id, "w15.mixed", "Anwenden: Rechentricks gemischt", "Tricks erkennen, wenn sie nicht angesagt sind")
+                }
+            }
         }
     }
 

@@ -140,6 +140,7 @@ fun PlanSetup(
 
 private fun kindIcon(kind: String): Int = when (kind) {
     DailyPlan.WARMUP -> R.drawable.history_24dp
+    DailyPlan.CHECK -> R.drawable.question_mark_24dp
     DailyPlan.NEW -> R.drawable.terrain_24dp
     DailyPlan.WEAK -> R.drawable.refresh_24dp
     DailyPlan.SPEED -> R.drawable.timer_24dp

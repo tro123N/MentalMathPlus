@@ -238,6 +238,43 @@ fun LevelScreen(navController: NavController, skillId: String) {
                     )
                 }
             }
+            // Gezielt üben (Trainingsplan, Stufe 2).
+            val pattern = viewModel.patternOf(progress, skill.id)
+            val canCheck = unlocked && viewModel.checkUseful(progress, skill.id)
+            val canSpeed = viewModel.speedUseful(progress, skill)
+            if (canCheck || pattern != null || canSpeed) {
+                Spacer(Modifier.height(16.dp))
+                ClimbCard(modifier = Modifier.testTag("levelDrills")) {
+                    CardTitle("Gezielt üben")
+                    Spacer(Modifier.height(8.dp))
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        if (canCheck) ActionButton(
+                            text = "Grundlagen-Check",
+                            subtitle = "${com.helddertierwelt.mentalmath.domain.climb.engine.Drills.CHECK_SIZE} Aufgaben aus den Levels davor – zeigt, ob es an der Grundlage liegt",
+                            icon = R.drawable.question_mark_24dp,
+                            iconTint = accent,
+                            onClick = { if (viewModel.startCheck(skill.id)) navController.navigate("climbplay") },
+                            modifier = Modifier.testTag("levelCheck"),
+                        )
+                        if (pattern != null) ActionButton(
+                            text = "Fehlermuster üben",
+                            subtitle = "${pattern.count}× zuletzt: ${pattern.note.removePrefix(com.helddertierwelt.mentalmath.domain.climb.engine.SessionLogic.MISTAKE_PREFIX)}",
+                            icon = R.drawable.lightbulb_24dp,
+                            iconTint = yellow,
+                            onClick = { if (viewModel.startPatternDrill(skill.id, pattern.note)) navController.navigate("climbplay") },
+                            modifier = Modifier.testTag("levelPattern"),
+                        )
+                        if (canSpeed) ActionButton(
+                            text = "Tempotraining",
+                            subtitle = "Zeitlimit ${secondsText(goals.star2 * com.helddertierwelt.mentalmath.domain.climb.engine.Drills.SPEED_FACTOR)} pro Aufgabe – für 2 Sterne brauchst du im Schnitt ${secondsText(goals.star2)}",
+                            icon = R.drawable.timer_24dp,
+                            iconTint = accent,
+                            onClick = { if (viewModel.startSpeed(skill.id)) navController.navigate("climbplay") },
+                            modifier = Modifier.testTag("levelSpeed"),
+                        )
+                    }
+                }
+            }
             if (!unlocked) {
                 Spacer(Modifier.height(12.dp))
                 CaptionText("Dieses Level wird frei, sobald du das Level davor mit mindestens einem Stern geschafft hast.")

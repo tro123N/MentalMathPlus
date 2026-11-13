@@ -120,14 +120,20 @@ object Memory {
     fun recentErrors(progress: ClimbProgress, now: Long, days: Int = 14): Map<String, Int> =
         progress.errors.filter { now - it.at <= days * DAY_MS }.groupingBy { it.skillId }.eachCount()
 
-    /** Ein Fehlermuster: derselbe erkannte Denkfehler mehrfach. */
+    /** Ein Fehlermuster: derselbe Denkfehler mehrfach; [note] ist das jüngste Beispiel. */
     data class Pattern(val skillId: String, val note: String, val count: Int)
+
+    private val number = Regex("[-−]?\\d+(?:[.,]\\d+)*")
+
+    /** Art des Denkfehlers ohne die konkreten Zahlen – so werden gleiche Fehler mit anderen Zahlen erkannt. */
+    fun patternKey(note: String): String =
+        note.removePrefix(SessionLogic.MISTAKE_PREFIX).replace(number, "#").trim()
 
     /** Denkfehler, die in den letzten [days] Tagen mindestens zweimal vorkamen (häufigste zuerst). */
     fun patterns(progress: ClimbProgress, now: Long, days: Int = 30): List<Pattern> =
         progress.errors.filter { it.note != null && now - it.at <= days * DAY_MS }
-            .groupBy { it.skillId to it.note!! }
-            .map { (k, v) -> Pattern(k.first, k.second, v.size) }
+            .groupBy { it.skillId to patternKey(it.note!!) }
+            .map { (k, v) -> Pattern(k.first, v.last().note!!, v.size) }
             .filter { it.count >= 2 }
             .sortedByDescending { it.count }
 }

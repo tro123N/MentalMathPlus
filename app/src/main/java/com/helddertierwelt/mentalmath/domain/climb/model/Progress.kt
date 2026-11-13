@@ -200,7 +200,7 @@ data class ErrorEntry(
 @Serializable
 data class PlanBlock(
     val id: String,
-    /** WARMUP, NEW, WEAK, SPEED oder APPLY. */
+    /** WARMUP, CHECK, NEW, WEAK, SPEED oder APPLY. */
     val kind: String,
     val title: String,
     /** Warum dieser Abschnitt heute dran ist (für die Person). */
@@ -208,8 +208,10 @@ data class PlanBlock(
     val skillIds: List<String> = emptyList(),
     /** Anzahl Aufgaben. */
     val count: Int = 0,
-    /** Bei APPLY: welche Anwendung (ap, units, w15.mixed …). */
+    /** Wie der Abschnitt gestartet wird (ap, units, pattern, speed, mix, check …). */
     val target: String? = null,
+    /** Fehlermuster-Training: der Denkfehler, um den es geht. */
+    val note: String? = null,
 )
 
 /** Der Trainingsplan eines Tages. */
