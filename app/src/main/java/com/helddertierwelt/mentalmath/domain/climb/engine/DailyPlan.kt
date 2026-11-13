@@ -362,7 +362,9 @@ object DailyPlan {
             fresh.forEachIndexed { i, s ->
                 if (i == 0 || fits(s.practiceCount)) {
                     val reason = when {
-                        i > 0 -> "läuft gut (${pct(acc)} richtig) – heute ein Level mehr"
+                        i > 0 && acc != null && acc > TARGET_ACCURACY + 0.08 -> "läuft gut (${pct(acc)} richtig) – heute ein Level mehr"
+                        i > 0 && status.perDay != null && status.perDay > 1.2 -> "für dein Enddatum nötig: etwa ${fmt1(status.perDay)} Levels pro Übungstag"
+                        i > 0 -> "genug Zeit für ein zweites neues Level"
                         status.perDay != null && status.perDay > 1.2 -> "für dein Enddatum nötig: etwa ${fmt1(status.perDay)} Levels pro Übungstag"
                         p.followPath -> "nächstes Level deiner Auswahl"
                         else -> "nächster Schritt – abwechselnd aus deinen Welten"
