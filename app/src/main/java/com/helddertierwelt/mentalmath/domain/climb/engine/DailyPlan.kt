@@ -291,6 +291,7 @@ object DailyPlan {
         val key = settingsKey(plans, today)
         if (todays.isEmpty()) return DayPlan(day = today, minutes = 0, blocks = emptyList(), settingsKey = key)
         val blocks = mutableListOf<PlanBlock>()
+        val notes = mutableListOf<String>()
         val skillOf = { id: String -> Progression.skill(worlds, id) }
 
         // 1. Aufwärmen (gemeinsam): fällige Levels aller heutigen Pläne, bei Plänen mit Enddatum auch
@@ -342,10 +343,14 @@ object DailyPlan {
             // Wie viele neue Levels? Nach Phase, Tempo bis zum Enddatum und 85-%-Regel.
             var newCount = when (phase) {
                 Phase.FINAL, Phase.DONE -> 0
-                else -> if ((status.perDay ?: 0.0) > 1.2) 2 else 1
+                else -> if ((status.perDay ?: 0.0) > 1.2 || p.minutes >= 30) 2 else 1
             }
-            if (acc != null && acc < TARGET_ACCURACY - 0.1 && selection.any { progress.of(it.id).mastered }) newCount = (newCount - 1).coerceAtLeast(0)
+            if (acc != null && acc < TARGET_ACCURACY - 0.1 && newCount > 0 && selection.any { progress.of(it.id).mastered }) {
+                newCount = if (acc < TARGET_ACCURACY - 0.2) 0 else newCount - 1
+                notes += "${p.name}: Trefferquote zuletzt ${pct(acc)} (Ziel ≈ 85 %) – heute ${if (newCount == 0) "kein neues Level" else "weniger Neues"}, erst festigen."
+            }
             if (acc != null && acc > TARGET_ACCURACY + 0.08 && phase == Phase.BUILD) newCount += 1
+            if (phase == Phase.FINAL) notes += "${p.name}: Endspurt – keine neuen Levels mehr, dafür Simulation und Wiederholung."
             newCount = newCount.coerceAtMost(3)
             val weak = weakFirst[p.id]?.takeIf { it.skill.id !in usedIds }
             val fresh = newSkills(worlds, progress, p, newCount, today, usedIds + listOfNotNull(weak?.skill?.id))
@@ -386,6 +391,12 @@ object DailyPlan {
                 }
             }
             applyBlock(worlds, progress, p, phase, today, usedIds)?.let { if (mine.isEmpty() || fits(it.count)) add(it) }
+            // Noch viel Zeit übrig (z. B. ganz am Anfang)? Weiteres Neues, solange die Quote stimmt.
+            if (used < budget * 0.6 && phase != Phase.FINAL && (acc == null || acc >= TARGET_ACCURACY)) {
+                newSkills(worlds, progress, p, 3, today, usedIds + listOfNotNull(weak?.skill?.id)).take(if (used < budget * 0.3) 2 else 1).forEachIndexed { i, s ->
+                    if (fits(s.practiceCount)) add(PlanBlock("$NEW-x$i", NEW, "Neu: ${s.title}", "noch Zeit übrig – ein weiteres Level", listOf(s.id), s.practiceCount))
+                }
+            }
             // Noch Zeit übrig? Eine weitere Schwachstelle oder gemischtes Wiederholen.
             if (used < budget * 0.7) {
                 weaknesses(progress, now, selection).firstOrNull { it.skill.id !in usedIds }?.let { w ->
@@ -394,7 +405,7 @@ object DailyPlan {
             }
             blocks += mine
         }
-        return DayPlan(day = today, minutes = todays.sumOf { it.minutes }, blocks = blocks, settingsKey = key)
+        return DayPlan(day = today, minutes = todays.sumOf { it.minutes }, blocks = blocks, settingsKey = key, notes = notes)
     }
 
     /** Anwenden: gemischt üben passend zur Auswahl und Phase. */

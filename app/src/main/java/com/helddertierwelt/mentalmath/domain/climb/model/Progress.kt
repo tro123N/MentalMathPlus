@@ -254,6 +254,8 @@ data class DayPlan(
     val done: List<String> = emptyList(),
     /** Einstellungen, mit denen der Plan erstellt wurde (ändern sie sich, wird neu geplant). */
     val settingsKey: String = "",
+    /** Hinweise zur Planung (z. B. warum heute nichts Neues kommt). */
+    val notes: List<String> = emptyList(),
 ) {
     val next: PlanBlock? get() = blocks.firstOrNull { it.id !in done }
     val finished: Boolean get() = blocks.isNotEmpty() && blocks.all { it.id in done }

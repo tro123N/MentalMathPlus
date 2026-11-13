@@ -26,6 +26,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -265,11 +266,11 @@ private fun PlanOverviewCard(
             CaptionText("Trefferquote zuletzt $pct % (Ziel ≈ 85 %): $hint")
         }
         Spacer(Modifier.height(10.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            PlanChip("Bearbeiten", false, onEdit, Modifier.weight(1f).testTag("planEdit_${plan.id}"))
-            PlanChip(if (plan.paused) "Fortsetzen" else "Pausieren", plan.paused, onPause, Modifier.weight(1f).testTag("planPause_${plan.id}"))
-            PlanChip("Neu starten", false, onReset, Modifier.weight(1f).testTag("planReset_${plan.id}"))
-            PlanChip("Löschen", false, onDelete, Modifier.weight(1f).testTag("planDelete_${plan.id}"))
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            PlanChip("Bearbeiten", false, onEdit, Modifier.testTag("planEdit_${plan.id}"), padding = 14.dp)
+            PlanChip(if (plan.paused) "Fortsetzen" else "Pausieren", plan.paused, onPause, Modifier.testTag("planPause_${plan.id}"), padding = 14.dp)
+            PlanChip("Neu starten", false, onReset, Modifier.testTag("planReset_${plan.id}"), padding = 14.dp)
+            PlanChip("Löschen", false, onDelete, Modifier.testTag("planDelete_${plan.id}"), padding = 14.dp)
         }
     }
 }
@@ -352,16 +353,17 @@ fun PlanEditScreen(navController: NavController, planKey: String) {
                 val masteredSel = draft.skillIds.count { progress.of(it).mastered }
                 CaptionText("${selected.size} Levels ausgewählt, davon $masteredSel schon geschafft")
                 Spacer(Modifier.height(8.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     DailyPlan.GOALS.forEach { goal ->
                         PlanChip(
                             text = "+ " + DailyPlan.goalName(goal),
                             selected = false,
                             onClick = { draft = draft.copy(skillIds = DailyPlan.ordered(viewModel.worlds, draft.skillIds + DailyPlan.preset(viewModel.worlds, goal))) },
-                            modifier = Modifier.weight(1f).testTag("planAdd_$goal"),
+                            modifier = Modifier.testTag("planAdd_$goal"),
+                            padding = 12.dp,
                         )
                     }
-                    PlanChip("Leeren", false, { draft = draft.copy(skillIds = emptyList()) }, Modifier.weight(0.8f).testTag("planClear"))
+                    PlanChip("Alles abwählen", false, { draft = draft.copy(skillIds = emptyList()) }, Modifier.testTag("planClear"), padding = 12.dp)
                 }
                 Spacer(Modifier.height(8.dp))
                 viewModel.worlds.forEach { world ->
@@ -487,11 +489,11 @@ fun PlanEditScreen(navController: NavController, planKey: String) {
                 Spacer(Modifier.height(8.dp))
                 BodyText("Ende: ${draft.endDay?.let { dayText(it) } ?: "ohne Ende"}")
                 Spacer(Modifier.height(6.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    PlanChip("Ohne Ende", draft.endDay == null, { draft = draft.copy(endDay = null) }, Modifier.weight(1f).testTag("planEndNone"))
-                    PlanChip("4 Wochen", false, { draft = draft.copy(endDay = maxOf(today, draft.startDay) + 27) }, Modifier.weight(1f).testTag("planEnd4w"))
-                    PlanChip("3 Monate", false, { draft = draft.copy(endDay = maxOf(today, draft.startDay) + 90) }, Modifier.weight(1f).testTag("planEnd3m"))
-                    PlanChip("Datum…", false, { picking = "end" }, Modifier.weight(1f).testTag("planEndDate"))
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    PlanChip("Ohne Ende", draft.endDay == null, { draft = draft.copy(endDay = null) }, Modifier.testTag("planEndNone"), padding = 12.dp)
+                    PlanChip("4 Wochen", false, { draft = draft.copy(endDay = maxOf(today, draft.startDay) + 27) }, Modifier.testTag("planEnd4w"), padding = 12.dp)
+                    PlanChip("3 Monate", false, { draft = draft.copy(endDay = maxOf(today, draft.startDay) + 90) }, Modifier.testTag("planEnd3m"), padding = 12.dp)
+                    PlanChip("Datum wählen …", false, { picking = "end" }, Modifier.testTag("planEndDate"), padding = 12.dp)
                 }
                 if (draft.skillIds.any { it.startsWith("w13.") } && TMS_DAY > today) {
                     Spacer(Modifier.height(6.dp))

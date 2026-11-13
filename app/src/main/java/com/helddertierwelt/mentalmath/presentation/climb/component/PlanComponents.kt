@@ -61,7 +61,7 @@ import com.helddertierwelt.mentalmath.presentation.theme.yellow
 
 /** Auswahlfeld (Ziel, Minuten). */
 @Composable
-fun PlanChip(text: String, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun PlanChip(text: String, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier, padding: androidx.compose.ui.unit.Dp = 6.dp) {
     val dimens = MentalMathTheme.dimens
     Box(
         contentAlignment = Alignment.Center,
@@ -69,7 +69,7 @@ fun PlanChip(text: String, selected: Boolean, onClick: () -> Unit, modifier: Mod
             .clip(RoundedCornerShape(dimens.components.cornerRadius * 2))
             .background(if (selected) accent.copy(alpha = 0.18f) else MaterialTheme.colorScheme.background)
             .clickable { onClick() }
-            .padding(vertical = 8.dp, horizontal = 6.dp),
+            .padding(vertical = 8.dp, horizontal = padding),
     ) {
         Text(
             text = text,
@@ -226,6 +226,9 @@ private fun PlanContent(plan: DayPlan, plans: List<TrainingPlan>, onStart: (Plan
         Spacer(Modifier.height(10.dp))
         ActionButton(text = "Pläne verwalten", icon = R.drawable.tune_24dp, iconTint = accent, onClick = onManage, modifier = Modifier.testTag("planManage"))
         return
+    }
+    plan.notes.forEach { note ->
+        BodyText(note, color = yellow, modifier = Modifier.padding(bottom = 6.dp))
     }
     val next = plan.next
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {

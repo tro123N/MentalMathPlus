@@ -189,7 +189,7 @@ class PlanTest {
         val tight = tms.copy(startDay = today, endDay = today + 14)
         val status = DailyPlan.status(tight, p, today)
         assertTrue(status.perDay!! > 1.2)
-        assertEquals(2, DailyPlan.build(worlds, p, listOf(tight), now, today).blocks.count { it.kind == DailyPlan.NEW })
+        assertTrue(DailyPlan.build(worlds, p, listOf(tight.copy(minutes = 10)), now, today).blocks.count { it.kind == DailyPlan.NEW } >= 2)
     }
 
     @Test
@@ -210,11 +210,14 @@ class PlanTest {
         fun withRecent(ok: Int) = skills.take(3).fold(ClimbProgress(unlockAll = true)) { acc, sk ->
             acc.with(sk.id) { it.copy(stars = 1, practiced = 10, stability = 30.0, memoryAt = now, recent = List(10) { i -> if (i < ok) 2000L else -2000L }) }
         }
-        fun news(p: ClimbProgress) = DailyPlan.build(worlds, p, listOf(DailyPlan.newPlan(worlds, p, "x", "x", skills.map { it.id }, today).copy(minutes = 30)), now, today)
+        fun news(p: ClimbProgress) = DailyPlan.build(worlds, p, listOf(DailyPlan.newPlan(worlds, p, "x", "x", skills.map { it.id }, today).copy(minutes = 20)), now, today)
             .blocks.count { it.kind == DailyPlan.NEW }
-        assertEquals(2, news(withRecent(10)))
+        assertTrue(news(withRecent(10)) >= 2)
         assertEquals(1, news(withRecent(8)))
         assertEquals(0, news(withRecent(6)))
+        // Ganz am Anfang füllt der Plan die Zeit mit Neuem.
+        val fresh = DailyPlan.build(worlds, ClimbProgress(unlockAll = true), listOf(DailyPlan.newPlan(worlds, ClimbProgress(), "f", "f", skills.map { it.id }, today).copy(minutes = 30)), now, today)
+        assertTrue(fresh.blocks.count { it.kind == DailyPlan.NEW } >= 3)
     }
 
     @Test
