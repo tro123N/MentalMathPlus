@@ -49,7 +49,7 @@ object DailyPlan {
     fun goalName(goal: String): String = when (goal) {
         GOAL_TMSNAT -> "TMSnat"
         GOAL_ABI -> "Abitur / LK"
-        else -> "Kopfrechenprofi"
+        else -> "Kopfrechnen"
     }
 
     /** Aktionsschlüssel in [PlanBlock.target]: TMSnat-Übung, Einheiten. */
@@ -174,8 +174,12 @@ object DailyPlan {
         fun add(block: PlanBlock) { blocks += block; used += block.count }
         val all = worlds.flatMap { it.skills }
 
+        // Neues Level und größte Schwachstelle vorab bestimmen, damit das Aufwärmen sie auslässt.
+        val fresh = newSkill(worlds, progress, goals, followPath, today)
+        val weak = weaknesses(worlds, progress, now).firstOrNull { it.skill.id != fresh?.id }
+
         // 1. Aufwärmen: fällige oder am ehesten vergessene Levels.
-        val mastered = all.filter { progress.of(it.id).let { sp -> sp.mastered && !sp.needsAttention } }
+        val mastered = all.filter { it.id != weak?.skill?.id && progress.of(it.id).let { sp -> sp.mastered && !sp.needsAttention } }
         val byRecall = mastered.map { it to (Memory.recall(progress.of(it.id), now) ?: 1.0) }.sortedBy { it.second }
         val due = byRecall.filter { (s, r) -> r < Memory.TARGET || progress.of(s.id).nextReviewAt in 1..now }
         val warm = (due.ifEmpty { byRecall.filter { it.second < 0.95 }.take(2) }).take(WARMUP_MAX_SKILLS)
@@ -190,14 +194,12 @@ object DailyPlan {
         }
 
         // 2. Neues Level.
-        val fresh = newSkill(worlds, progress, goals, followPath, today)
         if (fresh != null && fits(fresh.practiceCount)) {
             val reason = if (followPath) "nächstes Level auf dem Kletterweg" else "nächster Schritt für dein Ziel"
             add(PlanBlock("$today-$NEW", NEW, "Neu: ${fresh.title}", reason, listOf(fresh.id), fresh.practiceCount))
         }
 
         // 3. Schwachstelle (eingerostete Levels zuerst).
-        val weak = weaknesses(worlds, progress, now).firstOrNull { it.skill.id != fresh?.id && it.skill.id !in warm.map { w -> w.first.id } }
         if (weak != null && fits(weak.skill.practiceCount)) {
             val count = if (progress.of(weak.skill.id).let { it.mastered && it.needsAttention }) Progression.REFRESH_SIZE else weak.skill.practiceCount
             add(PlanBlock("$today-$WEAK", WEAK, "Schwachstelle: ${weak.skill.title}", weak.reason, listOf(weak.skill.id), count))
@@ -216,9 +218,14 @@ object DailyPlan {
             add(PlanBlock("$today-$SPEED", SPEED, "Tempo: ${s.title}", reason, listOf(s.id), s.practiceCount))
         }
 
-        // 5. Anwenden: gemischte Aufgaben passend zum Ziel (wechselt täglich).
-        val apply = applyBlock(worlds, progress, goals, today)
-        if (apply != null && fits(apply.count)) add(apply)
+        // 5. Anwenden: gemischte Aufgaben passend zum Ziel – bei mehreren Zielen täglich ein anderes
+        // zuerst, die übrigen, solange die Zeit reicht.
+        val chosen = goals.ifEmpty { listOf(GOAL_PROFI) }
+        for (i in chosen.indices) {
+            val goal = chosen[((today + i) % chosen.size).toInt()]
+            val apply = applyBlock(worlds, progress, goal, today) ?: continue
+            if (i == 0 || used + apply.count <= budget) { if (fits(apply.count)) add(apply) }
+        }
 
         // Zu wenig gefüllt? Eine zweite Schwachstelle.
         if (used < budget * 0.7) {
@@ -230,10 +237,8 @@ object DailyPlan {
         return DayPlan(day = today, minutes = minutes, blocks = blocks, settingsKey = settingsKey(goals, minutes, followPath))
     }
 
-    private fun applyBlock(worlds: List<World>, progress: ClimbProgress, goals: List<String>, today: Long): PlanBlock? {
-        val chosen = goals.ifEmpty { listOf(GOAL_PROFI) }
-        val goal = chosen[(today % chosen.size).toInt()]
-        val id = "$today-$APPLY"
+    private fun applyBlock(worlds: List<World>, progress: ClimbProgress, goal: String, today: Long): PlanBlock? {
+        val id = "$today-$APPLY-$goal"
         return when (goal) {
             GOAL_TMSNAT -> if (today % 2 == 0L) {
                 PlanBlock(id, APPLY, "Anwenden: TMSnat-Aufgaben", "gemischte Textaufgaben wie im Test", count = 8, target = TARGET_AP)

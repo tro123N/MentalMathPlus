@@ -114,6 +114,8 @@ class PlanTest {
         assertEquals(weakId, weak.skillIds.single())
         assertTrue(weak.reason, weak.reason.contains("Vorzeichen"))
         assertTrue(plan.blocks.map { it.id }.toSet().size == plan.blocks.size)
+        // Die Schwachstelle steckt nicht schon im Aufwärmen.
+        assertTrue(weakId !in plan.blocks.first { it.kind == DailyPlan.WARMUP }.skillIds)
     }
 
     @Test
@@ -141,6 +143,9 @@ class PlanTest {
         val newBlock = tms.blocks.first { it.kind == DailyPlan.NEW }
         assertTrue(newBlock.skillIds.single(), newBlock.skillIds.single().startsWith("w13.") || newBlock.skillIds.single().startsWith("w14."))
         assertTrue(tms.blocks.any { it.kind == DailyPlan.APPLY && it.target != null })
+        // Zwei Ziele, 30 Minuten: für beide wird angewendet.
+        val both = DailyPlan.build(worlds, ClimbProgress(), listOf("profi", "tmsnat"), 30, true, now, today)
+        assertEquals(2, both.blocks.count { it.kind == DailyPlan.APPLY })
         val abi = DailyPlan.build(worlds, ClimbProgress(), listOf("abi"), 30, false, now, today)
         assertTrue(abi.blocks.first { it.kind == DailyPlan.NEW }.skillIds.single().let { it.startsWith("w17.") || it.startsWith("w16.") })
     }
