@@ -48,6 +48,12 @@ Die App hat drei getrennte Bereiche (Leiste unten):
 - Countdown bis zum ersten TMSnat; jede Kategorie ist auch ein Level (Welt 13) mit Erklärung, geführtem Üben und Prüfung.
 - **Einheiten umrechnen** (ab Version 2.2, auch als Aufgabenart im freien Training und als Welt 14): Vorsilben und Zehnerpotenzen (Tera bis Piko), Länge, Masse, Volumen und Liter, Fläche, Zeit und Uhrzeit, Geschwindigkeit (km/h ↔ m/s), Konzentration (mg/ml, g/l, mmol/l, Prozentlösungen, Tropfen, Dichte), Physik (Druck, Energie, Leistung, Strom, Spannung, Frequenz, Stoffmenge, Temperatur) und wissenschaftliche Schreibweise – unbegrenzt viele Aufgaben, jeder Bereich mit Erklärung und Lösungsweg, nach Fehlern mit Hinweis auf den typischen Fehler.
 
+### Ergänzungswelten (ab Version 2.4, immer offen)
+- **Welt 15 · Mehr Rechentricks:** mal 25/125, durch 25/125, mal 9/99/999, mal 5/50, mal 15, Quadrate um 50 und 100, Differenz von Quadraten, nahe an 100 malnehmen, Prozent tauschen.
+- **Welt 16 · Mathe im Alltag:** negative Zahlen, Mehrwertsteuer, Rabatte, Zinsen und Zinseszins, Verbrauch und Tanken, Rezepte, Uhrzeiten, Rechnung teilen, Grundpreis.
+- **Welt 17 · Oberstufe und Mathe-LK:** Logarithmen, Wachstum, Ableitungen, Scheitelpunkt, p-q-Formel, binomische Formeln, Trigonometrie, Pythagoras, Statistik, Wahrscheinlichkeit, Vektoren, Integrale – alles hilfsmittelfrei im Kopf.
+- Alle drei auch als Aufgabenarten im freien Training.
+
 ### KI-Coach – eine KI direkt auf dem Handy (ab Version 2.1)
 - Ein Sprachmodell von Google (**Gemma 4**) läuft komplett auf dem Handy, über [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM): **ohne Internet, kostenlos, Gespräche und Lernstand bleiben auf dem Gerät.** Das Modell wird einmal heruntergeladen.
 - Er **kennt den Lernstand** (Kletterweg und TMSnat-Training), **erklärt Aufgaben und Fehler** Schritt für Schritt – bei Aufgaben der App immer anhand ihres geprüften Lösungswegs – und **stellt Aufgaben im Chat**, prüft die Antworten und gibt auf Wunsch Tipps.
