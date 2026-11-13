@@ -102,7 +102,7 @@ class PlusFeaturesTest {
         assertTrue(Progression.worldUnlocked(worlds, p, 2))
         assertTrue(Progression.worldUnlocked(worlds, p, 3))
         assertTrue(Progression.skillUnlocked(worlds, p, worlds[3].skills[0].id))
-        assertEquals(worlds[0].skills[0].id, Progression.nextSkill(worlds, p)?.id)
+        assertEquals(worlds[0].skills.first { it.book.fromBook }.id, Progression.nextSkill(worlds, p)?.id)
         assertEquals(1, p.streakDays)
         assertEquals(today, p.days.last().day)
     }
@@ -203,7 +203,7 @@ class PlusFeaturesTest {
 
     @Test
     fun reminderTextFollowsTheProgress() {
-        val first = worlds[0].skills[0]
+        val first = worlds[0].skills.first { it.book.fromBook }
         val empty = ClimbProgress()
         assertTrue(Reminder.shouldNotify(empty, today, onlyIfIdle = true))
         assertTrue(Reminder.message(worlds, empty, now, today).text.contains(first.title))
@@ -559,8 +559,8 @@ class PlusFeaturesTest {
         val empty = ClimbProgress()
         assertTrue(Progression.worldUnlocked(worlds, empty, w13))
         worlds[w13].skills.forEach { assertTrue(it.id, Progression.skillUnlocked(worlds, empty, it.id)) }
-        // Der Hauptweg bleibt beim ersten Level.
-        assertEquals(worlds[0].skills[0].id, Progression.nextSkill(worlds, empty)?.id)
+        // Der Hauptweg bleibt beim ersten Level aus dem Buch.
+        assertEquals(worlds[0].skills.first { it.book.fromBook }.id, Progression.nextSkill(worlds, empty)?.id)
         // Auch wenn alle Hauptwelten geschafft sind, schickt „Weiterklettern“ nicht in die Zusatzwelt.
         val allMain = worlds.filter { !it.independent }.flatMap { it.skills }
             .fold(ClimbProgress()) { acc, sk -> acc.with(sk.id) { it.copy(stars = 1) } }

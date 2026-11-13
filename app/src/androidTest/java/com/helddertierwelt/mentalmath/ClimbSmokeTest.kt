@@ -440,7 +440,7 @@ class ClimbSmokeTest {
         compose.waitUntil(5_000) { vm.progress.value.skills.isEmpty() && vm.session.value == null }
         compose.waitForIdle()
         shot("a_start")
-        val first = Curriculum.worlds.first().skills.first()
+        val first = Curriculum.worlds.first().skills.first { it.book.fromBook }
 
         home("overviewContinue")
         waitForTag("levelColumn")

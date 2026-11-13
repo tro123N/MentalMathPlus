@@ -82,11 +82,20 @@ class EngineTest {
 
     @Test
     fun unlockingFollowsThePath() {
-        val first = worlds[0].skills[0].id
-        val second = worlds[0].skills[1].id
+        val book = worlds[0].skills.filter { it.book.fromBook }
+        val first = book[0].id
+        val second = book[1].id
         val empty = ClimbProgress()
         assertTrue(Progression.skillUnlocked(worlds, empty, first))
         assertFalse(Progression.skillUnlocked(worlds, empty, second))
+        // Ergänzungen (nicht aus dem Buch) sind freiwillig: vor dem ersten Buch-Level gleich offen …
+        worlds[0].skills.takeWhile { !it.book.fromBook }.forEach { assertTrue(it.id, Progression.skillUnlocked(worlds, empty, it.id)) }
+        // … und sie sperren nichts: Nach den Buch-Levels davor ist das nächste Buch-Level offen, auch ohne die Ergänzungen.
+        val beforeLast = book.dropLast(1).map { it.id }.toTypedArray()
+        assertTrue(Progression.skillUnlocked(worlds, mastered(*beforeLast), book.last().id))
+        assertEquals(first, Progression.nextSkill(worlds, empty)?.id)
+        // Welt 2 öffnet sich schon, wenn nur die Buch-Levels von Welt 1 geschafft sind.
+        assertTrue(Progression.worldUnlocked(worlds, mastered(*book.map { it.id }.toTypedArray()), 1))
         assertTrue(Progression.skillUnlocked(worlds, mastered(first), second))
         assertFalse(Progression.worldUnlocked(worlds, empty, 1))
         val allOfWorld1 = mastered(*worlds[0].skills.map { it.id }.toTypedArray())
@@ -97,8 +106,9 @@ class EngineTest {
 
     @Test
     fun twoFailedTestsSendYouBackToThePrerequisite() {
-        val pre = worlds[0].skills[0].id
-        val skill = worlds[0].skills[1].id
+        val book = worlds[0].skills.filter { it.book.fromBook }
+        val pre = book[0].id
+        val skill = book[1].id
         val fail = Outcome(total = 10, correct = 5, accuracy = 0.5, avgMs = 9_000, stars = 0)
         var p = mastered(pre)
         p = Progression.afterTest(worlds, p, skill, fail, now)

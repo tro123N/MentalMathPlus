@@ -258,7 +258,7 @@ class AiTest {
         val climbEmpty = run(AiToolbox.CLIMB_STATUS, "{}")
         assertTrue(climbEmpty.ok)
         assertEquals(12, climbEmpty.result["welten"]!!.jsonArray.size)
-        assertEquals("w1.complement", climbEmpty.result["naechstes_level"]!!.jsonObject.str("id"))
+        assertEquals("w1.times", climbEmpty.result["naechstes_level"]!!.jsonObject.str("id"))
         val climbFull = run(AiToolbox.CLIMB_STATUS, "{}", ctx(apProgress()))
         assertEquals("80", climbFull.result.str("richtig_prozent_gesamt"))
     }

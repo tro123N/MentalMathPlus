@@ -230,7 +230,7 @@ class PlanTest {
     }
 
     private fun masteredPath(n: Int): ClimbProgress {
-        val skills = worlds.first().skills.take(n)
+        val skills = worlds.filter { !it.independent }.flatMap { it.skills }.take(n)
         return skills.fold(ClimbProgress()) { acc, sk ->
             acc.with(sk.id) { it.copy(stars = 1, practiced = 10, stability = 30.0, memoryAt = now, recent = List(10) { 2000L }) }
         }
@@ -238,27 +238,27 @@ class PlanTest {
 
     @Test
     fun checkTestsThePrerequisitesAndMarksWeakOnes() {
-        val skills = worlds.first().skills
-        val target = skills[3]
-        var p = masteredPath(3).with(target.id) { it.copy(failStreak = 1, testsTaken = 1) }
+        val skills = worlds.filter { !it.independent }.flatMap { it.skills }
+        val target = skills[7]
+        var p = masteredPath(7).with(target.id) { it.copy(failStreak = 1, testsTaken = 1) }
         assertTrue(Drills.checkUseful(worlds, p, target.id))
         val session = Drills.check(worlds, p, target.id, Random(3))!!
         assertEquals(Drills.CHECK_SIZE, session.problems.size)
         val ids = session.problems.map { it.problem.skillId }.toSet()
-        assertEquals(setOf(skills[2].id, skills[1].id), ids)
+        assertEquals(setOf(skills[6].id, skills[5].id), ids)
         // Alle Aufgaben der direkten Grundlage falsch.
-        val results = session.problems.map { ProblemResult(it.problem, "1", correct = it.problem.skillId != skills[2].id, timeMs = 2000) }
+        val results = session.problems.map { ProblemResult(it.problem, "1", correct = it.problem.skillId != skills[6].id, timeMs = 2000) }
         val (after, outcome) = Drills.afterCheck(worlds, p, session.copy(results = results))
-        assertEquals(listOf(skills[2].id), outcome!!.weak.map { it.id })
-        assertTrue(after.of(skills[2].id).refreshPending)
-        assertTrue(!after.of(skills[1].id).refreshPending)
+        assertEquals(listOf(skills[6].id), outcome!!.weak.map { it.id })
+        assertTrue(after.of(skills[6].id).refreshPending)
+        assertTrue(!after.of(skills[5].id).refreshPending)
         // Der Plan bekommt einen Grundlagen-Check und danach das Auffrischen.
         val plan = buildFor(p, listOf("profi"), 20, true)
         val check = plan.blocks.first { it.kind == DailyPlan.CHECK }
         assertEquals(target.id, check.skillIds.single())
         val withFollowUp = DailyPlan.afterCheck(plan, today, outcome)!!
         val idx = withFollowUp.blocks.indexOfFirst { it.kind == DailyPlan.CHECK }
-        assertEquals(skills[2].id, withFollowUp.blocks[idx + 1].skillIds.single())
+        assertEquals(skills[6].id, withFollowUp.blocks[idx + 1].skillIds.single())
         p = after
         assertTrue(Progression.blockers(worlds, p, target.id).isNotEmpty())
     }

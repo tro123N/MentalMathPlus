@@ -252,7 +252,7 @@ fun ClimbHomeScreen(navController: NavController) {
                         item(key = "section_book") {
                             SectionHeader(
                                 title = "Kletterweg nach dem Buch",
-                                text = "Welten 1–12 folgen den Kapiteln 0–9 von „Mathe-Magie“ und werden der Reihe nach freigeschaltet. Einzelne Levels mit „Ergänzung“ sind eigene Zusätze (Grundlagen, Kommazahlen, Geld), die das Buch nicht enthält.",
+                                text = "Welten 1–12 folgen den Kapiteln 0–9 von „Mathe-Magie“ und werden der Reihe nach freigeschaltet. Levels mit „Ergänzung“ sind eigene Zusätze (Grundlagen, Kommazahlen, Geld), die das Buch nicht enthält – sie sind freiwillig und sperren nichts.",
                                 fromBook = true,
                                 modifier = Modifier.testTag("sectionBook"),
                             )

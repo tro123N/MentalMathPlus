@@ -164,7 +164,8 @@ class SessionTest {
 
     @Test
     fun passingATestUnlocksTheNextLevel() {
-        val skill = worlds[0].skills[0]
+        val book = worlds[0].skills.filter { it.book.fromBook }
+        val skill = book[0]
         var s = SessionLogic.create(SessionType.TEST, skill, Random(13))
         while (s.phase != Phase.FINISHED) {
             val typed = typeText(s, raw(s.expected!!))
@@ -173,7 +174,7 @@ class SessionTest {
         val (p, summary) = SessionFinisher.finish(worlds, ClimbProgress(), s, now = 1_000_000L, today = 10)
         assertEquals(3, summary.starsAfter)
         assertTrue(summary.outcome!!.passed)
-        assertEquals(worlds[0].skills[1].id, summary.unlocked?.id)
+        assertEquals(book[1].id, summary.unlocked?.id)
         assertEquals(1, p.streakDays)
         assertEquals(skill.goals.testSize.toLong(), p.totalSolved)
     }

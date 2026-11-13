@@ -71,45 +71,48 @@ object Progression {
         worldIndex <= 0 ||
             progress.unlockAll ||
             worlds.getOrNull(worldIndex)?.independent == true ||
-            worlds[worldIndex - 1].skills.all { progress.of(it.id).mastered } ||
+            worlds[worldIndex - 1].skills.filter { required(it) }.all { progress.of(it.id).mastered } ||
             worlds.getOrNull(worldIndex)?.skills?.any { progress.of(it.id).mastered } == true
 
     fun skillUnlocked(worlds: List<World>, progress: ClimbProgress, skillId: String): Boolean {
         val pos = locate(worlds, skillId) ?: return false
         if (worlds[pos.world].independent || progress.unlockAll) return true
         if (!worldUnlocked(worlds, progress, pos.world)) return false
-        if (pos.skill == 0) return true
-        return progress.of(worlds[pos.world].skills[pos.skill - 1].id).mastered
+        // Ergänzungen (nicht aus dem Buch) sind freiwillig: Sie sperren nichts.
+        return worlds[pos.world].skills.take(pos.skill).filter { required(it) }.all { progress.of(it.id).mastered }
     }
+
+    /** Muss dieses Level im Kletterweg geschafft werden? Nur Levels aus dem Buch – Ergänzungen sind freiwillig. */
+    fun required(skill: Skill): Boolean = skill.book.fromBook
 
     /** Das Level, auf dem dieses Level direkt aufbaut. */
     fun prerequisite(worlds: List<World>, skillId: String): Skill? {
         val pos = locate(worlds, skillId) ?: return null
         if (worlds[pos.world].independent) return null
-        return when {
-            pos.skill > 0 -> worlds[pos.world].skills[pos.skill - 1]
-            pos.world > 0 -> worlds[pos.world - 1].skills.lastOrNull()
-            else -> null
-        }
+        val before = worlds.take(pos.world).filter { !it.independent }.flatMap { it.skills } + worlds[pos.world].skills.take(pos.skill)
+        return before.lastOrNull { required(it) }
     }
 
     /** Levels, die erst aufgefrischt werden müssen, bevor die Prüfung dieses Levels möglich ist. */
     fun blockers(worlds: List<World>, progress: ClimbProgress, skillId: String): List<Skill> {
         val pos = locate(worlds, skillId) ?: return emptyList()
         if (worlds[pos.world].independent) return emptyList()
-        val earlier = worlds[pos.world].skills.take(pos.skill).toMutableList()
-        if (pos.skill == 0) prerequisite(worlds, skillId)?.let { earlier += it }
+        val earlier = worlds[pos.world].skills.take(pos.skill).filter { required(it) }.toMutableList()
+        prerequisite(worlds, skillId)?.let { if (it !in earlier) earlier += it }
         return earlier.filter { progress.of(it.id).needsAttention }
     }
 
-    /** Das nächste Level, an dem weitergeklettert werden sollte. */
+    /**
+     * Das nächste Level, an dem weitergeklettert werden sollte: das erste offene Level aus dem Buch.
+     * Sind alle Buch-Levels geschafft, kommen die übrigen Ergänzungen des Hauptwegs.
+     */
     fun nextSkill(worlds: List<World>, progress: ClimbProgress): Skill? {
-        worlds.forEachIndexed { wi, w ->
-            if (w.independent) return@forEachIndexed
-            if (!worldUnlocked(worlds, progress, wi)) return null
-            w.skills.forEach { s -> if (!progress.of(s.id).mastered) return s }
+        val main = worlds.withIndex().filter { !it.value.independent }
+        for ((wi, w) in main) {
+            if (!worldUnlocked(worlds, progress, wi)) break
+            w.skills.firstOrNull { required(it) && !progress.of(it.id).mastered }?.let { return it }
         }
-        return null
+        return main.flatMap { it.value.skills }.firstOrNull { !progress.of(it.id).mastered && skillUnlocked(worlds, progress, it.id) }
     }
 
     /** Tagesstatistik einer Liste von Ergebnissen. */
