@@ -455,16 +455,10 @@ private fun WorldCard(
                 )
                 CaptionText("${world.subtitle} · $done/${world.skills.size} · $stars★")
                 Spacer(Modifier.height(3.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    when {
-                        world.supplement -> SourceTag(false, "Ergänzung")
-                        world.bookSkills < world.skills.size -> SourceTag(true, "Buch · ${world.bookSkills} von ${world.skills.size} Levels")
-                        else -> SourceTag(true, "Buch · Kap. ${world.chapters.joinToString(", ")}")
-                    }
-                    world.recommendedAfter?.let {
-                        Spacer(Modifier.width(6.dp))
-                        CaptionText("empfohlen nach Welt $it")
-                    }
+                when {
+                    world.supplement -> SourceTag(false, world.recommendedAfter?.let { "Ergänzung · empfohlen nach Welt $it" } ?: "Ergänzung")
+                    world.bookSkills < world.skills.size -> SourceTag(true, "Buch · ${world.bookSkills} von ${world.skills.size} Levels")
+                    else -> SourceTag(true, "Buch · Kap. ${world.chapters.joinToString(", ")}")
                 }
             }
             Icon(
