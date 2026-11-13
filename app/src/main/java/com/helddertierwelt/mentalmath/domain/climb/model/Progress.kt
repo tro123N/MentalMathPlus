@@ -141,6 +141,8 @@ data class ClimbProgress(
     val apRuns: List<ApRun> = emptyList(),
     /** Fehlertraining: Aufgabentypen des TMSnat-Trainings, die zuletzt falsch gelöst wurden. */
     val apMistakes: List<ApMistakeEntry> = emptyList(),
+    /** Alle Levels sind offen (Schalter in den Einstellungen) – Sterne gibt es weiter nur durch Prüfungen. */
+    val unlockAll: Boolean = false,
 ) {
     fun of(skillId: String): SkillProgress = skills[skillId] ?: SkillProgress()
 

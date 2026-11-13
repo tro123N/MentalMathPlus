@@ -67,6 +67,20 @@ class EngineTest {
     }
 
     @Test
+    fun unlockAllOpensEveryLevelButKeepsTheNextStep() {
+        val worlds = Curriculum.worlds
+        val locked = ClimbProgress()
+        val open = locked.copy(unlockAll = true)
+        val all = worlds.flatMap { it.skills }
+        assertTrue(all.any { !Progression.skillUnlocked(worlds, locked, it.id) })
+        assertTrue(all.all { Progression.skillUnlocked(worlds, open, it.id) })
+        assertTrue(worlds.indices.all { Progression.worldUnlocked(worlds, open, it) })
+        // „Weiterklettern“ bleibt beim ersten nicht geschafften Level, Sterne entstehen nicht.
+        assertEquals(Progression.nextSkill(worlds, locked)?.id, Progression.nextSkill(worlds, open)?.id)
+        assertTrue(all.none { open.of(it.id).mastered })
+    }
+
+    @Test
     fun unlockingFollowsThePath() {
         val first = worlds[0].skills[0].id
         val second = worlds[0].skills[1].id

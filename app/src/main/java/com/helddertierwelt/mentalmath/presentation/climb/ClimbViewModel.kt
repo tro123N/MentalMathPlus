@@ -325,6 +325,12 @@ class ClimbViewModel @Inject constructor(
         viewModelScope.launch { settingsRepository.update { it.copy(trickTips = on) } }
     }
 
+    /** Alle Levels öffnen oder wieder der Reihe nach freischalten. Geschaffte Levels und Sterne bleiben. */
+    fun setUnlockAll(on: Boolean) {
+        feedbackController.play(FeedbackType.TAP)
+        viewModelScope.launch { repository.update { it.copy(unlockAll = on) } }
+    }
+
     fun setAdaptive(on: Boolean) {
         feedbackController.play(FeedbackType.TAP)
         viewModelScope.launch { settingsRepository.update { it.copy(adaptive = on) } }

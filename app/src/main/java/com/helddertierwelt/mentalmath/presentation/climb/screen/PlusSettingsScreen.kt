@@ -418,6 +418,13 @@ fun PlusSettingsScreen(navController: NavController) {
                     checked = plus.adaptive,
                     onCheckedChange = { viewModel.setAdaptive(it) },
                 )
+                SwitchRow(
+                    title = "Alle Levels freischalten",
+                    subtitle = "Jedes Level im Kletterweg ist sofort offen, ohne die Levels davor zu schaffen. Sterne gibt es weiter nur durch Prüfungen. Ausschalten stellt die Reihenfolge wieder her.",
+                    checked = progress.unlockAll,
+                    onCheckedChange = { viewModel.setUnlockAll(it) },
+                    modifier = Modifier.testTag("unlockAllSwitch"),
+                )
             }
             CardGap()
 

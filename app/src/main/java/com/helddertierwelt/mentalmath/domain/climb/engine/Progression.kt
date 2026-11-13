@@ -69,13 +69,14 @@ object Progression {
      */
     fun worldUnlocked(worlds: List<World>, progress: ClimbProgress, worldIndex: Int): Boolean =
         worldIndex <= 0 ||
+            progress.unlockAll ||
             worlds.getOrNull(worldIndex)?.independent == true ||
             worlds[worldIndex - 1].skills.all { progress.of(it.id).mastered } ||
             worlds.getOrNull(worldIndex)?.skills?.any { progress.of(it.id).mastered } == true
 
     fun skillUnlocked(worlds: List<World>, progress: ClimbProgress, skillId: String): Boolean {
         val pos = locate(worlds, skillId) ?: return false
-        if (worlds[pos.world].independent) return true
+        if (worlds[pos.world].independent || progress.unlockAll) return true
         if (!worldUnlocked(worlds, progress, pos.world)) return false
         if (pos.skill == 0) return true
         return progress.of(worlds[pos.world].skills[pos.skill - 1].id).mastered
