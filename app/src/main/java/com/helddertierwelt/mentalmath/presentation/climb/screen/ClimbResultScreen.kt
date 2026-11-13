@@ -90,7 +90,6 @@ fun ClimbResultScreen(navController: NavController) {
     val summaryOrNull by viewModel.summary.collectAsState()
     val progress by viewModel.progress.collectAsState()
     val fromPlan by viewModel.fromPlan.collectAsState()
-    val plus by viewModel.plusSettings.collectAsState()
 
     fun toHome() {
         viewModel.playTap()
@@ -152,7 +151,7 @@ fun ClimbResultScreen(navController: NavController) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     val skillId = summary.skillId
                     // Trainingsplan: direkt zum nächsten Baustein.
-                    val plan = progress.plan?.takeIf { fromPlan && plus.planSetUp && it.day == viewModel.today() }
+                    val plan = progress.plan?.takeIf { fromPlan && progress.plans.isNotEmpty() && it.day == viewModel.today() }
                     val planNext = plan?.next
                     if (planNext != null) {
                         ActionButton(

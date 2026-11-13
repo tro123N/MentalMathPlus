@@ -1,12 +1,20 @@
-**Mental Math Plus 2.6 – gezielt üben, wo es hakt**
+**Mental Math Plus 2.6 – eigene Trainingspläne, wissenschaftlich geplant**
 
-Der Trainingsplan wird schlauer (Stufe 2 von 3):
+**Pläne selbst gestalten:** Lege beliebig viele Pläne an (z. B. „TMSnat bis Mai“ und „Kopfrechnen allgemein“) und wähle für jeden:
+- **was** geübt wird – ganze Welten oder einzelne Levels,
+- **wie viel** – Minuten pro Übungstag und welche Wochentage,
+- **bis wann** – ohne Ende, 4 Wochen, 3 Monate, ein eigenes Datum oder direkt „bis zum TMSnat (8.5.2027)“.
 
-- **Grundlagen-Check:** Klappt die Prüfung eines Levels nicht, prüft die App mit 5 kurzen Aufgaben die Levels davor. Sitzt dort etwas nicht, kommt es zuerst zum Auffrischen dran – direkt im Plan. Sitzt alles, weißt du: Es liegt nur an der neuen Methode.
-- **Fehlermuster-Training:** Macht dich derselbe Denkfehler mehrfach (auch mit anderen Zahlen), übst du Aufgaben, bei denen genau dieser Fehler passieren kann.
-- **Tempotraining:** Für Levels, die du sicher, aber noch langsam rechnest – mit einem knappen Zeitlimit pro Aufgabe, damit du auf 2 Sterne kommst.
-- **Gemischt üben:** Die zuletzt gelernten Levels kommen durcheinander. So lernst du, die passende Methode selbst zu erkennen.
+Pläne lassen sich jederzeit **bearbeiten, pausieren, neu starten oder löschen** – deine Sterne und dein Level-Fortschritt bleiben immer erhalten. „Heute“ auf der Startseite setzt alle aktiven Pläne zu einer Einheit zusammen.
 
-Diese Übungen erscheinen automatisch im Plan „Heute“ und zusätzlich auf jeder Level-Seite unter **„Gezielt üben“**, sobald sie sich lohnen.
+**So plant die App (nach gut belegten Lernprinzipien):**
+- **Verteilt wiederholen:** Jedes Level kommt kurz vor dem Verblassen zurück – mit Enddatum so, dass zum Termin alles sitzt.
+- **Abrufen statt Nachlesen, Mischen:** kurze Abfragen, verschiedene Methoden durcheinander.
+- **Erst sicher, dann schnell:** Tempotraining erst ab 90 % richtig; **Grundlagen-Check** mit 5 Aufgaben, wenn eine Prüfung nicht klappt.
+- **Etwa 85 % richtig:** Läuft es sehr gut, kommt mehr Neues, sonst wird erst gefestigt.
+- **Phasen:** Aufbau → Festigen → Endspurt (vor dem Enddatum keine neuen Levels mehr, dafür Testsimulationen).
+- **Fehlermuster-Training:** Wiederholt sich ein Denkfehler, übst du genau solche Aufgaben.
+
+Auf jeder Level-Seite gibt es zusätzlich „Gezielt üben“ (Grundlagen-Check, Fehlermuster, Tempotraining).
 
 **Installieren:** `MentalMathPlus.apk` unten antippen, herunterladen und öffnen. Die neue Version ersetzt die alte, dein Fortschritt bleibt erhalten.

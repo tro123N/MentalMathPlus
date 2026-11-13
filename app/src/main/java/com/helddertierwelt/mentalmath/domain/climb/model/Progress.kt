@@ -56,6 +56,8 @@ data class SkillProgress(
     val stability: Double = 0.0,
     /** Zeitpunkt (ms), auf den sich [stability] bezieht – zuletzt geübt. */
     val memoryAt: Long = 0,
+    /** Gedächtnismodell: wie schwer dieses Level für die Person ist (1 leicht bis 10 schwer, 0 = noch unbekannt). */
+    val difficulty: Double = 0.0,
 ) {
     val mastered: Boolean get() = stars >= 1
     val needsAttention: Boolean get() = rusty || refreshPending
@@ -151,6 +153,10 @@ data class ClimbProgress(
     val errors: List<ErrorEntry> = emptyList(),
     /** Trainingsplan des Tages (wird einmal pro Tag erstellt). */
     val plan: DayPlan? = null,
+    /** Trainingspläne der Person (mehrere gleichzeitig möglich). */
+    val plans: List<TrainingPlan> = emptyList(),
+    /** Der alte Einzelplan (Version 2.5) wurde in [plans] übernommen. */
+    val plansMigrated: Boolean = false,
 ) {
     fun of(skillId: String): SkillProgress = skills[skillId] ?: SkillProgress()
 
@@ -212,6 +218,30 @@ data class PlanBlock(
     val target: String? = null,
     /** Fehlermuster-Training: der Denkfehler, um den es geht. */
     val note: String? = null,
+    /** Zu welchem Trainingsplan der Abschnitt gehört (null: für alle, z. B. Aufwärmen). */
+    val planId: String? = null,
+)
+
+/** Ein Trainingsplan, den die Person anlegt: was, wie viel, an welchen Tagen und bis wann. */
+@Serializable
+data class TrainingPlan(
+    val id: String,
+    val name: String,
+    /** Ausgewählte Levels (Reihenfolge wie im Kletterweg). */
+    val skillIds: List<String>,
+    /** Minuten an jedem Übungstag. */
+    val minutes: Int = 20,
+    /** Übungstage, 1 = Montag … 7 = Sonntag. */
+    val weekdays: List<Int> = listOf(1, 2, 3, 4, 5, 6, 7),
+    /** Erster Tag (Epoch-Tag). */
+    val startDay: Long,
+    /** Letzter Tag, z. B. der Prüfungstag (Epoch-Tag); null = ohne Ende. */
+    val endDay: Long? = null,
+    /** Neue Levels in der Reihenfolge des Kletterwegs (sonst abwechselnd aus den gewählten Welten). */
+    val followPath: Boolean = true,
+    val paused: Boolean = false,
+    /** Geschaffte Levels der Auswahl beim Start (für die Fortschrittsanzeige). */
+    val masteredAtStart: Int = 0,
 )
 
 /** Der Trainingsplan eines Tages. */

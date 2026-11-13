@@ -35,6 +35,12 @@ import org.junit.Test
 import kotlin.random.Random
 
 class PlanTest {
+    private fun planOf(p: ClimbProgress, goals: List<String>, minutes: Int, follow: Boolean) =
+        DailyPlan.newPlan(worlds, p, "t", "Test", goals.flatMap { DailyPlan.preset(worlds, it) }, now / Progression.DAY_MS - 1).copy(minutes = minutes, followPath = follow)
+
+    private fun buildFor(p: ClimbProgress, goals: List<String>, minutes: Int, follow: Boolean) =
+        DailyPlan.build(worlds, p, listOf(planOf(p, goals, minutes, follow)), now, now / Progression.DAY_MS)
+
     private val worlds = Curriculum.worlds
     private val now = 1_800_000_000_000L
     private val day = Progression.DAY_MS
@@ -92,7 +98,7 @@ class PlanTest {
 
     @Test
     fun freshPlanStartsWithTheFirstLevel() {
-        val plan = DailyPlan.build(worlds, ClimbProgress(), listOf("profi"), 20, true, now, today)
+        val plan = buildFor(ClimbProgress(), listOf("profi"), 20, true)
         val first = plan.blocks.first()
         assertEquals(DailyPlan.NEW, first.kind)
         assertEquals(worlds.first().skills.first().id, first.skillIds.single())
@@ -109,7 +115,7 @@ class PlanTest {
         p = Memory.update(worlds, p, results(weakId, 0, 4, 3000, note = "Vorzeichen"), now - day).let { q ->
             Memory.update(worlds, q, results(weakId, 0, 4, 3000, note = "Vorzeichen"), now - day)
         }
-        val plan = DailyPlan.build(worlds, p, listOf("profi"), 30, true, now, today)
+        val plan = buildFor(p, listOf("profi"), 30, true)
         val kinds = plan.blocks.map { it.kind }
         assertTrue(kinds.toString(), DailyPlan.WARMUP in kinds)
         val weak = plan.blocks.first { it.kind == DailyPlan.WEAK }
@@ -122,14 +128,16 @@ class PlanTest {
 
     @Test
     fun planIsKeptForTheDayAndRebuiltOnChanges() {
-        val p0 = ClimbProgress()
-        val plan = DailyPlan.current(worlds, p0, listOf("profi"), 20, true, now, today)
+        val plan0 = planOf(ClimbProgress(), listOf("profi"), 20, true)
+        val p0 = ClimbProgress(plans = listOf(plan0))
+        val plan = DailyPlan.current(worlds, p0, now, today)
         val first = plan.blocks.first().id
         val saved = p0.copy(plan = DailyPlan.markDone(plan, first))
-        val same = DailyPlan.current(worlds, saved, listOf("profi"), 20, true, now, today)
-        assertEquals(listOf(first), same.done)
-        assertTrue(DailyPlan.current(worlds, saved, listOf("profi"), 10, true, now, today).done.isEmpty())
-        assertTrue(DailyPlan.current(worlds, saved, listOf("profi"), 20, true, now + day, today + 1).done.isEmpty())
+        assertEquals(listOf(first), DailyPlan.current(worlds, saved, now, today).done)
+        // Geänderte Minuten: neu geplant, Erledigtes bleibt abgehakt.
+        val changed = saved.copy(plans = listOf(plan0.copy(minutes = 10)))
+        assertEquals(listOf(first), DailyPlan.current(worlds, changed, now, today).done)
+        assertTrue(DailyPlan.current(worlds, saved, now + day, today + 1).done.isEmpty())
         // Neues Level gilt als erledigt, sobald eine Einheit dieses Levels fertig ist.
         val newBlock = plan.blocks.first { it.kind == DailyPlan.NEW }
         val after = DailyPlan.afterSession(plan, today, null, newBlock.skillIds.single())!!
@@ -140,16 +148,82 @@ class PlanTest {
     }
 
     @Test
-    fun freeChoiceFollowsTheGoals() {
-        val tms = DailyPlan.build(worlds, ClimbProgress(), listOf("tmsnat"), 20, false, now, today)
-        val newBlock = tms.blocks.first { it.kind == DailyPlan.NEW }
-        assertTrue(newBlock.skillIds.single(), newBlock.skillIds.single().startsWith("w13.") || newBlock.skillIds.single().startsWith("w14."))
-        assertTrue(tms.blocks.any { it.kind == DailyPlan.APPLY && it.target != null })
-        // Zwei Ziele, 30 Minuten: für beide wird angewendet.
-        val both = DailyPlan.build(worlds, ClimbProgress(), listOf("profi", "tmsnat"), 30, true, now, today)
-        assertEquals(2, both.blocks.count { it.kind == DailyPlan.APPLY })
-        val abi = DailyPlan.build(worlds, ClimbProgress(), listOf("abi"), 30, false, now, today)
+    fun freeChoiceFollowsTheSelection() {
+        val tms = buildFor(ClimbProgress(), listOf("tmsnat"), 20, false)
+        val ids = tms.blocks.filter { it.kind == DailyPlan.NEW }.map { it.skillIds.single() }
+        assertTrue(ids.toString(), ids.isNotEmpty() && ids.all { it.startsWith("w13.") || it.startsWith("w14.") })
+        val abi = buildFor(ClimbProgress(), listOf("abi"), 30, false)
         assertTrue(abi.blocks.first { it.kind == DailyPlan.NEW }.skillIds.single().let { it.startsWith("w17.") || it.startsWith("w16.") })
+    }
+
+    @Test
+    fun severalPlansShareTheDayAndRespectWeekdays() {
+        val p = ClimbProgress()
+        val a = DailyPlan.newPlan(worlds, p, "a", "Kopfrechnen", DailyPlan.preset(worlds, "profi"), today - 3)
+        val b = DailyPlan.newPlan(worlds, p, "b", "TMSnat", DailyPlan.preset(worlds, "tmsnat"), today - 3).copy(minutes = 10)
+        val both = DailyPlan.build(worlds, p, listOf(a, b), now, today)
+        assertEquals(30, both.minutes)
+        assertTrue(both.blocks.any { it.planId == "a" && it.kind == DailyPlan.NEW })
+        assertTrue(both.blocks.any { it.planId == "b" && it.kind == DailyPlan.NEW })
+        // Plan b nicht an diesem Wochentag, Plan a pausiert → nichts zu tun.
+        val wd = DailyPlan.weekday(today)
+        val none = DailyPlan.build(worlds, p, listOf(a.copy(paused = true), b.copy(weekdays = (1..7).filter { it != wd })), now, today)
+        assertTrue(none.blocks.isEmpty())
+        assertEquals(4, DailyPlan.weekday(0)) // 1.1.1970 war ein Donnerstag
+        // Ende vorbei → nicht mehr aktiv.
+        assertTrue(DailyPlan.active(listOf(a.copy(endDay = today - 1)), today).isEmpty())
+    }
+
+    @Test
+    fun phasesFollowTheEndDate() {
+        val p = ClimbProgress()
+        val tms = DailyPlan.newPlan(worlds, p, "t", "TMSnat", DailyPlan.preset(worlds, "tmsnat"), today - 90).copy(endDay = today + 2)
+        assertEquals(DailyPlan.Phase.FINAL, DailyPlan.phase(tms, p, today))
+        val final = DailyPlan.build(worlds, p, listOf(tms), now, today)
+        assertTrue(final.blocks.none { it.kind == DailyPlan.NEW })
+        assertEquals(DailyPlan.TARGET_SIM, final.blocks.first { it.kind == DailyPlan.APPLY }.target)
+        val early = tms.copy(startDay = today, endDay = today + 100)
+        assertEquals(DailyPlan.Phase.BUILD, DailyPlan.phase(early, p, today))
+        assertEquals(DailyPlan.Phase.CONSOLIDATE, DailyPlan.phase(early, p, today + 80))
+        // Viele Levels bis zum Enddatum: zwei neue pro Tag.
+        val tight = tms.copy(startDay = today, endDay = today + 14)
+        val status = DailyPlan.status(tight, p, today)
+        assertTrue(status.perDay!! > 1.2)
+        assertEquals(2, DailyPlan.build(worlds, p, listOf(tight), now, today).blocks.count { it.kind == DailyPlan.NEW })
+    }
+
+    @Test
+    fun examDateBringsLevelsBackInTime() {
+        // Level gut gelernt (heute noch 92 %), würde bis zum Enddatum in 30 Tagen aber unter 90 % fallen.
+        val id = worlds.first().skills.first().id
+        val p = ClimbProgress().with(id) { it.copy(stars = 2, practiced = 10, stability = 20.0, memoryAt = now - 5 * day, recent = List(10) { 2000L }) }
+        val open = DailyPlan.newPlan(worlds, p, "o", "Offen", listOf(id), today - 10)
+        assertTrue(DailyPlan.build(worlds, p, listOf(open), now, today).blocks.none { it.kind == DailyPlan.WARMUP })
+        val exam = open.copy(endDay = today + 30)
+        val warm = DailyPlan.build(worlds, p, listOf(exam), now, today).blocks.first { it.kind == DailyPlan.WARMUP }
+        assertEquals(listOf(id), warm.skillIds)
+    }
+
+    @Test
+    fun accuracyRuleAdjustsTheAmountOfNewLevels() {
+        val skills = worlds.first().skills
+        fun withRecent(ok: Int) = skills.take(3).fold(ClimbProgress(unlockAll = true)) { acc, sk ->
+            acc.with(sk.id) { it.copy(stars = 1, practiced = 10, stability = 30.0, memoryAt = now, recent = List(10) { i -> if (i < ok) 2000L else -2000L }) }
+        }
+        fun news(p: ClimbProgress) = DailyPlan.build(worlds, p, listOf(DailyPlan.newPlan(worlds, p, "x", "x", skills.map { it.id }, today).copy(minutes = 30)), now, today)
+            .blocks.count { it.kind == DailyPlan.NEW }
+        assertEquals(2, news(withRecent(10)))
+        assertEquals(1, news(withRecent(8)))
+        assertEquals(0, news(withRecent(6)))
+    }
+
+    @Test
+    fun oldSinglePlanIsMigrated() {
+        val m = DailyPlan.migrate(worlds, ClimbProgress(), true, listOf("tmsnat"), 30, false, today)
+        assertEquals(1, m.plans.size)
+        assertEquals(30, m.plans.single().minutes)
+        assertTrue(m.plans.single().skillIds.all { it.startsWith("w13.") || it.startsWith("w14.") })
+        assertTrue(DailyPlan.migrate(worlds, ClimbProgress(), false, listOf("profi"), 20, true, today).let { it.plansMigrated && it.plans.isEmpty() })
     }
 
     private fun masteredPath(n: Int): ClimbProgress {
@@ -176,7 +250,7 @@ class PlanTest {
         assertTrue(after.of(skills[2].id).refreshPending)
         assertTrue(!after.of(skills[1].id).refreshPending)
         // Der Plan bekommt einen Grundlagen-Check und danach das Auffrischen.
-        val plan = DailyPlan.build(worlds, p, listOf("profi"), 20, true, now, today)
+        val plan = buildFor(p, listOf("profi"), 20, true)
         val check = plan.blocks.first { it.kind == DailyPlan.CHECK }
         assertEquals(target.id, check.skillIds.single())
         val withFollowUp = DailyPlan.afterCheck(plan, today, outcome)!!
@@ -199,7 +273,7 @@ class PlanTest {
         // Im Plan: Schwachstelle mit Fehlermuster wird zum Fehlermuster-Training.
         var p = ClimbProgress().with(skill.id) { it.copy(practiced = 10, recent = List(10) { 3000L }) }
         repeat(3) { p = Memory.update(worlds, p, listOf(ProblemResult(skill.generate(random), "1", false, 3000, note = note)), now - day) }
-        val plan = DailyPlan.build(worlds, p, listOf("profi", "tmsnat", "abi"), 30, true, now, today)
+        val plan = buildFor(p, listOf("profi", "tmsnat", "abi"), 30, true)
         val block = plan.blocks.first { it.kind == DailyPlan.WEAK }
         assertEquals(DailyPlan.TARGET_PATTERN, block.target)
         assertEquals(note, block.note)

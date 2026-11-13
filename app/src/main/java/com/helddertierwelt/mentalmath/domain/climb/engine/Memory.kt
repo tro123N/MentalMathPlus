@@ -73,6 +73,9 @@ object Memory {
     /** Nach wie vielen Stabilitäten die Sicherheit auf [TARGET] fällt (≈ 1,54). */
     private val dueFactor = ln(TARGET) / ln(0.9)
 
+    /** Geschätzte Sicherheit an einem späteren Tag (z. B. dem Prüfungstag). */
+    fun recallAt(sp: SkillProgress, at: Long): Double? = recall(sp, at)
+
     /** Tage, bis ein Level mit Stabilität [s] wieder fällig ist. */
     fun dueDays(s: Double): Double = s * dueFactor
 
@@ -98,13 +101,17 @@ object Memory {
             p = p.with(skillId) { sp ->
                 val s = stability(sp)
                 val r = recall(sp, now) ?: 1.0
+                // Schwierigkeit (wie bei FSRS): steigt nach Fehlern, sinkt nach sicheren, schnellen Runden.
+                val d0 = if (sp.difficulty > 0) sp.difficulty else 5.0
+                val d = (d0 + (0.8 - accuracy) * 2.5 - (if (fast && accuracy >= 0.9) 0.3 else 0.0)).coerceIn(1.0, 10.0)
+                val ease = (11 - d) / 6.0
                 val next = when {
                     s <= 0 -> if (accuracy >= 0.8) 1.0 else 0.5
-                    accuracy >= 0.8 -> s * (1 + (if (fast) 1.5 else 0.8) * (1 - r) * 4)
+                    accuracy >= 0.8 -> s * (1 + (if (fast) 1.5 else 0.8) * ease * (1 - r) * 4)
                     accuracy >= 0.5 -> s * 0.5
                     else -> s * 0.3
                 }.coerceIn(0.3, MAX_STABILITY)
-                val updated = sp.copy(stability = next, memoryAt = now)
+                val updated = sp.copy(stability = next, memoryAt = now, difficulty = d)
                 if (updated.mastered && !updated.needsAttention) {
                     val days = dueDays(next)
                     updated.copy(nextReviewAt = now + (days * DAY_MS).toLong(), intervalDays = days.toInt().coerceAtLeast(1))

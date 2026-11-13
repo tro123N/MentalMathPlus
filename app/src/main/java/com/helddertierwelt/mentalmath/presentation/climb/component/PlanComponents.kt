@@ -52,6 +52,7 @@ import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.domain.climb.engine.DailyPlan
 import com.helddertierwelt.mentalmath.domain.climb.model.DayPlan
 import com.helddertierwelt.mentalmath.domain.climb.model.PlanBlock
+import com.helddertierwelt.mentalmath.domain.climb.model.TrainingPlan
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
 import com.helddertierwelt.mentalmath.presentation.theme.accent
 import com.helddertierwelt.mentalmath.presentation.theme.green
@@ -80,64 +81,6 @@ fun PlanChip(text: String, selected: Boolean, onClick: () -> Unit, modifier: Mod
     }
 }
 
-/**
- * Einstellungen des Trainingsplans: Ziele (mehrere möglich), Minuten pro Tag und ob neue Levels
- * dem Kletterweg der Reihe nach folgen.
- */
-@Composable
-fun PlanSetup(
-    goals: List<String>,
-    minutes: Int,
-    followPath: Boolean,
-    onChange: (goals: List<String>, minutes: Int, followPath: Boolean) -> Unit,
-) {
-    CaptionText("Mein Ziel (mehrere möglich)")
-    Spacer(Modifier.height(6.dp))
-    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        DailyPlan.GOALS.forEach { goal ->
-            val on = goal in goals
-            PlanChip(
-                text = DailyPlan.goalName(goal),
-                selected = on,
-                onClick = {
-                    val next = if (on) goals - goal else goals + goal
-                    if (next.isNotEmpty()) onChange(next, minutes, followPath)
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .testTag("planGoal_$goal"),
-            )
-        }
-    }
-    Spacer(Modifier.height(12.dp))
-    CaptionText("Zeit pro Tag")
-    Spacer(Modifier.height(6.dp))
-    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        listOf(10, 20, 30).forEach { m ->
-            PlanChip(
-                text = "$m min",
-                selected = minutes == m,
-                onClick = { onChange(goals, m, followPath) },
-                modifier = Modifier
-                    .weight(1f)
-                    .testTag("planMinutes_$m"),
-            )
-        }
-    }
-    Spacer(Modifier.height(8.dp))
-    SwitchRow(
-        title = "Kletterweg der Reihe nach",
-        subtitle = if (followPath) {
-            "Neue Levels kommen in der Reihenfolge des Kletterwegs."
-        } else {
-            "Der Plan wählt neue Levels frei aus den Welten, die zu deinem Ziel passen."
-        },
-        checked = followPath,
-        onCheckedChange = { onChange(goals, minutes, it) },
-        modifier = Modifier.testTag("planFollowPath"),
-    )
-}
-
 private fun kindIcon(kind: String): Int = when (kind) {
     DailyPlan.WARMUP -> R.drawable.history_24dp
     DailyPlan.CHECK -> R.drawable.question_mark_24dp
@@ -149,7 +92,7 @@ private fun kindIcon(kind: String): Int = when (kind) {
 
 /** Eine Zeile des Plans: Haken oder Symbol, Titel und Begründung. */
 @Composable
-private fun PlanRow(block: PlanBlock, done: Boolean, current: Boolean, onClick: () -> Unit) {
+private fun PlanRow(block: PlanBlock, done: Boolean, current: Boolean, label: String?, onClick: () -> Unit) {
     val dimens = MentalMathTheme.dimens
     val tint = when {
         done -> green
@@ -190,54 +133,66 @@ private fun PlanRow(block: PlanBlock, done: Boolean, current: Boolean, onClick: 
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            CaptionText(block.reason)
+            CaptionText(if (label != null) "$label · ${block.reason}" else block.reason)
         }
         Spacer(Modifier.width(8.dp))
         CaptionText("${block.count}")
     }
 }
 
+/** Datum eines Epoch-Tags, z. B. „8.5.2027“. */
+fun dayText(day: Long): String {
+    val f = java.text.SimpleDateFormat("d.M.yyyy", java.util.Locale.GERMANY)
+    f.timeZone = java.util.TimeZone.getTimeZone("UTC")
+    return f.format(java.util.Date(day * 86_400_000L))
+}
+
+/** Kurzbeschreibung: „20 min · Mo–Fr · bis 8.5.2027“. */
+fun planSchedule(plan: TrainingPlan): String {
+    val days = when (plan.weekdays.sorted()) {
+        (1..7).toList() -> "täglich"
+        (1..5).toList() -> "Mo–Fr"
+        else -> plan.weekdays.sorted().joinToString(" ") { DailyPlan.WEEKDAY_NAMES[it - 1] }
+    }
+    val until = plan.endDay?.let { "bis ${dayText(it)}" } ?: "ohne Ende"
+    return "${plan.minutes} min · $days · $until"
+}
+
 /**
- * Karte „Heute“ auf der Startseite. Beim ersten Mal fragt sie nach Ziel und Zeit, danach zeigt
- * sie den Tagesplan mit Begründungen und startet den nächsten Baustein.
+ * Karte „Heute“ auf der Startseite: ohne Plan ein Knopf zum Erstellen, sonst die heutigen Abschnitte
+ * aller aktiven Pläne mit Begründung.
  */
 @Composable
 fun PlanCard(
     plan: DayPlan,
-    setUp: Boolean,
-    goals: List<String>,
-    minutes: Int,
-    followPath: Boolean,
-    onSetUp: (goals: List<String>, minutes: Int, followPath: Boolean) -> Unit,
+    plans: List<TrainingPlan>,
+    onCreate: () -> Unit,
     onStart: (PlanBlock) -> Unit,
-    onSettings: () -> Unit,
+    onManage: () -> Unit,
 ) {
     ClimbCard(modifier = Modifier.testTag("planCard")) {
-        if (!setUp) {
-            var g by remember(goals) { mutableStateOf(goals) }
-            var m by remember(minutes) { mutableStateOf(minutes) }
-            var f by remember(followPath) { mutableStateOf(followPath) }
+        if (plans.isEmpty()) {
             CardTitle("Dein Trainingsplan")
-            BodyText("Jeden Tag ein kurzer Plan: Wiederholen, was gerade zu verblassen droht, Neues lernen und gezielt üben, wo es hakt.")
-            Spacer(Modifier.height(12.dp))
-            PlanSetup(g, m, f) { ng, nm, nf -> g = ng; m = nm; f = nf }
+            BodyText("Leg fest, was du üben willst, wie viel Zeit du an welchen Tagen hast und bis wann – die App plant jeden Tag eine passende Einheit: wiederholen, was zu verblassen droht, Neues lernen und gezielt üben, wo es hakt.")
             Spacer(Modifier.height(12.dp))
             ActionButton(
                 text = "Plan erstellen",
-                icon = R.drawable.check_circle_24dp,
+                icon = R.drawable.add_24dp,
                 iconTint = green,
-                onClick = { onSetUp(g, m, f) },
+                onClick = onCreate,
                 modifier = Modifier.testTag("planCreate"),
             )
         } else {
-            PlanContent(plan, goals, onStart, onSettings)
+            PlanContent(plan, plans, onStart, onManage)
         }
     }
 }
 
 @Composable
-private fun PlanContent(plan: DayPlan, goals: List<String>, onStart: (PlanBlock) -> Unit, onSettings: () -> Unit) {
+private fun PlanContent(plan: DayPlan, plans: List<TrainingPlan>, onStart: (PlanBlock) -> Unit, onManage: () -> Unit) {
     val dimens = MentalMathTheme.dimens
+    val names = plans.associate { it.id to it.name }
+    val activeIds = plan.blocks.mapNotNull { it.planId }.distinct()
     Row(verticalAlignment = Alignment.CenterVertically) {
         Column(Modifier.weight(1f)) {
             Text(
@@ -245,25 +200,38 @@ private fun PlanContent(plan: DayPlan, goals: List<String>, onStart: (PlanBlock)
                 fontSize = dimens.fonts.settingsLabel,
                 color = MaterialTheme.colorScheme.onPrimary,
             )
-            val doneCount = plan.blocks.count { it.id in plan.done }
-            CaptionText("ca. ${DailyPlan.minutesOf(plan.blocks)} min · $doneCount von ${plan.blocks.size} erledigt · Ziel: ${goals.joinToString(", ") { DailyPlan.goalName(it) }}")
+            if (plan.blocks.isNotEmpty()) {
+                val doneCount = plan.blocks.count { it.id in plan.done }
+                CaptionText("ca. ${DailyPlan.minutesOf(plan.blocks)} min · $doneCount von ${plan.blocks.size} erledigt · ${activeIds.mapNotNull { names[it] }.joinToString(", ")}")
+            }
         }
         Icon(
             painter = painterResource(R.drawable.tune_24dp),
-            contentDescription = "Plan einstellen",
+            contentDescription = "Pläne verwalten",
             tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
             modifier = Modifier
                 .size(dimens.icons.menuItem)
                 .clip(CircleShape)
-                .clickable { onSettings() }
+                .clickable { onManage() }
                 .testTag("planSettings"),
         )
     }
     Spacer(Modifier.height(10.dp))
+    if (plan.blocks.isEmpty()) {
+        val text = when {
+            plans.all { it.paused } -> "Alle Pläne sind pausiert."
+            else -> "Heute ist laut deinen Plänen kein Übungstag. Wer mag, übt trotzdem frei weiter – Wiederholungen findest du unten."
+        }
+        BodyText(text)
+        Spacer(Modifier.height(10.dp))
+        ActionButton(text = "Pläne verwalten", icon = R.drawable.tune_24dp, iconTint = accent, onClick = onManage, modifier = Modifier.testTag("planManage"))
+        return
+    }
     val next = plan.next
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         plan.blocks.forEach { block ->
-            PlanRow(block, done = block.id in plan.done, current = block.id == next?.id, onClick = { onStart(block) })
+            val label = if (activeIds.size > 1) block.planId?.let { names[it] } else null
+            PlanRow(block, done = block.id in plan.done, current = block.id == next?.id, label = label, onClick = { onStart(block) })
         }
     }
     Spacer(Modifier.height(12.dp))
@@ -276,8 +244,6 @@ private fun PlanContent(plan: DayPlan, goals: List<String>, onStart: (PlanBlock)
             onClick = { onStart(next) },
             modifier = Modifier.testTag("planStart"),
         )
-    } else if (plan.blocks.isEmpty()) {
-        BodyText("Für heute gibt es nichts Neues – alles sitzt. Schau morgen wieder vorbei.")
     } else {
         BodyText("Plan für heute geschafft! Morgen gibt es einen neuen – wer mag, übt frei weiter.")
     }

@@ -105,6 +105,23 @@ fun Navigation(
             }
 
             composable(
+                route = "plans",
+                enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+            ) {
+                com.helddertierwelt.mentalmath.presentation.climb.screen.PlansScreen(navController = navController)
+            }
+
+            composable(
+                route = "planedit/{planKey}",
+                enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+            ) { entry ->
+                com.helddertierwelt.mentalmath.presentation.climb.screen.PlanEditScreen(
+                    navController = navController,
+                    planKey = entry.arguments?.getString("planKey") ?: "new-custom",
+                )
+            }
+
+            composable(
                 route = "aisettings",
                 enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
             ) {

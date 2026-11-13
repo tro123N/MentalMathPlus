@@ -28,7 +28,7 @@ Die App hat drei getrennte Bereiche (Leiste unten):
 - **12 Welten mit 84 Levels** nach den Kapiteln 0–9 des Buchs. Jedes Level: Erklärung, geführtes Üben (Zwischenschritte eintippen), freies Üben und eine Prüfung auf Zeit.
 - **Ziele und Sterne:** Ein Level gilt als geschafft, wenn Genauigkeit und Durchschnittszeit stimmen. Schneller heißt mehr Sterne.
 - **Auffrischen statt Vergessen:** Gelernte Levels kommen in Abständen wieder dran. Wer schlechter wird, frischt die Grundlage auf, bevor es weitergeht.
-- **Trainingsplan „Heute“:** Ziel (Kopfrechenprofi, TMSnat, Abitur/LK) und Minuten pro Tag wählen – die App stellt täglich Aufwärmen, Neues, Schwachstelle, Tempo und Anwenden zusammen, jeweils mit Begründung. Ein Gedächtnismodell schätzt pro Level, wann es zu verblassen droht; ein Fehlerprotokoll erkennt wiederkehrende Denkfehler. Dazu gezielte Übungen: Grundlagen-Check (5 Aufgaben), Fehlermuster-Training, Tempotraining und gemischtes Üben.
+- **Trainingspläne:** beliebig viele Pläne mit eigener Auswahl (Welten/Levels), Minuten, Wochentagen und Zeitraum (z. B. bis zum TMSnat) – bearbeiten, pausieren, neu starten, löschen. „Heute“ stellt täglich Aufwärmen, Neues, Schwachstelle, Tempo und Anwenden zusammen, jeweils mit Begründung. Ein Gedächtnismodell schätzt pro Level, wann es zu verblassen droht; ein Fehlerprotokoll erkennt wiederkehrende Denkfehler. Dazu gezielte Übungen: Grundlagen-Check (5 Aufgaben), Fehlermuster-Training, Tempotraining und gemischtes Üben.
 - **Einstufungstest:** Welten überspringen, die man schon kann.
 - **Handbuch:** alle Tricks zum Nachschlagen, durchsuchbar; wächst mit jedem neuen Level automatisch mit.
 - **Statistik:** Verlauf als Diagramm, Stärken und Schwächen, Fortschritt je Welt und je Level.

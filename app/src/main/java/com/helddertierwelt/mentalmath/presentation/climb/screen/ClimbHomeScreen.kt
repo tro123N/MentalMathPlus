@@ -113,8 +113,10 @@ fun ClimbHomeScreen(navController: NavController) {
     val plus by climbViewModel.plusSettings.collectAsState()
     val plusLoaded by climbViewModel.plusSettingsLoaded.collectAsState()
     val worlds = climbViewModel.worlds
-    val plan = remember(progress, plus) { climbViewModel.todayPlan(progress, plus) }
-    LaunchedEffect(plan, plus.planSetUp) { if (plus.planSetUp) climbViewModel.keepPlan(plan) }
+    val loaded by climbViewModel.loaded.collectAsState()
+    LaunchedEffect(loaded, plusLoaded) { if (loaded && plusLoaded) climbViewModel.migratePlans() }
+    val plan = remember(progress) { climbViewModel.todayPlan(progress) }
+    LaunchedEffect(plan) { if (progress.plans.isNotEmpty()) climbViewModel.keepPlan(plan) }
     val next = climbViewModel.nextSkill(progress)
     val currentWorldId = next?.let { n -> worlds.firstOrNull { w -> w.skills.any { it.id == n.id } }?.id }
     // Aufgeklappte Welten bleiben erhalten, wenn man von einem Level zurückkommt.
@@ -204,18 +206,12 @@ fun ClimbHomeScreen(navController: NavController) {
                         text = "Die Methoden aus „Mathe-Magie“ Schritt für Schritt: jedes Level verstehen, üben und die Prüfung bestehen.",
                     )
                 }
-                if (plusLoaded) {
+                if (plusLoaded && loaded) {
                     item(key = "plan") {
                         PlanCard(
                             plan = plan,
-                            setUp = plus.planSetUp,
-                            goals = plus.planGoals,
-                            minutes = plus.planMinutes,
-                            followPath = plus.planFollowPath,
-                            onSetUp = { g, m, f ->
-                                climbViewModel.playTap()
-                                climbViewModel.setPlan(g, m, f)
-                            },
+                            plans = progress.plans,
+                            onCreate = { openRoute("planedit/new-${com.helddertierwelt.mentalmath.domain.climb.engine.DailyPlan.GOAL_PROFI}") },
                             onStart = { block ->
                                 when (val start = climbViewModel.startPlanBlock(block)) {
                                     PlanStart.Play -> navController.navigate("climbplay")
@@ -223,7 +219,7 @@ fun ClimbHomeScreen(navController: NavController) {
                                     PlanStart.Failed -> Toast.makeText(context, "Dieser Schritt lässt sich gerade nicht starten.", Toast.LENGTH_SHORT).show()
                                 }
                             },
-                            onSettings = { openRoute("plussettings") },
+                            onManage = { openRoute("plans") },
                         )
                     }
                 }

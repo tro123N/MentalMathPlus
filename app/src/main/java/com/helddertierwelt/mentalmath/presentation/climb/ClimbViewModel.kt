@@ -32,6 +32,7 @@ import com.helddertierwelt.mentalmath.domain.climb.engine.DailyPlan
 import com.helddertierwelt.mentalmath.domain.climb.engine.Drills
 import com.helddertierwelt.mentalmath.domain.climb.model.DayPlan
 import com.helddertierwelt.mentalmath.domain.climb.model.PlanBlock
+import com.helddertierwelt.mentalmath.domain.climb.model.TrainingPlan
 import com.helddertierwelt.mentalmath.domain.climb.engine.ApForecast
 import com.helddertierwelt.mentalmath.domain.climb.engine.ApReview
 import com.helddertierwelt.mentalmath.domain.climb.engine.FreeMode
@@ -185,8 +186,64 @@ class ClimbViewModel @Inject constructor(
     // --- Trainingsplan -------------------------------------------------------------------------
 
     /** Der Plan für heute (gespeichert oder neu berechnet). */
-    fun todayPlan(p: ClimbProgress, s: PlusSettings): DayPlan =
-        DailyPlan.current(worlds, p, s.planGoals, s.planMinutes, s.planFollowPath, now(), today())
+    fun todayPlan(p: ClimbProgress): DayPlan = DailyPlan.current(worlds, p, now(), today())
+
+    /** Den alten Einzelplan (2.5) einmalig als Trainingsplan übernehmen. */
+    fun migratePlans() {
+        val s = plusSettings.value
+        if (progress.value.plansMigrated) return
+        viewModelScope.launch {
+            repository.update { DailyPlan.migrate(worlds, it, s.planSetUp, s.planGoals, s.planMinutes, s.planFollowPath, today()) }
+        }
+    }
+
+    /** Neuer, noch nicht gespeicherter Plan aus einer Vorlage. */
+    fun draftPlan(goal: String): TrainingPlan {
+        val name = if (goal == DailyPlan.GOAL_CUSTOM) "Mein Plan" else DailyPlan.goalName(goal)
+        return DailyPlan.newPlan(worlds, progress.value, "p${now()}", name, DailyPlan.preset(worlds, goal), today())
+    }
+
+    fun plan(id: String): TrainingPlan? = progress.value.plans.firstOrNull { it.id == id }
+
+    /** Plan anlegen oder ändern. */
+    fun savePlan(plan: TrainingPlan) {
+        val ordered = plan.copy(skillIds = DailyPlan.ordered(worlds, plan.skillIds))
+        viewModelScope.launch {
+            repository.update { p ->
+                val exists = p.plans.any { it.id == plan.id }
+                val fixed = if (exists) ordered else ordered.copy(masteredAtStart = ordered.skillIds.count { p.of(it).mastered })
+                p.copy(plans = if (exists) p.plans.map { if (it.id == plan.id) fixed else it } else p.plans + fixed, plansMigrated = true)
+            }
+        }
+    }
+
+    fun deletePlan(id: String) {
+        viewModelScope.launch { repository.update { p -> p.copy(plans = p.plans.filterNot { it.id == id }) } }
+    }
+
+    fun pausePlan(id: String, paused: Boolean) {
+        viewModelScope.launch { repository.update { p -> p.copy(plans = p.plans.map { if (it.id == id) it.copy(paused = paused) else it }) } }
+    }
+
+    /** Plan neu beginnen: ab heute, Fortschrittsanzeige zurück auf den jetzigen Stand. Sterne bleiben. */
+    fun resetPlan(id: String) {
+        val day = today()
+        viewModelScope.launch {
+            repository.update { p ->
+                p.copy(
+                    plans = p.plans.map { pl ->
+                        if (pl.id != id) pl else {
+                            val length = pl.endDay?.let { it - pl.startDay }
+                            pl.copy(startDay = day, endDay = length?.let { day + it }, paused = false, masteredAtStart = pl.skillIds.count { p.of(it).mastered })
+                        }
+                    },
+                    plan = p.plan?.let { dp -> dp.copy(done = dp.done.filterNot { d -> dp.blocks.any { it.id == d && it.planId == id } }) },
+                )
+            }
+        }
+    }
+
+    fun planStatus(p: ClimbProgress, plan: TrainingPlan): DailyPlan.Status = DailyPlan.status(plan, p, today())
 
     /** Den heutigen Plan speichern, damit er über den Tag gleich bleibt. */
     fun keepPlan(plan: DayPlan) {
@@ -224,6 +281,7 @@ class ClimbViewModel @Inject constructor(
             }
             block.target == DailyPlan.TARGET_PATTERN && first != null && block.note != null -> startPatternDrill(first, block.note)
             block.target == DailyPlan.TARGET_SPEED && first != null -> startSpeed(first)
+            block.target == DailyPlan.TARGET_SIM -> startApSimulation(750, 8)
             block.target == DailyPlan.TARGET_AP -> startApPractice()
             block.target == DailyPlan.TARGET_UNITS -> startUnitsPractice()
             first != null -> {
@@ -272,15 +330,6 @@ class ClimbViewModel @Inject constructor(
     }
 
     fun speedUseful(p: ClimbProgress, skill: Skill): Boolean = Drills.speedUseful(skill, p)
-
-    /** Ziele, Minuten und Reihenfolge des Plans festlegen. */
-    fun setPlan(goals: List<String>, minutes: Int, followPath: Boolean) {
-        viewModelScope.launch {
-            settingsRepository.update {
-                it.copy(planGoals = goals.ifEmpty { listOf(DailyPlan.GOAL_PROFI) }, planMinutes = minutes, planFollowPath = followPath, planSetUp = true)
-            }
-        }
-    }
 
     // --- Einheiten starten --------------------------------------------------------------------
 

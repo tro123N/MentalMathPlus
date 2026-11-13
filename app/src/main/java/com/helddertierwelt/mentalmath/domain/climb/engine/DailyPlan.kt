@@ -23,14 +23,26 @@ import com.helddertierwelt.mentalmath.domain.climb.model.ClimbProgress
 import com.helddertierwelt.mentalmath.domain.climb.model.DayPlan
 import com.helddertierwelt.mentalmath.domain.climb.model.PlanBlock
 import com.helddertierwelt.mentalmath.domain.climb.model.Skill
+import com.helddertierwelt.mentalmath.domain.climb.model.TrainingPlan
 import com.helddertierwelt.mentalmath.domain.climb.model.World
+import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 /**
- * Trainingsplan „Heute“: stellt aus Gedächtnismodell, Fehlerprotokoll und Ziel eine Einheit von
- * etwa der gewünschten Länge zusammen – Aufwärmen (fällige Wiederholungen), Neues, Schwachstelle,
- * Tempo und Anwenden. Der Plan wird einmal am Tag erstellt und neu gebaut, wenn sich die
- * Einstellungen ändern.
+ * Trainingspläne und der Plan „Heute“.
+ *
+ * Die Person legt beliebig viele Pläne an (Auswahl an Levels, Minuten, Wochentage, Zeitraum). Jeden
+ * Tag werden die aktiven Pläne zu einer Einheit zusammengesetzt. Grundlage sind gut belegte
+ * Lernprinzipien:
+ * - verteiltes Wiederholen nach Gedächtnismodell ([Memory]); hat ein Plan ein Enddatum, richten sich
+ *   die Abstände nach ihm (Abstand ≈ 10–20 % der Zeit bis zur Prüfung, Cepeda u. a. 2008),
+ * - Abrufen statt Nachlesen (fast nur kurze Abfragen),
+ * - Mischen verschiedener Aufgabentypen (Interleaving, Rohrer u. a.),
+ * - erst sicher, dann schnell (Mastery Learning; Tempo erst bei ≥ 90 % richtig),
+ * - etwa 85 % richtige Antworten (Wilson u. a. 2019): Läuft es deutlich besser, kommt mehr Neues,
+ *   läuft es schlechter, mehr Festigen,
+ * - Phasen bis zum Enddatum: Aufbau → Festigen → Endspurt (keine neuen Levels, Simulationen,
+ *   leichte Wiederholung).
  */
 object DailyPlan {
 
@@ -41,24 +53,27 @@ object DailyPlan {
     const val SPEED = "SPEED"
     const val APPLY = "APPLY"
 
-    /** Ziele des Plans. */
+    /** Vorlagen für neue Pläne. */
     const val GOAL_PROFI = "profi"
     const val GOAL_TMSNAT = "tmsnat"
     const val GOAL_ABI = "abi"
+    const val GOAL_CUSTOM = "custom"
     val GOALS = listOf(GOAL_PROFI, GOAL_TMSNAT, GOAL_ABI)
 
     fun goalName(goal: String): String = when (goal) {
         GOAL_TMSNAT -> "TMSnat"
         GOAL_ABI -> "Abitur / LK"
+        GOAL_CUSTOM -> "Eigene Auswahl"
         else -> "Kopfrechnen"
     }
 
-    /** Aktionsschlüssel in [PlanBlock.target]: TMSnat-Übung, Einheiten. */
+    /** Aktionsschlüssel in [PlanBlock.target]. */
     const val TARGET_AP = "ap"
     const val TARGET_UNITS = "units"
     const val TARGET_PATTERN = "pattern"
     const val TARGET_SPEED = "speed"
     const val TARGET_MIX = "mix"
+    const val TARGET_SIM = "sim"
 
     /** Geschätzte Sekunden pro Aufgabe (mit Lesen und Rückmeldung). */
     const val SECONDS_PER_TASK = 18
@@ -68,36 +83,127 @@ object DailyPlan {
     /** Ab diesem Punktwert gilt ein Level als Schwachstelle. */
     const val WEAK_THRESHOLD = 4.0
 
-    fun settingsKey(goals: List<String>, minutes: Int, followPath: Boolean): String =
-        goals.sorted().joinToString("+") + "|" + minutes + "|" + followPath
+    /** Zielquote richtiger Antworten (85-%-Regel). */
+    const val TARGET_ACCURACY = 0.85
 
-    /** Welten, die zu den Zielen gehören. */
-    fun goalWorlds(worlds: List<World>, goals: List<String>): List<World> {
-        val ids = buildSet {
-            if (GOAL_PROFI in goals || goals.isEmpty()) {
-                worlds.filter { !it.independent }.forEach { add(it.id) }
-                add("w15")
-            }
-            if (GOAL_TMSNAT in goals) { add("w13"); add("w14") }
-            if (GOAL_ABI in goals) { add("w17"); add("w16") }
-        }
-        return worlds.filter { it.id in ids }
+    // --- Pläne ---------------------------------------------------------------------------------
+
+    /** Wochentag eines Epoch-Tags: 1 = Montag … 7 = Sonntag (1.1.1970 war ein Donnerstag). */
+    fun weekday(day: Long): Int = (((day + 3) % 7 + 7) % 7).toInt() + 1
+
+    val WEEKDAY_NAMES = listOf("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So")
+
+    /** Levels einer Vorlage. */
+    fun preset(worlds: List<World>, goal: String): List<String> = when (goal) {
+        GOAL_PROFI -> worlds.filter { !it.independent || it.id == "w15" }
+        GOAL_TMSNAT -> worlds.filter { it.id == "w13" || it.id == "w14" }
+        GOAL_ABI -> worlds.filter { it.id == "w16" || it.id == "w17" }
+        else -> emptyList()
+    }.flatMap { w -> w.skills.map { it.id } }
+
+    /** Ausgewählte Levels in der Reihenfolge des Kletterwegs. */
+    fun ordered(worlds: List<World>, skillIds: Collection<String>): List<String> {
+        val set = skillIds.toSet()
+        return worlds.flatMap { w -> w.skills.map { it.id } }.filter { it in set }
     }
 
-    /** Der heutige Plan: der gespeicherte, wenn er von heute ist und zu den Einstellungen passt, sonst ein neuer. */
-    fun current(
-        worlds: List<World>,
-        progress: ClimbProgress,
-        goals: List<String>,
-        minutes: Int,
-        followPath: Boolean,
-        now: Long,
-        today: Long,
-    ): DayPlan {
-        val key = settingsKey(goals, minutes, followPath)
+    fun newPlan(worlds: List<World>, progress: ClimbProgress, id: String, name: String, skillIds: List<String>, today: Long): TrainingPlan {
+        val ids = ordered(worlds, skillIds)
+        return TrainingPlan(id = id, name = name, skillIds = ids, startDay = today, masteredAtStart = ids.count { progress.of(it).mastered })
+    }
+
+    /** Ist der Plan an diesem Tag dran? */
+    fun activeOn(plan: TrainingPlan, day: Long): Boolean =
+        !plan.paused && day >= plan.startDay && (plan.endDay == null || day <= plan.endDay) && weekday(day) in plan.weekdays
+
+    fun active(plans: List<TrainingPlan>, day: Long): List<TrainingPlan> = plans.filter { activeOn(it, day) }
+
+    /** Der alte Einzelplan (2.5) wird einmalig als Trainingsplan übernommen. */
+    fun migrate(worlds: List<World>, progress: ClimbProgress, setUp: Boolean, goals: List<String>, minutes: Int, followPath: Boolean, today: Long): ClimbProgress {
+        if (progress.plansMigrated) return progress
+        if (!setUp || progress.plans.isNotEmpty()) return progress.copy(plansMigrated = true)
+        val ids = goals.ifEmpty { listOf(GOAL_PROFI) }.flatMap { preset(worlds, it) }
+        val plan = newPlan(worlds, progress, "p$today", goals.joinToString(" + ") { goalName(it) }, ids, today)
+            .copy(minutes = minutes, followPath = followPath)
+        return progress.copy(plans = listOf(plan), plansMigrated = true)
+    }
+
+    /** Phase eines Plans. */
+    enum class Phase(val title: String, val text: String) {
+        BUILD("Aufbau", "Neue Levels lernen, Gelerntes regelmäßig wiederholen"),
+        CONSOLIDATE("Festigen", "Sicherer und schneller werden, viel gemischt üben"),
+        FINAL("Endspurt", "Keine neuen Levels mehr – Simulationen und leichtes Wiederholen"),
+        DONE("Abgeschlossen", "Der Zeitraum ist vorbei"),
+    }
+
+    fun phase(plan: TrainingPlan, progress: ClimbProgress, today: Long): Phase {
+        val end = plan.endDay
+        val allMastered = plan.skillIds.isNotEmpty() && plan.skillIds.all { progress.of(it).mastered }
+        if (end == null) return if (allMastered) Phase.CONSOLIDATE else Phase.BUILD
+        if (today > end) return Phase.DONE
+        val total = (end - plan.startDay).coerceAtLeast(1)
+        val left = end - today
+        return when {
+            left <= maxOf(3L, (total * 0.1).toLong()) -> Phase.FINAL
+            allMastered || today >= plan.startDay + (total * 0.75).toLong() -> Phase.CONSOLIDATE
+            else -> Phase.BUILD
+        }
+    }
+
+    /** Übungstage des Plans von [from] bis [to] (beide eingeschlossen). */
+    fun trainingDays(plan: TrainingPlan, from: Long, to: Long): Int =
+        if (to < from) 0 else (from..to).count { weekday(it) in plan.weekdays }
+
+    /** Stand eines Plans für die Übersicht. */
+    data class Status(
+        val phase: Phase,
+        val mastered: Int,
+        val total: Int,
+        /** Übungstage, bis alle Levels gelernt sein sollten (null ohne Enddatum). */
+        val learnDaysLeft: Int?,
+        /** Nötige neue Levels pro Übungstag (null ohne Enddatum oder wenn alles gelernt ist). */
+        val perDay: Double?,
+        /** Anteil richtiger Antworten zuletzt in diesem Plan (null bei zu wenig Daten). */
+        val accuracy: Double?,
+        val daysLeft: Long?,
+    ) {
+        val tight: Boolean get() = (perDay ?: 0.0) > 2.0
+    }
+
+    fun status(plan: TrainingPlan, progress: ClimbProgress, today: Long): Status {
+        val total = plan.skillIds.size
+        val mastered = plan.skillIds.count { progress.of(it).mastered }
+        val end = plan.endDay
+        val learnEnd = end?.let { plan.startDay + ((it - plan.startDay) * 0.75).toLong() }
+        val learnDays = learnEnd?.let { trainingDays(plan, today, maxOf(today, it)) }
+        val open = total - mastered
+        val perDay = if (learnDays != null && open > 0) open.toDouble() / learnDays.coerceAtLeast(1) else null
+        return Status(phase(plan, progress, today), mastered, total, learnDays, perDay, accuracy(progress, plan.skillIds), end?.let { it - today })
+    }
+
+    /** Anteil richtiger Antworten der letzten Ergebnisse in den Levels (je Level die letzten 10). */
+    fun accuracy(progress: ClimbProgress, skillIds: List<String>): Double? {
+        val recent = skillIds.flatMap { progress.of(it).recent.takeLast(10) }
+        if (recent.size < 10) return null
+        return recent.count { it > 0 }.toDouble() / recent.size
+    }
+
+    // --- Plan „Heute“ ---------------------------------------------------------------------------
+
+    fun settingsKey(plans: List<TrainingPlan>, today: Long): String =
+        active(plans, today).joinToString(";") { p ->
+            listOf(p.id, p.skillIds.hashCode(), p.minutes, p.weekdays.joinToString(""), p.startDay, p.endDay, p.followPath).joinToString("|")
+        }
+
+    /** Der heutige Plan: der gespeicherte, wenn er von heute ist und zu den Plänen passt, sonst ein neuer (Erledigtes bleibt abgehakt). */
+    fun current(worlds: List<World>, progress: ClimbProgress, now: Long, today: Long): DayPlan {
+        val key = settingsKey(progress.plans, today)
         val saved = progress.plan
         if (saved != null && saved.day == today && saved.settingsKey == key) return saved
-        return build(worlds, progress, goals, minutes, followPath, now, today)
+        val fresh = build(worlds, progress, progress.plans, now, today)
+        if (saved == null || saved.day != today) return fresh
+        val ids = fresh.blocks.map { it.id }.toSet()
+        return fresh.copy(done = saved.done.filter { it in ids })
     }
 
     /** Einen Baustein als erledigt markieren. */
@@ -116,31 +222,29 @@ object DailyPlan {
         return p
     }
 
-    /**
-     * Nach einem Grundlagen-Check: für jede unsichere Grundlage einen Abschnitt „Auffrischen“ direkt
-     * hinter dem Check einfügen.
-     */
+    /** Nach einem Grundlagen-Check: für jede unsichere Grundlage „Auffrischen“ direkt hinter dem Check einfügen. */
     fun afterCheck(plan: DayPlan?, today: Long, outcome: CheckOutcome?): DayPlan? {
         if (plan == null || plan.day != today || outcome == null || outcome.weak.isEmpty()) return plan
+        val check = plan.blocks.firstOrNull { it.kind == CHECK && outcome.skillId in it.skillIds }
         val extra = outcome.weak.filter { s -> plan.blocks.none { it.id == "$today-$WEAK-${s.id}" } }.map { s ->
-            PlanBlock("$today-$WEAK-${s.id}", WEAK, "Grundlage auffrischen: ${s.title}", "im Grundlagen-Check nicht sicher", listOf(s.id), Progression.REFRESH_SIZE)
+            PlanBlock("$today-$WEAK-${s.id}", WEAK, "Grundlage auffrischen: ${s.title}", "im Grundlagen-Check nicht sicher", listOf(s.id), Progression.REFRESH_SIZE, planId = check?.planId)
         }
         if (extra.isEmpty()) return plan
-        val at = plan.blocks.indexOfFirst { it.kind == CHECK }.let { if (it < 0) 0 else it + 1 }
+        val at = check?.let { plan.blocks.indexOf(it) + 1 } ?: 0
         return plan.copy(blocks = plan.blocks.take(at) + extra + plan.blocks.drop(at))
     }
 
-    /** Geschätzte Minuten eines Plans. */
+    /** Geschätzte Minuten. */
     fun minutesOf(blocks: List<PlanBlock>): Int =
         (blocks.sumOf { it.count } * SECONDS_PER_TASK / 60.0).roundToInt().coerceAtLeast(1)
 
     /** Punktwert „braucht Übung“ eines Levels, dazu der wichtigste Grund. */
     data class Weakness(val skill: Skill, val score: Double, val reason: String, val pattern: String? = null)
 
-    fun weaknesses(worlds: List<World>, progress: ClimbProgress, now: Long, among: List<World> = worlds): List<Weakness> {
+    fun weaknesses(progress: ClimbProgress, now: Long, among: List<Skill>): List<Weakness> {
         val errors = Memory.recentErrors(progress, now)
         val patterns = Memory.patterns(progress, now).groupBy { it.skillId }
-        return among.flatMap { it.skills }.mapNotNull { skill ->
+        return among.mapNotNull { skill ->
             val sp = progress.of(skill.id)
             if (sp.practiced == 0 && sp.testsTaken == 0) return@mapNotNull null
             val form = Stats.form(skill, sp)
@@ -164,133 +268,164 @@ object DailyPlan {
         }.filter { it.score >= WEAK_THRESHOLD }.sortedByDescending { it.score }
     }
 
-    /** Das neue Level für heute. */
-    fun newSkill(worlds: List<World>, progress: ClimbProgress, goals: List<String>, followPath: Boolean, today: Long): Skill? {
-        if (followPath) return Progression.nextSkill(worlds, progress)
-        val candidates = goalWorlds(worlds, goals).mapIndexedNotNull { _, w ->
-            val wi = worlds.indexOf(w)
-            if (!w.independent && !Progression.worldUnlocked(worlds, progress, wi)) return@mapIndexedNotNull null
-            w.skills.firstOrNull { !progress.of(it.id).mastered && Progression.skillUnlocked(worlds, progress, it.id) }
-        }.distinctBy { it.id }
-        if (candidates.isEmpty()) return null
-        return candidates[(today % candidates.size).toInt()]
+    /** Neue Levels für heute aus der Auswahl: der Reihe nach oder abwechselnd aus den gewählten Welten. */
+    fun newSkills(worlds: List<World>, progress: ClimbProgress, plan: TrainingPlan, count: Int, today: Long, exclude: Set<String> = emptySet()): List<Skill> {
+        if (count <= 0) return emptyList()
+        val open = plan.skillIds.mapNotNull { Progression.skill(worlds, it) }
+            .filter { it.id !in exclude && !progress.of(it.id).mastered && Progression.skillUnlocked(worlds, progress, it.id) }
+        if (plan.followPath) return open.take(count)
+        val byWorld = open.groupBy { s -> worlds.first { w -> w.skills.any { it.id == s.id } }.id }.values.toList()
+        if (byWorld.isEmpty()) return emptyList()
+        val result = mutableListOf<Skill>()
+        var round = 0
+        while (result.size < count && round < count * byWorld.size) {
+            val group = byWorld[((today + round) % byWorld.size).toInt()]
+            group.firstOrNull { it !in result }?.let { result += it }
+            round++
+        }
+        return result
     }
 
-    fun build(
-        worlds: List<World>,
-        progress: ClimbProgress,
-        goals: List<String>,
-        minutes: Int,
-        followPath: Boolean,
-        now: Long,
-        today: Long,
-    ): DayPlan {
-        val budget = (minutes * 60 / SECONDS_PER_TASK).coerceAtLeast(10)
+    fun build(worlds: List<World>, progress: ClimbProgress, plans: List<TrainingPlan>, now: Long, today: Long): DayPlan {
+        val todays = active(plans, today).sortedBy { it.endDay ?: Long.MAX_VALUE }
+        val key = settingsKey(plans, today)
+        if (todays.isEmpty()) return DayPlan(day = today, minutes = 0, blocks = emptyList(), settingsKey = key)
         val blocks = mutableListOf<PlanBlock>()
-        var used = 0
-        fun fits(count: Int) = blocks.isEmpty() || used + count <= budget + 4
-        fun add(block: PlanBlock) { blocks += block; used += block.count }
-        val all = worlds.flatMap { it.skills }
+        val skillOf = { id: String -> Progression.skill(worlds, id) }
 
-        // Neues Level und größte Schwachstelle vorab bestimmen, damit das Aufwärmen sie auslässt.
-        val fresh = newSkill(worlds, progress, goals, followPath, today)
-        val weak = weaknesses(worlds, progress, now).firstOrNull { it.skill.id != fresh?.id }
-
-        // 1. Aufwärmen: fällige oder am ehesten vergessene Levels.
-        val mastered = all.filter { it.id != weak?.skill?.id && progress.of(it.id).let { sp -> sp.mastered && !sp.needsAttention } }
-        val byRecall = mastered.map { it to (Memory.recall(progress.of(it.id), now) ?: 1.0) }.sortedBy { it.second }
-        val due = byRecall.filter { (s, r) -> r < Memory.TARGET || progress.of(s.id).nextReviewAt in 1..now }
-        val warm = (due.ifEmpty { byRecall.filter { it.second < 0.95 }.take(2) }).take(WARMUP_MAX_SKILLS)
+        // 1. Aufwärmen (gemeinsam): fällige Levels aller heutigen Pläne, bei Plänen mit Enddatum auch
+        //    alle, die bis zum Enddatum unter 90 % fallen würden und lange genug nicht geübt wurden.
+        val weakFirst = todays.associate { p ->
+            p.id to weaknesses(progress, now, p.skillIds.mapNotNull(skillOf)).firstOrNull()
+        }
+        val reserved = weakFirst.values.mapNotNull { it?.skill?.id }.toSet()
+        val warmScores = mutableMapOf<String, Double>()
+        for (p in todays) {
+            val end = p.endDay
+            for (id in p.skillIds) {
+                if (id in reserved) continue
+                val sp = progress.of(id)
+                if (!sp.mastered || sp.needsAttention) continue
+                val r = Memory.recall(sp, now) ?: continue
+                val due = r < Memory.TARGET || sp.nextReviewAt in 1..now
+                val examDue = end != null && run {
+                    val daysToEnd = (end - today).coerceAtLeast(1)
+                    val atEnd = Memory.recall(sp, end * Progression.DAY_MS) ?: 1.0
+                    val since = (now - maxOf(sp.memoryAt, sp.lastPracticedAt)) / Progression.DAY_MS.toDouble()
+                    atEnd < 0.9 && since >= maxOf(1.0, daysToEnd * 0.1)
+                }
+                if (due || examDue) warmScores[id] = minOf(warmScores[id] ?: 2.0, r)
+            }
+        }
+        val warm = warmScores.entries.sortedBy { it.value }.take(WARMUP_MAX_SKILLS)
         if (warm.isNotEmpty()) {
-            val reason = if (due.isNotEmpty()) {
-                val pct = (warm.first().second * 100).roundToInt()
-                "${due.size} ${if (due.size == 1) "Level ist" else "Levels sind"} fällig – geschätzte Sicherheit zuletzt $pct %"
-            } else {
-                "kurz auffrischen, bevor etwas verblasst"
+            val pct = (warm.first().value * 100).roundToInt()
+            val reason = "${warmScores.size} ${if (warmScores.size == 1) "Level ist" else "Levels sind"} dran – geschätzte Sicherheit zuletzt $pct %"
+            blocks += PlanBlock("$today-$WARMUP", WARMUP, "Aufwärmen", reason, warm.map { it.key }, warm.size * Progression.REVIEW_PER_SKILL)
+        }
+        val inWarm = warm.map { it.key }.toSet()
+
+        // 2. Je Plan: Grundlagen-Check, Neues, Schwachstelle, Tempo, Anwenden.
+        val warmShare = (blocks.sumOf { it.count }) / todays.size
+        val usedIds = inWarm.toMutableSet()
+        for (p in todays) {
+            val budget = (p.minutes * 60 / SECONDS_PER_TASK).coerceAtLeast(8)
+            var used = warmShare
+            val mine = mutableListOf<PlanBlock>()
+            fun add(b: PlanBlock) { mine += b.copy(id = "$today-${p.id}-${b.id}", planId = p.id); used += b.count; usedIds += b.skillIds }
+            fun fits(n: Int) = used + n <= budget + 4
+            val selection = p.skillIds.mapNotNull(skillOf)
+            val status = status(p, progress, today)
+            val phase = status.phase
+            val acc = status.accuracy
+
+            // Wie viele neue Levels? Nach Phase, Tempo bis zum Enddatum und 85-%-Regel.
+            var newCount = when (phase) {
+                Phase.FINAL, Phase.DONE -> 0
+                else -> if ((status.perDay ?: 0.0) > 1.2) 2 else 1
             }
-            add(PlanBlock("$today-$WARMUP", WARMUP, "Aufwärmen", reason, warm.map { it.first.id }, warm.size * Progression.REVIEW_PER_SKILL))
-        }
+            if (acc != null && acc < TARGET_ACCURACY - 0.1 && selection.any { progress.of(it.id).mastered }) newCount = (newCount - 1).coerceAtLeast(0)
+            if (acc != null && acc > TARGET_ACCURACY + 0.08 && phase == Phase.BUILD) newCount += 1
+            newCount = newCount.coerceAtMost(3)
+            val weak = weakFirst[p.id]?.takeIf { it.skill.id !in usedIds }
+            val fresh = newSkills(worlds, progress, p, newCount, today, usedIds + listOfNotNull(weak?.skill?.id))
 
-        // Grundlagen-Check vor einem Level, dessen Prüfung zuletzt nicht geklappt hat.
-        val checkFor = listOfNotNull(fresh, weak?.skill).firstOrNull { Drills.checkUseful(worlds, progress, it.id) }
-        if (checkFor != null) {
-            add(PlanBlock("$today-$CHECK", CHECK, "Grundlagen-Check", "Prüfung „${checkFor.title}“ zuletzt nicht bestanden – sitzen die Grundlagen?", listOf(checkFor.id), Drills.CHECK_SIZE, target = CHECK))
-        }
-
-        // 2. Neues Level.
-        if (fresh != null && fits(fresh.practiceCount)) {
-            val reason = if (followPath) "nächstes Level auf dem Kletterweg" else "nächster Schritt für dein Ziel"
-            add(PlanBlock("$today-$NEW", NEW, "Neu: ${fresh.title}", reason, listOf(fresh.id), fresh.practiceCount))
-        }
-
-        // 3. Schwachstelle (eingerostete Levels zuerst).
-        if (weak != null && fits(weak.skill.practiceCount)) {
-            val count = if (progress.of(weak.skill.id).let { it.mastered && it.needsAttention }) Progression.REFRESH_SIZE else weak.skill.practiceCount
-            if (weak.pattern != null) {
-                add(PlanBlock("$today-$WEAK", WEAK, "Fehlermuster: ${weak.skill.title}", weak.reason, listOf(weak.skill.id), Drills.PATTERN_SIZE, TARGET_PATTERN, weak.pattern))
-            } else {
-                add(PlanBlock("$today-$WEAK", WEAK, "Schwachstelle: ${weak.skill.title}", weak.reason, listOf(weak.skill.id), count))
+            val checkFor = (fresh.take(1) + listOfNotNull(weak?.skill)).firstOrNull { Drills.checkUseful(worlds, progress, it.id) }
+            if (checkFor != null) {
+                add(PlanBlock("$CHECK-${checkFor.id}", CHECK, "Grundlagen-Check", "Prüfung „${checkFor.title}“ zuletzt nicht bestanden – sitzen die Grundlagen?", listOf(checkFor.id), Drills.CHECK_SIZE, CHECK))
             }
-        }
-
-        // 4. Tempo: sicher, aber noch langsam.
-        val usedIds = blocks.flatMap { it.skillIds }.toSet()
-        val speed = goalWorlds(worlds, goals).flatMap { it.skills }
-            .filter { it.id !in usedIds && !progress.of(it.id).needsAttention && Drills.speedUseful(it, progress) }
-            .mapNotNull { s -> Stats.form(s, progress.of(s.id))?.let { s to it } }
-            .maxByOrNull { (s, f) -> f.medianSec!! / s.goals.star2 }
-        if (speed != null && fits(speed.first.practiceCount)) {
-            val (s, f) = speed
-            val reason = "sicher, aber ${fmt(f.medianSec!!)} s pro Aufgabe – Ziel unter ${fmt(s.goals.star2)} s, Zeitlimit ${fmt(s.goals.star2 * Drills.SPEED_FACTOR)} s"
-            add(PlanBlock("$today-$SPEED", SPEED, "Tempo: ${s.title}", reason, listOf(s.id), s.practiceCount, TARGET_SPEED))
-        }
-
-        // 5. Anwenden: gemischte Aufgaben passend zum Ziel – bei mehreren Zielen täglich ein anderes
-        // zuerst, die übrigen, solange die Zeit reicht.
-        val chosen = goals.ifEmpty { listOf(GOAL_PROFI) }
-        for (i in chosen.indices) {
-            val goal = chosen[((today + i) % chosen.size).toInt()]
-            val apply = applyBlock(worlds, progress, goal, today) ?: continue
-            if (i == 0 || used + apply.count <= budget) { if (fits(apply.count)) add(apply) }
-        }
-
-        // Zu wenig gefüllt? Eine zweite Schwachstelle.
-        if (used < budget * 0.7) {
-            val ids = blocks.flatMap { it.skillIds }.toSet()
-            weaknesses(worlds, progress, now).firstOrNull { it.skill.id !in ids }?.let { w ->
-                add(PlanBlock("$today-${WEAK}2", WEAK, "Schwachstelle: ${w.skill.title}", w.reason, listOf(w.skill.id), w.skill.practiceCount))
-            }
-        }
-        return DayPlan(day = today, minutes = minutes, blocks = blocks, settingsKey = settingsKey(goals, minutes, followPath))
-    }
-
-    private fun applyBlock(worlds: List<World>, progress: ClimbProgress, goal: String, today: Long): PlanBlock? {
-        val id = "$today-$APPLY-$goal"
-        return when (goal) {
-            GOAL_TMSNAT -> if (today % 2 == 0L) {
-                PlanBlock(id, APPLY, "Anwenden: TMSnat-Aufgaben", "gemischte Textaufgaben wie im Test", count = 8, target = TARGET_AP)
-            } else {
-                PlanBlock(id, APPLY, "Anwenden: Einheiten umrechnen", "gemischte Umrechnungen wie im Test", count = 10, target = TARGET_UNITS)
-            }
-
-            GOAL_ABI -> mixedBlock(worlds, progress, id, "w17.mixed", "Anwenden: Oberstufe gemischt", "Aufgaben aus allen LK-Themen")
-            else -> {
-                // Abwechselnd: zuletzt gelernte Levels gemischt (Methode selbst erkennen) und Rechentricks gemischt.
-                val recent = Drills.recentlyLearned(worlds, progress)
-                if (today % 2 == 1L && recent.size >= 2) {
-                    PlanBlock(id, APPLY, "Anwenden: zuletzt Gelerntes gemischt", "die passende Methode selbst erkennen, ohne dass sie angesagt ist", recent.map { it.id }, recent.size * Progression.REVIEW_PER_SKILL, TARGET_MIX)
-                } else {
-                    mixedBlock(worlds, progress, id, "w15.mixed", "Anwenden: Rechentricks gemischt", "Tricks erkennen, wenn sie nicht angesagt sind")
+            fresh.forEachIndexed { i, s ->
+                if (i == 0 || fits(s.practiceCount)) {
+                    val reason = when {
+                        i > 0 -> "läuft gut (${pct(acc)} richtig) – heute ein Level mehr"
+                        status.perDay != null && status.perDay > 1.2 -> "für dein Enddatum nötig: etwa ${fmt1(status.perDay)} Levels pro Übungstag"
+                        p.followPath -> "nächstes Level deiner Auswahl"
+                        else -> "nächster Schritt – abwechselnd aus deinen Welten"
+                    }
+                    add(PlanBlock("$NEW-$i", NEW, "Neu: ${s.title}", reason, listOf(s.id), s.practiceCount))
                 }
             }
+            if (weak != null && weak.skill.id !in usedIds && fits(weak.skill.practiceCount)) {
+                val sp = progress.of(weak.skill.id)
+                if (weak.pattern != null) {
+                    add(PlanBlock(WEAK, WEAK, "Fehlermuster: ${weak.skill.title}", weak.reason, listOf(weak.skill.id), Drills.PATTERN_SIZE, TARGET_PATTERN, weak.pattern))
+                } else {
+                    val count = if (sp.mastered && sp.needsAttention) Progression.REFRESH_SIZE else weak.skill.practiceCount
+                    add(PlanBlock(WEAK, WEAK, "Schwachstelle: ${weak.skill.title}", weak.reason, listOf(weak.skill.id), count))
+                }
+            }
+            // Tempo erst, wenn es sicher sitzt; in Aufbau-Phase nur bei guter Quote.
+            if (phase != Phase.BUILD || (acc ?: 0.0) >= 0.9) {
+                val speed = selection.filter { it.id !in usedIds && !progress.of(it.id).needsAttention && Drills.speedUseful(it, progress) }
+                    .mapNotNull { s -> Stats.form(s, progress.of(s.id))?.let { s to it } }
+                    .maxByOrNull { (s, f) -> f.medianSec!! / s.goals.star2 }
+                if (speed != null && fits(speed.first.practiceCount)) {
+                    val (s, f) = speed
+                    val reason = "sicher, aber ${fmt1(f.medianSec!!)} s pro Aufgabe – Ziel unter ${fmt1(s.goals.star2)} s, Zeitlimit ${fmt1(s.goals.star2 * Drills.SPEED_FACTOR)} s"
+                    add(PlanBlock(SPEED, SPEED, "Tempo: ${s.title}", reason, listOf(s.id), s.practiceCount, TARGET_SPEED))
+                }
+            }
+            applyBlock(worlds, progress, p, phase, today, usedIds)?.let { if (mine.isEmpty() || fits(it.count)) add(it) }
+            // Noch Zeit übrig? Eine weitere Schwachstelle oder gemischtes Wiederholen.
+            if (used < budget * 0.7) {
+                weaknesses(progress, now, selection).firstOrNull { it.skill.id !in usedIds }?.let { w ->
+                    add(PlanBlock("${WEAK}2", WEAK, "Schwachstelle: ${w.skill.title}", w.reason, listOf(w.skill.id), w.skill.practiceCount))
+                }
+            }
+            blocks += mine
         }
+        return DayPlan(day = today, minutes = todays.sumOf { it.minutes }, blocks = blocks, settingsKey = key)
     }
 
-    private fun mixedBlock(worlds: List<World>, progress: ClimbProgress, id: String, skillId: String, title: String, reason: String): PlanBlock? {
-        val skill = Progression.skill(worlds, skillId) ?: return null
-        if (!Progression.skillUnlocked(worlds, progress, skillId)) return null
-        return PlanBlock(id, APPLY, title, reason, listOf(skill.id), skill.practiceCount)
+    /** Anwenden: gemischt üben passend zur Auswahl und Phase. */
+    private fun applyBlock(worlds: List<World>, progress: ClimbProgress, plan: TrainingPlan, phase: Phase, today: Long, used: Set<String>): PlanBlock? {
+        val ids = plan.skillIds.toSet()
+        val hasAp = ids.any { it.startsWith("w13.") }
+        val hasUnits = ids.any { it.startsWith("w14.") }
+        val apMastered = ids.count { it.startsWith("w13.") && progress.of(it).mastered }
+        if (hasAp && phase == Phase.FINAL) {
+            return PlanBlock(APPLY, APPLY, "Endspurt: TMSnat-Kurztest", "Testsimulation mit 8 Aufgaben unter Zeitdruck – wie im echten Test", count = 8, target = TARGET_SIM)
+        }
+        if ((hasAp || hasUnits) && (today % 2 == 0L || !hasUnits) && hasAp && (apMastered >= 2 || phase != Phase.BUILD)) {
+            return PlanBlock(APPLY, APPLY, "Anwenden: TMSnat-Aufgaben", "gemischte Textaufgaben wie im Test", count = 8, target = TARGET_AP)
+        }
+        if (hasUnits && ids.count { it.startsWith("w14.") && progress.of(it).mastered } >= 2) {
+            return PlanBlock(APPLY, APPLY, "Anwenden: Einheiten umrechnen", "gemischte Umrechnungen wie im Test", count = 10, target = TARGET_UNITS)
+        }
+        // Gemischt: zuletzt gelernte und am ehesten vergessene Levels der Auswahl (Interleaving).
+        val mastered = plan.skillIds.mapNotNull { Progression.skill(worlds, it) }
+            .filter { it.id !in used && progress.of(it.id).mastered && !progress.of(it.id).needsAttention }
+        if (mastered.size < 2) return null
+        val recent = mastered.sortedByDescending { s -> progress.of(s.id).tests.filter { it.stars > 0 }.maxOfOrNull { it.at } ?: 0L }.take(2)
+        val faded = (mastered - recent.toSet()).sortedBy { Memory.recall(progress.of(it.id), today * Progression.DAY_MS) ?: 1.0 }.take(2)
+        val mix = (recent + faded).distinctBy { it.id }
+        return PlanBlock(APPLY, APPLY, "Gemischt üben", "verschiedene Methoden durcheinander – die passende selbst erkennen", mix.map { it.id }, mix.size * Progression.REVIEW_PER_SKILL, TARGET_MIX)
     }
 
-    private fun fmt(sec: Double): String = String.format(java.util.Locale.GERMANY, "%.1f", sec)
+    private fun pct(v: Double?): String = if (v == null) "–" else "${(v * 100).roundToInt()} %"
+
+    private fun fmt1(v: Double): String = String.format(java.util.Locale.GERMANY, "%.1f", v)
+
+    /** Aufgerundet. */
+    fun ceilInt(v: Double): Int = ceil(v).toInt()
 }

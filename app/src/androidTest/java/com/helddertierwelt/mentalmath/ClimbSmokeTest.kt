@@ -1114,29 +1114,37 @@ class ClimbSmokeTest {
         waitForHome()
     }
 
-    /** Trainingsplan „Heute“: Ziel wählen, Plan erstellen, Bausteine nacheinander abarbeiten. */
+    /** Trainingspläne: Plan anlegen (Auswahl, Minuten, Zeitraum), heute abarbeiten, verwalten. */
     @Test
     fun m_trainingsplan() {
         waitForHome()
-        compose.runOnUiThread {
-            vm.resetPlusSettings()
-            vm.importProgress(ClimbProgress())
-        }
-        compose.waitUntil(5_000) { vm.progress.value.skills.isEmpty() && !vm.plusSettings.value.planSetUp }
+        compose.runOnUiThread { vm.importProgress(ClimbProgress(plansMigrated = true)) }
+        compose.waitUntil(5_000) { vm.progress.value.skills.isEmpty() && vm.progress.value.plans.isEmpty() }
         compose.onNodeWithTag("climbList").performScrollToIndex(0)
         compose.waitForIdle()
-        shot("m_plan_einrichten")
-        compose.onNodeWithTag("planGoal_tmsnat").performClick()
-        compose.onNodeWithTag("planMinutes_30").performClick()
-        compose.waitForIdle()
-        shot("m_plan_auswahl")
+        shot("m_ohne_plan")
         home("planCreate")
-        compose.waitUntil(5_000) { vm.plusSettings.value.planSetUp }
-        compose.waitUntil(5_000) { vm.progress.value.plan != null }
+        waitForTag("planEditColumn")
+        shot("m_editor")
+        compose.onNodeWithTag("planAdd_tmsnat").performScrollTo().performClick()
+        compose.onNodeWithTag("planExpand_w13").performScrollTo().performClick()
+        compose.waitForIdle()
+        compose.onNodeWithTag("planExpand_w13").performScrollTo()
+        shot("m_editor_auswahl")
+        compose.onNodeWithTag("planMinutes_30").performScrollTo().performClick()
+        compose.onNodeWithTag("planEndTms").performScrollTo().performClick()
+        compose.waitForIdle()
+        compose.onNodeWithTag("planPeriod").performScrollTo()
+        shot("m_editor_zeitraum")
+        compose.onNodeWithTag("planSave").performScrollTo().performClick()
+        compose.waitUntil(5_000) { vm.progress.value.plans.size == 1 }
+        waitForHome()
+        compose.waitUntil(5_000) { vm.progress.value.plan?.blocks?.isNotEmpty() == true }
         compose.onNodeWithTag("climbList").performScrollToIndex(0)
         compose.waitForIdle()
         shot("m_plan_neu")
-        assertTrue(vm.progress.value.plan!!.blocks.isNotEmpty())
+        val myPlans = vm.progress.value.plans
+        assertEquals(30, myPlans.single().minutes)
 
         // Fortgeschrittener Stand: Welt 1 und 2 geschafft, länger nicht geübt, ein Level mit Fehlermuster.
         val now = vm.now()
@@ -1151,7 +1159,7 @@ class ClimbSmokeTest {
         })
         val weak = skills[3]
         val errors = List(4) { com.helddertierwelt.mentalmath.domain.climb.model.ErrorEntry(weak.id, now - day, "Übertrag vergessen") }
-        seeded = seeded.copy(errors = errors)
+        seeded = seeded.copy(errors = errors, plans = myPlans, plansMigrated = true)
         compose.runOnUiThread { vm.importProgress(seeded) }
         compose.waitUntil(5_000) { vm.progress.value.skills.size == skills.size }
         compose.waitUntil(5_000) { vm.progress.value.plan?.blocks?.any { it.kind == "WARMUP" } == true }
@@ -1184,9 +1192,26 @@ class ClimbSmokeTest {
         compose.waitForIdle()
         shot("m_plan_fortschritt")
         compose.onNodeWithTag("planSettings").performClick()
-        compose.onNodeWithTag("settingsPlan").performScrollTo()
-        compose.waitForIdle()
-        shot("m_einstellungen_plan")
+        waitForTag("plansColumn")
+        shootScrolling("plansColumn", "m_plaene", maxShots = 4)
+        val id = myPlans.single().id
+        compose.onNodeWithTag("planEdit_$id").performScrollTo().performClick()
+        waitForTag("planEditColumn")
+        shot("m_bearbeiten")
+        back()
+        waitForTag("plansColumn")
+        compose.onNodeWithTag("planPause_$id").performScrollTo().performClick()
+        compose.waitUntil(5_000) { vm.progress.value.plans.single().paused }
+        compose.onNodeWithTag("planPause_$id").performScrollTo().performClick()
+        compose.onNodeWithTag("planReset_$id").performScrollTo().performClick()
+        waitForTag("planConfirm")
+        shot("m_zuruecksetzen")
+        compose.onNodeWithTag("planConfirm").performClick()
+        compose.waitUntil(5_000) { vm.progress.value.plans.single().startDay == vm.today() && !vm.progress.value.plans.single().paused }
+        compose.onNodeWithTag("planDelete_$id").performScrollTo().performClick()
+        waitForTag("planConfirm")
+        compose.onNodeWithTag("planConfirm").performClick()
+        compose.waitUntil(5_000) { vm.progress.value.plans.isEmpty() }
         back()
         waitForHome()
     }

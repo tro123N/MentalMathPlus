@@ -403,19 +403,21 @@ fun PlusSettingsScreen(navController: NavController) {
             }
             CardGap()
 
-            // Trainingsplan
+            // Trainingspläne
             ClimbCard(modifier = Modifier.testTag("settingsPlan")) {
-                CardTitle("Trainingsplan")
-                BodyText("Der Plan „Heute“ auf der Startseite richtet sich nach deinem Ziel und deiner Zeit. Änderungen gelten sofort für den heutigen Plan.")
+                CardTitle("Trainingspläne")
+                BodyText("Pläne anlegen, ändern, pausieren, zurücksetzen oder löschen: was geübt wird, wie viel an welchen Tagen und bis wann.")
                 Spacer(Modifier.height(10.dp))
-                com.helddertierwelt.mentalmath.presentation.climb.component.PlanSetup(
-                    goals = plus.planGoals,
-                    minutes = plus.planMinutes,
-                    followPath = plus.planFollowPath,
-                    onChange = { g, m, f ->
+                ActionButton(
+                    text = "Pläne verwalten",
+                    subtitle = if (progress.plans.isEmpty()) "Noch kein Plan" else "${progress.plans.size} ${if (progress.plans.size == 1) "Plan" else "Pläne"}",
+                    icon = R.drawable.calendar_clock_24dp,
+                    iconTint = accent,
+                    onClick = {
                         viewModel.playTap()
-                        viewModel.setPlan(g, m, f)
+                        navController.navigate("plans")
                     },
+                    modifier = Modifier.testTag("settingsPlans"),
                 )
             }
             CardGap()
