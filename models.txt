@@ -1,0 +1,7 @@
+total 3340280
+-rw-r--r-- 1 shell   ext_data_rw 2588147712 2026-11-13 22:58 gemma-4-E2B-it.litertlm
+-rw-rw---- 1 u0_a192 ext_data_rw         64 2026-11-13 23:01 gemma-4-E2B-it.litertlm.ok
+-rw-r----- 1 u0_a192 ext_data_rw   43851168 2026-11-13 23:14 gemma-4-E2B-it.litertlm_1794610701_2588147712.mtp_drafter.xnnpack_cache
+-rw-r----- 1 u0_a192 ext_data_rw  788412736 2026-11-13 23:14 gemma-4-E2B-it.litertlm_1794610701_2588147712.xnnpack_cache
+Filesystem       Size Used Avail Use% Mounted on
+/dev/block/dm-40 7.7G 4.1G  3.4G  55% /data/user/0
