@@ -62,6 +62,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.helddertierwelt.mentalmath.R
 import com.helddertierwelt.mentalmath.presentation.theme.MentalMathTheme
+import com.helddertierwelt.mentalmath.presentation.theme.accent
 import com.helddertierwelt.mentalmath.presentation.theme.yellow
 
 /** Obere Leiste im Stil der App mit optionalem Zurück-Pfeil. */
@@ -306,4 +307,43 @@ fun ScreenBackground(content: @Composable () -> Unit) {
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
     ) { content() }
+}
+
+/**
+ * Herkunfts-Markierung: „Buch · Kap. 3“ (Methode aus *Mathe-Magie*) oder „Ergänzung“ (eigener
+ * Zusatz, nicht aus dem Buch).
+ */
+@Composable
+fun SourceTag(fromBook: Boolean, text: String, modifier: Modifier = Modifier) {
+    val color = if (fromBook) accent else Color(0xFFE08A00)
+    Text(
+        text = text,
+        color = color,
+        fontSize = MentalMathTheme.dimens.fonts.caption * 0.85f,
+        fontWeight = FontWeight.Medium,
+        maxLines = 1,
+        modifier = modifier
+            .background(color.copy(alpha = 0.13f), RoundedCornerShape(50))
+            .padding(horizontal = 7.dp, vertical = 1.dp),
+    )
+}
+
+/** Überschrift zwischen den Bereichen der Startseite. */
+@Composable
+fun SectionHeader(title: String, text: String, fromBook: Boolean, modifier: Modifier = Modifier) {
+    Column(modifier = modifier.padding(horizontal = 4.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = title,
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = MentalMathTheme.dimens.fonts.settingsLabel,
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.weight(1f, fill = false),
+            )
+            Spacer(Modifier.width(8.dp))
+            SourceTag(fromBook, if (fromBook) "aus dem Buch" else "nicht aus dem Buch")
+        }
+        Spacer(Modifier.height(2.dp))
+        CaptionText(text)
+    }
 }

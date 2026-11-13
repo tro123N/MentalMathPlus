@@ -115,7 +115,7 @@ fun LevelScreen(navController: NavController, skillId: String) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Column(modifier = Modifier.weight(1f)) {
                         CardTitle(skill.method)
-                        CaptionText("Im Buch: ${skill.book.label}")
+                        CaptionText(skill.book.origin)
                     }
                     StarRow(stars = sp.stars, size = dimens.icons.cardHeader)
                 }

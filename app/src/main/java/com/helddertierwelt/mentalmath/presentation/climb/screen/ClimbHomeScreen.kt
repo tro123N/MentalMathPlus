@@ -70,6 +70,8 @@ import com.helddertierwelt.mentalmath.domain.climb.model.World
 import com.helddertierwelt.mentalmath.presentation.climb.ClimbViewModel
 import com.helddertierwelt.mentalmath.presentation.climb.PlanStart
 import com.helddertierwelt.mentalmath.presentation.climb.component.PlanCard
+import com.helddertierwelt.mentalmath.presentation.climb.component.SectionHeader
+import com.helddertierwelt.mentalmath.presentation.climb.component.SourceTag
 import com.helddertierwelt.mentalmath.domain.climb.engine.Placement
 import com.helddertierwelt.mentalmath.presentation.climb.component.ActionButton
 import com.helddertierwelt.mentalmath.presentation.climb.component.AreaIntro
@@ -246,6 +248,26 @@ fun ClimbHomeScreen(navController: NavController) {
                     )
                 }
                 worlds.forEachIndexed { index, world ->
+                    if (index == 0) {
+                        item(key = "section_book") {
+                            SectionHeader(
+                                title = "Kletterweg nach dem Buch",
+                                text = "Welten 1–12 folgen den Kapiteln 0–9 von „Mathe-Magie“ und werden der Reihe nach freigeschaltet. Einzelne Levels mit „Ergänzung“ sind eigene Zusätze (Grundlagen, Kommazahlen, Geld), die das Buch nicht enthält.",
+                                fromBook = true,
+                                modifier = Modifier.testTag("sectionBook"),
+                            )
+                        }
+                    }
+                    if (world.independent && worlds.getOrNull(index - 1)?.independent != true) {
+                        item(key = "section_extra") {
+                            SectionHeader(
+                                title = "Ergänzungen",
+                                text = "Welten 13–17 stammen nicht aus dem Buch: TMSnat, Einheiten, weitere Tricks, Alltag und Oberstufe. Sie hängen nicht vom Kletterweg ab und sind deshalb immer offen – bei jeder Welt steht, ab wann sie sich empfiehlt.",
+                                fromBook = false,
+                                modifier = Modifier.testTag("sectionExtra"),
+                            )
+                        }
+                    }
                     item(key = world.id) {
                         val unlocked = climbViewModel.isWorldUnlocked(progress, index)
                         val isOpen = expanded[world.id] ?: (world.id == currentWorldId || (currentWorldId == null && index == worlds.lastIndex))
@@ -432,6 +454,18 @@ private fun WorldCard(
                     overflow = TextOverflow.Ellipsis,
                 )
                 CaptionText("${world.subtitle} · $done/${world.skills.size} · $stars★")
+                Spacer(Modifier.height(3.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    when {
+                        world.supplement -> SourceTag(false, "Ergänzung")
+                        world.bookSkills < world.skills.size -> SourceTag(true, "Buch · ${world.bookSkills} von ${world.skills.size} Levels")
+                        else -> SourceTag(true, "Buch · Kap. ${world.chapters.joinToString(", ")}")
+                    }
+                    world.recommendedAfter?.let {
+                        Spacer(Modifier.width(6.dp))
+                        CaptionText("empfohlen nach Welt $it")
+                    }
+                }
             }
             Icon(
                 painter = painterResource(if (isOpen) R.drawable.keyboard_arrow_up_24dp else R.drawable.keyboard_arrow_down_24dp),
@@ -449,6 +483,8 @@ private fun WorldCard(
                     progress = progress,
                     unlocked = unlocked && isSkillUnlocked(skill.id),
                     isNext = skill.id == nextId,
+                    // In Ergänzungswelten ist alles Ergänzung – dort keine Markierung je Level.
+                    showSource = !world.supplement,
                     onClick = { onOpenSkill(skill) },
                 )
             }
@@ -463,6 +499,7 @@ private fun SkillRow(
     progress: ClimbProgress,
     unlocked: Boolean,
     isNext: Boolean,
+    showSource: Boolean,
     onClick: () -> Unit,
 ) {
     val dimens = MentalMathTheme.dimens
@@ -493,6 +530,10 @@ private fun SkillRow(
                 color = MaterialTheme.colorScheme.onPrimary.copy(alpha = if (unlocked) 1f else 0.6f),
             )
             CaptionText(skill.method)
+            if (showSource) {
+                Spacer(Modifier.height(2.dp))
+                SourceTag(skill.book.fromBook, skill.book.tag)
+            }
         }
         Spacer(Modifier.width(8.dp))
         StarRow(stars = sp.stars, size = dimens.icons.problemStatus * 0.7f)

@@ -30,6 +30,20 @@ data class BookRef(
 ) {
     val label: String
         get() = if (chapter == null) section else "Kapitel $chapter · $section"
+
+    /** Stammt die Methode aus dem Buch? */
+    val fromBook: Boolean get() = chapter != null
+
+    /** Kurze Herkunftsangabe für Markierungen: „Buch · Kap. 3“ oder „Ergänzung“. */
+    val tag: String get() = if (chapter == null) "Ergänzung" else "Buch · Kap. $chapter"
+
+    /** Ausführliche Herkunft für Level- und Lernseite. */
+    val origin: String
+        get() = if (chapter == null) {
+            "Nicht aus dem Buch – ${section.removePrefix("Ergänzung: ").removePrefix("Ergänzung ")}"
+        } else {
+            "Aus dem Buch: Kapitel $chapter · $section"
+        }
 }
 
 /**
@@ -103,4 +117,27 @@ class World(
      * nicht Teil des Hauptwegs („Weiterklettern“).
      */
     val independent: Boolean = false,
-)
+) {
+    /** Levels, deren Methode aus dem Buch stammt. */
+    val bookSkills: Int get() = skills.count { it.book.fromBook }
+
+    /** Ganze Welt stammt nicht aus dem Buch. */
+    val supplement: Boolean get() = bookSkills == 0
+
+    /** Kapitel des Buchs, die diese Welt abdeckt. */
+    val chapters: List<Int> get() = skills.mapNotNull { it.book.chapter }.distinct().sorted()
+
+    /**
+     * Ergänzungswelten sind immer offen; diese Welt des Hauptwegs sollte vorher geschafft sein,
+     * weil die Aufgaben darauf aufbauen (nur Empfehlung, nichts wird gesperrt).
+     */
+    val recommendedAfter: Int?
+        get() = when (id) {
+            "w13" -> 8 // Prozent, Dreisatz und Überschlagen (Kapitel 4 und 5)
+            "w14" -> 5 // Kommazahlen und Zehnerpotenzen
+            "w15" -> 6 // baut auf Kapitel 2 und 3 auf (Quadrate, Faktorisieren)
+            "w16" -> 8 // Prozent und Überschlagen (Kapitel 5)
+            "w17" -> 7 // Brüche (Kapitel 4) und Schulwissen der Oberstufe
+            else -> null
+        }
+}

@@ -142,6 +142,11 @@ fun HandbookScreen(navController: NavController) {
                     ClimbCard {
                         CardTitle("Welt ${world.number} · ${world.title}")
                         CaptionText(world.subtitle)
+                        Spacer(Modifier.height(3.dp))
+                        com.helddertierwelt.mentalmath.presentation.climb.component.SourceTag(
+                            !world.supplement,
+                            if (world.supplement) "Ergänzung – nicht aus dem Buch" else "Buch · Kap. ${world.chapters.joinToString(", ")}",
+                        )
                         Spacer(Modifier.height(6.dp))
                         skills.forEach { skill ->
                             val isOpen = open == skill.id
@@ -160,6 +165,9 @@ fun HandbookScreen(navController: NavController) {
                                 Column(Modifier.weight(1f)) {
                                     Text(skill.title, fontSize = dimens.fonts.sideSheetEntry, color = MaterialTheme.colorScheme.onPrimary)
                                     CaptionText(skill.method)
+                                    if (!world.supplement) {
+                                        com.helddertierwelt.mentalmath.presentation.climb.component.SourceTag(skill.book.fromBook, skill.book.tag)
+                                    }
                                 }
                                 Icon(
                                     painter = painterResource(if (isOpen) R.drawable.keyboard_arrow_up_24dp else R.drawable.keyboard_arrow_down_24dp),
@@ -169,7 +177,7 @@ fun HandbookScreen(navController: NavController) {
                                 )
                             }
                             if (isOpen) {
-                                CaptionText("Im Buch: ${skill.book.label}")
+                                CaptionText(skill.book.origin)
                                 Spacer(Modifier.height(6.dp))
                                 BodyText(skill.summary)
                                 Spacer(Modifier.height(10.dp))

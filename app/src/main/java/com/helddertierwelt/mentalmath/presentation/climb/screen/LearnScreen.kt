@@ -98,7 +98,7 @@ fun LearnScreen(navController: NavController, skillId: String) {
             } else {
             ClimbCard {
                 CardTitle(skill.method)
-                CaptionText("Im Buch: ${skill.book.label}")
+                CaptionText(skill.book.origin)
                 Spacer(Modifier.height(10.dp))
                 ExplanationBlocks(skill.explanation)
             }

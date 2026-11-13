@@ -516,16 +516,23 @@ class ClimbSmokeTest {
         compose.waitForIdle()
         shot("b_start")
 
+        // Bereiche „nach dem Buch“ und „Ergänzungen“.
+        compose.onNodeWithTag("climbList").performScrollToNode(hasTestTag("sectionBook"))
+        compose.waitForIdle()
+        shot("b_bereich_buch")
+        compose.onNodeWithTag("climbList").performScrollToNode(hasTestTag("sectionExtra"))
+        compose.waitForIdle()
+        shot("b_bereich_ergaenzungen")
         // Jede Welt aufgeklappt fotografieren (Liste: Übersicht, dann eine Karte pro Welt).
         Curriculum.worlds.forEachIndexed { index, world ->
             val list = compose.onNodeWithTag("climbList")
-            list.performScrollToIndex(index + 3)
+            list.performScrollToIndex(index + 4 + (if (world.independent) 1 else 0))
             compose.waitForIdle()
             if (compose.onAllNodesWithTag("skill_${world.skills.first().id}").fetchSemanticsNodes().isEmpty()) {
                 compose.onNodeWithTag("worldHeader_${world.id}").performClick()
                 compose.waitForIdle()
             }
-            list.performScrollToIndex(index + 3)
+            list.performScrollToIndex(index + 4 + (if (world.independent) 1 else 0))
             shot("b_welt_${world.number}")
         }
 
