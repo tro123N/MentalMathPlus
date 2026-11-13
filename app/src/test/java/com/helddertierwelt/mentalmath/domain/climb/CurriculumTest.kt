@@ -185,7 +185,8 @@ class CurriculumTest {
         }
         Regex("^([0-9]+):([0-9]{2}) bis ([0-9]+):([0-9]{2}) = \\? min$").matchEntire(text)?.let { m ->
             val (h1, m1, h2, m2) = m.groupValues.drop(1).map { it.toLong() }
-            return BigDecimal((h2 * 60 + m2) - (h1 * 60 + m1))
+            val diff = (h2 * 60 + m2) - (h1 * 60 + m1)
+            return BigDecimal(if (diff < 0) diff + 1440 else diff)
         }
         Regex("^($numberPattern) · 10(⁻?[⁰¹²³⁴⁵⁶⁷⁸⁹]+)$").matchEntire(text)?.let { m ->
             val sup = m.groupValues[2]
@@ -211,11 +212,163 @@ class CurriculumTest {
         return null
     }
 
+    // --- Welten 15–17: unabhängige Nachrechnung -------------------------------------------------
+
+    private val subDigits = "₀₁₂₃₄₅₆₇₈₉"
+    private fun supInt(s: String): Int = s.filter { it != '⁻' }.map { superDigits.indexOf(it) }.joinToString("").toInt() * (if (s.startsWith('⁻')) -1 else 1)
+    private fun subInt(s: String): Int = s.map { subDigits.indexOf(it) }.joinToString("").toInt()
+    private fun ipow(b: BigDecimal, e: Int): BigDecimal = b.pow(e)
+
+    /** Polynom wie „3x⁴ + 2x − 5“ als Liste (Koeffizient, Exponent). */
+    private fun parsePoly(text: String): List<Pair<BigDecimal, Int>>? {
+        val t = text.replace(" ", "").replace(minus, "-")
+        val parts = Regex("[+-]?[^+-]+").findAll(t).map { it.value }.toList()
+        if (parts.joinToString("") != t) return null
+        return parts.map { part ->
+            val m = Regex("^([+-]?)([0-9.]*)(x([⁰¹²³⁴⁵⁶⁷⁸⁹]*))?$").matchEntire(part) ?: return null
+            val sign = if (m.groupValues[1] == "-") -1 else 1
+            val hasX = m.groupValues[3].isNotEmpty()
+            val coef = m.groupValues[2].replace(".", "").ifEmpty { if (hasX) "1" else return null }.toBigDecimal() * BigDecimal(sign)
+            val e = if (!hasX) 0 else if (m.groupValues[4].isEmpty()) 1 else supInt(m.groupValues[4])
+            coef to e
+        }
+    }
+
+    private fun logOf(base: BigDecimal, v: BigDecimal): BigDecimal? {
+        var x = BigDecimal.ONE
+        for (e in 0..60) {
+            if (x.compareTo(v) == 0) return BigDecimal(e)
+            x *= base
+        }
+        return null
+    }
+
+    private fun isqrt(v: BigDecimal): BigDecimal? = v.sqrt(MathContext.DECIMAL64).stripTrailingZeros().takeIf { it * it == v.stripTrailingZeros() || (it * it).compareTo(v) == 0 }
+
+    private fun extraPrompt(text: String): BigDecimal? {
+        val nP = numberPattern
+        fun v(s: String) = num(s)!!
+        Regex("^($nP) % von ($nP)$").matchEntire(text)?.let { return (v(it.groupValues[1]) * v(it.groupValues[2])).divide(BigDecimal(100)) }
+        Regex("^log([₀₁₂₃₄₅₆₇₈₉]+) ($nP)$").matchEntire(text)?.let { return logOf(BigDecimal(subInt(it.groupValues[1])), v(it.groupValues[2])) }
+        Regex("^lg ($nP)$").matchEntire(text)?.let { return logOf(BigDecimal.TEN, v(it.groupValues[1])) }
+        Regex("^log([₀₁₂₃₄₅₆₇₈₉]+) ($nP) \\+ log([₀₁₂₃₄₅₆₇₈₉]+) ($nP)$").matchEntire(text)?.let { m ->
+            val b = BigDecimal(subInt(m.groupValues[1]))
+            return logOf(b, v(m.groupValues[2]))?.let { a -> logOf(b, v(m.groupValues[4]))?.let { a + it } }
+        }
+        Regex("^([0-9]+)([⁰¹²³⁴⁵⁶⁷⁸⁹]+)$").matchEntire(text)?.let { return ipow(BigDecimal(it.groupValues[1]), supInt(it.groupValues[2])) }
+        Regex("^([0-9]+)([⁰¹²³⁴⁵⁶⁷⁸⁹]+) ([·$divide]) ([0-9]+)([⁰¹²³⁴⁵⁶⁷⁸⁹]+) = ([0-9]+)\\^\\?$").matchEntire(text)?.let { m ->
+            val a = supInt(m.groupValues[2]); val b = supInt(m.groupValues[5])
+            return BigDecimal(if (m.groupValues[3] == "·") a + b else a - b)
+        }
+        Regex("^Verdopplung alle ($nP) (h|min): Faktor nach ($nP) (h|min) = \\?$").matchEntire(text)?.let { m ->
+            return ipow(BigDecimal(2), (v(m.groupValues[3]) / v(m.groupValues[1])).toInt())
+        }
+        Regex("^($nP) mg, Halbwertszeit ($nP) h: nach ($nP) h = \\? mg$").matchEntire(text)?.let { m ->
+            return v(m.groupValues[1]).divide(ipow(BigDecimal(2), (v(m.groupValues[3]) / v(m.groupValues[2])).toInt()))
+        }
+        Regex("^f\\(x\\) = (.+): f'\\(([0-9]+)\\) = \\?$").matchEntire(text)?.let { m ->
+            val poly = parsePoly(m.groupValues[1]) ?: return null
+            val x = BigDecimal(m.groupValues[2])
+            return poly.filter { it.second > 0 }.fold(BigDecimal.ZERO) { acc, (c, e) -> acc + c * BigDecimal(e) * ipow(x, e - 1) }
+        }
+        Regex("^f\\(x\\) = (.+): Scheitel bei (x|y) = \\?$").matchEntire(text)?.let { m ->
+            val poly = parsePoly(m.groupValues[1]) ?: return null
+            val a = poly.firstOrNull { it.second == 2 }?.first ?: return null
+            val b = poly.firstOrNull { it.second == 1 }?.first ?: BigDecimal.ZERO
+            val c = poly.firstOrNull { it.second == 0 }?.first ?: BigDecimal.ZERO
+            val x = b.negate().divide(a * BigDecimal(2), MathContext.DECIMAL64)
+            return if (m.groupValues[2] == "x") x else a * x * x + b * x + c
+        }
+        Regex("^(.+) = 0: größere Lösung x = \\?$").matchEntire(text)?.let { m ->
+            val poly = parsePoly(m.groupValues[1]) ?: return null
+            val a = poly.firstOrNull { it.second == 2 }?.first ?: return null
+            val b = poly.firstOrNull { it.second == 1 }?.first ?: BigDecimal.ZERO
+            val c = poly.firstOrNull { it.second == 0 }?.first ?: BigDecimal.ZERO
+            val disc = (b * b - BigDecimal(4) * a * c).sqrt(MathContext.DECIMAL64)
+            return (b.negate() + disc).divide(a * BigDecimal(2), MathContext.DECIMAL64)
+        }
+        Regex("^x² \\+ ([0-9]+)x \\+ ([0-9]+) = \\(x \\+ \\?\\)²$").matchEntire(text)?.let { m ->
+            val half = BigDecimal(m.groupValues[1]).divide(BigDecimal(2))
+            return half.takeIf { it * it == BigDecimal(m.groupValues[2]) }
+        }
+        Regex("^x² $minus ([0-9]+) = \\(x $minus \\?\\)\\(x \\+ \\?\\)$").matchEntire(text)?.let { return isqrt(BigDecimal(it.groupValues[1])) }
+        Regex("^\\(x [+$minus] ([0-9]+)\\)² = x² [+$minus] \\?x \\+ ([0-9]+)$").matchEntire(text)?.let { m ->
+            val a = BigDecimal(m.groupValues[1])
+            return (BigDecimal(2) * a).takeIf { a * a == BigDecimal(m.groupValues[2]) }
+        }
+        Regex("^($nP)° = \\? · π$").matchEntire(text)?.let { return v(it.groupValues[1]).divide(BigDecimal(180)) }
+        Regex("^([0-9]*)π/([0-9]+) = \\? °$").matchEntire(text)?.let { m ->
+            val k = if (m.groupValues[1].isEmpty()) BigDecimal.ONE else BigDecimal(m.groupValues[1])
+            return (k * BigDecimal(180)).divide(BigDecimal(m.groupValues[2]))
+        }
+        Regex("^Katheten ($nP) und ($nP): Hypotenuse = \\?$").matchEntire(text)?.let { m -> return isqrt(v(m.groupValues[1]).pow(2) + v(m.groupValues[2]).pow(2)) }
+        Regex("^Hypotenuse ($nP), Kathete ($nP): andere Kathete = \\?$").matchEntire(text)?.let { m -> return isqrt(v(m.groupValues[1]).pow(2) - v(m.groupValues[2]).pow(2)) }
+        Regex("^(Mittelwert|Median) von ([0-9., ]+)$").matchEntire(text)?.let { m ->
+            val values = m.groupValues[2].split(", ").map { v(it) }
+            if (m.groupValues[1] == "Mittelwert") return values.fold(BigDecimal.ZERO) { a, b -> a + b }.divide(BigDecimal(values.size), MathContext.DECIMAL64)
+            val s = values.sorted()
+            return if (s.size % 2 == 1) s[s.size / 2] else (s[s.size / 2 - 1] + s[s.size / 2]).divide(BigDecimal(2))
+        }
+        Regex("^($nP) € mit ($nP) %, ($nP) € mit ($nP) %, sonst 0 €: Erwartungswert = \\? €$").matchEntire(text)?.let { m ->
+            return (v(m.groupValues[1]) * v(m.groupValues[2]) + v(m.groupValues[3]) * v(m.groupValues[4])).divide(BigDecimal(100))
+        }
+        Regex("^([0-9]+) über ([0-9]+)$").matchEntire(text)?.let { m ->
+            val nn = m.groupValues[1].toLong(); val k = m.groupValues[2].toLong()
+            var r = java.math.BigInteger.ONE
+            for (i in 1..k) r = r * java.math.BigInteger.valueOf(nn - k + i) / java.math.BigInteger.valueOf(i)
+            return BigDecimal(r)
+        }
+        Regex("^P\\(A\\) = ($nP), P\\(B\\) = ($nP), unabhängig: P\\(A und B\\) = \\?$").matchEntire(text)?.let { m -> return v(m.groupValues[1]) * v(m.groupValues[2]) }
+        Regex("^($nP) Personen, ($nP) krank, davon ($nP) positiv getestet: P\\(positiv \\| krank\\) = \\?$").matchEntire(text)?.let { m ->
+            return v(m.groupValues[3]).divide(v(m.groupValues[2]), MathContext.DECIMAL64)
+        }
+        fun vec(s: String) = s.split('|').map { it.replace(minus, "-").toBigDecimal() }
+        Regex("^\\(([^)]+)\\) · \\(([^)]+)\\)$").matchEntire(text)?.let { m ->
+            return vec(m.groupValues[1]).zip(vec(m.groupValues[2])).fold(BigDecimal.ZERO) { acc, (a, b) -> acc + a * b }
+        }
+        Regex("^\\|\\(([^)]+)\\)\\|$").matchEntire(text)?.let { m -> return isqrt(vec(m.groupValues[1]).fold(BigDecimal.ZERO) { acc, a -> acc + a * a }) }
+        Regex("^\\(([0-9]+)\\|a\\|([0-9]+)\\) ⊥ \\(([^)]+)\\): a = \\?$").matchEntire(text)?.let { m ->
+            val w = vec(m.groupValues[3])
+            val rest = BigDecimal(m.groupValues[1]) * w[0] + BigDecimal(m.groupValues[2]) * w[2]
+            return rest.divide(w[1].negate(), MathContext.DECIMAL64)
+        }
+        Regex("^∫([₀₁₂₃₄₅₆₇₈₉]+)([⁰¹²³⁴⁵⁶⁷⁸⁹]+) (.+) dx$").matchEntire(text)?.let { m ->
+            val a = BigDecimal(subInt(m.groupValues[1])); val b = BigDecimal(supInt(m.groupValues[2]))
+            val poly = parsePoly(m.groupValues[3]) ?: return null
+            return poly.fold(BigDecimal.ZERO) { acc, (c, e) -> acc + c.divide(BigDecimal(e + 1), MathContext.DECIMAL64) * (ipow(b, e + 1) - ipow(a, e + 1)) }
+        }
+        Regex("^Netto ($nP) € \\+ ($nP) % MwSt = \\? €$").matchEntire(text)?.let { m -> return v(m.groupValues[1]) * (BigDecimal(100) + v(m.groupValues[2])).divide(BigDecimal(100)) }
+        Regex("^Brutto ($nP) € mit ($nP) % MwSt = \\? € netto$").matchEntire(text)?.let { m ->
+            return v(m.groupValues[1]).divide((BigDecimal(100) + v(m.groupValues[2])).divide(BigDecimal(100)), MathContext.DECIMAL64)
+        }
+        Regex("^($nP) € $minus ($nP) % = \\? €$").matchEntire(text)?.let { m -> return v(m.groupValues[1]) * (BigDecimal(100) - v(m.groupValues[2])).divide(BigDecimal(100)) }
+        Regex("^Erst ($nP) % Rabatt, dann noch ($nP) %: zusammen \\? %$").matchEntire(text)?.let { m ->
+            val rest = ((BigDecimal(100) - v(m.groupValues[1])) * (BigDecimal(100) - v(m.groupValues[2]))).divide(BigDecimal(100))
+            return BigDecimal(100) - rest
+        }
+        Regex("^($nP) € zu ($nP) % Zinsen für 1 Jahr = \\? € Zinsen$").matchEntire(text)?.let { m -> return (v(m.groupValues[1]) * v(m.groupValues[2])).divide(BigDecimal(100)) }
+        Regex("^($nP) € mit ($nP) % Zinseszins, ([0-9]+) Jahre = \\? €$").matchEntire(text)?.let { m ->
+            return v(m.groupValues[1]) * ipow((BigDecimal(100) + v(m.groupValues[2])).divide(BigDecimal(100)), m.groupValues[3].toInt())
+        }
+        Regex("^($nP) l/100 km, ($nP) km = \\? l$").matchEntire(text)?.let { m -> return (v(m.groupValues[1]) * v(m.groupValues[2])).divide(BigDecimal(100)) }
+        Regex("^($nP) l zu ($nP) € pro Liter = \\? €$").matchEntire(text)?.let { m -> return v(m.groupValues[1]) * v(m.groupValues[2]) }
+        Regex("^($nP) l auf ($nP) km = \\? l/100 km$").matchEntire(text)?.let { m -> return (v(m.groupValues[1]) * BigDecimal(100)).divide(v(m.groupValues[2]), MathContext.DECIMAL64) }
+        Regex("^([0-9]+) Personen: ($nP) [^.]+\\. Für ([0-9]+) Personen = \\?$").matchEntire(text)?.let { m ->
+            return (v(m.groupValues[2]) * BigDecimal(m.groupValues[3])).divide(BigDecimal(m.groupValues[1]), MathContext.DECIMAL64)
+        }
+        Regex("^($nP) € \\+ ($nP) % Trinkgeld, durch ($nP) = \\? €$").matchEntire(text)?.let { m ->
+            return (v(m.groupValues[1]) * (BigDecimal(100) + v(m.groupValues[2]))).divide(BigDecimal(100) * v(m.groupValues[3]), MathContext.DECIMAL64)
+        }
+        Regex("^($nP) g für ($nP) € = \\? € pro kg$").matchEntire(text)?.let { m -> return (v(m.groupValues[2]) * BigDecimal(1000)).divide(v(m.groupValues[1]), MathContext.DECIMAL64) }
+        return null
+    }
+
     /** Wert, den die Aufgabenstellung selbst ergibt (für bekannte Formen). */
     private fun evaluatePrompt(p: Problem): BigDecimal? {
         val text = p.prompt.text
         evaluate(text)?.let { return it }
         unitPrompt(text)?.let { return it }
+        extraPrompt(text)?.let { return it }
         Regex("^Das Doppelte von ($numberPattern)$").matchEntire(text)?.let { return num(it.groupValues[1])!! * BigDecimal(2) }
         Regex("^Die Hälfte von ($numberPattern)$").matchEntire(text)?.let { return num(it.groupValues[1])!!.divide(BigDecimal(2)) }
         Regex("^([0-9]+) % von ($numberPattern)$").matchEntire(text)?.let {

@@ -48,6 +48,9 @@ enum class FreeTopic(val title: String, val subtitle: String) {
     GEOMETRY("Geometrie", "Flächen, Umfänge, Winkel, Volumen"),
     NUMBER_THEORY("Zahlentheorie", "ggT, kgV, Primzahlen, Reste"),
     UNITS("Einheiten umrechnen", "Vorsilben, Zeit, Volumen, Konzentration, Zehnerpotenzen"),
+    TRICKS("Rechentricks", "Mal 25, mal 99, Quadrate um 50 und 100, Differenz von Quadraten"),
+    DAILY("Mathe im Alltag", "Mehrwertsteuer, Zinsen, Verbrauch, Rezepte, Uhrzeiten"),
+    ADVANCED("Oberstufe", "Logarithmen, Ableitungen, Wahrscheinlichkeit, Vektoren, Integrale"),
 }
 
 /** Erzeugt Aufgaben für das freie Training; Schwierigkeit 1 (leicht) bis 3 (schwer). */
@@ -73,6 +76,16 @@ object FreeTopics {
         FreeTopic.GEOMETRY -> geometry(level, r)
         FreeTopic.NUMBER_THEORY -> numberTheory(level, r)
         FreeTopic.UNITS -> com.helddertierwelt.mentalmath.domain.climb.curriculum.UnitTasks.free(id(topic), level, r)
+        FreeTopic.TRICKS -> fromWorld(com.helddertierwelt.mentalmath.domain.climb.curriculum.World15.world, topic, level, r)
+        FreeTopic.DAILY -> fromWorld(com.helddertierwelt.mentalmath.domain.climb.curriculum.World16.world, topic, level, r)
+        FreeTopic.ADVANCED -> fromWorld(com.helddertierwelt.mentalmath.domain.climb.curriculum.World17.world, topic, level, r)
+    }
+
+    /** Aufgabe aus einer Ergänzungswelt: Stufe 1 die erste Hälfte der Levels, Stufe 2 und 3 alle. */
+    private fun fromWorld(world: com.helddertierwelt.mentalmath.domain.climb.model.World, topic: FreeTopic, level: Int, r: Random): Problem {
+        val skills = world.skills.filter { !it.id.endsWith(".mixed") }
+        val pool = if (level <= 1) skills.take((skills.size + 1) / 2) else skills
+        return r.pick(pool).generate(r).copy(skillId = id(topic))
     }
 
     private fun intProblem(topic: FreeTopic, key: String, prompt: Prompt, value: Long, steps: List<Step>, method: String? = null) =

@@ -5,3 +5,7 @@ w13.prob
 w13.mixed
 w14.time
 w14.sci
+w15.sq50
+w16.vat
+w17.deriv
+w17.prob
